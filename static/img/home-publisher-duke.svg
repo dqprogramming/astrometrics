@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 180">
+    <!-- DUKE (Black Box) -->
+    <rect x="50" y="50" width="125" height="65" fill="#000000"/>
+    <text x="65" y="95" font-family="Arial, sans-serif" font-weight="bold" font-size="28" fill="#FFFFFF" letter-spacing="5">DUKE</text>
+
+    <!-- UNIVERSITY PRESS (White Box with Border) -->
+    <rect x="125" y="115" width="125" height="65" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+    <text x="135" y="143" font-family="Arial, sans-serif" font-weight="bold" font-size="16" fill="#000000">UNIVERSITY</text>
+    <text x="135" y="165" font-family="Arial, sans-serif" font-weight="bold" font-size="16" fill="#000000">PRESS</text>
+</svg>

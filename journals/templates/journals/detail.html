@@ -1,0 +1,242 @@
+{% extends "journals/base.html" %}
+{% load static %}
+
+{% block title %}{{ journal.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'journals:search' %}">Journals</a></li>
+            <li class="breadcrumb-item active">{{ journal.title }}</li>
+        </ol>
+    </nav>
+    
+    <!-- Main Journal Info -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">{{ journal.title }}</h2>
+        </div>
+        <div class="card-body">
+            
+            <!-- Basic Info Row -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Publisher:</dt>
+                        <dd class="col-sm-8">{{ journal.publisher.name }}</dd>
+                        
+                        {% if journal.journal_owner %}
+                        <dt class="col-sm-4">Owner:</dt>
+                        <dd class="col-sm-8">{{ journal.journal_owner }}</dd>
+                        {% endif %}
+                        
+                        {% if journal.year_established %}
+                        <dt class="col-sm-4">Established:</dt>
+                        <dd class="col-sm-8">{{ journal.year_established }}</dd>
+                        {% endif %}
+                        
+                        {% if journal.issn %}
+                        <dt class="col-sm-4">ISSN:</dt>
+                        <dd class="col-sm-8">{{ journal.issn }}</dd>
+                        {% endif %}
+                    </dl>
+                </div>
+                
+                <div class="col-md-6">
+                    <dl class="row">
+                        {% if journal.package_band %}
+                        <dt class="col-sm-4">Package Band:</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-secondary">{{ journal.package_band.code }}</span>
+                            {{ journal.package_band.name }}
+                        </dd>
+                        {% endif %}
+                        
+                        {% if journal.cost_gbp %}
+                        <dt class="col-sm-4">Cost:</dt>
+                        <dd class="col-sm-8">£{{ journal.cost_gbp|floatformat:2 }}</dd>
+                        {% endif %}
+                        
+                        {% if journal.normalized_articles %}
+                        <dt class="col-sm-4">Articles/Year:</dt>
+                        <dd class="col-sm-8">{{ journal.normalized_articles|floatformat:1 }}</dd>
+                        {% endif %}
+                        
+                        {% if journal.cost_per_article %}
+                        <dt class="col-sm-4">Cost/Article:</dt>
+                        <dd class="col-sm-8"><strong>£{{ journal.cost_per_article|floatformat:2 }}</strong></dd>
+                        {% endif %}
+                    </dl>
+                </div>
+            </div>
+            
+            <!-- Description -->
+            {% if journal.description %}
+            <div class="mb-4">
+                <h5>Description</h5>
+                <p>{{ journal.description|linebreaks }}</p>
+            </div>
+            {% endif %}
+            
+            <!-- Subjects and Languages -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5>Subjects</h5>
+                    {% if journal.subjects.all %}
+                    {% for subject in journal.subjects.all %}
+                        <span class="badge bg-info text-dark me-1 mb-1">{{ subject.name }}</span>
+                    {% endfor %}
+                    {% else %}
+                    <p class="text-muted">No subjects listed</p>
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-6">
+                    <h5>Languages</h5>
+                    {% if journal.languages.all %}
+                    {% for language in journal.languages.all %}
+                        <span class="badge bg-success me-1 mb-1">{{ language.name }}</span>
+                    {% endfor %}
+                    {% else %}
+                    <p class="text-muted">No languages listed</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Indexing Status -->
+            <div class="mb-4">
+                <h5>Indexing & Metrics</h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                {% if journal.in_doaj %}
+                                <i class="bi bi-check-circle-fill text-success" style="font-size: 2rem;"></i>
+                                <p class="mb-0 mt-2">Listed in DOAJ</p>
+                                {% else %}
+                                <i class="bi bi-x-circle text-muted" style="font-size: 2rem;"></i>
+                                <p class="mb-0 mt-2">Not in DOAJ</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                {% if journal.in_scopus %}
+                                <i class="bi bi-check-circle-fill text-success" style="font-size: 2rem;"></i>
+                                <p class="mb-0 mt-2">Indexed in Scopus</p>
+                                {% else %}
+                                <i class="bi bi-x-circle text-muted" style="font-size: 2rem;"></i>
+                                <p class="mb-0 mt-2">Not in Scopus</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                {% if journal.wos_impact_factor %}
+                                <h2 class="text-primary">{{ journal.wos_impact_factor }}</h2>
+                                <p class="mb-0">Impact Factor</p>
+                                {% else %}
+                                <i class="bi bi-dash-circle text-muted" style="font-size: 2rem;"></i>
+                                <p class="mb-0 mt-2">No Impact Factor</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Archive Information -->
+            {% if journal.archive_available_diamond_oa or journal.archive_years or journal.archiving_services %}
+            <div class="mb-4">
+                <h5>Archive Information</h5>
+                <dl class="row">
+                    {% if journal.archive_years %}
+                    <dt class="col-sm-3">Archive Years:</dt>
+                    <dd class="col-sm-9">{{ journal.archive_years }} years</dd>
+                    {% endif %}
+                    
+                    {% if journal.archive_available_diamond_oa %}
+                    <dt class="col-sm-3">Diamond OA:</dt>
+                    <dd class="col-sm-9">{{ journal.archive_available_diamond_oa }}</dd>
+                    {% endif %}
+                    
+                    {% if journal.archiving_services %}
+                    <dt class="col-sm-3">Services:</dt>
+                    <dd class="col-sm-9">{{ journal.archiving_services|linebreaks }}</dd>
+                    {% endif %}
+                </dl>
+            </div>
+            {% endif %}
+            
+            <!-- Licensing -->
+            {% if journal.licensing %}
+            <div class="mb-4">
+                <h5>License</h5>
+                <span class="badge bg-warning text-dark">{{ journal.licensing }}</span>
+            </div>
+            {% endif %}
+            
+            <!-- USPs -->
+            {% if journal.usps %}
+            <div class="mb-4">
+                <h5>Unique Selling Points</h5>
+                <p>{{ journal.usps|linebreaks }}</p>
+            </div>
+            {% endif %}
+            
+            <!-- Links -->
+            <div class="mb-3">
+                <h5>Links</h5>
+                {% if journal.journal_url %}
+                <a href="{{ journal.journal_url }}" target="_blank" class="btn btn-primary me-2">
+                    <i class="bi bi-box-arrow-up-right"></i> Visit Journal
+                </a>
+                {% endif %}
+                {% if journal.publisher_url %}
+                <a href="{{ journal.publisher_url }}" target="_blank" class="btn btn-secondary">
+                    <i class="bi bi-box-arrow-up-right"></i> Visit Publisher
+                </a>
+                {% endif %}
+            </div>
+            
+        </div>
+        <div class="card-footer text-muted">
+            <small>Added: {{ journal.created_at|date:"F d, Y" }} | Last updated: {{ journal.updated_at|date:"F d, Y" }}</small>
+        </div>
+    </div>
+    
+    <!-- Related Journals -->
+    {% if related_journals %}
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Related Journals</h5>
+        </div>
+        <div class="card-body">
+            <div class="list-group">
+                {% for related in related_journals %}
+                <a href="{% url 'journals:detail' related.pk %}" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">{{ related.title }}</h6>
+                        {% if related.cost_gbp %}
+                        <small>£{{ related.cost_gbp|floatformat:0 }}</small>
+                        {% endif %}
+                    </div>
+                    <small class="text-muted">{{ related.publisher.name }}</small>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+</div>
+{% endblock %}

@@ -1,0 +1,194 @@
+{% extends "journals/base.html" %}
+{% load static %}
+
+{% block title %}Journal Statistics{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Journal Statistics Dashboard</h1>
+    
+    <!-- Overview Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center bg-primary text-white">
+                <div class="card-body">
+                    <h2>{{ total_journals }}</h2>
+                    <p class="mb-0">Total Journals</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center bg-success text-white">
+                <div class="card-body">
+                    <h2>£{{ total_cost|floatformat:0 }}</h2>
+                    <p class="mb-0">Total Cost</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center bg-info text-white">
+                <div class="card-body">
+                    <h2>£{{ avg_cost|floatformat:0 }}</h2>
+                    <p class="mb-0">Average Cost</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center bg-warning text-dark">
+                <div class="card-body">
+                    <h2>{{ avg_articles|floatformat:1 }}</h2>
+                    <p class="mb-0">Avg Articles/Year</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- DOAJ and Scopus Coverage -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">DOAJ Coverage</h5>
+                </div>
+                <div class="card-body text-center">
+                    <h1 class="display-4">{{ doaj_percentage|floatformat:1 }}%</h1>
+                    <p>{{ doaj_count }} of {{ total_journals }} journals in DOAJ</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Scopus Coverage</h5>
+                </div>
+                <div class="card-body text-center">
+                    <h1 class="display-4">{{ scopus_percentage|floatformat:1 }}%</h1>
+                    <p>{{ scopus_count }} of {{ total_journals }} journals in Scopus</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- By Publisher -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Top Publishers by Journal Count</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Publisher</th>
+                            <th class="text-end">Journals</th>
+                            <th class="text-end">Total Cost</th>
+                            <th class="text-end">Avg Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pub in by_publisher %}
+                        <tr>
+                            <td>{{ pub.name }}</td>
+                            <td class="text-end">{{ pub.journal_count }}</td>
+                            <td class="text-end">£{{ pub.total_cost|floatformat:0|default:"-" }}</td>
+                            <td class="text-end">£{{ pub.avg_cost|floatformat:0|default:"-" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- By Package Band -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Distribution by Package Band</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Band</th>
+                            <th class="text-end">Journals</th>
+                            <th class="text-end">Total Cost</th>
+                            <th class="text-end">Avg Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for band in by_package_band %}
+                        <tr>
+                            <td>
+                                <span class="badge bg-secondary">{{ band.code }}</span>
+                                {{ band.name }}
+                            </td>
+                            <td class="text-end">{{ band.journal_count }}</td>
+                            <td class="text-end">£{{ band.total_cost|floatformat:0|default:"-" }}</td>
+                            <td class="text-end">£{{ band.avg_cost|floatformat:0|default:"-" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Top Subjects -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Top Subjects by Journal Count</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for subject in by_subject %}
+                <div class="col-md-4 mb-2">
+                    <span class="badge bg-info text-dark me-2">{{ subject.journal_count }}</span>
+                    {{ subject.name }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- License Distribution -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">License Distribution</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>License Type</th>
+                            <th class="text-end">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for license in license_distribution %}
+                        <tr>
+                            <td>
+                                {% if license.licensing %}
+                                <span class="badge bg-warning text-dark">{{ license.licensing }}</span>
+                                {% else %}
+                                <span class="text-muted">Not specified</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">{{ license.count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="text-center mb-4">
+        <a href="{% url 'journals:search' %}" class="btn btn-primary">
+            <i class="bi bi-search"></i> Back to Search
+        </a>
+    </div>
+    
+</div>
+{% endblock %}

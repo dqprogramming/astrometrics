@@ -1,0 +1,319 @@
+{% extends "public/base.html" %}
+{% load static %}
+
+{% block title %}{{ journal.title }}{% endblock %}
+
+{% block header_title %}<h1 class="site-header-text">{{ journal.title|truncatewords:8 }}</h1>{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 3rem 0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10">
+                <div style="text-align: center; color: white;">
+                    <h2 style="font-size: 2.5rem; margin-bottom: 1rem; line-height: 1.3;">
+                        {{ journal.title }}
+                    </h2>
+
+                    <p style="font-size: 1.2rem; color: rgba(255,255,255,0.9); margin-bottom: 1.5rem;">
+                        {{ journal.publisher.name }}
+                    </p>
+
+                    <!-- Badges -->
+                    <div style="display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                        {% if journal.in_doaj %}
+                        <span style="padding: 0.4rem 1rem; background: #28a745; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">
+                            DOAJ Listed
+                        </span>
+                        {% endif %}
+
+                        {% if journal.in_scopus %}
+                        <span style="padding: 0.4rem 1rem; background: #17a2b8; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">
+                            Scopus Indexed
+                        </span>
+                        {% endif %}
+
+                        {% if journal.wos_impact_factor %}
+                        <span style="padding: 0.4rem 1rem; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 0.9rem; font-weight: 600;">
+                            Impact Factor: {{ journal.wos_impact_factor }}
+                        </span>
+                        {% endif %}
+
+                        {% if journal.licensing %}
+                        <span style="padding: 0.4rem 1rem; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 0.9rem; font-weight: 600;">
+                            {{ journal.licensing }}
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Actions -->
+                    <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                        {% if journal.journal_url %}
+                        <a href="{{ journal.journal_url }}" target="_blank"
+                           style="padding: 0.8rem 2rem; background: white; color: #1a1a2e; text-decoration: none; border-radius: 25px; font-weight: 600; display: inline-block;">
+                            Visit Journal Website →
+                        </a>
+                        {% endif %}
+
+                        <a href="{% url 'journals:public_search' %}"
+                           style="padding: 0.8rem 2rem; background: transparent; color: white; border: 2px solid white; text-decoration: none; border-radius: 25px; font-weight: 600; display: inline-block;">
+                            ← Back to Search
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<section class="content-section" style="padding: 3rem 0; background: white;">
+    <div class="container">
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10">
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 3rem; margin-bottom: 3rem;">
+
+                    <!-- Left Column - Main Info -->
+                    <div>
+
+                        {% if journal.description %}
+                        <div style="margin-bottom: 3rem;">
+                            <h3 style="color: #1a1a2e; font-size: 1.8rem; margin-bottom: 1rem; border-bottom: 3px solid #1a1a2e; padding-bottom: 0.5rem;">
+                                About
+                            </h3>
+                            <div style="color: #555; line-height: 1.8; font-size: 1.05rem;">
+                                {{ journal.description|linebreaks }}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if journal.subjects.all %}
+                        <div style="margin-bottom: 3rem;">
+                            <h3 style="color: #1a1a2e; font-size: 1.5rem; margin-bottom: 1rem;">
+                                Subject Areas
+                            </h3>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.8rem;">
+                                {% for subject in journal.subjects.all %}
+                                <span style="padding: 0.5rem 1.2rem; background: #e9ecef; color: #495057; border-radius: 20px; font-size: 0.95rem;">
+                                    {{ subject.name }}
+                                </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if journal.usps %}
+                        <div style="margin-bottom: 3rem;">
+                            <h3 style="color: #1a1a2e; font-size: 1.5rem; margin-bottom: 1rem;">
+                                Key Features
+                            </h3>
+                            <div style="color: #555; line-height: 1.8; font-size: 1.05rem;">
+                                {{ journal.usps|linebreaks }}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if journal.archiving_services %}
+                        <div style="margin-bottom: 3rem;">
+                            <h3 style="color: #1a1a2e; font-size: 1.5rem; margin-bottom: 1rem;">
+                                Archiving Services
+                            </h3>
+                            <div style="color: #555; line-height: 1.8; font-size: 1.05rem;">
+                                {{ journal.archiving_services|linebreaks }}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                    </div>
+
+                    <!-- Right Column - Metadata -->
+                    <div>
+                        <div style="background: #f8f9fa; padding: 2rem; border-radius: 12px; position: sticky; top: 2rem;">
+                            <h3 style="color: #1a1a2e; font-size: 1.3rem; margin-bottom: 1.5rem; text-align: center;">
+                                Journal Information
+                            </h3>
+
+                            <div style="display: grid; gap: 1.5rem;">
+
+                                {% if journal.issn %}
+                                <div>
+                                    <div style="color: #666; font-size: 0.85rem; margin-bottom: 0.3rem; font-weight: 600;">
+                                        ISSN
+                                    </div>
+                                    <div style="color: #1a1a2e; font-size: 1rem;">
+                                        {{ journal.issn }}
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                <div>
+                                    <div style="color: #666; font-size: 0.85rem; margin-bottom: 0.3rem; font-weight: 600;">
+                                        Publisher
+                                    </div>
+                                    <div style="color: #1a1a2e; font-size: 1rem;">
+                                        {{ journal.publisher.name }}
+                                    </div>
+                                </div>
+
+                                {% if journal.journal_owner %}
+                                <div>
+                                    <div style="color: #666; font-size: 0.85rem; margin-bottom: 0.3rem; font-weight: 600;">
+                                        Owner
+                                    </div>
+                                    <div style="color: #1a1a2e; font-size: 1rem;">
+                                        {{ journal.journal_owner }}
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if journal.year_established %}
+                                <div>
+                                    <div style="color: #666; font-size: 0.85rem; margin-bottom: 0.3rem; font-weight: 600;">
+                                        Year Established
+                                    </div>
+                                    <div style="color: #1a1a2e; font-size: 1rem;">
+                                        {{ journal.year_established }}
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if journal.languages.all %}
+                                <div>
+                                    <div style="color: #666; font-size: 0.85rem; margin-bottom: 0.3rem; font-weight: 600;">
+                                        Languages
+                                    </div>
+                                    <div style="color: #1a1a2e; font-size: 1rem;">
+                                        {{ journal.languages.all|join:", " }}
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if journal.archive_years %}
+                                <div>
+                                    <div style="color: #666; font-size: 0.85rem; margin-bottom: 0.3rem; font-weight: 600;">
+                                        Archive Coverage
+                                    </div>
+                                    <div style="color: #1a1a2e; font-size: 1rem;">
+                                        {{ journal.archive_years }} years
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if journal.normalized_articles %}
+                                <div>
+                                    <div style="color: #666; font-size: 0.85rem; margin-bottom: 0.3rem; font-weight: 600;">
+                                        Articles (Normalized)
+                                    </div>
+                                    <div style="color: #1a1a2e; font-size: 1rem;">
+                                        {{ journal.normalized_articles|floatformat:1 }}
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if journal.package_band %}
+                                <div>
+                                    <div style="color: #666; font-size: 0.85rem; margin-bottom: 0.3rem; font-weight: 600;">
+                                        Package Band
+                                    </div>
+                                    <div style="color: #1a1a2e; font-size: 1rem;">
+                                        {{ journal.package_band.code }} - {{ journal.package_band.name }}
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                            </div>
+
+                            {% if journal.journal_url or journal.publisher_url %}
+                            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #ddd;">
+                                <div style="display: grid; gap: 0.8rem;">
+                                    {% if journal.journal_url %}
+                                    <a href="{{ journal.journal_url }}" target="_blank"
+                                       style="padding: 0.7rem 1rem; background: #1a1a2e; color: white; text-decoration: none; border-radius: 8px; text-align: center; font-weight: 600; display: block;">
+                                        Visit Journal
+                                    </a>
+                                    {% endif %}
+
+                                    {% if journal.publisher_url %}
+                                    <a href="{{ journal.publisher_url }}" target="_blank"
+                                       style="padding: 0.7rem 1rem; background: white; color: #1a1a2e; border: 2px solid #1a1a2e; text-decoration: none; border-radius: 8px; text-align: center; font-weight: 600; display: block;">
+                                        Publisher Site
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Related Journals -->
+                {% if related_journals %}
+                <div style="margin-top: 4rem;">
+                    <h3 style="color: #1a1a2e; font-size: 1.8rem; margin-bottom: 1.5rem; border-bottom: 3px solid #1a1a2e; padding-bottom: 0.5rem;">
+                        Related Journals
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+                        {% for related in related_journals %}
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 12px; transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;"
+                             onclick="window.location.href='{% url 'journals:public_detail' related.pk %}'"
+                             onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'"
+                             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+
+                            <h4 style="color: #1a1a2e; font-size: 1.1rem; margin-bottom: 0.5rem; line-height: 1.4;">
+                                {{ related.title|truncatewords:10 }}
+                            </h4>
+
+                            <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.8rem;">
+                                {{ related.publisher.name }}
+                            </p>
+
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                {% if related.in_doaj %}
+                                <span style="padding: 0.2rem 0.6rem; background: #28a745; color: white; border-radius: 10px; font-size: 0.75rem; font-weight: 600;">
+                                    DOAJ
+                                </span>
+                                {% endif %}
+
+                                {% if related.in_scopus %}
+                                <span style="padding: 0.2rem 0.6rem; background: #17a2b8; color: white; border-radius: 10px; font-size: 0.75rem; font-weight: 600;">
+                                    Scopus
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+            <div class="col-1"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Responsive styles for smaller screens -->
+<style>
+    @media (max-width: 768px) {
+        section.content-section > .container > .row > .col-10 > div {
+            grid-template-columns: 1fr !important;
+        }
+
+        .content-section h2 {
+            font-size: 2rem !important;
+        }
+
+        .hero-section h2 {
+            font-size: 1.8rem !important;
+        }
+    }
+</style>
+
+{% endblock %}
