@@ -5,16 +5,20 @@
 
 {% block header_title %}<h1 class="site-header-text">Browse Journals</h1>{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/catalogue.css' %}">
+{% endblock %}
+
 {% block content %}
 <!-- Hero Section -->
-<section class="hero-section" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 4rem 0 3rem;">
+<section class="hero-section hero-section--large">
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h2 style="color: white; font-size: 2.5rem; margin-bottom: 1rem; text-align: center;">
+                <h2 class="hero-title" style="text-align: center;">
                     Discover Open Access Journals
                 </h2>
-                <p style="color: rgba(255,255,255,0.8); font-size: 1.2rem; text-align: center; max-width: 800px; margin: 0 auto 2rem;">
+                <p class="hero-description">
                     Search our collection of academic journals committed to open access and community-led publishing
                 </p>
             </div>
@@ -23,51 +27,46 @@
 </section>
 
 <!-- Search Section -->
-<section class="search-section" style="padding: 3rem 0; background: #f8f9fa;">
+<section class="search-section">
     <div class="container">
         <div class="row">
             <div class="col-1"></div>
             <div class="col-10">
                 <form method="get" action="{% url 'journals:public_search' %}" class="search-form">
                     <!-- Main Search Bar -->
-                    <div style="margin-bottom: 2rem;">
-                        <div style="position: relative; max-width: 900px; margin: 0 auto;">
-                            <input type="text"
-                                   name="q"
-                                   value="{{ current_filters.q }}"
-                                   placeholder="Search by journal title, subject, publisher..."
-                                   style="width: 100%; padding: 1.2rem 5rem 1.2rem 1.5rem; font-size: 1.1rem; border: 2px solid #ddd; border-radius: 50px; outline: none; transition: border-color 0.3s;">
-                            <button type="submit"
-                                    style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); padding: 0.8rem 2rem; background: #1a1a2e; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: 600; transition: background 0.3s;">
-                                Search
-                            </button>
-                        </div>
+                    <div class="search-bar-wrapper">
+                        <input type="text"
+                               name="q"
+                               value="{{ current_filters.q }}"
+                               placeholder="Search by journal title, subject, publisher..."
+                               class="search-input">
+                        <button type="submit" class="search-submit">
+                            Search
+                        </button>
                     </div>
 
                     <!-- Filter Toggles -->
-                    <div style="text-align: center; margin-bottom: 2rem;">
+                    <div class="filter-toggles">
                         <button type="button"
                                 onclick="document.getElementById('filters').style.display = document.getElementById('filters').style.display === 'none' ? 'block' : 'none'"
-                                style="padding: 0.7rem 1.5rem; background: white; border: 2px solid #1a1a2e; color: #1a1a2e; border-radius: 25px; cursor: pointer; font-weight: 600; margin: 0.5rem;">
+                                class="filter-toggle-btn">
                             ⚙ Filters
                         </button>
                         {% if current_filters.q or current_filters.subject or current_filters.publisher or current_filters.in_doaj == 'yes' %}
-                        <a href="{% url 'journals:public_search' %}"
-                           style="padding: 0.7rem 1.5rem; background: #dc3545; color: white; border: none; border-radius: 25px; text-decoration: none; display: inline-block; margin: 0.5rem; font-weight: 600;">
+                        <a href="{% url 'journals:public_search' %}" class="btn btn--danger">
                             Clear All
                         </a>
                         {% endif %}
                     </div>
 
                     <!-- Collapsible Filters -->
-                    <div id="filters" style="display: none; background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 2rem;">
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                    <div id="filters" class="filters-panel">
+                        <div class="filters-grid">
 
                             <!-- Subject Filter -->
-                            <div>
-                                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #1a1a2e;">Subject</label>
-                                <select name="subject"
-                                        style="width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
+                            <div class="filter-group">
+                                <label>Subject</label>
+                                <select name="subject" class="filter-select">
                                     <option value="">All Subjects</option>
                                     {% for subject in subjects %}
                                     <option value="{{ subject.id }}"
@@ -79,10 +78,9 @@
                             </div>
 
                             <!-- Publisher Filter -->
-                            <div>
-                                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #1a1a2e;">Publisher</label>
-                                <select name="publisher"
-                                        style="width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
+                            <div class="filter-group">
+                                <label>Publisher</label>
+                                <select name="publisher" class="filter-select">
                                     <option value="">All Publishers</option>
                                     {% for publisher in publishers %}
                                     <option value="{{ publisher.id }}"
@@ -94,20 +92,18 @@
                             </div>
 
                             <!-- DOAJ Filter -->
-                            <div>
-                                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #1a1a2e;">DOAJ Listed</label>
-                                <select name="in_doaj"
-                                        style="width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
+                            <div class="filter-group">
+                                <label>DOAJ Listed</label>
+                                <select name="in_doaj" class="filter-select">
                                     <option value="">All Journals</option>
                                     <option value="yes" {% if current_filters.in_doaj == 'yes' %}selected{% endif %}>DOAJ Listed Only</option>
                                 </select>
                             </div>
 
                             <!-- Language Filter -->
-                            <div>
-                                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #1a1a2e;">Language</label>
-                                <select name="language"
-                                        style="width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
+                            <div class="filter-group">
+                                <label>Language</label>
+                                <select name="language" class="filter-select">
                                     <option value="">All Languages</option>
                                     {% for language in languages %}
                                     <option value="{{ language.id }}"
@@ -120,9 +116,8 @@
 
                         </div>
 
-                        <div style="text-align: center; margin-top: 1.5rem;">
-                            <button type="submit"
-                                    style="padding: 0.8rem 2.5rem; background: #1a1a2e; color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: 600; font-size: 1rem;">
+                        <div class="filter-submit-wrapper">
+                            <button type="submit" class="filter-submit">
                                 Apply Filters
                             </button>
                         </div>
@@ -135,7 +130,7 @@
 </section>
 
 <!-- Results Section -->
-<section class="results-section" style="padding: 3rem 0; background: white;">
+<section class="results-section">
     <div class="container">
         <div class="row">
             <div class="col-1"></div>
@@ -143,56 +138,56 @@
 
                 {% if statistics.total_count > 0 %}
                 <!-- Results Summary -->
-                <div style="margin-bottom: 2rem; padding: 1.5rem; background: #f8f9fa; border-radius: 10px; text-align: center;">
-                    <h3 style="margin: 0; color: #1a1a2e; font-size: 1.3rem;">
+                <div class="results-summary">
+                    <h3 class="results-summary__title">
                         Found <strong>{{ statistics.total_count }}</strong> journal{{ statistics.total_count|pluralize }}
                     </h3>
                     {% if statistics.doaj_count > 0 %}
-                    <p style="margin: 0.5rem 0 0; color: #666;">
+                    <p class="results-summary__subtitle">
                         {{ statistics.doaj_count }} listed in DOAJ
                     </p>
                     {% endif %}
                 </div>
 
                 <!-- Journal Cards -->
-                <div style="display: grid; gap: 1.5rem;">
+                <div class="results-grid">
                     {% for journal in journals %}
-                    <div class="journal-card" style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.5rem; transition: box-shadow 0.3s, transform 0.3s; cursor: pointer;"
+                    <div class="journal-card journal-card--list"
                          onclick="window.location.href='{% url 'journals:public_detail' journal.pk %}'">
 
                         <!-- Header -->
-                        <div style="margin-bottom: 1rem;">
-                            <h3 style="margin: 0 0 0.5rem; color: #1a1a2e; font-size: 1.4rem; font-weight: 600;">
+                        <div>
+                            <h3 class="journal-card__title journal-card__title--large">
                                 {{ journal.title }}
                             </h3>
 
                             <!-- Publisher & Badges -->
-                            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                <span style="color: #666; font-size: 0.95rem;">
+                            <div class="journal-card__meta">
+                                <span class="journal-card__publisher">
                                     {{ journal.publisher.name }}
                                 </span>
 
                                 {% if journal.in_doaj %}
-                                <span style="display: inline-block; padding: 0.2rem 0.6rem; background: #28a745; color: white; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                                <span class="badge badge--doaj badge--small">
                                     DOAJ
                                 </span>
                                 {% endif %}
 
                                 {% if journal.in_scopus %}
-                                <span style="display: inline-block; padding: 0.2rem 0.6rem; background: #17a2b8; color: white; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                                <span class="badge badge--scopus badge--small">
                                     Scopus
                                 </span>
                                 {% endif %}
 
                                 {% if journal.wos_impact_factor %}
-                                <span style="display: inline-block; padding: 0.2rem 0.6rem; background: #6c757d; color: white; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                                <span class="badge badge--if badge--small">
                                     IF: {{ journal.wos_impact_factor }}
                                 </span>
                                 {% endif %}
                             </div>
 
                             {% if journal.issn %}
-                            <div style="color: #999; font-size: 0.85rem;">
+                            <div class="journal-card__issn">
                                 ISSN: {{ journal.issn }}
                             </div>
                             {% endif %}
@@ -200,21 +195,21 @@
 
                         <!-- Description -->
                         {% if journal.description %}
-                        <div style="margin-bottom: 1rem; color: #555; font-size: 0.95rem; line-height: 1.6;">
+                        <div class="journal-card__description">
                             {{ journal.description|truncatewords:40 }}
                         </div>
                         {% endif %}
 
                         <!-- Subjects -->
                         {% if journal.subjects.all %}
-                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                        <div class="journal-card__subjects">
                             {% for subject in journal.subjects.all|slice:":5" %}
-                            <span style="display: inline-block; padding: 0.3rem 0.8rem; background: #e9ecef; color: #495057; border-radius: 15px; font-size: 0.85rem;">
+                            <span class="badge badge--subject-small">
                                 {{ subject.name }}
                             </span>
                             {% endfor %}
                             {% if journal.subjects.count > 5 %}
-                            <span style="display: inline-block; padding: 0.3rem 0.8rem; background: #e9ecef; color: #495057; border-radius: 15px; font-size: 0.85rem;">
+                            <span class="badge badge--subject-small">
                                 +{{ journal.subjects.count|add:"-5" }} more
                             </span>
                             {% endif %}
@@ -222,8 +217,8 @@
                         {% endif %}
 
                         <!-- Footer -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
-                            <div style="color: #666; font-size: 0.9rem;">
+                        <div class="journal-card__footer">
+                            <div class="journal-card__languages">
                                 {% if journal.languages.all %}
                                 <span>
                                     {{ journal.languages.all|join:", " }}
@@ -231,7 +226,7 @@
                                 {% endif %}
                             </div>
                             <div>
-                                <span style="color: #1a1a2e; font-weight: 600; text-decoration: none;">
+                                <span class="journal-card__link">
                                     View Details →
                                 </span>
                             </div>
@@ -242,39 +237,34 @@
 
                 <!-- Pagination -->
                 {% if page_obj.has_other_pages %}
-                <div style="margin-top: 3rem; text-align: center;">
-                    <div style="display: inline-flex; gap: 0.5rem; align-items: center;">
+                <div class="pagination">
+                    <div class="pagination__wrapper">
                         {% if page_obj.has_previous %}
-                        <a href="?page=1&{{ query_string }}"
-                           style="padding: 0.5rem 1rem; background: white; border: 1px solid #ddd; border-radius: 8px; text-decoration: none; color: #1a1a2e;">
+                        <a href="?page=1&{{ query_string }}" class="pagination__link">
                             ««
                         </a>
-                        <a href="?page={{ page_obj.previous_page_number }}&{{ query_string }}"
-                           style="padding: 0.5rem 1rem; background: white; border: 1px solid #ddd; border-radius: 8px; text-decoration: none; color: #1a1a2e;">
+                        <a href="?page={{ page_obj.previous_page_number }}&{{ query_string }}" class="pagination__link">
                             ‹
                         </a>
                         {% endif %}
 
                         {% for num in page_obj.paginator.page_range %}
                         {% if page_obj.number == num %}
-                        <span style="padding: 0.5rem 1rem; background: #1a1a2e; color: white; border-radius: 8px; font-weight: 600;">
+                        <span class="pagination__current">
                             {{ num }}
                         </span>
                         {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                        <a href="?page={{ num }}&{{ query_string }}"
-                           style="padding: 0.5rem 1rem; background: white; border: 1px solid #ddd; border-radius: 8px; text-decoration: none; color: #1a1a2e;">
+                        <a href="?page={{ num }}&{{ query_string }}" class="pagination__link">
                             {{ num }}
                         </a>
                         {% endif %}
                         {% endfor %}
 
                         {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}&{{ query_string }}"
-                           style="padding: 0.5rem 1rem; background: white; border: 1px solid #ddd; border-radius: 8px; text-decoration: none; color: #1a1a2e;">
+                        <a href="?page={{ page_obj.next_page_number }}&{{ query_string }}" class="pagination__link">
                             ›
                         </a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}&{{ query_string }}"
-                           style="padding: 0.5rem 1rem; background: white; border: 1px solid #ddd; border-radius: 8px; text-decoration: none; color: #1a1a2e;">
+                        <a href="?page={{ page_obj.paginator.num_pages }}&{{ query_string }}" class="pagination__link">
                             »»
                         </a>
                         {% endif %}
@@ -284,15 +274,14 @@
 
                 {% else %}
                 <!-- No Results -->
-                <div style="text-align: center; padding: 4rem 2rem; background: #f8f9fa; border-radius: 15px;">
-                    <h3 style="color: #1a1a2e; font-size: 1.8rem; margin-bottom: 1rem;">
+                <div class="no-results">
+                    <h3 class="no-results__title">
                         No journals found
                     </h3>
-                    <p style="color: #666; font-size: 1.1rem; margin-bottom: 1.5rem;">
+                    <p class="no-results__text">
                         Try adjusting your search criteria or filters
                     </p>
-                    <a href="{% url 'journals:public_search' %}"
-                       style="padding: 0.8rem 2rem; background: #1a1a2e; color: white; text-decoration: none; border-radius: 25px; display: inline-block; font-weight: 600;">
+                    <a href="{% url 'journals:public_search' %}" class="btn btn--dark">
                         Clear All Filters
                     </a>
                 </div>
@@ -303,13 +292,6 @@
         </div>
     </div>
 </section>
-
-<style>
-    .journal-card:hover {
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        transform: translateY(-2px);
-    }
-</style>
 
 {% endblock %}
 
