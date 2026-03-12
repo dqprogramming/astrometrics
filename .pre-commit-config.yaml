@@ -10,7 +10,7 @@ repos:
     hooks:
       - id: tests
         name: run tests
-        entry: uv run python manage.py test --no-input
+        entry: uv run python manage.py test --settings=astrometrics.test_settings --no-input
         language: system
         pass_filenames: false
         always_run: true

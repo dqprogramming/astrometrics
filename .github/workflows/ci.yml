@@ -36,6 +36,6 @@ jobs:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v6
       - run: uv sync
-      - run: uv run python manage.py test --no-input
+      - run: uv run python manage.py test --settings=astrometrics.test_settings --no-input
         env:
           DATABASE_URL: postgres://astrometrics:astrometrics@localhost:5432/astrometrics
