@@ -1,0 +1,37 @@
+[project]
+name = "astrometrics"
+version = "1.0.0"
+description = "Astrometrics Django application for OJC"
+readme = "README.MD"
+requires-python = ">=3.12"
+dependencies = [
+    "django>=4.2,<5.0",
+    "psycopg2-binary>=2.9.0",
+    "django-redis>=5.3.0",
+]
+
+[tool.commitizen]
+version = "1.0.0"
+version_files = [
+    "__version__.py",
+    "pyproject.toml:version",
+]
+update_changelog_on_bump = true
+
+[tool.ruff]
+line-length = 79
+extend-exclude = ["*/migrations/*"]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "W",
+    "I",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.5.1",
+    "ruff>=0.15.5",
+]

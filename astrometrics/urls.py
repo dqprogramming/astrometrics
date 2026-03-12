@@ -1,16 +1,16 @@
 from django.contrib import admin
 from django.urls import (
-    path,
     include,
+    path,
 )
 
 urlpatterns = [
     path(
-        'admin/',
+        "admin/",
         admin.site.urls,
     ),
     path(
-        '',
-        include('journals.urls'),
+        "",
+        include("journals.urls"),
     ),
 ]
