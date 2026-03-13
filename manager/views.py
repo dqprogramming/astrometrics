@@ -13,6 +13,8 @@ from journals.models import (
     Subject,
 )
 
+# ruff: noqa: E501
+
 
 class StaffRequiredMixin(UserPassesTestMixin):
     login_url = "/admin/login/"
