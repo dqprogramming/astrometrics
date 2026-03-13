@@ -5,6 +5,8 @@ FROM python AS python-run-stage
 
 ARG BUILD_ENVIRONMENT=local
 ARG APP_HOME=/app
+ARG UID=1000
+ARG GID=1000
 
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -24,6 +26,10 @@ COPY ./start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 
+# create a non-root user matching the host UID/GID
+RUN groupadd -g ${GID} appuser && \
+    useradd -u ${UID} -g ${GID} -m appuser
+
 WORKDIR ${APP_HOME}
 
 EXPOSE 443
@@ -35,6 +41,11 @@ RUN uv pip install --system -r pyproject.toml && \
 
 # copy application code to WORKDIR
 COPY . ${APP_HOME}
+
+RUN mkdir -p ${APP_HOME}/.venv && \
+    chown -R appuser:appuser ${APP_HOME}
+
+USER appuser
 
 ENTRYPOINT ["/entrypoint"]
 CMD ["/start"]
