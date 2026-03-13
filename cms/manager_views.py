@@ -7,6 +7,8 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from .forms import PageForm, PostForm, SnippetForm
 from .models import Page, Post, Snippet
 
+# ruff: noqa: E501
+
 
 class StaffRequiredMixin(UserPassesTestMixin):
     login_url = "/admin/login/"
