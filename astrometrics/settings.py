@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
+import structlog
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -45,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.postgres",
     # Third-party
     "django_extensions",
+    "django_structlog",
     # Project apps
     "journals",
     "cms",
@@ -53,6 +56,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "django_structlog.middlewares.RequestMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -160,3 +164,73 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 PAGINATE_BY = 25
+
+# Logging configuration
+
+_common_processors = [
+    structlog.contextvars.merge_contextvars,
+    structlog.stdlib.add_logger_name,
+    structlog.stdlib.add_log_level,
+    structlog.stdlib.PositionalArgumentsFormatter(),
+    structlog.processors.TimeStamper(fmt="iso"),
+    structlog.processors.StackInfoRenderer(),
+    structlog.processors.UnicodeDecoder(),
+]
+
+_renderer = (
+    structlog.dev.ConsoleRenderer()
+    if DEBUG
+    else structlog.processors.JSONRenderer()
+)
+
+structlog.configure(
+    processors=[
+        structlog.stdlib.filter_by_level,
+        *_common_processors,
+        structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
+    ],
+    logger_factory=structlog.stdlib.LoggerFactory(),
+    wrapper_class=structlog.stdlib.BoundLogger,
+    cache_logger_on_first_use=True,
+)
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "structured": {
+            "()": structlog.stdlib.ProcessorFormatter,
+            "processors": [
+                structlog.stdlib.ProcessorFormatter.remove_processors_meta,
+                _renderer,
+            ],
+            "foreign_pre_chain": _common_processors,
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "structured",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG" if DEBUG else "INFO",
+    },
+    "loggers": {
+        "django": {
+            "level": "INFO",
+        },
+        "django.server": {
+            "level": "WARNING",
+        },
+        "django_structlog": {
+            "level": "INFO",
+        },
+        "werkzeug": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
