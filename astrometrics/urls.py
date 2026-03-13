@@ -10,7 +10,11 @@ urlpatterns = [
         admin.site.urls,
     ),
     path(
-        "",
+        "catalogue/",
         include("journals.urls"),
+    ),
+    path(
+        "",
+        include("cms.urls"),
     ),
 ]
