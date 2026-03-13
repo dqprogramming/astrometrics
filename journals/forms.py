@@ -1,6 +1,13 @@
 from django import forms
 
-from .models import ArchivingService, Journal, Language, PackageBand, Publisher, Subject
+from .models import (
+    ArchivingService,
+    Journal,
+    Language,
+    PackageBand,
+    Publisher,
+    Subject,
+)
 
 
 class ArchivingServiceForm(forms.ModelForm):
@@ -8,7 +15,12 @@ class ArchivingServiceForm(forms.ModelForm):
         model = ArchivingService
         fields = ["name"]
         widgets = {
-            "name": forms.TextInput(attrs={"class": "mgr-input", "placeholder": "e.g. CLOCKSS, Portico"}),
+            "name": forms.TextInput(
+                attrs={
+                    "class": "mgr-input",
+                    "placeholder": "e.g. CLOCKSS, Portico",
+                }
+            ),
         }
 
 
@@ -37,7 +49,9 @@ class LanguageForm(forms.ModelForm):
         fields = ["name", "code"]
         widgets = {
             "name": forms.TextInput(attrs={"class": "mgr-input"}),
-            "code": forms.TextInput(attrs={"class": "mgr-input", "placeholder": "e.g. en, fr, de"}),
+            "code": forms.TextInput(
+                attrs={"class": "mgr-input", "placeholder": "e.g. en, fr, de"}
+            ),
         }
 
 
@@ -46,7 +60,9 @@ class PackageBandForm(forms.ModelForm):
         model = PackageBand
         fields = ["code", "name"]
         widgets = {
-            "code": forms.TextInput(attrs={"class": "mgr-input", "placeholder": "e.g. C1"}),
+            "code": forms.TextInput(
+                attrs={"class": "mgr-input", "placeholder": "e.g. C1"}
+            ),
             "name": forms.TextInput(attrs={"class": "mgr-input"}),
         }
 
@@ -55,14 +71,23 @@ class JournalForm(forms.ModelForm):
     class Meta:
         model = Journal
         fields = [
-            "title", "year_established", "issn",
-            "publisher", "journal_owner", "package_band",
-            "journal_url", "publisher_url",
+            "title",
+            "year_established",
+            "issn",
+            "publisher",
+            "journal_owner",
+            "package_band",
+            "journal_url",
+            "publisher_url",
             "description",
-            "cost_gbp", "normalized_articles",
-            "in_doaj", "in_scopus", "wos_impact_factor",
+            "cost_gbp",
+            "normalized_articles",
+            "in_doaj",
+            "in_scopus",
+            "wos_impact_factor",
             "licensing",
-            "archive_available_diamond_oa", "archive_years",
+            "archive_available_diamond_oa",
+            "archive_years",
             "usps",
         ]
         widgets = {
@@ -74,12 +99,22 @@ class JournalForm(forms.ModelForm):
             "package_band": forms.Select(attrs={"class": "mgr-select"}),
             "journal_url": forms.URLInput(attrs={"class": "mgr-input"}),
             "publisher_url": forms.URLInput(attrs={"class": "mgr-input"}),
-            "description": forms.Textarea(attrs={"class": "mgr-textarea", "rows": 5}),
-            "cost_gbp": forms.NumberInput(attrs={"class": "mgr-input", "step": "0.01"}),
-            "normalized_articles": forms.NumberInput(attrs={"class": "mgr-input", "step": "0.01"}),
-            "wos_impact_factor": forms.NumberInput(attrs={"class": "mgr-input", "step": "0.01"}),
+            "description": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 5}
+            ),
+            "cost_gbp": forms.NumberInput(
+                attrs={"class": "mgr-input", "step": "0.01"}
+            ),
+            "normalized_articles": forms.NumberInput(
+                attrs={"class": "mgr-input", "step": "0.01"}
+            ),
+            "wos_impact_factor": forms.NumberInput(
+                attrs={"class": "mgr-input", "step": "0.01"}
+            ),
             "licensing": forms.Select(attrs={"class": "mgr-select"}),
-            "archive_available_diamond_oa": forms.Textarea(attrs={"class": "mgr-textarea", "rows": 3}),
+            "archive_available_diamond_oa": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 3}
+            ),
             "archive_years": forms.NumberInput(attrs={"class": "mgr-input"}),
             "usps": forms.Textarea(attrs={"class": "mgr-textarea", "rows": 3}),
         }

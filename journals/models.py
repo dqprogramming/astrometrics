@@ -1,5 +1,3 @@
-import uuid
-
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -137,13 +135,6 @@ class Journal(models.Model):
         ("CC BY-ND", "CC BY-ND"),
     ]
 
-    uuid = models.UUIDField(
-        default=uuid.uuid4,
-        unique=True,
-        editable=False,
-        help_text="Stable public identifier",
-    )
-
     # Basic Information
     title = models.CharField(
         max_length=500, unique=True, help_text="Full journal title"
@@ -276,13 +267,6 @@ class Journal(models.Model):
         related_name="journals",
         blank=True,
         help_text="Archiving services (CLOCKSS, LOCKSS, PKP PN, etc.)",
-    )
-
-    cover = models.ImageField(
-        upload_to="journal_covers/",
-        null=True,
-        blank=True,
-        help_text="Journal cover image",
     )
 
     # Metadata

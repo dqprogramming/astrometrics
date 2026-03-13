@@ -34,7 +34,7 @@ def populate_m2m(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("journals", "0005_journal_uuid_cover"),
+        ("journals", "0004_remove_journal_journal_title_trgm_idx_and_more"),
     ]
 
     operations = [

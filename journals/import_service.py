@@ -12,7 +12,15 @@ from django.db import transaction
 from django.http import StreamingHttpResponse
 from django.utils import timezone
 
-from .models import ArchivingService, ImportLog, Journal, Language, PackageBand, Publisher, Subject
+from .models import (
+    ArchivingService,
+    ImportLog,
+    Journal,
+    Language,
+    PackageBand,
+    Publisher,
+    Subject,
+)
 
 # Column headers used by both export and import — order must stay in sync.
 CSV_HEADERS = [
@@ -46,9 +54,11 @@ def export_journals_csv(queryset=None):
     queryset) as a CSV using the exact same column format as the import.
     """
     if queryset is None:
-        queryset = Journal.objects.select_related(
-            "publisher", "package_band"
-        ).prefetch_related("languages", "subjects", "archiving_services").order_by("title")
+        queryset = (
+            Journal.objects.select_related("publisher", "package_band")
+            .prefetch_related("languages", "subjects", "archiving_services")
+            .order_by("title")
+        )
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"journals_export_{timestamp}.csv"
@@ -75,31 +85,45 @@ def _csv_rows(queryset):
         band = journal.package_band
         band_value = ""
         if band:
-            band_value = f"{band.code} - {band.name}" if band.name != band.code else band.code
+            band_value = (
+                f"{band.code} - {band.name}"
+                if band.name != band.code
+                else band.code
+            )
 
-        writer.writerow([
-            journal.title,
-            journal.publisher.name if journal.publisher else "",
-            journal.publisher_url or "",
-            journal.year_established or "",
-            band_value,
-            journal.cost_gbp if journal.cost_gbp is not None else "",
-            journal.normalized_articles if journal.normalized_articles is not None else "",
-            journal.journal_url or "",
-            journal.issn or "",
-            journal.description or "",
-            journal.journal_owner or "",
-            "Y" if journal.in_doaj else "N",
-            "Y" if journal.in_scopus else "N",
-            journal.wos_impact_factor if journal.wos_impact_factor is not None else "",
-            journal.archive_available_diamond_oa or "",
-            journal.archive_years if journal.archive_years is not None else "",
-            journal.usps or "",
-            journal.licensing or "",
-            ", ".join(svc.name for svc in journal.archiving_services.all()),
-            ", ".join(lang.name for lang in journal.languages.all()),
-            ", ".join(subj.name for subj in journal.subjects.all()),
-        ])
+        writer.writerow(
+            [
+                journal.title,
+                journal.publisher.name if journal.publisher else "",
+                journal.publisher_url or "",
+                journal.year_established or "",
+                band_value,
+                journal.cost_gbp if journal.cost_gbp is not None else "",
+                journal.normalized_articles
+                if journal.normalized_articles is not None
+                else "",
+                journal.journal_url or "",
+                journal.issn or "",
+                journal.description or "",
+                journal.journal_owner or "",
+                "Y" if journal.in_doaj else "N",
+                "Y" if journal.in_scopus else "N",
+                journal.wos_impact_factor
+                if journal.wos_impact_factor is not None
+                else "",
+                journal.archive_available_diamond_oa or "",
+                journal.archive_years
+                if journal.archive_years is not None
+                else "",
+                journal.usps or "",
+                journal.licensing or "",
+                ", ".join(
+                    svc.name for svc in journal.archiving_services.all()
+                ),
+                ", ".join(lang.name for lang in journal.languages.all()),
+                ", ".join(subj.name for subj in journal.subjects.all()),
+            ]
+        )
         yield buf.getvalue()
 
 
@@ -145,6 +169,7 @@ def import_csv(file_obj, filename, update_existing=False):
 
 # ── Row processing ─────────────────────────────────────────────────────────────
 
+
 def _process_row(row, update_existing, import_log):
     import_log.records_processed += 1
 
@@ -163,7 +188,9 @@ def _process_row(row, update_existing, import_log):
 
     defaults = _get_journal_defaults(row, publisher)
 
-    journal, created = Journal.objects.get_or_create(title=title, defaults=defaults)
+    journal, created = Journal.objects.get_or_create(
+        title=title, defaults=defaults
+    )
 
     if created:
         import_log.records_created += 1
@@ -187,7 +214,9 @@ def _get_journal_defaults(row, publisher):
         "year_established": row.get("Year Est. / Original zombie", "").strip(),
         "package_band": _get_or_create_package_band(package_band_value),
         "cost_gbp": _parse_decimal(row.get("Cost (££)", "")),
-        "normalized_articles": _parse_decimal(row.get("Normalised no of articles", "")),
+        "normalized_articles": _parse_decimal(
+            row.get("Normalised no of articles", "")
+        ),
         "journal_url": row.get("Link to Journal", "").strip(),
         "publisher_url": row.get("Link to publisher website", "").strip(),
         "issn": row.get("ISSN", "").strip(),
@@ -196,8 +225,12 @@ def _get_journal_defaults(row, publisher):
         "in_doaj": _parse_boolean(row.get("Already in DOAJ? Y/N", "")),
         "in_scopus": _parse_boolean(row.get("Scopus", "")),
         "wos_impact_factor": _parse_decimal(row.get("WOS impact factor", "")),
-        "archive_available_diamond_oa": row.get("Archive available diamond OA? (Y/N, notes)", "").strip(),
-        "archive_years": _parse_integer(row.get("No. of years of archive", "")),
+        "archive_available_diamond_oa": row.get(
+            "Archive available diamond OA? (Y/N, notes)", ""
+        ).strip(),
+        "archive_years": _parse_integer(
+            row.get("No. of years of archive", "")
+        ),
         "usps": row.get("Any USPs to note? ", "").strip(),
         "licensing": _parse_license(row.get("Licencing", "")),
     }
@@ -210,12 +243,19 @@ def _get_or_create_package_band(raw_value):
     code_match = re.search(r"\bC\d+\b", text, flags=re.IGNORECASE)
     code = code_match.group(0).upper() if code_match else None
     if code:
-        remainder = re.sub(rf"\b{re.escape(code)}\b[:\-\u2013]?\s*", "", text, flags=re.IGNORECASE).strip()
+        remainder = re.sub(
+            rf"\b{re.escape(code)}\b[:\-\u2013]?\s*",
+            "",
+            text,
+            flags=re.IGNORECASE,
+        ).strip()
         name = remainder or code
     else:
         code = text.upper()[:10]
         name = text
-    band, _ = PackageBand.objects.get_or_create(code=code, defaults={"name": name})
+    band, _ = PackageBand.objects.get_or_create(
+        code=code, defaults={"name": name}
+    )
     if name and band.name != name:
         band.name = name
         band.save(update_fields=["name"])
@@ -235,7 +275,11 @@ def _process_subjects(journal, subjects_str):
 
 
 def _process_archiving_services(journal, services_str):
-    for name in [s.strip() for s in re.split(r"[\n,]+", services_str) if s.strip() and s.strip().lower() != "n/a"]:
+    for name in [
+        s.strip()
+        for s in re.split(r"[\n,]+", services_str)
+        if s.strip() and s.strip().lower() != "n/a"
+    ]:
         svc, _ = ArchivingService.objects.get_or_create(name=name)
         journal.archiving_services.add(svc)
 
@@ -263,6 +307,13 @@ def _parse_boolean(value):
 
 
 def _parse_license(value):
-    valid = {"CC BY", "CC BY-NC", "CC BY-NC-SA", "CC BY-NC-ND", "CC BY-SA", "CC BY-ND"}
+    valid = {
+        "CC BY",
+        "CC BY-NC",
+        "CC BY-NC-SA",
+        "CC BY-NC-ND",
+        "CC BY-SA",
+        "CC BY-ND",
+    }
     v = value.strip() if value else ""
     return v if v in valid else v

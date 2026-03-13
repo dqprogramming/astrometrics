@@ -17,6 +17,7 @@ class StaffRequiredMixin(UserPassesTestMixin):
 
 # ── Pages ─────────────────────────────────────────────────────────────────────
 
+
 class PageListView(StaffRequiredMixin, ListView):
     model = Page
     template_name = "cms/manager/page_list.html"
@@ -32,7 +33,11 @@ class PageListView(StaffRequiredMixin, ListView):
 
     def get(self, request, *args, **kwargs):
         if request.headers.get("HX-Request"):
-            return render(request, "cms/manager/page_table.html", {"pages": self.get_queryset()})
+            return render(
+                request,
+                "cms/manager/page_table.html",
+                {"pages": self.get_queryset()},
+            )
         return super().get(request, *args, **kwargs)
 
 
@@ -48,7 +53,9 @@ class PageCreateView(StaffRequiredMixin, CreateView):
         return ctx
 
     def form_valid(self, form):
-        messages.success(self.request, f'Page "{form.instance.title}" created.')
+        messages.success(
+            self.request, f'Page "{form.instance.title}" created.'
+        )
         return super().form_valid(form)
 
 
@@ -64,7 +71,9 @@ class PageUpdateView(StaffRequiredMixin, UpdateView):
         return ctx
 
     def form_valid(self, form):
-        messages.success(self.request, f'Page "{form.instance.title}" updated.')
+        messages.success(
+            self.request, f'Page "{form.instance.title}" updated.'
+        )
         return super().form_valid(form)
 
 
@@ -86,6 +95,7 @@ class PageDeleteView(StaffRequiredMixin, DeleteView):
 
 # ── Posts ─────────────────────────────────────────────────────────────────────
 
+
 class PostListView(StaffRequiredMixin, ListView):
     model = Post
     template_name = "cms/manager/post_list.html"
@@ -101,7 +111,11 @@ class PostListView(StaffRequiredMixin, ListView):
 
     def get(self, request, *args, **kwargs):
         if request.headers.get("HX-Request"):
-            return render(request, "cms/manager/post_table.html", {"posts": self.get_queryset()})
+            return render(
+                request,
+                "cms/manager/post_table.html",
+                {"posts": self.get_queryset()},
+            )
         return super().get(request, *args, **kwargs)
 
 
@@ -117,7 +131,9 @@ class PostCreateView(StaffRequiredMixin, CreateView):
         return ctx
 
     def form_valid(self, form):
-        messages.success(self.request, f'Post "{form.instance.title}" created.')
+        messages.success(
+            self.request, f'Post "{form.instance.title}" created.'
+        )
         return super().form_valid(form)
 
 
@@ -133,7 +149,9 @@ class PostUpdateView(StaffRequiredMixin, UpdateView):
         return ctx
 
     def form_valid(self, form):
-        messages.success(self.request, f'Post "{form.instance.title}" updated.')
+        messages.success(
+            self.request, f'Post "{form.instance.title}" updated.'
+        )
         return super().form_valid(form)
 
 
@@ -155,6 +173,7 @@ class PostDeleteView(StaffRequiredMixin, DeleteView):
 
 # ── Snippets ──────────────────────────────────────────────────────────────────
 
+
 class SnippetListView(StaffRequiredMixin, ListView):
     model = Snippet
     template_name = "cms/manager/snippet_list.html"
@@ -170,7 +189,11 @@ class SnippetListView(StaffRequiredMixin, ListView):
 
     def get(self, request, *args, **kwargs):
         if request.headers.get("HX-Request"):
-            return render(request, "cms/manager/snippet_table.html", {"snippets": self.get_queryset()})
+            return render(
+                request,
+                "cms/manager/snippet_table.html",
+                {"snippets": self.get_queryset()},
+            )
         return super().get(request, *args, **kwargs)
 
 
@@ -186,7 +209,9 @@ class SnippetCreateView(StaffRequiredMixin, CreateView):
         return ctx
 
     def form_valid(self, form):
-        messages.success(self.request, f'Snippet "{form.instance.name}" created.')
+        messages.success(
+            self.request, f'Snippet "{form.instance.name}" created.'
+        )
         return super().form_valid(form)
 
 
@@ -202,7 +227,9 @@ class SnippetUpdateView(StaffRequiredMixin, UpdateView):
         return ctx
 
     def form_valid(self, form):
-        messages.success(self.request, f'Snippet "{form.instance.name}" updated.')
+        messages.success(
+            self.request, f'Snippet "{form.instance.name}" updated.'
+        )
         return super().form_valid(form)
 
 
@@ -218,5 +245,7 @@ class SnippetDeleteView(StaffRequiredMixin, DeleteView):
         return ctx
 
     def form_valid(self, form):
-        messages.success(self.request, f'Snippet "{self.object.name}" deleted.')
+        messages.success(
+            self.request, f'Snippet "{self.object.name}" deleted.'
+        )
         return super().form_valid(form)

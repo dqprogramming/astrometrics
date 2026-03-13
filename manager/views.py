@@ -4,7 +4,14 @@ from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 
 from cms.models import Page, Post, Snippet
-from journals.models import ArchivingService, Journal, Language, PackageBand, Publisher, Subject
+from journals.models import (
+    ArchivingService,
+    Journal,
+    Language,
+    PackageBand,
+    Publisher,
+    Subject,
+)
 
 
 class StaffRequiredMixin(UserPassesTestMixin):
@@ -117,24 +124,37 @@ class DashboardView(StaffRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        q   = self.request.GET.get("q", "").lower().strip()
+        q = self.request.GET.get("q", "").lower().strip()
         tag = self.request.GET.get("tag", "all")
 
         counts = _counts()
         cards = []
         for card in _ALL_CARDS:
-            match_tag  = tag == "all" or tag in card["tags"]
-            match_text = not q or q in card["title"].lower() or q in card["description"].lower()
+            match_tag = tag == "all" or tag in card["tags"]
+            match_text = (
+                not q
+                or q in card["title"].lower()
+                or q in card["description"].lower()
+            )
             if match_tag and match_text:
                 cards.append({**card, "count": counts.get(card["title"])})
 
         ctx["cards"] = cards
-        ctx["q"]     = q
-        ctx["tag"]   = tag
-        ctx["tags"]  = [("all", "All"), ("content", "Content"), ("catalogue", "Catalogue"), ("data", "Data")]
+        ctx["q"] = q
+        ctx["tag"] = tag
+        ctx["tags"] = [
+            ("all", "All"),
+            ("content", "Content"),
+            ("catalogue", "Catalogue"),
+            ("data", "Data"),
+        ]
         return ctx
 
     def get(self, request, *args, **kwargs):
         if request.headers.get("HX-Request"):
-            return render(request, "manager/dashboard_cards.html", self.get_context_data())
+            return render(
+                request,
+                "manager/dashboard_cards.html",
+                self.get_context_data(),
+            )
         return super().get(request, *args, **kwargs)
