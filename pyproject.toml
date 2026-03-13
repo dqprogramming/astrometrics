@@ -1,6 +1,6 @@
 [project]
 name = "astrometrics"
-version = "1.1.0"
+version = "1.1.1"
 description = "Astrometrics Django application for OJC"
 readme = "README.MD"
 requires-python = ">=3.12"
@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [tool.commitizen]
-version = "1.1.0"
+version = "1.1.1"
 version_files = [
     "__version__.py",
     "pyproject.toml:version",
