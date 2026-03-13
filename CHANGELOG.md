@@ -1,3 +1,13 @@
+## 1.3.0 (2026-03-13)
+
+### Feat
+
+- **merge**: merge from main
+
+### Fix
+
+- removes migration that was not needed on this branch. Ruff formatting.
+
 ## 1.2.0 (2026-03-13)
 
 ### Feat
