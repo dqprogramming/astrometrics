@@ -32,6 +32,7 @@ select = [
     "W",
     "I",
 ]
+ignore = ["E501"]
 
 [dependency-groups]
 dev = [
