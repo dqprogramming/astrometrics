@@ -1,3 +1,9 @@
+## 1.3.1 (2026-03-13)
+
+### Fix
+
+- **docker**: run as non-root user and fix .venv permissions
+
 ## 1.3.0 (2026-03-13)
 
 ### Feat
