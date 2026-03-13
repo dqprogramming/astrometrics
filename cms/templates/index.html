@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Journals Collective</title>
+
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
+
+    <!-- app styles -->
+    <link rel="stylesheet" href="/static/css/app.css">
+    <link rel="stylesheet" href="/static/css/font.css">
+
+    <!-- normalize -->
+    <link rel="stylesheet" href="/static/css/normalize.min.css">
+
+    <!-- Google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
+          rel="stylesheet">
+
+    <!-- Glide/carousel -->
+    <!-- Required Core Stylesheet -->
+    <link rel="stylesheet" href="/static/css/glide.core.min.css">
+    <!-- Optional Theme Stylesheet -->
+    <link rel="stylesheet" href="/static/css/glide.theme.min.css">
+    <script src="/static/js/glide.min.js"></script>
+    <script src="/static/js/nav.js"></script>
+    <script src="/static/js/a11y.js"></script>
+
+    <!-- htmx -->
+    <script src="/static/js/htmx-1.9.12.min.js"></script>
+</head>
+<body>
+<!-- Header -->
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="logo col-2">
+                <img src="/static/img/OJC-logo.svg" class="mini-logo"
+                     alt="Open Journal Collection logo">
+            </div>
+            <div class="logo-text col-8 spectral-bold">
+                <h1 class="site-header-text">Open Journals Collective</h1>
+            </div>
+            <div
+                    class="menu-icon col-1"
+                    id="menu-toggle"
+                    role="button"
+                    tabindex="0"
+                    aria-label="Toggle menu"
+            >
+                ≡
+            </div>
+
+        </div>
+    </div>
+</header>
+
+<!-- Fullscreen Navigation -->
+<div class="fullscreen-nav" id="fullscreen-nav">
+    <div class="container">
+        <div class="row">
+            <div class="col-2">
+                <img src="/static/img/ojc-nav-logo.svg" class="mini-logo"
+                     alt="Open Journal Collection logo">
+            </div>
+            <div class="logo-text col-8 spectral-bold">
+                <span class="site-header-text">
+                    Open Journals Collective
+                </span>
+            </div>
+            <div class="close-icon col-1" id="close-nav">×</div>
+        </div>
+        <div class="nav-content">
+            <div class="nav-links">
+                <a href="/#who-we-are" class="nav-link">Who we are.</a>
+                <a href="/#how-it-works" class="nav-link">How it works.</a>
+                <a href="/#publishers" class="nav-link">Publishers onboard.</a>
+                <a href="/#contact" class="nav-link">Contact.</a>
+                <a href="/board/" class="nav-link">OJC Boards.</a>
+                
+            </div>
+            <div class="nav-cta">
+                <a target="_blank" href="mailto:info@openjournalscollective.org?subject=Open Journals Collective" class="nav-btn">JOIN
+                    THE MOVEMENT</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hero Section -->
+<section class="hero"
+         style="background-image: url('/static/img/home-brand-lines-hero.svg');">
+    <div class="container">
+        <div class="row hero-row">
+            <div class="col-2">
+            </div>
+            <div class="col-8">
+                <div class="hero-content">
+                    <p class="spectral-bold">We are an international collective of libraries, scholarly societies, and small non-profit publishers changing the way that academic research is supported and disseminated.</p>
+                    <a target="_blank" href="mailto:info@openjournalscollective.org?subject=Open Journals Collection"
+                       class="btn spectral-bold">JOIN THE MOVEMENT</a>
+                </div>
+            </div>
+            <div class="col-2"></div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="features">
+                    <div class="feature-card blue">
+                        <img src="/static/img/home-col-1.jpg"
+                             alt="Publishing research: an image of a man working on a laptop"
+                             class="feature-image">
+                        <div class="feature-number">01</div>
+                        <div class="feature-title">Publishing cutting-edge
+                            research.
+                        </div>
+                        <br>
+                        <p class="feature-text">We publish leading academic journals
+                            that are openly available – free to read, published with no
+                            embargos, and with no author payments. We believe that
+                            high-quality research should be available to all. </p>
+                    </div>
+
+                    <div class="feature-card green">
+                        <img src="/static/img/home-col-2.jpg"
+                             alt="Research communities: an image of women working outside on a laptop and clipboard"
+                             class="feature-image">
+                        <div class="feature-number">02</div>
+                        <div class="feature-title">Giving back to research
+                            communities.
+                        </div>
+                        <p class="feature-text">We work closely with libraries and
+                            funders to support the transition from a profit-driven
+                            commercial publishing model to a community-governed
+                            publishing model. All funds are invested in our journals and
+                            the research communities that make them possible. </p>
+                    </div>
+
+                    <div class="feature-card pink">
+                        <img src="/static/img/home-col-3.jpg"
+                             alt="Academic journals: an image of a library with many staircases"
+                             class="feature-image">
+                        <div class="feature-number">03</div>
+                        <div class="feature-title">Building a sustainable future for
+                            academic journals.
+                        </div>
+                        <p class="feature-text">Building a sustainable future for academic journals. Our expertise as mission-driven publishers places us at the heart of the academic community. We provide a sustainable future for academic journals, providing financial, legal and technological support.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-4 brochure-button">
+                <a href="https://drive.google.com/file/d/1-i_9uipCHMAOn0FGufHdF09cK7SK4FsH/view?usp=sharing"
+                   class="btn spectral-bold">DOWNLOAD OUR BROCHURE</a>
+            </div>
+            <div class="col-4 brochure-button">
+                <a href="https://www.openjournalscollective.org/catalogue/"
+                   class="btn spectral-bold">SEARCH OUR CATALOGUE</a>
+            </div>
+
+            <div class="col-4 brochure-button">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdotiDEvbJJdVf5tnoWmmx0_SUAD64LcNaX0_MjjQWD1K7aoA/viewform"
+                   class="btn spectral-bold">SUPPORT OUR WORK</a>
+            </div>
+
+
+    </div>
+
+    </div>
+</section>
+
+<!-- Who We Are Section -->
+<section class="who-we-are" id="who-we-are">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2>Who we are.</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10">
+                <div class="who-columns">
+                    <div class="who-column">
+                        <img src="/static/img/home-icon-col-1.svg"
+                             alt="Academics icon" class="who-icon">
+                        <h3 class="who-title">We are Academics.</h3>
+                        <p>We are academic authors, editorial boards, and scholarly
+                            associations calling for transformative change to the way in
+                            which our research is published and disseminated. We stand
+                            united against the commercialisation of our work by global
+                            publishing corporations. </p>
+                    </div>
+
+                    <div class="who-column">
+                        <img src="/static/img/home-icon-col-2.svg"
+                             alt="Librarians icon" class="who-icon">
+                        <h3 class="who-title">We are Librarians.</h3>
+                        <p>We are library directors, subject librarians, and open
+                            research specialists who reject the current profit-driven
+                            publishing model. We want to divest library budgets away from
+                            commercial packages and invest in a sustainable community-led
+                            publishing future. </p>
+                    </div>
+
+                    <div class="who-column">
+                        <img src="/static/img/home-icon-col-3.svg"
+                             alt="Publishers icon" class="who-icon">
+                        <h3 class="who-title">We are Publishers.</h3>
+                        <p>We are trusted university presses, library-based publishers,
+                            and scholarly associations with decades of experience
+                            publishing high-quality academic journals. We want our
+                            journals to be open access and integrated into a system of
+                            open infrastructure that places our values above
+                            profits. </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Quote Section -->
+<section class="quote-section">
+    <div class="glide">
+        <div class="glide__track" data-glide-el="track">
+            <ul class="glide__slides">
+                <li class="glide__slide">
+                    <div class="container">
+                        <div class="row">
+
+                            <div class="col-3"><img
+                                    src="/static/img/mpub-quote-logo.png"
+                                    alt="Duke University Press"
+                                    class="press-logo"></div>
+
+                            <div class="col-9">
+
+                                <div class="quote-content">
+                                    <h2 class="quote-text">The Open Journals Collective
+                                        is one of the most exciting initiatives in advancing
+                                        diamond open access that I have seen. Investors
+                                        have an opportunity to support communities of
+                                        scholars and publishers who have shown their
+                                        commitment to expanding access to knowledge over
+                                        decades of scrimping and saving. With real
+                                        investment, the sky's the limit for what the
+                                        authors and editors of these journals can
+                                        achieve.</h2>
+                                    <p class="quote-author">- Charles Watkinson,
+                                        Associate University Librarian, University of
+                                        Michigan</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </li>
+                <li class="glide__slide">
+                    <div class="container">
+                        <div class="row">
+
+                            <div class="col-3"><img
+                                    src="/static/img/doaj-quote-logo.svg"
+                                    alt="Open Library of Humanities"
+                                    class="press-logo"></div>
+
+                            <div class="col-9">
+
+                                <div class="quote-content">
+                                    <h2 class="quote-text">The Open Journals Collective
+                                        provides a community-led, scalable opportunity
+                                        for libraries to invest in trusted open access
+                                        journals. DOAJ and OJC share a commitment to
+                                        building an equitable and diverse scholarly
+                                        publishing system, and this initiative takes an
+                                        important step towards that vision.</h2>
+                                    <p class="quote-author">- Joanna Ball, Managing
+                                        Director, Directory of Open Access Journals</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="glide__bullets pagination" data-glide-el="controls[nav]">
+            <button class="glide__bullet" data-glide-dir="=0" aria-label="Go to slide 1"></button>
+            <button class="glide__bullet" data-glide-dir="=1" aria-label="Go to slide 2"></button>
+        </div>
+    </div>
+
+    <script>
+        gl = new Glide('.glide', {
+            type: 'slider',
+        });
+        gl.mount();
+    </script>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works" id="how-it-works">
+    <div class="container">
+        <div class="row">
+            <div class="col-3">
+                <h2>How it works.</h2>
+            </div>
+            <div class="col-9">
+                <p class="audience-text">
+                    We work with academics, librarians, and publishers. <br/>
+                    Click on the button below to find out more.
+                </p>
+
+                <div class="audience-buttons" id="audience-buttons">
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="how-it-works-switch"
+             hx-get="/partial/how-it-works-1.html"
+             hx-trigger="load"
+             hx-target="this"></div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="cta-wrapper">
+                    <div class="cta-image-container">
+                        <img src="/static/img/home-free-access.jpg"
+                             alt="People in library" class="cta-image">
+                        <div class="cta-image-accent"></div>
+                    </div>
+                    <div class="cta-content">
+                        <h2 class="cta-title">Free access to hundreds of the
+                            world's leading academic journals.</h2>
+                        <a target="_blank" href="mailto:info@openjournalscollective.org?subject=Open Journals Collection"
+                           class="btn">GET STARTED</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Publishers Section -->
+<section class="publishers-section" id="publishers">
+    <div class="container">
+        <div class="row">
+            <div class="col-5">
+                <h2>OJC Publishers.</h2>
+            </div>
+            <div class="col-6">
+                <p class="publishers-text">Leading university-based publishers have
+                    joined OJC, making high-quality academic journals free to read and
+                    free to publish in.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="glide_publishers">
+                    <div class="glide__track" data-glide-el="track">
+                        <ul class="glide__slides">
+                            <li class="glide__slide">
+                                <div class="publishers-logos">
+                                    <img src="/static/img/publisher-olh.png"
+                                         alt="Open Library of Humanities"
+                                         class="publisher-logo">
+                                    <img src="/static/img/publisher-edin-diamond.png"
+                                         alt="Edinburgh Diamond"
+                                         class="publisher-logo">
+                                    <img src="/static/img/publisher-lse.png"
+                                         alt="LSE Press"
+                                         class="publisher-logo">
+                                </div>
+                            </li>
+                            <li class="glide__slide">
+                                <div class="publishers-logos">
+                                    <img src="/static/img/publisher-ucl.svg"
+                                         alt="UCL Press"
+                                         class="publisher-logo">
+                                    <img src="/static/img/publisher-umich.svg"
+                                         alt="University of Michigan Press"
+                                         class="publisher-logo">
+                                    <img src="/static/img/publisher-cdl-2.svg"
+                                         alt="California Digital Library"
+                                         class="publisher-logo">
+                                </div>
+                            </li>
+                            <li class="glide__slide">
+                                <div class="publishers-logos">
+                                    <img src="/static/img/publisher-UPP.png"
+                                         alt="University of Pennsylvania Press"
+                                         class="publisher-logo">
+                                    <img src="/static/img/publisher-erudit.png"
+                                         alt="Erudit"
+                                         class="publisher-logo">
+                                    <img src="/static/img/publisher-blank.png"
+                                         alt="Blank"
+                                         class="publisher-logo">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="glide__bullets pagination"
+                         data-glide-el="controls[nav]">
+                        <button class="glide__bullet"
+                                data-glide-dir="=0" aria-label="Go to slide 1"></button>
+                        <button class="glide__bullet"
+                                data-glide-dir="=1" aria-label="Go to slide 2"></button>
+                        <button class="glide__bullet"
+                                data-glide-dir="=2" aria-label="Go to slide 3"></button>
+                    </div>
+                </div>
+
+                <script>
+                    gl = new Glide('.glide_publishers', {
+                        type: 'carousel',
+                    });
+                    gl.mount();
+                </script>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer Section -->
+<footer class="footer" id="contact">
+    <div class="container">
+        <div class="row">
+            <div class="footer-content">
+                <div class="footer-left col-6">
+                    <h2 class="footer-title">
+                        For Academics.<br>
+                        For Libraries.<br>
+                        For Publishers.
+                    </h2>
+                    <div class="footer-pattern">
+                    </div>
+                </div>
+                <div class="footer-right col-6">
+                    <div class="footer-links">
+                        <div class="footer-column">
+                            <h3>Connect</h3>
+                            <a href="#">Bluesky</a>
+                        </div>
+
+                        <div class="footer-column">
+                            <h3>Contact</h3>
+                            <p><a href="mailto:info@openjournalscollective.org">info@openjournalscollective.org</a>
+                            </p>
+                            <p>Open Journals Collective is a <a style="display: inline !important;" href="https://find-and-update.company-information.service.gov.uk/company/16431892">Collective Community Interest Company (16431892)</a> based in the UK. A CIC is a special type of limited company that exists to benefit the community rather than private shareholders. </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+
+</script>
+
+</body>
+</html>

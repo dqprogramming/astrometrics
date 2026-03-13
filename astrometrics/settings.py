@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # PostgreSQL specific features (REQUIRED for full-text search)
     "django.contrib.postgres",
+    # Third-party
+    "django_extensions",
     # Project apps
     "journals",
     "cms",
@@ -149,11 +151,6 @@ STATICFILES_DIRS = [
 
 # Media files (user uploads)
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
-
-# Media files (user uploads)
-MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 

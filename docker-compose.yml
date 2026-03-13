@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: astrometrics
+      POSTGRES_USER: astrometrics
+      POSTGRES_PASSWORD: astrometrics
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U astrometrics"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: astrometrics
+    container_name: astrometrics
+    volumes:
+      - .:/app:z
+      - ${HOME}/cert.pem:/certs/cert.pem:ro
+      - ${HOME}/key.pem:/certs/key.pem:ro
+    ports:
+      - '443:443'
+    environment:
+      DJANGO_SETTINGS_MODULE: astrometrics.local_settings
+      DATABASE_URL: postgres://astrometrics:astrometrics@db:5432/astrometrics
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
