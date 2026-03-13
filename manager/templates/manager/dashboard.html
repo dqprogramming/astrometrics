@@ -1,0 +1,42 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
+
+{% block content %}
+<form
+    id="dashFilters"
+    hx-get="{% url 'manager:dashboard' %}"
+    hx-target="#dashGrid"
+    hx-trigger="input changed delay:300ms from:#dashSearch, change from:[name='tag']"
+    class="dash-search-bar"
+>
+    <div class="dash-search-wrap">
+        <i class="bi bi-search"></i>
+        <label for="dashSearch" class="visually-hidden">Search functions</label>
+        <input
+            class="dash-search-input"
+            type="text"
+            name="q"
+            id="dashSearch"
+            value="{{ q }}"
+            placeholder="Search functions…"
+            autocomplete="off"
+        >
+    </div>
+
+    <div class="dash-filter-tags">
+        {% for value, label in tags %}
+        <label class="dash-tag">
+            <input type="radio" name="tag" value="{{ value }}" {% if tag == value %}checked{% endif %}>
+            {{ label }}
+        </label>
+        {% endfor %}
+    </div>
+</form>
+
+<div class="dash-grid" id="dashGrid">
+    {% include "manager/dashboard_cards.html" %}
+</div>
+{% endblock %}

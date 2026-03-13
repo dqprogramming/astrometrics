@@ -1,0 +1,192 @@
+{% extends "manager/base.html" %}
+
+{% block title %}{{ action }} Journal{% endblock %}
+{% block page_title %}{{ action }} Journal{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> /
+<a href="{% url 'journals_manager:journal_list' %}">Journals</a> /
+{{ action }}
+{% endblock %}
+{% block nav_journals %}active{% endblock %}
+
+{% block extra_css %}
+<style>
+.mgr-select-multi { min-height: 120px; }
+.journal-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 1.25rem;
+    align-items: start;
+}
+.form-section { margin-bottom: 1.25rem; }
+.form-section:last-child { margin-bottom: 0; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<form method="post" class="journal-form-grid">
+    {% csrf_token %}
+
+    <div>
+        {% if form.non_field_errors %}
+        <div class="mgr-alert mgr-alert-error" style="margin-bottom:1rem;">
+            <i class="bi bi-exclamation-circle"></i> {{ form.non_field_errors.0 }}
+        </div>
+        {% endif %}
+
+        <div class="mgr-form-card form-section">
+            <div class="mgr-form-section-label">Basic Information</div>
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.title.id_for_label }}">Title</label>
+                {{ form.title }}
+                {% if form.title.errors %}<div class="mgr-error">{{ form.title.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="form-row">
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.issn.id_for_label }}">ISSN</label>
+                    {{ form.issn }}
+                    {% if form.issn.errors %}<div class="mgr-error">{{ form.issn.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.year_established.id_for_label }}">Year Established</label>
+                    {{ form.year_established }}
+                </div>
+            </div>
+            <div class="mgr-field" style="margin-bottom:0;">
+                <label class="mgr-label" for="{{ form.description.id_for_label }}">Description</label>
+                {{ form.description }}
+            </div>
+        </div>
+
+        <div class="mgr-form-card form-section">
+            <div class="mgr-form-section-label">URLs</div>
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.journal_url.id_for_label }}">Journal URL</label>
+                {{ form.journal_url }}
+                {% if form.journal_url.errors %}<div class="mgr-error">{{ form.journal_url.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="mgr-field" style="margin-bottom:0;">
+                <label class="mgr-label" for="{{ form.publisher_url.id_for_label }}">Publisher URL</label>
+                {{ form.publisher_url }}
+            </div>
+        </div>
+
+        <div class="mgr-form-card form-section">
+            <div class="mgr-form-section-label">Archive &amp; Archiving</div>
+            <div class="form-row">
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.archive_years.id_for_label }}">Archive Years</label>
+                    {{ form.archive_years }}
+                </div>
+            </div>
+            <div class="mgr-field" style="margin-bottom:0;">
+                <label class="mgr-label" for="{{ form.archive_available_diamond_oa.id_for_label }}">Diamond OA Archive</label>
+                {{ form.archive_available_diamond_oa }}
+            </div>
+        </div>
+
+        <div class="mgr-form-card form-section">
+            <div class="mgr-form-section-label">Unique Selling Points</div>
+            <div class="mgr-field" style="margin-bottom:0;">
+                <label class="mgr-label" for="{{ form.usps.id_for_label }}">USPs</label>
+                {{ form.usps }}
+            </div>
+        </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:1rem;">
+
+        <div class="mgr-form-card">
+            <div class="mgr-form-section-label">Publisher</div>
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.publisher.id_for_label }}">Publisher</label>
+                {{ form.publisher }}
+                {% if form.publisher.errors %}<div class="mgr-error">{{ form.publisher.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.journal_owner.id_for_label }}">Journal Owner</label>
+                {{ form.journal_owner }}
+            </div>
+            <div class="mgr-field" style="margin-bottom:0;">
+                <label class="mgr-label" for="{{ form.package_band.id_for_label }}">Package Band</label>
+                {{ form.package_band }}
+            </div>
+        </div>
+
+        <div class="mgr-form-card">
+            <div class="mgr-form-section-label">Cost</div>
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.cost_gbp.id_for_label }}">Cost (£)</label>
+                {{ form.cost_gbp }}
+            </div>
+            <div class="mgr-field" style="margin-bottom:0;">
+                <label class="mgr-label" for="{{ form.normalized_articles.id_for_label }}">Normalised Articles</label>
+                {{ form.normalized_articles }}
+            </div>
+        </div>
+
+        <div class="mgr-form-card">
+            <div class="mgr-form-section-label">Indexing</div>
+            <div class="mgr-field">
+                <div class="mgr-checkbox-wrap">
+                    {{ form.in_doaj }}
+                    <label for="{{ form.in_doaj.id_for_label }}" style="font-size:.875rem; cursor:pointer;">Listed in DOAJ</label>
+                </div>
+            </div>
+            <div class="mgr-field">
+                <div class="mgr-checkbox-wrap">
+                    {{ form.in_scopus }}
+                    <label for="{{ form.in_scopus.id_for_label }}" style="font-size:.875rem; cursor:pointer;">Indexed in Scopus</label>
+                </div>
+            </div>
+            <div class="mgr-field" style="margin-bottom:0;">
+                <label class="mgr-label" for="{{ form.wos_impact_factor.id_for_label }}">WoS Impact Factor</label>
+                {{ form.wos_impact_factor }}
+            </div>
+        </div>
+
+        <div class="mgr-form-card">
+            <div class="mgr-form-section-label">Classification</div>
+            <div class="mgr-field" style="margin-bottom:0;">
+                <label class="mgr-label" for="{{ form.licensing.id_for_label }}">Licence</label>
+                {{ form.licensing }}
+            </div>
+        </div>
+
+        {% if object.pk %}
+        <div class="mgr-form-card">
+            <div class="mgr-form-section-label">Subjects</div>
+            {% include "journals/manager/_m2m_widget.html" with journal=object field="subjects" items=object.subjects.all label="Subjects" %}
+        </div>
+
+        <div class="mgr-form-card">
+            <div class="mgr-form-section-label">Languages</div>
+            {% include "journals/manager/_m2m_widget.html" with journal=object field="languages" items=object.languages.all label="Languages" %}
+        </div>
+
+        <div class="mgr-form-card">
+            <div class="mgr-form-section-label">Archiving Services</div>
+            {% include "journals/manager/_m2m_widget.html" with journal=object field="archiving_services" items=object.archiving_services.all label="Archiving Services" %}
+        </div>
+        {% else %}
+        <div class="mgr-form-card" style="border-style:dashed; opacity:.7;">
+            <div style="display:flex; align-items:center; gap:.6rem; font-size:.85rem; color:var(--muted);">
+                <i class="bi bi-info-circle"></i>
+                Subjects, languages, and archiving services can be added after the journal is saved.
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="mgr-form-actions">
+            <button type="submit" class="btn-mgr-primary">
+                <i class="bi bi-check2"></i> Save
+            </button>
+            <a href="{% url 'journals_manager:journal_list' %}" class="btn-mgr-secondary">
+                Cancel
+            </a>
+        </div>
+    </div>
+
+</form>
+{% endblock %}

@@ -1,0 +1,54 @@
+<div class="mgr-table-wrap">
+    <table class="mgr-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Publisher</th>
+                <th>ISSN</th>
+                <th>Band</th>
+                <th>DOAJ</th>
+                <th>Cost (£)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for journal in journals %}
+            <tr>
+                <td style="font-weight:500; max-width:320px;">
+                    <span style="display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ journal.title }}</span>
+                </td>
+                <td style="color:var(--muted);">{{ journal.publisher.name }}</td>
+                <td style="font-family:monospace; font-size:0.82rem; color:var(--muted);">{{ journal.issn|default:"—" }}</td>
+                <td>
+                    {% if journal.package_band %}
+                    <span class="mgr-badge mgr-badge-gray">{{ journal.package_band.code }}</span>
+                    {% else %}—{% endif %}
+                </td>
+                <td>
+                    {% if journal.in_doaj %}
+                    <span class="mgr-badge mgr-badge-green">DOAJ</span>
+                    {% else %}
+                    <span style="color:var(--subtle);">—</span>
+                    {% endif %}
+                </td>
+                <td style="color:var(--muted);">
+                    {% if journal.cost_gbp %}£{{ journal.cost_gbp }}{% else %}—{% endif %}
+                </td>
+                <td style="text-align:right;">
+                    <div style="display:flex; gap:.5rem; justify-content:flex-end;">
+                        <a href="{% url 'journals_manager:journal_edit' journal.pk %}" class="btn-mgr-secondary" style="padding:.3rem .7rem;"><i class="bi bi-pencil"></i></a>
+                        <a href="{% url 'journals_manager:journal_delete' journal.pk %}" class="btn-mgr-danger" style="padding:.3rem .7rem;"><i class="bi bi-trash"></i></a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" style="text-align:center; padding:2.5rem; color:var(--muted);">
+                    <i class="bi bi-journals" style="font-size:1.5rem; display:block; margin-bottom:.5rem;"></i>
+                    No journals found.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,41 @@
+{% for card in cards %}
+<a
+    href="{{ card.url }}"
+    class="dash-card {% if card.coming_soon %}coming-soon{% endif %}"
+>
+    <div class="dash-card-top">
+        <div class="dash-card-icon" style="background: {{ card.color }}1a; color: {{ card.color }};">
+            <i class="bi bi-{{ card.icon }}"></i>
+        </div>
+        {% if card.count is not None %}
+        <div style="text-align:right;">
+            <div class="dash-card-count">{{ card.count }}</div>
+            <div class="dash-card-count-label">items</div>
+        </div>
+        {% elif card.coming_soon %}
+        <span class="dash-soon-badge">Coming soon</span>
+        {% endif %}
+    </div>
+
+    <div>
+        <div class="dash-card-title">{{ card.title }}</div>
+        <div class="dash-card-desc">{{ card.description }}</div>
+    </div>
+
+    <div class="dash-card-footer">
+        <div class="dash-card-tags">
+            {% for tag in card.tags %}
+            <span class="dash-card-tag">{{ tag }}</span>
+            {% endfor %}
+        </div>
+        {% if not card.coming_soon %}
+        <i class="bi bi-arrow-right dash-card-arrow"></i>
+        {% endif %}
+    </div>
+</a>
+{% empty %}
+<div class="dash-empty">
+    <i class="bi bi-search" style="font-size:2rem; display:block; margin-bottom:.75rem;"></i>
+    No functions match your search.
+</div>
+{% endfor %}

@@ -1,0 +1,57 @@
+{% extends "manager/base.html" %}
+
+{% block title %}{{ action }} Snippet{% endblock %}
+{% block page_title %}{{ action }} Snippet{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> /
+<a href="{% url 'cms_manager:snippet_list' %}">Snippets</a> /
+{{ action }}
+{% endblock %}
+{% block nav_snippets %}active{% endblock %}
+
+{% block content %}
+<form method="post" style="max-width:860px;">
+    {% csrf_token %}
+
+    <div style="display:grid; grid-template-columns:1fr 280px; gap:1.25rem; align-items:start;">
+
+        <div class="mgr-form-card">
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.body.id_for_label }}">Body</label>
+                {{ form.body }}
+                <div class="mgr-help">HTML is allowed and will be sanitized on save.</div>
+                {% if form.body.errors %}<div class="mgr-error">{{ form.body.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+            <div class="mgr-form-card">
+                <div class="mgr-form-section-label">Details</div>
+
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.name.id_for_label }}">Name</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}<div class="mgr-error">{{ form.name.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="mgr-field" style="margin-bottom:0;">
+                    <label class="mgr-label" for="{{ form.key.id_for_label }}">Key</label>
+                    {{ form.key }}
+                    <div class="mgr-help">Unique key used in templates, e.g. <code style="font-size:.75rem;">Snippet.objects.get(key="…")</code></div>
+                    {% if form.key.errors %}<div class="mgr-error">{{ form.key.errors.0 }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="mgr-form-actions">
+                <button type="submit" class="btn-mgr-primary">
+                    <i class="bi bi-check2"></i> Save
+                </button>
+                <a href="{% url 'cms_manager:snippet_list' %}" class="btn-mgr-secondary">
+                    Cancel
+                </a>
+            </div>
+        </div>
+
+    </div>
+</form>
+{% endblock %}

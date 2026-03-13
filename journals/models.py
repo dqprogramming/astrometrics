@@ -29,6 +29,24 @@ class Publisher(models.Model):
         return self.name
 
 
+class ArchivingService(models.Model):
+    """
+    Archiving services used by journals (CLOCKSS, LOCKSS, Portico, etc.).
+    """
+
+    name = models.CharField(
+        max_length=255, unique=True, help_text="Archiving service name"
+    )
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = _("Archiving Service")
+        verbose_name_plural = _("Archiving Services")
+
+    def __str__(self):
+        return self.name
+
+
 class Subject(models.Model):
     """
     Academic subjects/disciplines for journals.
@@ -244,7 +262,9 @@ class Journal(models.Model):
         blank=True,
         help_text="Creative Commons or other license type",
     )
-    archiving_services = models.TextField(
+    archiving_services = models.ManyToManyField(
+        ArchivingService,
+        related_name="journals",
         blank=True,
         help_text="Archiving services (CLOCKSS, LOCKSS, PKP PN, etc.)",
     )

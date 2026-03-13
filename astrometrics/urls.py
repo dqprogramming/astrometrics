@@ -5,16 +5,10 @@ from django.urls import (
 )
 
 urlpatterns = [
-    path(
-        "admin/",
-        admin.site.urls,
-    ),
-    path(
-        "catalogue/",
-        include("journals.urls"),
-    ),
-    path(
-        "",
-        include("cms.urls"),
-    ),
+    path("admin/", admin.site.urls),
+    path("manager/", include("manager.urls")),
+    path("manager/cms/", include("cms.manager_urls")),
+    path("manager/catalogue/", include("journals.manager_urls")),
+    path("catalogue/", include("journals.urls")),
+    path("", include("cms.urls")),
 ]

@@ -1,0 +1,38 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Pages{% endblock %}
+{% block page_title %}Pages{% endblock %}
+{% block breadcrumb %}<a href="{% url 'manager:dashboard' %}">Dashboard</a> / Pages{% endblock %}
+{% block nav_pages %}active{% endblock %}
+
+{% block content %}
+<div class="mgr-section-header">
+    <div>
+        <div class="mgr-section-title">{{ pages|length }} page{{ pages|length|pluralize }}</div>
+        <div class="mgr-section-sub">Static CMS pages served on the public site.</div>
+    </div>
+    <div style="display:flex; gap:.75rem; align-items:center;">
+        <div class="mgr-search-wrap">
+            <i class="bi bi-search"></i>
+            <label for="pageSearch" class="visually-hidden">Filter pages</label>
+            <input
+                class="mgr-search"
+                type="text"
+                id="pageSearch"
+                name="q"
+                placeholder="Filter pages…"
+                hx-get="{% url 'cms_manager:page_list' %}"
+                hx-trigger="input changed delay:300ms"
+                hx-target="#pageTable"
+            >
+        </div>
+        <a href="{% url 'cms_manager:page_create' %}" class="btn-mgr-primary">
+            <i class="bi bi-plus"></i> New Page
+        </a>
+    </div>
+</div>
+
+<div id="pageTable">
+    {% include "cms/manager/page_table.html" %}
+</div>
+{% endblock %}

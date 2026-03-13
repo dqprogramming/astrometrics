@@ -1,0 +1,31 @@
+<div class="m2m-widget" id="m2m-{{ field }}">
+    <div class="m2m-tags">
+        {% for item in items %}
+        <span class="m2m-tag">
+            <span>{{ item.name }}</span>
+            <button type="button"
+                    hx-post="{% url 'journals_manager:journal_tag_remove' journal.pk field item.pk %}"
+                    hx-target="#m2m-{{ field }}"
+                    hx-swap="outerHTML"
+                    hx-confirm=""
+                    class="m2m-tag-remove"
+                    aria-label="Remove {{ item.name }}">
+                <i class="bi bi-x"></i>
+            </button>
+        </span>
+        {% empty %}
+        <span class="m2m-none">None added yet</span>
+        {% endfor %}
+    </div>
+    <div class="m2m-search-wrap">
+        <input type="text"
+               class="mgr-input"
+               placeholder="Search or create {{ label|lower }}…"
+               hx-get="{% url 'journals_manager:journal_tag_search' journal.pk field %}"
+               hx-target="#m2m-{{ field }}-results"
+               hx-trigger="input changed delay:200ms, focus"
+               name="q"
+               autocomplete="off">
+        <div id="m2m-{{ field }}-results" class="m2m-results"></div>
+    </div>
+</div>

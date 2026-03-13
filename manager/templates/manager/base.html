@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Manager{% endblock %} — OJC</title>
+    {# Prevent flash of wrong theme by reading localStorage before paint #}
+    <script>
+        const t = localStorage.getItem('mgr-theme') || 'dark';
+        document.documentElement.dataset.theme = t;
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{% static 'css/manager.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<div class="mgr-sidebar">
+    <a href="{% url 'manager:dashboard' %}" class="mgr-brand">
+        <span class="mgr-brand-dot"></span>
+        OJC Manager
+    </a>
+
+    <nav class="mgr-nav">
+        <span class="mgr-nav-section">Overview</span>
+        <a href="{% url 'manager:dashboard' %}" class="mgr-nav-link {% block nav_dashboard %}{% endblock %}">
+            <i class="bi bi-house"></i> Dashboard
+        </a>
+
+        <span class="mgr-nav-section">Content</span>
+        <a href="{% url 'cms_manager:page_list' %}" class="mgr-nav-link {% block nav_pages %}{% endblock %}">
+            <i class="bi bi-file-text"></i> Pages
+        </a>
+        <a href="{% url 'cms_manager:post_list' %}" class="mgr-nav-link {% block nav_posts %}{% endblock %}">
+            <i class="bi bi-newspaper"></i> Posts
+        </a>
+        <a href="{% url 'cms_manager:snippet_list' %}" class="mgr-nav-link {% block nav_snippets %}{% endblock %}">
+            <i class="bi bi-puzzle"></i> Snippets
+        </a>
+
+        <span class="mgr-nav-section">Catalogue</span>
+        <a href="{% url 'journals_manager:journal_list' %}" class="mgr-nav-link {% block nav_journals %}{% endblock %}">
+            <i class="bi bi-journals"></i> Journals
+        </a>
+        <a href="{% url 'journals_manager:publisher_list' %}" class="mgr-nav-link {% block nav_publishers %}{% endblock %}">
+            <i class="bi bi-building"></i> Publishers
+        </a>
+        <a href="{% url 'journals_manager:subject_list' %}" class="mgr-nav-link {% block nav_subjects %}{% endblock %}">
+            <i class="bi bi-bookmark"></i> Subjects
+        </a>
+        <a href="{% url 'journals_manager:language_list' %}" class="mgr-nav-link {% block nav_languages %}{% endblock %}">
+            <i class="bi bi-translate"></i> Languages
+        </a>
+        <a href="{% url 'journals_manager:packageband_list' %}" class="mgr-nav-link {% block nav_bands %}{% endblock %}">
+            <i class="bi bi-layers"></i> Package Bands
+        </a>
+        <a href="{% url 'journals_manager:archivingservice_list' %}" class="mgr-nav-link {% block nav_archiving %}{% endblock %}">
+            <i class="bi bi-archive"></i> Archiving Services
+        </a>
+        <a href="{% url 'journals_manager:import' %}" class="mgr-nav-link {% block nav_import %}{% endblock %}">
+            <i class="bi bi-upload"></i> Import
+        </a>
+    </nav>
+
+    <div class="mgr-sidebar-footer">
+        <a href="/admin/" class="mgr-nav-link" target="_blank">
+            <i class="bi bi-gear"></i> Django Admin
+        </a>
+        <a href="/" class="mgr-nav-link" target="_blank">
+            <i class="bi bi-box-arrow-up-right"></i> View Site
+        </a>
+    </div>
+</div>
+
+<div class="mgr-main">
+    <div class="mgr-topbar">
+        <div>
+            <div class="mgr-page-title">{% block page_title %}Manager{% endblock %}</div>
+            <div class="mgr-breadcrumb">{% block breadcrumb %}{% endblock %}</div>
+        </div>
+        <div class="mgr-user">
+            <button class="mgr-theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle light/dark theme">
+                <i class="bi bi-sun" id="themeIcon"></i>
+            </button>
+            {% if user.is_authenticated %}
+            <span><i class="bi bi-person-circle me-1"></i>{{ user.get_full_name|default:user.username }}</span>
+            <a href="/admin/logout/?next=/"><i class="bi bi-box-arrow-right"></i> Sign out</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mgr-content">
+        {% for message in messages %}
+        <div class="mgr-alert mgr-alert-{{ message.tags }}">
+            <i class="bi bi-info-circle"></i> {{ message }}
+        </div>
+        {% endfor %}
+
+        {% block content %}{% endblock %}
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'js/htmx-1.9.12.min.js' %}"></script>
+<script>
+    (function () {
+        const root = document.documentElement;
+        const icon = document.getElementById('themeIcon');
+
+        function applyTheme(theme) {
+            root.dataset.theme = theme;
+            icon.className = theme === 'dark' ? 'bi bi-sun' : 'bi bi-moon';
+        }
+
+        applyTheme(root.dataset.theme);
+
+        document.getElementById('themeToggle').addEventListener('click', function () {
+            const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('mgr-theme', next);
+            applyTheme(next);
+        });
+    })();
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>
