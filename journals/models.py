@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.translation import gettext_lazy as _
@@ -105,6 +106,16 @@ class PackageBand(models.Model):
         return f"{self.code} - {self.name}"
 
 
+def journal_cover_upload_path(instance, filename):
+    """
+    Generate upload path for journal cover images.
+    Example: media/journal_covers/open-library-humanities/open-library-humanities-cover.jpg
+    """
+    from django.utils.text import slugify
+    slug = slugify(instance.title)
+    return f'journal_covers/{slug}/{filename}'
+
+
 class Journal(models.Model):
     """
     Main journal model representing academic journals.
@@ -119,7 +130,9 @@ class Journal(models.Model):
         ('CC BY-SA', 'CC BY-SA'),
         ('CC BY-ND', 'CC BY-ND'),
     ]
-
+    uuid = models.UUIDField(
+        default=uuid.uuid4,
+    )
     # Basic Information
     title = models.CharField(
         max_length=500,
@@ -255,6 +268,12 @@ class Journal(models.Model):
     archiving_services = models.TextField(
         blank=True,
         help_text="Archiving services (CLOCKSS, LOCKSS, PKP PN, etc.)"
+    )
+    cover = models.ImageField(
+        upload_to=journal_cover_upload_path,
+        blank=True,
+        null=True,
+        help_text='Journal cover image',
     )
 
     # Metadata

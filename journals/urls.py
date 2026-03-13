@@ -14,9 +14,9 @@ app_name = 'journals'
 
 urlpatterns = [
     # Admin/Internal Routes
-    #path('admin/', JournalSearchView.as_view(), name='search'),
-    #path('admin/stats/', journal_stats_view, name='stats'),
-    #path('admin/<int:pk>/', journal_detail_view, name='detail'),
+    path('manager/search/', JournalSearchView.as_view(), name='search'),
+    path('manager/stats/', journal_stats_view, name='stats'),
+    path('manager/<int:pk>/', journal_detail_view, name='detail'),
 
     # Public Routes
     path('', PublicJournalSearchView.as_view(), name='public_search'),

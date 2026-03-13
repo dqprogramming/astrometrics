@@ -11,10 +11,15 @@ Options:
 import csv
 import re
 from decimal import Decimal, InvalidOperation
+from urllib.parse import urlparse
+import requests
+from io import BytesIO
 
 from django.core.management.base import BaseCommand, CommandError
+from django.core.files.base import ContentFile
 from django.db import transaction
 from django.utils import timezone
+from django.utils.text import slugify
 
 from journals.models import (
     Journal,
@@ -144,7 +149,7 @@ class Command(BaseCommand):
             raise ValueError('Journal title is required')
 
         # Get or create publisher
-        publisher_name = row.get('Publisher', '').strip()
+        publisher_name = row.get('Publishing Member', '').strip()
         if not publisher_name:
             raise ValueError('Publisher is required')
 
@@ -193,6 +198,12 @@ class Command(BaseCommand):
             journal,
             row.get('Subject(s)', ''),
         )
+
+        # Download and store cover image
+        cover_url = row.get('Journal Cover URL', '').strip()
+        print(cover_url)
+        if cover_url:
+            self._download_cover_image(journal, cover_url, title)
 
     def _get_journal_defaults(
         self,
@@ -243,7 +254,7 @@ class Command(BaseCommand):
                 '',
             ).strip(),
             'in_doaj': self._parse_boolean(
-                row.get('Already in DOAJ? Y/N', ''),
+                row.get('Already in DOAJ?', ''),
             ),
             'in_scopus': self._parse_boolean(
                 row.get('Scopus', ''),
@@ -325,6 +336,98 @@ class Command(BaseCommand):
             package_band.save(update_fields=['name'])
 
         return package_band
+
+    def _download_cover_image(
+        self,
+        journal,
+        cover_url,
+        title,
+    ):
+        """
+        Download cover image from URL and save to journal's cover field.
+
+        Args:
+            journal: Journal instance to attach the cover to
+            cover_url: URL of the cover image
+            title: Journal title for generating filename
+        """
+        try:
+            # Download the image with timeout
+            response = requests.get(
+                cover_url,
+                timeout=10,
+                headers={
+                    'User-Agent': 'Mozilla/5.0 (OLH Journal Importer)',
+                },
+            )
+            response.raise_for_status()
+
+            # Validate content type
+            content_type = response.headers.get('content-type', '').lower()
+            if not content_type.startswith('image/'):
+                self.stdout.write(
+                    self.style.WARNING(
+                        f"  Skipped cover for '{title}': "
+                        f"Invalid content type '{content_type}'"
+                    )
+                )
+                return
+
+            # Extract file extension from URL or content type
+            parsed_url = urlparse(cover_url)
+            path = parsed_url.path
+            if '.' in path:
+                ext = path.split('.')[-1].lower()
+                # Validate extension
+                valid_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp']
+                if ext not in valid_extensions:
+                    ext = 'jpg'  # Default fallback
+            else:
+                # Try to get extension from content type
+                ext_map = {
+                    'image/jpeg': 'jpg',
+                    'image/png': 'png',
+                    'image/gif': 'gif',
+                    'image/webp': 'webp',
+                }
+                ext = ext_map.get(content_type, 'jpg')
+
+            # Generate clean filename
+            slug = slugify(title)
+            filename = f"{slug}-cover.{ext}"
+
+            # Save the file to the journal's cover field
+            # Assumes the Journal model has a FileField/ImageField named 'cover'
+            journal.cover.save(
+                filename,
+                ContentFile(response.content),
+                save=True,
+            )
+
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f"  Downloaded cover for '{title}'"
+                )
+            )
+
+        except requests.exceptions.Timeout:
+            self.stdout.write(
+                self.style.WARNING(
+                    f"  Timeout downloading cover for '{title}'"
+                )
+            )
+        except requests.exceptions.RequestException as e:
+            self.stdout.write(
+                self.style.WARNING(
+                    f"  Failed to download cover for '{title}': {str(e)}"
+                )
+            )
+        except Exception as e:
+            self.stdout.write(
+                self.style.WARNING(
+                    f"  Error saving cover for '{title}': {str(e)}"
+                )
+            )
 
     def _process_languages(
         self,

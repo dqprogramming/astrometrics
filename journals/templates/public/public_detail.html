@@ -39,12 +39,6 @@
                         </span>
                         {% endif %}
 
-                        {% if journal.wos_impact_factor %}
-                        <span class="badge badge--impact-factor">
-                            Impact Factor: {{ journal.wos_impact_factor }}
-                        </span>
-                        {% endif %}
-
                         {% if journal.licensing %}
                         <span class="badge badge--license">
                             {{ journal.licensing }}
@@ -135,6 +129,9 @@
 
                     <!-- Right Column - Metadata -->
                     <div>
+                        {% if journal.cover %}
+                            <img alt="Cover image for {{ journal.title }}" style="max-width: 100%;" src="{{ MEDIA_URL }}{{ journal.cover.url }}">
+                        {% endif %}
                         <div class="metadata-panel">
                             <h3 class="section-heading section-heading--small">
                                 Journal Information
@@ -209,7 +206,7 @@
                                 {% if journal.normalized_articles %}
                                 <div class="metadata-item">
                                     <div class="metadata-label">
-                                        Articles (Normalized)
+                                        Number of Articles per Year
                                     </div>
                                     <div class="metadata-value">
                                         {{ journal.normalized_articles|floatformat:1 }}

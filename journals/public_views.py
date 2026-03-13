@@ -4,7 +4,7 @@ Simplified interface for browsing the journal catalogue.
 """
 
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Q, Count, Avg
+from django.db.models import Q, Count, When, Case
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.views.generic import ListView
 
@@ -44,7 +44,22 @@ class PublicJournalSearchView(ListView):
             # Default ordering by title
             queryset = queryset.order_by('title')
 
-        return queryset
+        # Get unique journal IDs, preserving order
+        journal_ids = list(queryset.values_list('id', flat=True).distinct())
+
+        # Return queryset filtered to these IDs, preserving the original order
+        preserved_order = Case(
+            *[When(pk=pk, then=pos) for pos, pk in enumerate(journal_ids)]
+        )
+
+        return Journal.objects.filter(
+            id__in=journal_ids
+        ).select_related(
+            'publisher'
+        ).prefetch_related(
+            'languages',
+            'subjects'
+        ).order_by(preserved_order)
 
     def _apply_search(self, queryset, search_query):
         """
@@ -111,15 +126,15 @@ class PublicJournalSearchView(ListView):
         # Add filter options (limit to most common for public view)
         context['publishers'] = Publisher.objects.annotate(
             journal_count=Count('journals')
-        ).filter(journal_count__gt=0).order_by('name')[:50]
+        ).filter(journal_count__gt=0).order_by('name')
 
         context['subjects'] = Subject.objects.annotate(
             journal_count=Count('journals')
-        ).filter(journal_count__gt=0).order_by('name')[:30]
+        ).filter(journal_count__gt=0).order_by('name')
 
         context['languages'] = Language.objects.annotate(
             journal_count=Count('journals')
-        ).filter(journal_count__gt=0).order_by('name')[:20]
+        ).filter(journal_count__gt=0).order_by('name')
 
         # Add current filter values for form persistence
         context['current_filters'] = {
