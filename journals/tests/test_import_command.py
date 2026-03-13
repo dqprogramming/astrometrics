@@ -192,7 +192,7 @@ class GetJournalDefaultsTests(TestCase):
         self.assertEqual(defaults["wos_impact_factor"], Decimal("1.5"))
         self.assertEqual(defaults["archive_years"], 10)
         self.assertEqual(defaults["licensing"], "CC BY")
-        self.assertEqual(defaults["archiving_services"], "LOCKSS")
+        self.assertNotIn("archiving_services", defaults)
         self.assertEqual(defaults["year_established"], "2010")
         self.assertIsNotNone(defaults["package_band"])
         self.assertEqual(defaults["package_band"].code, "C1")

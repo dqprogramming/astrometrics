@@ -1,0 +1,46 @@
+<div class="mgr-table-wrap">
+    <table class="mgr-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Slug</th>
+                <th>Status</th>
+                <th>Published</th>
+                <th>Updated</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+            <tr>
+                <td style="font-weight:500;">{{ post.title }}</td>
+                <td style="font-family:monospace; font-size:0.8rem; color:var(--muted);">{{ post.slug }}</td>
+                <td>
+                    {% if post.is_published %}
+                    <span class="mgr-badge mgr-badge-green"><i class="bi bi-circle-fill me-1" style="font-size:.45rem;"></i>Published</span>
+                    {% else %}
+                    <span class="mgr-badge mgr-badge-gray">Draft</span>
+                    {% endif %}
+                </td>
+                <td style="color:var(--muted); font-size:0.82rem;">
+                    {% if post.published_at %}{{ post.published_at|date:"d M Y" }}{% else %}—{% endif %}
+                </td>
+                <td style="color:var(--muted); font-size:0.82rem;">{{ post.updated_at|date:"d M Y" }}</td>
+                <td style="text-align:right;">
+                    <div style="display:flex; gap:.5rem; justify-content:flex-end;">
+                        <a href="{% url 'cms_manager:post_edit' post.pk %}" class="btn-mgr-secondary" style="padding:.3rem .7rem;"><i class="bi bi-pencil"></i></a>
+                        <a href="{% url 'cms_manager:post_delete' post.pk %}" class="btn-mgr-danger" style="padding:.3rem .7rem;"><i class="bi bi-trash"></i></a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align:center; padding:2.5rem; color:var(--muted);">
+                    <i class="bi bi-newspaper" style="font-size:1.5rem; display:block; margin-bottom:.5rem;"></i>
+                    No posts found.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

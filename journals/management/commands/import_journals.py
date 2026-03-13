@@ -17,6 +17,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from journals.models import (
+    ArchivingService,
     ImportLog,
     Journal,
     Language,
@@ -193,6 +194,10 @@ class Command(BaseCommand):
             journal,
             row.get("Subject(s)", ""),
         )
+        self._process_archiving_services(
+            journal,
+            row.get("Archiving", ""),
+        )
 
     def _get_journal_defaults(
         self,
@@ -265,10 +270,6 @@ class Command(BaseCommand):
             "licensing": self._parse_license(
                 row.get("Licencing", ""),
             ),
-            "archiving_services": row.get(
-                "Archiving",
-                "",
-            ).strip(),
         }
 
     def _get_or_create_package_band(
@@ -367,6 +368,22 @@ class Command(BaseCommand):
                 name=subj_name,
             )
             journal.subjects.add(subject)
+
+    def _process_archiving_services(
+        self,
+        journal,
+        services_str,
+    ):
+        """Parse and associate archiving services with journal."""
+        if not services_str:
+            return
+
+        for name in re.split(r"[\n,]+", services_str):
+            name = name.strip()
+            if not name or name.lower() == "n/a":
+                continue
+            svc, _ = ArchivingService.objects.get_or_create(name=name)
+            journal.archiving_services.add(svc)
 
     def _parse_decimal(
         self,

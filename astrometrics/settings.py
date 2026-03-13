@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # Project apps
     "journals",
     "cms",
+    "manager",
 ]
 
 MIDDLEWARE = [
@@ -88,8 +89,8 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "astrometrics",
-        "USER": "",
-        "PASSWORD": "",
+        "USER": "ajrbyers",
+        "PASSWORD": "legosword",
         "HOST": "localhost",
         "PORT": "5432",
         # Keep connections alive for 10 minutes

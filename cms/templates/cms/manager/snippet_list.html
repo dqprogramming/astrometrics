@@ -1,0 +1,38 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Snippets{% endblock %}
+{% block page_title %}Snippets{% endblock %}
+{% block breadcrumb %}<a href="{% url 'manager:dashboard' %}">Dashboard</a> / Snippets{% endblock %}
+{% block nav_snippets %}active{% endblock %}
+
+{% block content %}
+<div class="mgr-section-header">
+    <div>
+        <div class="mgr-section-title">{{ snippets|length }} snippet{{ snippets|length|pluralize }}</div>
+        <div class="mgr-section-sub">Reusable content blocks referenced by key in templates.</div>
+    </div>
+    <div style="display:flex; gap:.75rem; align-items:center;">
+        <div class="mgr-search-wrap">
+            <i class="bi bi-search"></i>
+            <label for="snippetSearch" class="visually-hidden">Filter snippets</label>
+            <input
+                class="mgr-search"
+                type="text"
+                id="snippetSearch"
+                name="q"
+                placeholder="Filter snippets…"
+                hx-get="{% url 'cms_manager:snippet_list' %}"
+                hx-trigger="input changed delay:300ms"
+                hx-target="#snippetTable"
+            >
+        </div>
+        <a href="{% url 'cms_manager:snippet_create' %}" class="btn-mgr-primary">
+            <i class="bi bi-plus"></i> New Snippet
+        </a>
+    </div>
+</div>
+
+<div id="snippetTable">
+    {% include "cms/manager/snippet_table.html" %}
+</div>
+{% endblock %}

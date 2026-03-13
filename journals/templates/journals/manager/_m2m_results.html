@@ -1,0 +1,28 @@
+{% if results or can_create %}
+<div class="m2m-results-inner">
+    {% for item in results %}
+    <button type="button"
+            class="m2m-result-item"
+            hx-post="{% url 'journals_manager:journal_tag_add' journal.pk field %}"
+            hx-vals='{"item_id": "{{ item.pk }}"}'
+            hx-target="#m2m-{{ field }}"
+            hx-swap="outerHTML">
+        <i class="bi bi-plus"></i> {{ item.name }}
+    </button>
+    {% endfor %}
+    {% if can_create %}
+    <button type="button"
+            class="m2m-result-item m2m-result-create"
+            hx-post="{% url 'journals_manager:journal_tag_add' journal.pk field %}"
+            hx-vals='{"name": "{{ q|escapejs }}"}'
+            hx-target="#m2m-{{ field }}"
+            hx-swap="outerHTML">
+        <i class="bi bi-plus-circle"></i> Create "{{ q }}"
+    </button>
+    {% endif %}
+</div>
+{% elif q %}
+<div class="m2m-results-inner">
+    <span class="m2m-empty-results">No matches for "{{ q }}"</span>
+</div>
+{% endif %}

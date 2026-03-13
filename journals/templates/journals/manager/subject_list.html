@@ -1,0 +1,25 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Subjects{% endblock %}
+{% block page_title %}Subjects{% endblock %}
+{% block breadcrumb %}<a href="{% url 'manager:dashboard' %}">Dashboard</a> / Subjects{% endblock %}
+{% block nav_subjects %}active{% endblock %}
+
+{% block content %}
+<div class="mgr-section-header">
+    <div>
+        <div class="mgr-section-title">{{ subjects|length }} subject{{ subjects|length|pluralize }}</div>
+        <div class="mgr-section-sub">Academic subjects used to classify journals.</div>
+    </div>
+    <div style="display:flex; gap:.75rem; align-items:center;">
+        <div class="mgr-search-wrap">
+            <i class="bi bi-search"></i>
+            <label for="subjectSearch" class="visually-hidden">Filter subjects</label>
+            <input class="mgr-search" type="text" id="subjectSearch" name="q" placeholder="Filter subjects…"
+                hx-get="{% url 'journals_manager:subject_list' %}" hx-trigger="input changed delay:300ms" hx-target="#subjectTable">
+        </div>
+        <a href="{% url 'journals_manager:subject_create' %}" class="btn-mgr-primary"><i class="bi bi-plus"></i> New Subject</a>
+    </div>
+</div>
+<div id="subjectTable">{% include "journals/manager/subject_table.html" %}</div>
+{% endblock %}

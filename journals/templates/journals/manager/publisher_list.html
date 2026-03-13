@@ -1,0 +1,38 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Publishers{% endblock %}
+{% block page_title %}Publishers{% endblock %}
+{% block breadcrumb %}<a href="{% url 'manager:dashboard' %}">Dashboard</a> / Publishers{% endblock %}
+{% block nav_publishers %}active{% endblock %}
+
+{% block content %}
+<div class="mgr-section-header">
+    <div>
+        <div class="mgr-section-title">{{ publishers|length }} publisher{{ publishers|length|pluralize }}</div>
+        <div class="mgr-section-sub">Publishing organisations in the catalogue.</div>
+    </div>
+    <div style="display:flex; gap:.75rem; align-items:center;">
+        <div class="mgr-search-wrap">
+            <i class="bi bi-search"></i>
+            <label for="publisherSearch" class="visually-hidden">Filter publishers</label>
+            <input
+                class="mgr-search"
+                type="text"
+                id="publisherSearch"
+                name="q"
+                placeholder="Filter publishers…"
+                hx-get="{% url 'journals_manager:publisher_list' %}"
+                hx-trigger="input changed delay:300ms"
+                hx-target="#publisherTable"
+            >
+        </div>
+        <a href="{% url 'journals_manager:publisher_create' %}" class="btn-mgr-primary">
+            <i class="bi bi-plus"></i> New Publisher
+        </a>
+    </div>
+</div>
+
+<div id="publisherTable">
+    {% include "journals/manager/publisher_table.html" %}
+</div>
+{% endblock %}

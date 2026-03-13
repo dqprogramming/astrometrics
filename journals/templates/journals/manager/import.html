@@ -1,0 +1,81 @@
+{% extends "manager/base.html" %}
+{% load static %}
+{% block title %}Import Journals{% endblock %}
+{% block page_title %}Import Journals{% endblock %}
+{% block nav_import %}active{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> /
+<a href="{% url 'journals_manager:import_log_list' %}">Import Logs</a> /
+New Import
+{% endblock %}
+
+{% block content %}
+<div style="max-width:560px;">
+    <div class="mgr-form-card">
+        <p style="font-size:.875rem; color:var(--muted); margin-bottom:1rem;">
+            Upload a CSV file to import or update journal records. The file must use the
+            standard column format.
+        </p>
+        <div style="display:flex; gap:.6rem; flex-wrap:wrap; margin-bottom:1.5rem;">
+            <a href="{% url 'journals_manager:export' %}"
+               class="btn-mgr-secondary" style="font-size:.82rem;">
+                <i class="bi bi-download"></i> Export all journals
+            </a>
+            <a href="{% static 'csv/template.csv' %}" download
+               class="btn-mgr-secondary" style="font-size:.82rem;">
+                <i class="bi bi-file-earmark-arrow-down"></i> Blank template
+            </a>
+            <a href="{% static 'csv/sample.csv' %}" download
+               class="btn-mgr-secondary" style="font-size:.82rem;">
+                <i class="bi bi-file-earmark-spreadsheet"></i> Sample file
+            </a>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mgr-field">
+                <label class="mgr-label" for="csv_file">CSV file</label>
+                <input type="file" id="csv_file" name="csv_file" accept=".csv"
+                       class="mgr-input" required>
+            </div>
+
+            <div class="mgr-field" style="margin-top:1rem;">
+                <label style="display:flex; align-items:center; gap:.6rem; cursor:pointer; font-size:.875rem;">
+                    <input type="checkbox" name="update_existing" id="update_existing"
+                           style="width:16px; height:16px; accent-color:var(--accent);">
+                    <span>Update existing journals (matched by title)</span>
+                </label>
+                <div style="font-size:.8rem; color:var(--muted); margin-top:.35rem; margin-left:1.6rem;">
+                    When unchecked, rows that match an existing journal title are skipped.
+                </div>
+            </div>
+
+            <div style="display:flex; gap:.75rem; margin-top:1.75rem;">
+                <button type="submit" class="btn-mgr-primary" style="flex:1; justify-content:center;">
+                    <i class="bi bi-upload"></i> Start Import
+                </button>
+                <a href="{% url 'journals_manager:import_log_list' %}"
+                   class="btn-mgr-secondary" style="flex:1; justify-content:center;">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    {% if logs %}
+    <div style="margin-top:2rem;">
+        <div style="font-size:.8rem; font-weight:600; color:var(--muted); text-transform:uppercase;
+                    letter-spacing:.06em; margin-bottom:.75rem;">Recent imports</div>
+        {% for log in logs %}
+        <a href="{% url 'journals_manager:import_log_detail' log.pk %}"
+           style="display:flex; align-items:center; justify-content:space-between;
+                  padding:.6rem .75rem; border-radius:6px; margin-bottom:.4rem;
+                  border:1px solid var(--border); text-decoration:none; color:var(--text);
+                  background:var(--surface); font-size:.875rem;">
+            <span style="font-family:monospace; color:var(--accent-fg);">{{ log.filename }}</span>
+            <span style="color:var(--muted); font-size:.8rem;">{{ log.started_at|date:"d M Y H:i" }}</span>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

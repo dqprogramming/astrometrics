@@ -1,0 +1,36 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Delete {{ object_type }}{% endblock %}
+{% block page_title %}Delete {{ object_type }}{% endblock %}
+{% block breadcrumb %}<a href="{% url 'manager:dashboard' %}">Dashboard</a> / Delete{% endblock %}
+
+{% block content %}
+<div style="max-width:480px;">
+    <div class="mgr-form-card">
+        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.25rem;">
+            <div style="width:44px; height:44px; border-radius:8px; background:rgba(248,113,113,.12); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <i class="bi bi-trash" style="color:#f87171; font-size:1.2rem;"></i>
+            </div>
+            <div>
+                <div style="font-weight:600; font-size:.95rem;">Confirm deletion</div>
+                <div style="color:var(--muted); font-size:.82rem; margin-top:.1rem;">This action cannot be undone.</div>
+            </div>
+        </div>
+
+        <p style="font-size:.875rem; color:var(--muted); margin-bottom:1.5rem;">
+            Are you sure you want to delete the {{ object_type|lower }}
+            <strong style="color:var(--text);">"{{ object }}"</strong>?
+        </p>
+
+        <form method="post" style="display:flex; gap:.75rem;">
+            {% csrf_token %}
+            <button type="submit" class="btn-mgr-danger" style="flex:1; justify-content:center;">
+                <i class="bi bi-trash"></i> Delete
+            </button>
+            <a href="{{ cancel_url }}" class="btn-mgr-secondary" style="flex:1; justify-content:center;">
+                Cancel
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

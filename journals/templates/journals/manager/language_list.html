@@ -1,0 +1,23 @@
+{% extends "manager/base.html" %}
+{% block title %}Languages{% endblock %}
+{% block page_title %}Languages{% endblock %}
+{% block breadcrumb %}<a href="{% url 'manager:dashboard' %}">Dashboard</a> / Languages{% endblock %}
+{% block nav_languages %}active{% endblock %}
+{% block content %}
+<div class="mgr-section-header">
+    <div>
+        <div class="mgr-section-title">{{ languages|length }} language{{ languages|length|pluralize }}</div>
+        <div class="mgr-section-sub">Publication languages for journal classification.</div>
+    </div>
+    <div style="display:flex; gap:.75rem; align-items:center;">
+        <div class="mgr-search-wrap">
+            <i class="bi bi-search"></i>
+            <label for="languageSearch" class="visually-hidden">Filter languages</label>
+            <input class="mgr-search" type="text" id="languageSearch" name="q" placeholder="Filter languages…"
+                hx-get="{% url 'journals_manager:language_list' %}" hx-trigger="input changed delay:300ms" hx-target="#languageTable">
+        </div>
+        <a href="{% url 'journals_manager:language_create' %}" class="btn-mgr-primary"><i class="bi bi-plus"></i> New Language</a>
+    </div>
+</div>
+<div id="languageTable">{% include "journals/manager/language_table.html" %}</div>
+{% endblock %}

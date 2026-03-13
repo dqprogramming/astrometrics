@@ -1,0 +1,21 @@
+{% extends "manager/base.html" %}
+{% block title %}{{ action }} Subject{% endblock %}
+{% block page_title %}{{ action }} Subject{% endblock %}
+{% block breadcrumb %}<a href="{% url 'manager:dashboard' %}">Dashboard</a> / <a href="{% url 'journals_manager:subject_list' %}">Subjects</a> / {{ action }}{% endblock %}
+{% block nav_subjects %}active{% endblock %}
+{% block content %}
+<form method="post" style="max-width:480px;">
+    {% csrf_token %}
+    <div class="mgr-form-card" style="margin-bottom:1rem;">
+        <div class="mgr-field" style="margin-bottom:0;">
+            <label class="mgr-label" for="{{ form.name.id_for_label }}">Name</label>
+            {{ form.name }}
+            {% if form.name.errors %}<div class="mgr-error">{{ form.name.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    <div class="mgr-form-actions">
+        <button type="submit" class="btn-mgr-primary"><i class="bi bi-check2"></i> Save</button>
+        <a href="{% url 'journals_manager:subject_list' %}" class="btn-mgr-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}
