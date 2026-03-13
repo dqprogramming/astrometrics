@@ -1,3 +1,9 @@
+## 1.4.0 (2026-03-13)
+
+### Feat
+
+- **logging**: add structlog with rich for structured logging
+
 ## 1.3.1 (2026-03-13)
 
 ### Fix
