@@ -1,3 +1,10 @@
+## 1.2.0 (2026-03-13)
+
+### Feat
+
+- **docker**: add Docker Compose development environment
+- **cms**: add CMS views and routes for index and board pages
+
 ## 1.1.1 (2026-03-13)
 
 ### Fix
