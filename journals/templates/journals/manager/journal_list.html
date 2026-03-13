@@ -1,0 +1,53 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Journals{% endblock %}
+{% block page_title %}Journals{% endblock %}
+{% block breadcrumb %}<a href="{% url 'manager:dashboard' %}">Dashboard</a> / Journals{% endblock %}
+{% block nav_journals %}active{% endblock %}
+
+{% block content %}
+<div class="mgr-section-header">
+    <div>
+        <div class="mgr-section-title">{{ journals|length }} journal{{ journals|length|pluralize }}</div>
+        <div class="mgr-section-sub">The full journal catalogue.</div>
+    </div>
+    <div style="display:flex; gap:.75rem; align-items:center; flex-wrap:wrap;">
+        <select
+            class="mgr-select"
+            name="publisher"
+            style="width:auto;"
+            hx-get="{% url 'journals_manager:journal_list' %}"
+            hx-trigger="change"
+            hx-target="#journalTable"
+            hx-include="#journalSearch"
+        >
+            <option value="">All publishers</option>
+            {% for p in publishers %}
+            <option value="{{ p.pk }}" {% if selected_publisher == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.name }}</option>
+            {% endfor %}
+        </select>
+        <div class="mgr-search-wrap">
+            <i class="bi bi-search"></i>
+            <label for="journalSearch" class="visually-hidden">Filter journals</label>
+            <input
+                class="mgr-search"
+                type="text"
+                id="journalSearch"
+                name="q"
+                placeholder="Filter by title…"
+                hx-get="{% url 'journals_manager:journal_list' %}"
+                hx-trigger="input changed delay:300ms"
+                hx-target="#journalTable"
+                hx-include="[name='publisher']"
+            >
+        </div>
+        <a href="{% url 'journals_manager:journal_create' %}" class="btn-mgr-primary">
+            <i class="bi bi-plus"></i> New Journal
+        </a>
+    </div>
+</div>
+
+<div id="journalTable">
+    {% include "journals/manager/journal_table.html" %}
+</div>
+{% endblock %}

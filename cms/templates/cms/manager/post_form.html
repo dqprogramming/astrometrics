@@ -1,0 +1,90 @@
+{% extends "manager/base.html" %}
+
+{% block title %}{{ action }} Post{% endblock %}
+{% block page_title %}{{ action }} Post{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> /
+<a href="{% url 'cms_manager:post_list' %}">Posts</a> /
+{{ action }}
+{% endblock %}
+{% block nav_posts %}active{% endblock %}
+
+{% block content %}
+<form method="post" style="max-width:860px;">
+    {% csrf_token %}
+
+    <div style="display:grid; grid-template-columns:1fr 300px; gap:1.25rem; align-items:start;">
+
+        <div>
+            <div class="mgr-form-card">
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.title.id_for_label }}">Title</label>
+                    {{ form.title }}
+                    {% if form.title.errors %}<div class="mgr-error">{{ form.title.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.slug.id_for_label }}">Slug</label>
+                    {{ form.slug }}
+                    <div class="mgr-help">{{ form.slug.help_text }}</div>
+                    {% if form.slug.errors %}<div class="mgr-error">{{ form.slug.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.summary.id_for_label }}">Summary</label>
+                    {{ form.summary }}
+                    <div class="mgr-help">Short summary shown in post listings. HTML allowed.</div>
+                    {% if form.summary.errors %}<div class="mgr-error">{{ form.summary.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="mgr-field" style="margin-bottom:0;">
+                    <label class="mgr-label" for="{{ form.body.id_for_label }}">Body</label>
+                    {{ form.body }}
+                    <div class="mgr-help">HTML is allowed and will be sanitized on save.</div>
+                    {% if form.body.errors %}<div class="mgr-error">{{ form.body.errors.0 }}</div>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+            <div class="mgr-form-card">
+                <div class="mgr-form-section-label">Publishing</div>
+
+                <div class="mgr-field">
+                    <div class="mgr-checkbox-wrap">
+                        {{ form.is_published }}
+                        <label for="{{ form.is_published.id_for_label }}" style="font-size:.875rem; cursor:pointer;">Published</label>
+                    </div>
+                    <div class="mgr-help">Only published posts appear on the site.</div>
+                </div>
+
+                <div class="mgr-field" style="margin-bottom:0;">
+                    <label class="mgr-label" for="{{ form.published_at.id_for_label }}">Publish Date</label>
+                    {{ form.published_at }}
+                    <div class="mgr-help">Used for ordering in listings.</div>
+                    {% if form.published_at.errors %}<div class="mgr-error">{{ form.published_at.errors.0 }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="mgr-form-card">
+                <div class="mgr-form-section-label">SEO</div>
+                <div class="mgr-field" style="margin-bottom:0;">
+                    <label class="mgr-label" for="{{ form.meta_description.id_for_label }}">Meta Description</label>
+                    {{ form.meta_description }}
+                    {% if form.meta_description.errors %}<div class="mgr-error">{{ form.meta_description.errors.0 }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="mgr-form-actions">
+                <button type="submit" class="btn-mgr-primary">
+                    <i class="bi bi-check2"></i> Save
+                </button>
+                <a href="{% url 'cms_manager:post_list' %}" class="btn-mgr-secondary">
+                    Cancel
+                </a>
+            </div>
+        </div>
+
+    </div>
+</form>
+{% endblock %}

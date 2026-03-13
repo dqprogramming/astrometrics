@@ -1,0 +1,78 @@
+{% extends "manager/base.html" %}
+{% block title %}Import Logs{% endblock %}
+{% block page_title %}Import Logs{% endblock %}
+{% block nav_import %}active{% endblock %}
+{% block breadcrumb %}<a href="{% url 'manager:dashboard' %}">Dashboard</a> / Import Logs{% endblock %}
+
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+    <div style="color:var(--muted); font-size:.875rem;">{{ page_obj.paginator.count }} import{{ page_obj.paginator.count|pluralize }}</div>
+    <a href="{% url 'journals_manager:import' %}" class="btn-mgr-primary">
+        <i class="bi bi-upload"></i> New Import
+    </a>
+</div>
+
+<div class="mgr-table-wrap">
+    <table class="mgr-table">
+        <thead>
+            <tr>
+                <th>File</th>
+                <th>Status</th>
+                <th style="text-align:right;">Processed</th>
+                <th style="text-align:right;">Created</th>
+                <th style="text-align:right;">Updated</th>
+                <th style="text-align:right;">Failed</th>
+                <th>Started</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for log in logs %}
+            <tr>
+                <td style="font-family:monospace; color:var(--accent-fg); font-size:.85rem;">{{ log.filename }}</td>
+                <td>
+                    {% if log.status == "completed" %}
+                        <span class="mgr-badge mgr-badge-green">Completed</span>
+                    {% elif log.status == "failed" %}
+                        <span class="mgr-badge mgr-badge-red">Failed</span>
+                    {% elif log.status == "in_progress" %}
+                        <span class="mgr-badge mgr-badge-yellow">In Progress</span>
+                    {% else %}
+                        <span class="mgr-badge">{{ log.status }}</span>
+                    {% endif %}
+                </td>
+                <td style="text-align:right;">{{ log.records_processed }}</td>
+                <td style="text-align:right; color:var(--green-fg);">{{ log.records_created }}</td>
+                <td style="text-align:right; color:var(--accent-fg);">{{ log.records_updated }}</td>
+                <td style="text-align:right; color:{% if log.records_failed %}var(--red-fg){% else %}var(--muted){% endif %};">{{ log.records_failed }}</td>
+                <td style="color:var(--muted); font-size:.85rem;">{{ log.started_at|date:"d M Y H:i" }}</td>
+                <td>
+                    <a href="{% url 'journals_manager:import_log_detail' log.pk %}"
+                       class="mgr-action-link">View</a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="8" class="mgr-empty">No imports yet.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if is_paginated %}
+<div style="display:flex; gap:.5rem; justify-content:center; margin-top:1.5rem;">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}" class="btn-mgr-secondary">
+        <i class="bi bi-chevron-left"></i> Previous
+    </a>
+    {% endif %}
+    <span style="padding:.45rem .75rem; font-size:.875rem; color:var(--muted);">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </span>
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}" class="btn-mgr-secondary">
+        Next <i class="bi bi-chevron-right"></i>
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,3 +1,5 @@
+import uuid
+
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -24,6 +26,24 @@ class Publisher(models.Model):
         ordering = ["name"]
         verbose_name = _("Publisher")
         verbose_name_plural = _("Publishers")
+
+    def __str__(self):
+        return self.name
+
+
+class ArchivingService(models.Model):
+    """
+    Archiving services used by journals (CLOCKSS, LOCKSS, Portico, etc.).
+    """
+
+    name = models.CharField(
+        max_length=255, unique=True, help_text="Archiving service name"
+    )
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = _("Archiving Service")
+        verbose_name_plural = _("Archiving Services")
 
     def __str__(self):
         return self.name
@@ -116,6 +136,13 @@ class Journal(models.Model):
         ("CC BY-SA", "CC BY-SA"),
         ("CC BY-ND", "CC BY-ND"),
     ]
+
+    uuid = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        editable=False,
+        help_text="Stable public identifier",
+    )
 
     # Basic Information
     title = models.CharField(
@@ -244,9 +271,18 @@ class Journal(models.Model):
         blank=True,
         help_text="Creative Commons or other license type",
     )
-    archiving_services = models.TextField(
+    archiving_services = models.ManyToManyField(
+        ArchivingService,
+        related_name="journals",
         blank=True,
         help_text="Archiving services (CLOCKSS, LOCKSS, PKP PN, etc.)",
+    )
+
+    cover = models.ImageField(
+        upload_to="journal_covers/",
+        null=True,
+        blank=True,
+        help_text="Journal cover image",
     )
 
     # Metadata

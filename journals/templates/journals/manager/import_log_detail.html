@@ -1,0 +1,92 @@
+{% extends "manager/base.html" %}
+{% block title %}Import — {{ log.filename }}{% endblock %}
+{% block page_title %}Import Log{% endblock %}
+{% block nav_import %}active{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> /
+<a href="{% url 'journals_manager:import_log_list' %}">Import Logs</a> /
+{{ log.filename }}
+{% endblock %}
+
+{% block content %}
+<div style="max-width:720px;">
+
+    <div class="mgr-form-card" style="margin-bottom:1.5rem;">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
+            <div>
+                <div style="font-family:monospace; font-size:1rem; color:var(--accent-fg); margin-bottom:.35rem;">
+                    {{ log.filename }}
+                </div>
+                <div style="font-size:.85rem; color:var(--muted);">
+                    Started {{ log.started_at|date:"d M Y H:i:s" }}
+                    {% if log.completed_at %}
+                    · Completed {{ log.completed_at|date:"H:i:s" }}
+                    {% endif %}
+                </div>
+            </div>
+            <div>
+                {% if log.status == "completed" %}
+                    <span class="mgr-badge mgr-badge-green" style="font-size:.9rem; padding:.3rem .7rem;">Completed</span>
+                {% elif log.status == "failed" %}
+                    <span class="mgr-badge mgr-badge-red" style="font-size:.9rem; padding:.3rem .7rem;">Failed</span>
+                {% elif log.status == "in_progress" %}
+                    <span class="mgr-badge mgr-badge-yellow" style="font-size:.9rem; padding:.3rem .7rem;">In Progress</span>
+                {% else %}
+                    <span class="mgr-badge" style="font-size:.9rem; padding:.3rem .7rem;">{{ log.status }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-top:1.5rem;">
+            <div style="background:var(--surface-2); border-radius:8px; padding:.85rem 1rem; text-align:center;">
+                <div style="font-size:1.5rem; font-weight:700; color:var(--text);">{{ log.records_processed }}</div>
+                <div style="font-size:.78rem; color:var(--muted); margin-top:.2rem;">Processed</div>
+            </div>
+            <div style="background:var(--surface-2); border-radius:8px; padding:.85rem 1rem; text-align:center;">
+                <div style="font-size:1.5rem; font-weight:700; color:var(--green-fg);">{{ log.records_created }}</div>
+                <div style="font-size:.78rem; color:var(--muted); margin-top:.2rem;">Created</div>
+            </div>
+            <div style="background:var(--surface-2); border-radius:8px; padding:.85rem 1rem; text-align:center;">
+                <div style="font-size:1.5rem; font-weight:700; color:var(--accent-fg);">{{ log.records_updated }}</div>
+                <div style="font-size:.78rem; color:var(--muted); margin-top:.2rem;">Updated</div>
+            </div>
+            <div style="background:var(--surface-2); border-radius:8px; padding:.85rem 1rem; text-align:center;">
+                <div style="font-size:1.5rem; font-weight:700; color:{% if log.records_failed %}var(--red-fg){% else %}var(--muted){% endif %};">
+                    {{ log.records_failed }}
+                </div>
+                <div style="font-size:.78rem; color:var(--muted); margin-top:.2rem;">Failed</div>
+            </div>
+        </div>
+    </div>
+
+    {% if log.error_log %}
+    <div class="mgr-form-card">
+        <div style="display:flex; align-items:center; gap:.6rem; margin-bottom:1rem;">
+            <i class="bi bi-exclamation-triangle" style="color:var(--yellow-fg);"></i>
+            <span style="font-weight:600; font-size:.9rem;">Errors &amp; Warnings</span>
+        </div>
+        <pre style="background:var(--surface-2); border:1px solid var(--border); border-radius:6px;
+                    padding:1rem; font-size:.8rem; line-height:1.6; color:var(--muted);
+                    white-space:pre-wrap; word-break:break-word; max-height:400px; overflow-y:auto;
+                    margin:0;">{{ log.error_log }}</pre>
+    </div>
+    {% elif log.status == "completed" %}
+    <div style="display:flex; align-items:center; gap:.6rem; padding:.85rem 1rem;
+                background:rgba(35,134,54,.1); border:1px solid rgba(35,134,54,.3);
+                border-radius:8px; font-size:.875rem; color:var(--green-fg);">
+        <i class="bi bi-check-circle"></i>
+        Import completed with no errors.
+    </div>
+    {% endif %}
+
+    <div style="margin-top:1.5rem;">
+        <a href="{% url 'journals_manager:import' %}" class="btn-mgr-primary">
+            <i class="bi bi-upload"></i> New Import
+        </a>
+        <a href="{% url 'journals_manager:import_log_list' %}" class="btn-mgr-secondary" style="margin-left:.75rem;">
+            <i class="bi bi-clock-history"></i> All Logs
+        </a>
+    </div>
+
+</div>
+{% endblock %}
