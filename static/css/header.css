@@ -1,0 +1,322 @@
+/* =============================================
+   Header Styles
+   ============================================= */
+
+.landing-header {
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.landing-header-inner {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 24px;
+    min-height: 68px;
+}
+
+.landing-header-logo {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 0;
+}
+
+.landing-header-logo .mini-logo {
+    height: 44px;
+}
+
+.landing-header-logo-text {
+    font-family: 'Spectral', serif;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1.2;
+    color: #212129;
+    white-space: nowrap;
+}
+
+.landing-nav {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    flex: 1;
+    justify-content: center;
+}
+
+.landing-nav-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: #212129;
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.landing-nav-link:hover {
+    background-color: #212129;
+    color: #fff;
+}
+
+/* Dropdown */
+.landing-nav-dropdown {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+}
+
+.landing-nav-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #212129;
+    padding: 20px 24px;
+    min-width: 200px;
+    z-index: 200;
+    flex-direction: column;
+    gap: 6px;
+    border-radius: 0 0 8px 8px;
+}
+
+.landing-nav-dropdown:hover .landing-nav-dropdown-menu,
+.landing-nav-dropdown:focus-within .landing-nav-dropdown-menu {
+    display: flex;
+}
+
+.landing-nav-dropdown.dropdown-closed .landing-nav-dropdown-menu {
+    display: none;
+}
+
+.landing-nav-dropdown:hover .landing-nav-link,
+.landing-nav-dropdown:focus-within .landing-nav-link {
+    background-color: #212129;
+    color: #fff;
+}
+
+.landing-dropdown-item {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 4px 0;
+    transition: font-weight 0.15s;
+}
+
+.landing-dropdown-item:hover,
+.landing-dropdown-item:focus-visible {
+    font-weight: 700;
+}
+
+.landing-dropdown-item:focus-visible {
+    outline-color: #fff;
+}
+
+.landing-dropdown-cta {
+    margin-top: 12px;
+    display: inline-block;
+    text-align: center;
+    border: 2px solid #fff;
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-size: 12px;
+    transition: border-color 0.2s;
+}
+
+.landing-dropdown-cta:hover {
+    border-color: #FFDE59;
+}
+
+.landing-dropdown-cta:focus-visible {
+    border-color: #FFDE59;
+    outline: 3px solid #71f7f2;
+    outline-offset: 2px;
+}
+
+.landing-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+}
+
+.btn-get-involved {
+    display: inline-block;
+    padding: 10px 22px;
+    background-color: #212129;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: background-color 0.2s;
+}
+
+.btn-get-involved:hover {
+    background-color: #3a3a45;
+}
+
+/* Hamburger icon (mobile only) */
+.menu-icon-landing {
+    all: unset;
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+}
+
+/* Close button reset */
+button.close-icon {
+    all: unset;
+    text-align: right;
+    font-size: 40px;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.menu-icon-landing span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: #212129;
+    border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+    .landing-nav {
+        display: none;
+    }
+    .landing-nav-dropdown .btn-get-involved {
+        display: none;
+    }
+    .menu-icon-landing {
+        display: flex;
+    }
+}
+
+/* --- Shared header/logo styles --- */
+.site-header-text {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.logo {
+    margin-right: 20px;
+}
+
+.mini-logo {
+    height: 30px;
+}
+
+.logo-text {
+    border-left: 2px solid #212129;
+    padding-left: 20px;
+    font-weight: 700;
+}
+
+.menu-icon {
+    text-align: right;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* --- Fullscreen Navigation (mobile) --- */
+.fullscreen-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+    z-index: 1000;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.fullscreen-nav.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.close-icon {
+    text-align: right;
+    font-size: 40px;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.nav-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100% - 100px);
+    padding: 60px 0;
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.nav-link {
+    font-family: 'Spectral', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #71f7f2;
+}
+
+.nav-cta {
+    margin-top: 60px;
+}
+
+.nav-btn {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: #71f7f2;
+    color: #212129;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-btn:hover {
+    background-color: #5ad8d3;
+}
+
+/* Focus styles for dark background (fullscreen nav) */
+.fullscreen-nav *:focus-visible {
+    outline-color: #71f7f2;
+}
+
+@media (max-width: 768px) {
+    .nav-link {
+        font-size: 36px;
+    }
+}

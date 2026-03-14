@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="/static/css/landing.css">
+{% endblock %}
+
+{% block content %}
+<!-- Hero + Features wrapper (circles span both) -->
+<div class="landing-hero-features-wrapper">
+    <!-- Concentric circles SVG -->
+    <svg class="landing-circles-svg" viewBox="0 0 1100 1100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" overflow="visible">
+        <circle cx="550" cy="550" r="130" fill="none" stroke="#FFDE59" stroke-width="70"/>
+        <circle cx="550" cy="550" r="250" fill="none" stroke="#FFDE59" stroke-width="70"/>
+        <circle cx="550" cy="550" r="370" fill="none" stroke="#FFDE59" stroke-width="70"/>
+        <circle cx="550" cy="550" r="490" fill="none" stroke="#FFDE59" stroke-width="70"/>
+    </svg>
+
+    <!-- Hero Section -->
+    <section class="landing-hero">
+        <div class="container">
+            <div class="landing-hero-content">
+                <h1 class="landing-hero-heading spectral-bold">
+                    We're a collective of libraries
+                    and university publishers
+                    reshaping academic research.
+                </h1>
+                <p class="landing-hero-sub">
+                    Add a bit more info here, means we can be a bit more punchy
+                    to the point above and adipiscing elit, sed do a cursus semper.
+                </p>
+                <a href="mailto:info@openjournalscollective.org?subject=Open Journals Collective"
+                   class="btn btn-dark spectral-bold">JOIN THE MOVEMENT</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="landing-features">
+    <div class="container">
+        <h2 class="sr-only">Features</h2>
+        <div class="row">
+            <div class="col-12">
+                <div class="features">
+                    <div class="feature-card blue">
+                        <img src="/static/img/home-col-1.jpg"
+                             alt="Publishing research: an image of a man working on a laptop"
+                             class="feature-image">
+                        <div class="feature-number">01</div>
+                        <h3 class="feature-title">Publishing cutting-edge
+                            research.
+                        </h3>
+                        <p class="feature-text">We publish leading academic journals
+                            that are openly available – free to read, published with no
+                            embargos, and with no author payments. We believe that
+                            high-quality research should be available to all. </p>
+                        <a href="https://drive.google.com/file/d/1-i_9uipCHMAOn0FGufHdF09cK7SK4FsH/view?usp=sharing"
+                           class="btn btn-dark spectral-bold feature-btn">DOWNLOAD BROCHURE</a>
+                    </div>
+
+                    <div class="feature-card green">
+                        <img src="/static/img/home-col-2.jpg"
+                             alt="Research communities: an image of women working outside on a laptop and clipboard"
+                             class="feature-image">
+                        <div class="feature-number">02</div>
+                        <h3 class="feature-title">Giving back to research
+                            communities.
+                        </h3>
+                        <p class="feature-text">We work closely with libraries and
+                            funders to support the transition from a profit-driven
+                            commercial publishing model to a community-governed
+                            publishing model. All funds are invested in our journals and
+                            the research communities that make them possible. </p>
+                        <a href="https://www.openjournalscollective.org/catalogue/"
+                           class="btn btn-dark spectral-bold feature-btn">SEARCH CATALOGUE</a>
+                    </div>
+
+                    <div class="feature-card pink">
+                        <img src="/static/img/home-col-3.jpg"
+                             alt="Academic journals: an image of a library with many staircases"
+                             class="feature-image">
+                        <div class="feature-number">03</div>
+                        <h3 class="feature-title">Building a sustainable future for
+                            academic journals.
+                        </h3>
+                        <p class="feature-text">Our expertise as mission-driven publishers places us at the heart of the academic community. We provide a sustainable future for academic journals, providing financial, legal and technological support.</p>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdotiDEvbJJdVf5tnoWmmx0_SUAD64LcNaX0_MjjQWD1K7aoA/viewform"
+                           class="btn btn-dark spectral-bold feature-btn">SUPPORT US</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</div><!-- end .landing-hero-features-wrapper -->
+
+<!-- 45% Stats Section -->
+<section class="landing-stats">
+    <div class="container">
+        <h2 class="sr-only">Statistics</h2>
+        <svg class="landing-stats-rings-svg" viewBox="0 0 1100 1100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" overflow="visible">
+            <circle cx="550" cy="550" r="200" fill="none" stroke="#fff" stroke-width="80"/>
+            <circle cx="550" cy="550" r="350" fill="none" stroke="#fff" stroke-width="80"/>
+            <circle cx="550" cy="550" r="500" fill="none" stroke="#fff" stroke-width="80"/>
+        </svg>
+        <div class="landing-stats-inner">
+            <div class="landing-stats-left">
+                <span class="landing-stats-number spectral-bold"
+                      data-count-to="45" data-count-suffix="%">0%</span>
+            </div>
+            <div class="landing-stats-right">
+                <div class="landing-stats-raised">
+                    <span class="landing-stats-amount spectral-bold"
+                          data-count-to="11500" data-count-prefix="£"
+                          data-count-format="comma">&pound;0</span>
+                    <span class="landing-stats-target">raised of &pound;14k</span>
+                </div>
+                <p class="landing-stats-desc">
+                    Lorem ipsum dolor sit amet, consectetur
+                    adipiscing elit, aliqu lorem lobortis nisi ut alip.
+                </p>
+                <div class="landing-stats-buttons">
+                    <a href="mailto:info@openjournalscollective.org?subject=Open Journals Collective"
+                       class="btn btn-dark spectral-bold">JOIN THE MOVEMENT</a>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdotiDEvbJJdVf5tnoWmmx0_SUAD64LcNaX0_MjjQWD1K7aoA/viewform"
+                       class="btn btn-dark spectral-bold">SHARE</a>
+                </div>
+            </div>
+        </div>
+        <div class="sr-only" aria-live="polite" id="stats-announcement"></div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+  const counters = document.querySelectorAll('[data-count-to]');
+  if (!counters.length) return;
+
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function formatNumber(n, el) {
+    const fmt = el.dataset.countFormat;
+    if (fmt === 'comma') return n.toLocaleString('en-GB');
+    return String(n);
+  }
+
+  function updateDisplay(el, value) {
+    const prefix = el.dataset.countPrefix || '';
+    const suffix = el.dataset.countSuffix || '';
+    el.textContent = prefix + formatNumber(value, el) + suffix;
+  }
+
+  function announceStats() {
+    var announcement = document.getElementById('stats-announcement');
+    if (!announcement) return;
+    var parts = [];
+    counters.forEach(function (el) {
+      var target = parseInt(el.dataset.countTo, 10);
+      var prefix = el.dataset.countPrefix || '';
+      var suffix = el.dataset.countSuffix || '';
+      parts.push(prefix + formatNumber(target, el) + suffix);
+    });
+    announcement.textContent = '45 percent raised, £11,500 of £14,000';
+  }
+
+  function animateCount(el, from, to, onComplete) {
+    if (el._countAnim) cancelAnimationFrame(el._countAnim);
+    var duration = 1200;
+    var start = performance.now();
+
+    function tick(now) {
+      var elapsed = now - start;
+      var progress = Math.min(elapsed / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = Math.round(from + eased * (to - from));
+      el._currentValue = current;
+      updateDisplay(el, current);
+      if (progress < 1) {
+        el._countAnim = requestAnimationFrame(tick);
+      } else {
+        el._countAnim = null;
+        if (onComplete) onComplete();
+      }
+    }
+
+    el._countAnim = requestAnimationFrame(tick);
+  }
+
+  counters.forEach(function (el) { el._currentValue = 0; });
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      var animationsRemaining = counters.length;
+      counters.forEach(function (el) {
+        var target = parseInt(el.dataset.countTo, 10);
+        var to = entry.isIntersecting ? target : 0;
+        var from = el._currentValue;
+        if (from !== to) {
+          if (prefersReducedMotion) {
+            el._currentValue = to;
+            updateDisplay(el, to);
+            animationsRemaining--;
+            if (animationsRemaining <= 0 && entry.isIntersecting) {
+              announceStats();
+            }
+          } else {
+            animateCount(el, from, to, function () {
+              animationsRemaining--;
+              if (animationsRemaining <= 0 && entry.isIntersecting) {
+                announceStats();
+              }
+            });
+          }
+        } else {
+          animationsRemaining--;
+        }
+      });
+    });
+  }, { threshold: 0.5 });
+
+  observer.observe(document.querySelector('.landing-stats'));
+})();
+</script>
+{% endblock %}
