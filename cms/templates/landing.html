@@ -20,16 +20,13 @@
         <div class="container">
             <div class="landing-hero-content">
                 <h1 class="landing-hero-heading spectral-bold">
-                    We're a collective of libraries
-                    and university publishers
-                    reshaping academic research.
+                    {{ landing.hero_heading }}
                 </h1>
                 <p class="landing-hero-sub">
-                    Add a bit more info here, means we can be a bit more punchy
-                    to the point above and adipiscing elit, sed do a cursus semper.
+                    {{ landing.hero_subheading }}
                 </p>
-                <a href="mailto:info@openjournalscollective.org?subject=Open Journals Collective"
-                   class="btn btn-dark spectral-bold">JOIN THE MOVEMENT</a>
+                <a href="{{ landing.hero_button_url }}"
+                   class="btn btn-dark spectral-bold">{{ landing.hero_button_text }}</a>
             </div>
         </div>
     </section>
@@ -46,15 +43,10 @@
                              alt="Publishing research: an image of a man working on a laptop"
                              class="feature-image">
                         <div class="feature-number">01</div>
-                        <h3 class="feature-title">Publishing cutting-edge
-                            research.
-                        </h3>
-                        <p class="feature-text">We publish leading academic journals
-                            that are openly available – free to read, published with no
-                            embargos, and with no author payments. We believe that
-                            high-quality research should be available to all. </p>
-                        <a href="https://drive.google.com/file/d/1-i_9uipCHMAOn0FGufHdF09cK7SK4FsH/view?usp=sharing"
-                           class="btn btn-dark spectral-bold feature-btn">DOWNLOAD BROCHURE</a>
+                        <h3 class="feature-title">{{ landing.feature_1_title }}</h3>
+                        <p class="feature-text">{{ landing.feature_1_text }}</p>
+                        <a href="{{ landing.feature_1_button_url }}"
+                           class="btn btn-dark spectral-bold feature-btn">{{ landing.feature_1_button_text }}</a>
                     </div>
 
                     <div class="feature-card green">
@@ -62,16 +54,10 @@
                              alt="Research communities: an image of women working outside on a laptop and clipboard"
                              class="feature-image">
                         <div class="feature-number">02</div>
-                        <h3 class="feature-title">Giving back to research
-                            communities.
-                        </h3>
-                        <p class="feature-text">We work closely with libraries and
-                            funders to support the transition from a profit-driven
-                            commercial publishing model to a community-governed
-                            publishing model. All funds are invested in our journals and
-                            the research communities that make them possible. </p>
-                        <a href="https://www.openjournalscollective.org/catalogue/"
-                           class="btn btn-dark spectral-bold feature-btn">SEARCH CATALOGUE</a>
+                        <h3 class="feature-title">{{ landing.feature_2_title }}</h3>
+                        <p class="feature-text">{{ landing.feature_2_text }}</p>
+                        <a href="{{ landing.feature_2_button_url }}"
+                           class="btn btn-dark spectral-bold feature-btn">{{ landing.feature_2_button_text }}</a>
                     </div>
 
                     <div class="feature-card pink">
@@ -79,12 +65,10 @@
                              alt="Academic journals: an image of a library with many staircases"
                              class="feature-image">
                         <div class="feature-number">03</div>
-                        <h3 class="feature-title">Building a sustainable future for
-                            academic journals.
-                        </h3>
-                        <p class="feature-text">Our expertise as mission-driven publishers places us at the heart of the academic community. We provide a sustainable future for academic journals, providing financial, legal and technological support.</p>
-                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdotiDEvbJJdVf5tnoWmmx0_SUAD64LcNaX0_MjjQWD1K7aoA/viewform"
-                           class="btn btn-dark spectral-bold feature-btn">SUPPORT US</a>
+                        <h3 class="feature-title">{{ landing.feature_3_title }}</h3>
+                        <p class="feature-text">{{ landing.feature_3_text }}</p>
+                        <a href="{{ landing.feature_3_button_url }}"
+                           class="btn btn-dark spectral-bold feature-btn">{{ landing.feature_3_button_text }}</a>
                     </div>
                 </div>
             </div>
@@ -93,7 +77,7 @@
 </section>
 </div><!-- end .landing-hero-features-wrapper -->
 
-<!-- 45% Stats Section -->
+<!-- Stats Section -->
 <section class="landing-stats">
     <div class="container">
         <h2 class="sr-only">Statistics</h2>
@@ -105,24 +89,23 @@
         <div class="landing-stats-inner">
             <div class="landing-stats-left">
                 <span class="landing-stats-number spectral-bold"
-                      data-count-to="45" data-count-suffix="%">0%</span>
+                      data-count-to="{{ landing.stats_percentage }}" data-count-suffix="%">0%</span>
             </div>
             <div class="landing-stats-right">
                 <div class="landing-stats-raised">
                     <span class="landing-stats-amount spectral-bold"
-                          data-count-to="11500" data-count-prefix="£"
+                          data-count-to="{{ landing.stats_amount_raised }}" data-count-prefix="&pound;"
                           data-count-format="comma">&pound;0</span>
-                    <span class="landing-stats-target">raised of &pound;14k</span>
+                    <span class="landing-stats-target">raised of {{ landing.stats_fundraising_target_display }}</span>
                 </div>
                 <p class="landing-stats-desc">
-                    Lorem ipsum dolor sit amet, consectetur
-                    adipiscing elit, aliqu lorem lobortis nisi ut alip.
+                    {{ landing.stats_description }}
                 </p>
                 <div class="landing-stats-buttons">
-                    <a href="mailto:info@openjournalscollective.org?subject=Open Journals Collective"
-                       class="btn btn-dark spectral-bold">JOIN THE MOVEMENT</a>
-                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdotiDEvbJJdVf5tnoWmmx0_SUAD64LcNaX0_MjjQWD1K7aoA/viewform"
-                       class="btn btn-dark spectral-bold">SHARE</a>
+                    <a href="{{ landing.stats_button_1_url }}"
+                       class="btn btn-dark spectral-bold">{{ landing.stats_button_1_text }}</a>
+                    <a href="{{ landing.stats_button_2_url }}"
+                       class="btn btn-dark spectral-bold">{{ landing.stats_button_2_text }}</a>
                 </div>
             </div>
         </div>
@@ -161,7 +144,7 @@
       var suffix = el.dataset.countSuffix || '';
       parts.push(prefix + formatNumber(target, el) + suffix);
     });
-    announcement.textContent = '45 percent raised, £11,500 of £14,000';
+    announcement.textContent = parts[0] + ' raised, ' + parts[1] + ' of {{ landing.stats_fundraising_target_display }}';
   }
 
   function animateCount(el, from, to, onComplete) {

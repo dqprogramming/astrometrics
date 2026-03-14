@@ -4,8 +4,8 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-from .forms import PageForm, PostForm, SnippetForm
-from .models import Page, Post, Snippet
+from .forms import LandingPageSettingsForm, PageForm, PostForm, SnippetForm
+from .models import LandingPageSettings, Page, Post, Snippet
 
 # ruff: noqa: E501
 
@@ -15,6 +15,28 @@ class StaffRequiredMixin(UserPassesTestMixin):
 
     def test_func(self):
         return self.request.user.is_active and self.request.user.is_staff
+
+
+# ── Landing Page Settings ────────────────────────────────────────────────────
+
+
+class LandingPageSettingsUpdateView(StaffRequiredMixin, UpdateView):
+    model = LandingPageSettings
+    form_class = LandingPageSettingsForm
+    template_name = "cms/manager/landing_page_form.html"
+    success_url = reverse_lazy("cms_manager:landing_page")
+
+    def get_object(self, queryset=None):
+        return LandingPageSettings.load()
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["landing"] = self.get_object()
+        return ctx
+
+    def form_valid(self, form):
+        messages.success(self.request, "Landing page settings updated.")
+        return super().form_valid(form)
 
 
 # ── Pages ─────────────────────────────────────────────────────────────────────
