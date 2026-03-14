@@ -1,3 +1,13 @@
+## 1.7.0 (2026-03-14)
+
+### Feat
+
+- Adds the tinyMCE rich text editor for posts, pages and snippets
+
+### Fix
+
+- fix tests and bump django version
+
 ## 1.6.0 (2026-03-14)
 
 ### Feat
