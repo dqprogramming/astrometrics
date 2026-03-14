@@ -13,9 +13,10 @@
     width: 850px;
     height: 850px;
     top: -200px;
-    right: -80px;
+    right: 50px;
     z-index: 0;
     pointer-events: none;
+    clip-path: inset(0 28% 0 0);
 }
 
 /* --- Hero Section --- */
@@ -72,6 +73,7 @@
         height: 650px;
         top: -150px;
         right: -60px;
+        clip-path: inset(0 35% 0 0);
     }
 }
 
@@ -86,7 +88,8 @@
         width: 500px;
         height: 500px;
         top: -100px;
-        right: -40px;
+        right: -80px;
+        clip-path: inset(0 45% 0 0);
     }
 }
 
