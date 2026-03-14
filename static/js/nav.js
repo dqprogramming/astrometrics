@@ -62,7 +62,10 @@ document.addEventListener('DOMContentLoaded', function () {
         fullscreenNav.setAttribute('aria-hidden', 'false');
         menuToggle.setAttribute('aria-expanded', 'true');
         document.body.style.overflow = 'hidden';
-        closeNav.focus();
+        fullscreenNav.addEventListener('transitionend', function handler() {
+            fullscreenNav.removeEventListener('transitionend', handler);
+            closeNav.focus();
+        });
     }
 
     function closeMenu() {
@@ -108,6 +111,30 @@ document.addEventListener('DOMContentLoaded', function () {
             closeMenu();
         }
     });
+
+    // --- Arrow key navigation within fullscreen nav ---
+    if (fullscreenNav) {
+        fullscreenNav.addEventListener('keydown', function (event) {
+            if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+                var items = fullscreenNav.querySelectorAll(
+                    'a[href], button, [tabindex]:not([tabindex="-1"]), [role="button"]'
+                );
+                if (items.length === 0) return;
+
+                var currentIndex = Array.prototype.indexOf.call(items, document.activeElement);
+
+                if (event.key === 'ArrowDown') {
+                    event.preventDefault();
+                    var nextIndex = currentIndex < 0 ? 0 : Math.min(currentIndex + 1, items.length - 1);
+                    items[nextIndex].focus();
+                } else {
+                    event.preventDefault();
+                    var prevIndex = currentIndex <= 0 ? 0 : currentIndex - 1;
+                    items[prevIndex].focus();
+                }
+            }
+        });
+    }
 
     // --- Focus trap within fullscreen nav ---
     if (fullscreenNav) {
