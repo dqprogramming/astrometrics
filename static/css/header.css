@@ -163,7 +163,7 @@
     .landing-nav {
         display: none;
     }
-    .btn-get-involved {
+    .landing-nav-dropdown .btn-get-involved {
         display: none;
     }
     .menu-icon-landing {
