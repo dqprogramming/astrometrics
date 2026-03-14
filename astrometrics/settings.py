@@ -96,9 +96,8 @@ WSGI_APPLICATION = "astrometrics.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-_DB_DEFAULT_URL = "postgresql://ajrbyers:legosword@localhost:5432/astrometrics"
 _db_config = dj_database_url.config(
-    default=os.environ.get("DATABASE_URL", _DB_DEFAULT_URL),
+    default=os.environ.get("DATABASE_URL", ""),
     conn_max_age=600,
 )
 _db_config["OPTIONS"] = {
