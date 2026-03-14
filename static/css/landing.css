@@ -333,8 +333,8 @@
 
 /* --- Footer adjustments for landing --- */
 .footer-legal {
-    margin-top: 24px;
-    padding-top: 16px;
+    margin-top: 10px;
+    padding-top: 10px;
     border-top: 1px solid rgba(33, 33, 41, 0.15);
     font-size: 12px;
     line-height: 1.5;

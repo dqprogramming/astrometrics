@@ -770,16 +770,18 @@ header {
   background-color: #ffd4f7;
 }
 
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  gap: 60px;
-  height: 350px;
+.footer-grid {
+  display: grid;
+  grid-template-columns: 48% 1fr;
+  grid-template-rows: auto auto;
+  gap: 0 40px;
 }
 
 .footer-left {
-
-  position: relative;
+  grid-column: 1;
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
 }
 
 .footer-title {
@@ -792,18 +794,18 @@ header {
 }
 
 .footer-pattern {
-
-  bottom: 0;
-  left: 0;
-  width: 300px;
-  height: 150px;
+  width: 100%;
+  height: 250px;
+  margin-top: auto;
   background-image: url("/static/img/OJC-logo.svg");
   background-repeat: no-repeat;
-  background-position-y: bottom;
-  opacity: 0.8;
+  background-size: contain;
+  background-position: bottom left;
 }
 
 .footer-right {
+  grid-column: 2;
+  grid-row: 1 / 3;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -833,22 +835,37 @@ header {
 
 .footer-links {
   display: flex;
-  justify-content: space-between;
-  gap: 30px;
+  gap: 20px;
+  border-left: 1px solid #212129;
+  padding-left: 20px;
+  margin-top: auto;
+  margin-bottom: 0;
+}
+
+.footer-column {
+  white-space: nowrap;
+  min-width: 130px;
 }
 
 .footer-column h3 {
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #212129;
 }
 
 .footer-column a,
 .footer-column p {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1px;
+  font-size: 13px;
   color: #212129;
   text-decoration: none;
+  transition: font-weight 0.15s;
+}
+
+.footer-column a:hover {
+  font-weight: 700;
 }
 
 /* Responsive adjustments */
