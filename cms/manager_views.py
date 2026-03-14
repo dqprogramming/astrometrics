@@ -49,7 +49,9 @@ def image_upload(request):
 
     ext = os.path.splitext(uploaded.name)[1].lower()
     if ext not in _ALLOWED_IMAGE_EXTENSIONS:
-        return JsonResponse({"error": "Unsupported file extension"}, status=400)
+        return JsonResponse(
+            {"error": "Unsupported file extension"}, status=400
+        )
 
     filename = f"cms/images/{uuid.uuid4().hex}{ext}"
     saved_path = default_storage.save(filename, uploaded)
