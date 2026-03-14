@@ -98,11 +98,14 @@
         </svg>
         <div class="landing-stats-inner">
             <div class="landing-stats-left">
-                <span class="landing-stats-number spectral-bold">45%</span>
+                <span class="landing-stats-number spectral-bold"
+                      data-count-to="45" data-count-suffix="%">0%</span>
             </div>
             <div class="landing-stats-right">
                 <div class="landing-stats-raised">
-                    <span class="landing-stats-amount spectral-bold">&pound;11,500</span>
+                    <span class="landing-stats-amount spectral-bold"
+                          data-count-to="11500" data-count-prefix="£"
+                          data-count-format="comma">&pound;0</span>
                     <span class="landing-stats-target">raised of &pound;14k</span>
                 </div>
                 <p class="landing-stats-desc">
@@ -119,4 +122,64 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+  const counters = document.querySelectorAll('[data-count-to]');
+  if (!counters.length) return;
+
+  function formatNumber(n, el) {
+    const fmt = el.dataset.countFormat;
+    if (fmt === 'comma') return n.toLocaleString('en-GB');
+    return String(n);
+  }
+
+  function updateDisplay(el, value) {
+    const prefix = el.dataset.countPrefix || '';
+    const suffix = el.dataset.countSuffix || '';
+    el.textContent = prefix + formatNumber(value, el) + suffix;
+  }
+
+  function animateCount(el, from, to) {
+    if (el._countAnim) cancelAnimationFrame(el._countAnim);
+    var duration = 1200;
+    var start = performance.now();
+
+    function tick(now) {
+      var elapsed = now - start;
+      var progress = Math.min(elapsed / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = Math.round(from + eased * (to - from));
+      el._currentValue = current;
+      updateDisplay(el, current);
+      if (progress < 1) {
+        el._countAnim = requestAnimationFrame(tick);
+      } else {
+        el._countAnim = null;
+      }
+    }
+
+    el._countAnim = requestAnimationFrame(tick);
+  }
+
+  counters.forEach(function (el) { el._currentValue = 0; });
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      counters.forEach(function (el) {
+        var target = parseInt(el.dataset.countTo, 10);
+        var to = entry.isIntersecting ? target : 0;
+        var from = el._currentValue;
+        if (from !== to) {
+          animateCount(el, from, to);
+        }
+      });
+    });
+  }, { threshold: 0.5 });
+
+  observer.observe(document.querySelector('.landing-stats'));
+})();
+</script>
 {% endblock %}
