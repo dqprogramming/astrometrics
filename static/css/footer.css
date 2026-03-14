@@ -133,8 +133,4 @@
   .footer-links {
     flex-direction: column;
   }
-
-  .footer .container {
-    height: 500px !important;
-  }
 }
