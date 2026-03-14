@@ -84,6 +84,12 @@
   min-width: 130px;
 }
 
+.footer-column:last-child {
+  border-left: 1px solid #212129;
+  padding-left: 20px;
+  align-self: start;
+}
+
 .footer-column h3 {
   font-size: 13px;
   font-weight: 700;
@@ -120,17 +126,29 @@
 }
 
 @media (max-width: 768px) {
-  .footer-content {
-    flex-direction: column;
+  .footer-grid {
+    grid-template-columns: 1fr;
   }
 
   .footer-left,
   .footer-right {
-    flex: 0 0 100%;
-    width: 100%;
+    display: contents;
+  }
+
+  .footer-title {
+    order: 1;
   }
 
   .footer-links {
-    flex-direction: column;
+    order: 2;
+    margin-top: 0;
+  }
+
+  .footer-legal {
+    order: 3;
+  }
+
+  .footer-pattern {
+    order: 4;
   }
 }
