@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # Third-party
     "django_extensions",
     "django_structlog",
+    "tinymce",
     # Project apps
     "journals",
     "cms",
@@ -164,6 +165,77 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 PAGINATE_BY = 25
+
+# TinyMCE rich-text editor
+# Toolbar is scoped to match the Bleach allowlist in cms/models.py so
+# editors don't see buttons whose output will be stripped on save.
+# valid_elements is intentionally omitted — restricting it collapses
+# pasted content (Word wraps everything in divs/spans that aren't in the
+# schema). Bleach handles final sanitisation on save instead.
+TINYMCE_DEFAULT_CONFIG = {
+    "height": 500,
+    "menubar": False,
+    "plugins": "lists link image table code fullscreen wordcount",
+    "toolbar": (
+        "undo redo | blocks | "
+        "bold italic underline | "
+        "link image | "
+        "bullist numlist | "
+        "blockquote hr | "
+        "table | "
+        "sub sup | "
+        "code | fullscreen"
+    ),
+    # Content CSS: load the site's own fonts and styles so the editor
+    # previews content as it will appear on the front end.
+    "content_css": [
+        "https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap",
+        "/static/css/normalize.min.css",
+        "/static/css/font.css",
+        "/static/css/app.css",
+    ],
+    # Paste cleanup — setup is eval'd into a real JS function by
+    # django-tinymce's init_tinymce.js. DOM-based so we can surgically
+    # strip junk without destroying semantic structure.
+    "setup": """function(editor) {
+  var BLOCK_TAGS = ['P','H1','H2','H3','H4','H5','H6','LI','UL','OL',
+                    'BLOCKQUOTE','TABLE','THEAD','TBODY','TR','TD','TH'];
+  var JUNK_ATTRS = ['id','dir','aria-level','role','lang','class'];
+  var KEEP_STYLE_RE = /^(font-weight|font-style|text-decoration)$/i;
+
+  function cleanEl(el) {
+    JUNK_ATTRS.forEach(function(a) { el.removeAttribute(a); });
+    if (BLOCK_TAGS.indexOf(el.tagName) !== -1) {
+      el.removeAttribute('style');
+    } else {
+      var raw = el.getAttribute('style') || '';
+      var kept = raw.split(';').filter(function(rule) {
+        var prop = (rule.split(':')[0] || '').trim();
+        return prop && KEEP_STYLE_RE.test(prop);
+      }).join(';');
+      kept ? el.setAttribute('style', kept) : el.removeAttribute('style');
+    }
+  }
+
+  editor.on('PastePreProcess', function(evt) {
+    var d = document.createElement('div');
+    d.innerHTML = evt.content;
+    d.querySelectorAll('font').forEach(function(el) {
+      var frag = document.createDocumentFragment();
+      while (el.firstChild) frag.appendChild(el.firstChild);
+      if (el.parentNode) el.parentNode.replaceChild(frag, el);
+    });
+    d.querySelectorAll('*').forEach(cleanEl);
+    evt.content = d.innerHTML;
+  });
+}""",
+    # Image upload
+    "images_upload_url": "/manager/cms/image-upload/",
+    "images_upload_credentials": True,
+    "automatic_uploads": True,
+    "file_picker_types": "image",
+    "image_caption": False,
+}
 
 # Logging configuration
 

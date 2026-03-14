@@ -63,10 +63,16 @@ class SanitizeHtmlTests(SimpleTestCase):
     def test_none(self):
         self.assertIsNone(sanitize_html(None))
 
-    def test_strips_img_tag(self):
-        html = '<img src="https://example.com/x.png" />'
+    def test_allows_img_tag_with_safe_attributes(self):
+        html = '<img src="https://example.com/x.png" alt="test" width="100" height="50">'
         result = sanitize_html(html)
-        self.assertNotIn("<img", result)
+        self.assertIn("<img", result)
+        self.assertIn('src="https://example.com/x.png"', result)
+
+    def test_strips_img_onerror_attribute(self):
+        html = '<img src="x.png" onerror="alert(1)">'
+        result = sanitize_html(html)
+        self.assertNotIn("onerror", result)
 
     def test_strips_disallowed_attributes_on_allowed_tags(self):
         html = '<p style="color:red" class="foo">text</p>'

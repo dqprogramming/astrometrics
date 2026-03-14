@@ -5,6 +5,8 @@ from . import manager_views as views
 app_name = "cms_manager"
 
 urlpatterns = [
+    # TinyMCE image upload
+    path("image-upload/", views.image_upload, name="image_upload"),
     # Landing Page
     path(
         "landing-page/",
