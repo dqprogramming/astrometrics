@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="/static/css/landing.css">
+{% endblock %}
+
+{% block content %}
+<!-- Hero + Features wrapper (circles span both) -->
+<div class="landing-hero-features-wrapper">
+    <!-- Concentric circles SVG -->
+    <svg class="landing-circles-svg" viewBox="0 0 1100 1100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" overflow="visible">
+        <circle cx="550" cy="550" r="130" fill="none" stroke="#FFDE59" stroke-width="70"/>
+        <circle cx="550" cy="550" r="250" fill="none" stroke="#FFDE59" stroke-width="70"/>
+        <circle cx="550" cy="550" r="370" fill="none" stroke="#FFDE59" stroke-width="70"/>
+        <circle cx="550" cy="550" r="490" fill="none" stroke="#FFDE59" stroke-width="70"/>
+    </svg>
+
+    <!-- Hero Section -->
+    <section class="landing-hero">
+        <div class="container">
+            <div class="landing-hero-content">
+                <h1 class="landing-hero-heading spectral-bold">
+                    {{ landing.hero_heading }}
+                </h1>
+                <p class="landing-hero-sub">
+                    {{ landing.hero_subheading }}
+                </p>
+                <a href="{{ landing.hero_button_url }}"
+                   class="btn btn-dark spectral-bold">{{ landing.hero_button_text }}</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="landing-features">
+    <div class="container">
+        <h2 class="sr-only">Features</h2>
+        <div class="row">
+            <div class="col-12">
+                <div class="features">
+                    <div class="feature-card blue">
+                        <img src="/static/img/home-col-1.jpg"
+                             alt="Publishing research: an image of a man working on a laptop"
+                             class="feature-image">
+                        <div class="feature-number">01</div>
+                        <h3 class="feature-title">{{ landing.feature_1_title }}</h3>
+                        <p class="feature-text">{{ landing.feature_1_text }}</p>
+                        <a href="{{ landing.feature_1_button_url }}"
+                           class="btn btn-dark spectral-bold feature-btn">{{ landing.feature_1_button_text }}</a>
+                    </div>
+
+                    <div class="feature-card green">
+                        <img src="/static/img/home-col-2.jpg"
+                             alt="Research communities: an image of women working outside on a laptop and clipboard"
+                             class="feature-image">
+                        <div class="feature-number">02</div>
+                        <h3 class="feature-title">{{ landing.feature_2_title }}</h3>
+                        <p class="feature-text">{{ landing.feature_2_text }}</p>
+                        <a href="{{ landing.feature_2_button_url }}"
+                           class="btn btn-dark spectral-bold feature-btn">{{ landing.feature_2_button_text }}</a>
+                    </div>
+
+                    <div class="feature-card pink">
+                        <img src="/static/img/home-col-3.jpg"
+                             alt="Academic journals: an image of a library with many staircases"
+                             class="feature-image">
+                        <div class="feature-number">03</div>
+                        <h3 class="feature-title">{{ landing.feature_3_title }}</h3>
+                        <p class="feature-text">{{ landing.feature_3_text }}</p>
+                        <a href="{{ landing.feature_3_button_url }}"
+                           class="btn btn-dark spectral-bold feature-btn">{{ landing.feature_3_button_text }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</div><!-- end .landing-hero-features-wrapper -->
+
+<!-- Stats Section -->
+<section class="landing-stats">
+    <div class="container">
+        <h2 class="sr-only">Statistics</h2>
+        <svg class="landing-stats-rings-svg" viewBox="0 0 1100 1100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" overflow="visible">
+            <circle cx="550" cy="550" r="200" fill="none" stroke="#fff" stroke-width="80"/>
+            <circle cx="550" cy="550" r="350" fill="none" stroke="#fff" stroke-width="80"/>
+            <circle cx="550" cy="550" r="500" fill="none" stroke="#fff" stroke-width="80"/>
+        </svg>
+        <div class="landing-stats-inner">
+            <div class="landing-stats-left">
+                <span class="landing-stats-number spectral-bold"
+                      data-count-to="{{ landing.stats_percentage }}" data-count-suffix="%">0%</span>
+            </div>
+            <div class="landing-stats-right">
+                <div class="landing-stats-raised">
+                    <span class="landing-stats-amount spectral-bold"
+                          data-count-to="{{ landing.stats_amount_raised }}" data-count-prefix="&pound;"
+                          data-count-format="comma">&pound;0</span>
+                    <span class="landing-stats-target">raised of {{ landing.stats_fundraising_target_display }}</span>
+                </div>
+                <p class="landing-stats-desc">
+                    {{ landing.stats_description }}
+                </p>
+                <div class="landing-stats-buttons">
+                    <a href="{{ landing.stats_button_1_url }}"
+                       class="btn btn-dark spectral-bold">{{ landing.stats_button_1_text }}</a>
+                    <a href="{{ landing.stats_button_2_url }}"
+                       class="btn btn-dark spectral-bold">{{ landing.stats_button_2_text }}</a>
+                </div>
+            </div>
+        </div>
+        <div class="sr-only" aria-live="polite" id="stats-announcement"></div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+  const counters = document.querySelectorAll('[data-count-to]');
+  if (!counters.length) return;
+
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function formatNumber(n, el) {
+    const fmt = el.dataset.countFormat;
+    if (fmt === 'comma') return n.toLocaleString('en-GB');
+    return String(n);
+  }
+
+  function updateDisplay(el, value) {
+    const prefix = el.dataset.countPrefix || '';
+    const suffix = el.dataset.countSuffix || '';
+    el.textContent = prefix + formatNumber(value, el) + suffix;
+  }
+
+  function announceStats() {
+    var announcement = document.getElementById('stats-announcement');
+    if (!announcement) return;
+    var parts = [];
+    counters.forEach(function (el) {
+      var target = parseInt(el.dataset.countTo, 10);
+      var prefix = el.dataset.countPrefix || '';
+      var suffix = el.dataset.countSuffix || '';
+      parts.push(prefix + formatNumber(target, el) + suffix);
+    });
+    announcement.textContent = parts[0] + ' raised, ' + parts[1] + ' of {{ landing.stats_fundraising_target_display }}';
+  }
+
+  function animateCount(el, from, to, onComplete) {
+    if (el._countAnim) cancelAnimationFrame(el._countAnim);
+    var duration = 1200;
+    var start = performance.now();
+
+    function tick(now) {
+      var elapsed = now - start;
+      var progress = Math.min(elapsed / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = Math.round(from + eased * (to - from));
+      el._currentValue = current;
+      updateDisplay(el, current);
+      if (progress < 1) {
+        el._countAnim = requestAnimationFrame(tick);
+      } else {
+        el._countAnim = null;
+        if (onComplete) onComplete();
+      }
+    }
+
+    el._countAnim = requestAnimationFrame(tick);
+  }
+
+  counters.forEach(function (el) { el._currentValue = 0; });
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      var animationsRemaining = counters.length;
+      counters.forEach(function (el) {
+        var target = parseInt(el.dataset.countTo, 10);
+        var to = entry.isIntersecting ? target : 0;
+        var from = el._currentValue;
+        if (from !== to) {
+          if (prefersReducedMotion) {
+            el._currentValue = to;
+            updateDisplay(el, to);
+            animationsRemaining--;
+            if (animationsRemaining <= 0 && entry.isIntersecting) {
+              announceStats();
+            }
+          } else {
+            animateCount(el, from, to, function () {
+              animationsRemaining--;
+              if (animationsRemaining <= 0 && entry.isIntersecting) {
+                announceStats();
+              }
+            });
+          }
+        } else {
+          animationsRemaining--;
+        }
+      });
+    });
+  }, { threshold: 0.5 });
+
+  observer.observe(document.querySelector('.landing-stats'));
+})();
+</script>
+{% endblock %}
