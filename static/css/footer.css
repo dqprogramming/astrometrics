@@ -107,7 +107,8 @@
   transition: font-weight 0.15s;
 }
 
-.footer-column a:hover {
+.footer-column a:hover,
+.footer-column a:focus-visible {
   font-weight: 700;
 }
 
@@ -117,7 +118,7 @@
     border-top: 1px solid rgba(33, 33, 41, 0.15);
     font-size: 12px;
     line-height: 1.5;
-    color: #444;
+    color: #000;
 }
 
 .footer-legal a {

@@ -9,7 +9,7 @@
             </div>
             <nav class="landing-nav" id="landing-nav">
                 <div class="landing-nav-dropdown">
-                    <a href="/#who-we-are" class="landing-nav-link">About OJC</a>
+                    <a href="/#who-we-are" class="landing-nav-link" aria-haspopup="true" aria-expanded="false">About OJC</a>
                     <div class="landing-nav-dropdown-menu">
                         <a href="/#who-we-are" class="landing-dropdown-item">About us</a>
                         <a href="/#team" class="landing-dropdown-item">Our team</a>
@@ -29,7 +29,7 @@
                 <a href="mailto:info@openjournalscollective.org?subject=Open Journals Collective"
                    class="btn-get-involved">GET INVOLVED</a>
                 <div class="menu-icon-landing" id="menu-toggle"
-                     role="button" tabindex="0" aria-label="Toggle menu">
+                     role="button" tabindex="0" aria-label="Toggle menu" aria-expanded="false">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -40,7 +40,7 @@
 </header>
 
 <!-- Fullscreen Navigation (mobile) -->
-<div class="fullscreen-nav" id="fullscreen-nav">
+<div class="fullscreen-nav" id="fullscreen-nav" aria-hidden="true">
     <div class="container">
         <div class="row">
             <div class="col-2">
@@ -52,7 +52,7 @@
                     Open Journals Collective
                 </span>
             </div>
-            <div class="close-icon col-1" id="close-nav">&times;</div>
+            <div class="close-icon col-1" id="close-nav" role="button" tabindex="0" aria-label="Close menu">&times;</div>
         </div>
         <div class="nav-content">
             <div class="nav-links">
@@ -63,7 +63,7 @@
                 <a href="/#news" class="nav-link">News &amp; updates.</a>
             </div>
             <div class="nav-cta">
-                <a target="_blank"
+                <a target="_blank" rel="noopener"
                    href="mailto:info@openjournalscollective.org?subject=Open Journals Collective"
                    class="nav-btn">GET INVOLVED</a>
             </div>

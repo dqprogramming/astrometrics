@@ -1085,9 +1085,28 @@ a {
     border-width: 0;
 }
 
+/* Skip navigation link */
+.skip-link {
+    position: absolute;
+    top: -100%;
+    left: 16px;
+    z-index: 10000;
+    padding: 12px 24px;
+    background: #212129;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 0 0 8px 8px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
 /* Focus visible for keyboard navigation */
 *:focus-visible {
-    outline: 3px solid #1a1a2e;
+    outline: 3px solid #212129;
     outline-offset: 2px;
 }
 
