@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- Dropdown aria-expanded + Escape to close ---
     if (dropdownTrigger && dropdown) {
+        var escapedDropdown = false;
+
         dropdown.addEventListener('mouseenter', function () {
             dropdown.classList.remove('dropdown-closed');
             dropdownTrigger.setAttribute('aria-expanded', 'true');
@@ -16,6 +18,10 @@ document.addEventListener('DOMContentLoaded', function () {
             dropdownTrigger.setAttribute('aria-expanded', 'false');
         });
         dropdown.addEventListener('focusin', function () {
+            if (escapedDropdown) {
+                escapedDropdown = false;
+                return;
+            }
             dropdown.classList.remove('dropdown-closed');
             dropdownTrigger.setAttribute('aria-expanded', 'true');
         });
@@ -27,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         dropdown.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
+                escapedDropdown = true;
                 dropdown.classList.add('dropdown-closed');
                 dropdownTrigger.setAttribute('aria-expanded', 'false');
                 dropdownTrigger.focus();
@@ -79,25 +86,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- Menu toggle (hamburger) ---
     if (menuToggle && fullscreenNav) {
         menuToggle.addEventListener('click', openMenu);
-
-        menuToggle.addEventListener('keydown', function (event) {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                openMenu();
-            }
-        });
     }
 
     // --- Close button ---
     if (closeNav && fullscreenNav) {
         closeNav.addEventListener('click', closeMenu);
-
-        closeNav.addEventListener('keydown', function (event) {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                closeMenu();
-            }
-        });
     }
 
     // --- Close on nav link click ---
@@ -117,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
         fullscreenNav.addEventListener('keydown', function (event) {
             if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
                 var items = fullscreenNav.querySelectorAll(
-                    'a[href], button, [tabindex]:not([tabindex="-1"]), [role="button"]'
+                    'a[href], button, [tabindex]:not([tabindex="-1"])'
                 );
                 if (items.length === 0) return;
 
@@ -142,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (event.key !== 'Tab') return;
 
             var focusable = fullscreenNav.querySelectorAll(
-                'a[href], button, [tabindex]:not([tabindex="-1"]), [role="button"]'
+                'a[href], button, [tabindex]:not([tabindex="-1"])'
             );
             if (focusable.length === 0) return;
 

@@ -102,7 +102,7 @@
             <circle cx="550" cy="550" r="350" fill="none" stroke="#fff" stroke-width="80"/>
             <circle cx="550" cy="550" r="500" fill="none" stroke="#fff" stroke-width="80"/>
         </svg>
-        <div class="landing-stats-inner" role="status" aria-live="polite">
+        <div class="landing-stats-inner">
             <div class="landing-stats-left">
                 <span class="landing-stats-number spectral-bold"
                       data-count-to="45" data-count-suffix="%">0%</span>
@@ -126,6 +126,7 @@
                 </div>
             </div>
         </div>
+        <div class="sr-only" aria-live="polite" id="stats-announcement"></div>
     </div>
 </section>
 {% endblock %}
@@ -135,6 +136,8 @@
 (function () {
   const counters = document.querySelectorAll('[data-count-to]');
   if (!counters.length) return;
+
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function formatNumber(n, el) {
     const fmt = el.dataset.countFormat;
@@ -148,7 +151,20 @@
     el.textContent = prefix + formatNumber(value, el) + suffix;
   }
 
-  function animateCount(el, from, to) {
+  function announceStats() {
+    var announcement = document.getElementById('stats-announcement');
+    if (!announcement) return;
+    var parts = [];
+    counters.forEach(function (el) {
+      var target = parseInt(el.dataset.countTo, 10);
+      var prefix = el.dataset.countPrefix || '';
+      var suffix = el.dataset.countSuffix || '';
+      parts.push(prefix + formatNumber(target, el) + suffix);
+    });
+    announcement.textContent = '45 percent raised, £11,500 of £14,000';
+  }
+
+  function animateCount(el, from, to, onComplete) {
     if (el._countAnim) cancelAnimationFrame(el._countAnim);
     var duration = 1200;
     var start = performance.now();
@@ -164,6 +180,7 @@
         el._countAnim = requestAnimationFrame(tick);
       } else {
         el._countAnim = null;
+        if (onComplete) onComplete();
       }
     }
 
@@ -174,12 +191,29 @@
 
   var observer = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
+      var animationsRemaining = counters.length;
       counters.forEach(function (el) {
         var target = parseInt(el.dataset.countTo, 10);
         var to = entry.isIntersecting ? target : 0;
         var from = el._currentValue;
         if (from !== to) {
-          animateCount(el, from, to);
+          if (prefersReducedMotion) {
+            el._currentValue = to;
+            updateDisplay(el, to);
+            animationsRemaining--;
+            if (animationsRemaining <= 0 && entry.isIntersecting) {
+              announceStats();
+            }
+          } else {
+            animateCount(el, from, to, function () {
+              animationsRemaining--;
+              if (animationsRemaining <= 0 && entry.isIntersecting) {
+                announceStats();
+              }
+            });
+          }
+        } else {
+          animationsRemaining--;
         }
       });
     });

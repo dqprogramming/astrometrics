@@ -112,6 +112,17 @@
   font-weight: 700;
 }
 
+.footer-column a:focus-visible {
+  outline: 2px solid #212129;
+  outline-offset: 2px;
+}
+
+.footer-column a.social-disabled {
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+}
+
 .footer-legal {
     margin-top: 10px;
     padding-top: 10px;

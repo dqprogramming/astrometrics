@@ -129,10 +129,14 @@
     transition: border-color 0.2s;
 }
 
-.landing-dropdown-cta:hover,
+.landing-dropdown-cta:hover {
+    border-color: #FFDE59;
+}
+
 .landing-dropdown-cta:focus-visible {
     border-color: #FFDE59;
-    outline: none;
+    outline: 3px solid #71f7f2;
+    outline-offset: 2px;
 }
 
 .landing-header-actions {
@@ -162,11 +166,21 @@
 
 /* Hamburger icon (mobile only) */
 .menu-icon-landing {
+    all: unset;
     display: none;
     flex-direction: column;
     gap: 5px;
     cursor: pointer;
     padding: 4px;
+}
+
+/* Close button reset */
+button.close-icon {
+    all: unset;
+    text-align: right;
+    font-size: 40px;
+    cursor: pointer;
+    color: #ffffff;
 }
 
 .menu-icon-landing span {

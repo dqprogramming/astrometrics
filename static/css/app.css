@@ -1110,6 +1110,18 @@ a {
     outline-offset: 2px;
 }
 
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+    }
+}
+
 /* Utility Classes */
 .text-gradient {
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
