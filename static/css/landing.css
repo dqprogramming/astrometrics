@@ -222,22 +222,24 @@
     overflow: hidden;
 }
 
+.landing-stats .container {
+    position: relative;
+    overflow-x: clip;
+}
+
 .landing-stats-rings-svg {
     position: absolute;
     width: 700px;
     height: 700px;
-    bottom: -350px;
-    left: -250px;
+    bottom: -380px;
+    left: -280px;
     pointer-events: none;
     z-index: 0;
 }
 
-.landing-stats .container {
+.landing-stats-inner {
     position: relative;
     z-index: 1;
-}
-
-.landing-stats-inner {
     display: flex;
     align-items: center;
     gap: 60px;
