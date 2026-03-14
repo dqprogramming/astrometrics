@@ -1,7 +1,14 @@
+import os
+import uuid
+
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.core.files.storage import default_storage
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from .forms import PageForm, PostForm, SnippetForm
@@ -15,6 +22,39 @@ class StaffRequiredMixin(UserPassesTestMixin):
 
     def test_func(self):
         return self.request.user.is_active and self.request.user.is_staff
+
+
+_ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/gif", "image/webp"}
+_ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
+
+
+@csrf_exempt
+@require_POST
+def image_upload(request):
+    """TinyMCE image upload endpoint.
+
+    CSRF is exempt because TinyMCE's XHR does not send the CSRF token;
+    access is instead restricted to authenticated staff users.
+    Returns {"location": "<url>"} on success or {"error": "..."} on failure.
+    """
+    if not (request.user.is_active and request.user.is_staff):
+        return JsonResponse({"error": "Forbidden"}, status=403)
+
+    uploaded = request.FILES.get("file")
+    if not uploaded:
+        return JsonResponse({"error": "No file received"}, status=400)
+
+    if uploaded.content_type not in _ALLOWED_IMAGE_TYPES:
+        return JsonResponse({"error": "Unsupported file type"}, status=400)
+
+    ext = os.path.splitext(uploaded.name)[1].lower()
+    if ext not in _ALLOWED_IMAGE_EXTENSIONS:
+        return JsonResponse({"error": "Unsupported file extension"}, status=400)
+
+    filename = f"cms/images/{uuid.uuid4().hex}{ext}"
+    saved_path = default_storage.save(filename, uploaded)
+    url = default_storage.url(saved_path)
+    return JsonResponse({"location": url})
 
 
 # ── Pages ─────────────────────────────────────────────────────────────────────

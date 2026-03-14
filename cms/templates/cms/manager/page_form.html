@@ -9,11 +9,13 @@
 {% endblock %}
 {% block nav_pages %}active{% endblock %}
 
+{% block extra_js %}{{ form.media }}{% endblock %}
+
 {% block content %}
-<form method="post" style="max-width:860px;">
+<form method="post">
     {% csrf_token %}
 
-    <div style="display:grid; grid-template-columns:1fr 300px; gap:1.25rem; align-items:start;">
+    <div style="display:grid; grid-template-columns:1fr 280px; gap:1.25rem; align-items:start;">
 
         <div>
             <div class="mgr-form-card">
