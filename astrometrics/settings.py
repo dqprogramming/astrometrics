@@ -10,8 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
+import dj_database_url
 import structlog
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -22,14 +24,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = (
-    "django-insecure-7)quvmg#txg+_pg87x7&ulbcuj#@%5f=7@etu_zx2d1-!8)ylj"
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "django-insecure-7)quvmg#txg+_pg87x7&ulbcuj#@%5f=7@etu_zx2d1-!8)ylj",
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "true").lower() in ("1", "true", "yes")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1").split(
+    ","
+)
 
 
 # Application definition
@@ -52,6 +57,7 @@ INSTALLED_APPS = [
     "journals",
     "cms",
     "manager",
+    "portal",
 ]
 
 MIDDLEWARE = [
@@ -89,22 +95,16 @@ WSGI_APPLICATION = "astrometrics.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "astrometrics",
-        "USER": "ajrbyers",
-        "PASSWORD": "legosword",
-        "HOST": "localhost",
-        "PORT": "5432",
-        # Keep connections alive for 10 minutes
-        "CONN_MAX_AGE": 600,
-        "OPTIONS": {
-            "connect_timeout": 10,
-            "options": "-c statement_timeout=30000",  # 30 second query timeout
-        },
-    }
+_DB_DEFAULT_URL = "postgresql://ajrbyers:legosword@localhost:5432/astrometrics"
+_db_config = dj_database_url.config(
+    default=os.environ.get("DATABASE_URL", _DB_DEFAULT_URL),
+    conn_max_age=600,
+)
+_db_config["OPTIONS"] = {
+    "connect_timeout": 10,
+    "options": "-c statement_timeout=30000",
 }
+DATABASES = {"default": _db_config}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

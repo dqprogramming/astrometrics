@@ -1,0 +1,487 @@
+/* ── Publisher Portal — clean light UI ─────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+    --bg:         #f6f8fa;
+    --surface:    #ffffff;
+    --border:     #d0d7de;
+    --text:       #1f2328;
+    --muted:      #656d76;
+    --accent:     #0969da;
+    --accent-fg:  #ffffff;
+    --green:      #1a7f37;
+    --red:        #cf222e;
+    --nav-bg:     #24292f;
+    --nav-text:   #f0f6fc;
+    --nav-muted:  #8b949e;
+}
+
+body.portal-body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* ── Nav ─────────────────────────────────────────────────────────────────── */
+
+.portal-nav {
+    background: var(--nav-bg);
+    color: var(--nav-text);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    height: 56px;
+    border-bottom: 1px solid rgba(255,255,255,.1);
+}
+
+.portal-nav-brand {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-weight: 600;
+    font-size: .9rem;
+}
+
+.portal-brand-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+}
+
+.portal-nav-user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: .85rem;
+    color: var(--nav-muted);
+}
+
+.portal-nav-logout {
+    background: none;
+    border: none;
+    color: var(--nav-muted);
+    cursor: pointer;
+    font-size: .85rem;
+    padding: 0;
+}
+.portal-nav-logout:hover { color: var(--nav-text); }
+
+/* ── Main layout ─────────────────────────────────────────────────────────── */
+
+.portal-main {
+    padding: 2rem 0;
+}
+
+.portal-container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* ── Login ───────────────────────────────────────────────────────────────── */
+
+.portal-login-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: var(--bg);
+}
+
+.portal-login-wrap {
+    width: 100%;
+    max-width: 400px;
+    padding: 1rem;
+}
+
+.portal-login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2rem;
+}
+
+.portal-login-brand {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-weight: 600;
+    font-size: .875rem;
+    margin-bottom: 1.5rem;
+    color: var(--muted);
+}
+
+.portal-login-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 1.25rem;
+}
+
+/* ── Page header ─────────────────────────────────────────────────────────── */
+
+.portal-page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.portal-page-title {
+    font-size: 1.375rem;
+    font-weight: 600;
+    margin: 0 0 .25rem;
+}
+
+.portal-page-sub {
+    font-size: .875rem;
+    color: var(--muted);
+    margin: 0;
+}
+
+.portal-page-sub a { color: var(--accent); text-decoration: none; }
+.portal-page-sub a:hover { text-decoration: underline; }
+
+/* ── Section ─────────────────────────────────────────────────────────────── */
+
+.portal-section {
+    margin-top: 1.5rem;
+}
+
+.portal-section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 1rem;
+}
+
+.portal-section-label {
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .75rem;
+}
+
+/* ── Journal cards ───────────────────────────────────────────────────────── */
+
+.portal-journal-list {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.portal-journal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: .875rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.portal-journal-title {
+    font-weight: 500;
+    flex: 1;
+}
+
+.portal-journal-meta {
+    font-size: .8125rem;
+    color: var(--muted);
+    min-width: 120px;
+}
+
+/* ── Forms ───────────────────────────────────────────────────────────────── */
+
+.portal-form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.portal-two-col {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 1.25rem;
+    align-items: start;
+}
+
+@media (max-width: 720px) {
+    .portal-two-col { grid-template-columns: 1fr; }
+}
+
+.portal-field {
+    margin-bottom: 1rem;
+}
+.portal-field:last-child { margin-bottom: 0; }
+
+.portal-label {
+    display: block;
+    font-size: .8125rem;
+    font-weight: 500;
+    margin-bottom: .375rem;
+    color: var(--text);
+}
+
+.portal-input,
+input.portal-input,
+select.portal-input {
+    width: 100%;
+    padding: .4375rem .6875rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: .875rem;
+    line-height: 1.5;
+    transition: border-color .15s;
+}
+
+.portal-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(9,105,218,.1);
+}
+
+.portal-textarea {
+    width: 100%;
+    padding: .4375rem .6875rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: .875rem;
+    line-height: 1.5;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.portal-textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(9,105,218,.1);
+}
+
+.portal-checkbox-wrap {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.portal-help {
+    font-size: .75rem;
+    color: var(--muted);
+    margin-top: .25rem;
+}
+
+.portal-error {
+    font-size: .75rem;
+    color: var(--red);
+    margin-top: .25rem;
+}
+
+.portal-form-actions {
+    display: flex;
+    gap: .5rem;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+
+.portal-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: .375rem;
+    padding: .4375rem .875rem;
+    background: var(--green);
+    color: #fff;
+    border: 1px solid var(--green);
+    border-radius: 6px;
+    font-size: .875rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: filter .15s;
+}
+.portal-btn-primary:hover { filter: brightness(1.1); color: #fff; }
+
+.portal-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: .375rem;
+    padding: .4375rem .875rem;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: .875rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background .15s;
+}
+.portal-btn-secondary:hover { background: var(--bg); }
+
+.portal-btn-sm {
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+    padding: .25rem .625rem;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: .8125rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background .15s;
+}
+.portal-btn-sm:hover { background: var(--bg); }
+
+/* ── Alerts ──────────────────────────────────────────────────────────────── */
+
+.portal-alert {
+    padding: .75rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: .875rem;
+    border: 1px solid transparent;
+}
+
+.portal-alert-success { background: #dafbe1; border-color: #b7dfbd; color: #1a7f37; }
+.portal-alert-error   { background: #ffebe9; border-color: #ffb8b0; color: #cf222e; }
+.portal-alert-info    { background: #ddf4ff; border-color: #96d0ff; color: #0550ae; }
+.portal-alert-warning { background: #fff8c5; border-color: #e3b341; color: #7d4e00; }
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+
+.portal-empty {
+    color: var(--muted);
+    font-size: .875rem;
+}
+
+/* ── M2M widget (shared with manager CSS tokens) ────────────────────────── */
+
+.m2m-widget {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.m2m-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .375rem;
+    min-height: 1.5rem;
+}
+
+.m2m-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+    background: rgba(9,105,218,.1);
+    color: var(--accent);
+    border: 1px solid rgba(9,105,218,.2);
+    border-radius: 2em;
+    padding: .125rem .625rem;
+    font-size: .8125rem;
+}
+
+.m2m-tag-remove {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0 .1rem;
+    opacity: .7;
+    line-height: 1;
+}
+.m2m-tag-remove:hover { opacity: 1; }
+
+.m2m-none {
+    font-size: .8125rem;
+    color: var(--muted);
+}
+
+.m2m-search-wrap { position: relative; }
+
+.m2m-results {
+    position: absolute;
+    left: 0; right: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.12);
+    z-index: 50;
+    margin-top: .25rem;
+}
+
+.m2m-results-inner {
+    display: flex;
+    flex-direction: column;
+    padding: .25rem;
+}
+
+.m2m-result-item {
+    display: flex;
+    align-items: center;
+    gap: .375rem;
+    padding: .4375rem .625rem;
+    background: none;
+    border: none;
+    border-radius: 4px;
+    color: var(--text);
+    font-size: .875rem;
+    text-align: left;
+    cursor: pointer;
+    width: 100%;
+}
+.m2m-result-item:hover { background: var(--bg); }
+
+.m2m-empty-results {
+    display: block;
+    padding: .5rem .625rem;
+    font-size: .8125rem;
+    color: var(--muted);
+}
+
+/* ── Audit log table extras ──────────────────────────────────────────────── */
+
+.audit-action {
+    display: inline-block;
+    padding: .125rem .5rem;
+    border-radius: 2em;
+    font-size: .75rem;
+    font-weight: 500;
+}
+
+.audit-action-update     { background: #ddf4ff; color: #0550ae; }
+.audit-action-m2m_add    { background: #dafbe1; color: #1a7f37; }
+.audit-action-m2m_remove { background: #ffebe9; color: #cf222e; }
+
+.audit-value {
+    font-family: ui-monospace, "SFMono-Regular", monospace;
+    font-size: .8125rem;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mgr-pagination {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-top: 1.25rem;
+    font-size: .875rem;
+}

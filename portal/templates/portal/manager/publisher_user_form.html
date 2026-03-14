@@ -1,0 +1,108 @@
+{% extends "manager/base.html" %}
+
+{% block title %}{{ action }} Portal User{% endblock %}
+{% block page_title %}{{ action }} Portal User{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> /
+<a href="{% url 'portal_manager:publisher_user_list' %}">Portal Users</a> /
+{{ action }}
+{% endblock %}
+{% block nav_portal_users %}active{% endblock %}
+
+{% block content %}
+<form method="post" style="max-width:480px;">
+    {% csrf_token %}
+    <div class="mgr-form-card">
+
+        <div class="mgr-field">
+            <label class="mgr-label">User</label>
+
+            {{ form.user }}{# hidden input #}
+
+            <div id="user-selected" style="display:none; margin-bottom:.5rem;">
+                <span class="m2m-tag" style="border-radius:6px; padding:.375rem .75rem;">
+                    <span id="user-selected-label"></span>
+                    <button type="button" id="user-clear" class="m2m-tag-remove" aria-label="Clear">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </span>
+            </div>
+
+            <div id="user-search-wrap">
+                <div class="m2m-search-wrap">
+                    <input type="text"
+                           id="user-search-input"
+                           class="mgr-input"
+                           placeholder="Search by name, username or email…"
+                           hx-get="{% url 'portal_manager:user_search' %}"
+                           hx-target="#user-search-results"
+                           hx-trigger="input changed delay:200ms, focus"
+                           name="q"
+                           autocomplete="off">
+                    <div id="user-search-results" class="m2m-results"></div>
+                </div>
+            </div>
+
+            <div class="mgr-help">Search and select the user account to grant portal access.</div>
+            {% if form.user.errors %}<div class="mgr-error">{{ form.user.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="mgr-field" style="margin-bottom:0;">
+            <label class="mgr-label" for="{{ form.publisher.id_for_label }}">Publisher</label>
+            {{ form.publisher }}
+            <div class="mgr-help">The publisher this user will be able to manage.</div>
+            {% if form.publisher.errors %}<div class="mgr-error">{{ form.publisher.errors.0 }}</div>{% endif %}
+        </div>
+
+    </div>
+    <div class="mgr-form-actions">
+        <button type="submit" class="btn-mgr-primary">
+            <i class="bi bi-check2"></i> Save
+        </button>
+        <a href="{% url 'portal_manager:publisher_user_list' %}" class="btn-mgr-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    var hiddenInput   = document.getElementById('{{ form.user.id_for_label }}');
+    var selectedWrap  = document.getElementById('user-selected');
+    var selectedLabel = document.getElementById('user-selected-label');
+    var searchWrap    = document.getElementById('user-search-wrap');
+    var searchInput   = document.getElementById('user-search-input');
+    var resultsDiv    = document.getElementById('user-search-results');
+    var clearBtn      = document.getElementById('user-clear');
+
+    function selectUser(id, label) {
+        hiddenInput.value = id;
+        selectedLabel.textContent = label;
+        selectedWrap.style.display = '';
+        searchWrap.style.display = 'none';
+        resultsDiv.innerHTML = '';
+    }
+
+    function clearUser() {
+        hiddenInput.value = '';
+        selectedWrap.style.display = 'none';
+        searchWrap.style.display = '';
+        searchInput.value = '';
+        searchInput.focus();
+    }
+
+    clearBtn.addEventListener('click', clearUser);
+
+    // Delegate click on dynamically-rendered result buttons
+    resultsDiv.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-user-id]');
+        if (btn) selectUser(btn.dataset.userId, btn.dataset.userLabel);
+    });
+
+    // Hide results when clicking outside
+    document.addEventListener('click', function (e) {
+        if (!searchWrap.contains(e.target)) resultsDiv.innerHTML = '';
+    });
+}());
+</script>
+{% endblock %}
