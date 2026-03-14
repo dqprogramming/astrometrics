@@ -1,3 +1,9 @@
+## 1.8.0 (2026-03-14)
+
+### Feat
+
+- **dev**: add django-debug-toolbar for local development
+
 ## 1.7.0 (2026-03-14)
 
 ### Feat
