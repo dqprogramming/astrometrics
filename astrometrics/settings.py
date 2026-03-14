@@ -266,6 +266,17 @@ structlog.configure(
     cache_logger_on_first_use=True,
 )
 
+# Django Debug Toolbar (development only)
+if DEBUG:
+    import socket
+
+    INSTALLED_APPS += ["debug_toolbar"]
+    MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
+    INTERNAL_IPS = ["127.0.0.1"]
+    # Detect Docker gateway IP so the toolbar shows inside containers
+    _hostname, _aliases, _ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS += [ip[: ip.rfind(".")] + ".1" for ip in _ips]
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
