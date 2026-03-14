@@ -12,8 +12,12 @@
 
     <!-- app styles -->
     <link rel="stylesheet" href="/static/css/app.css">
-    <link rel="stylesheet" href="/static/css/landing.css">
+    <link rel="stylesheet" href="/static/css/header.css">
+    <link rel="stylesheet" href="/static/css/footer.css">
     <link rel="stylesheet" href="/static/css/font.css">
+
+    <!-- styles from templates in includes/ -->
+    {% block extra_css %}{% endblock %}
 
     <!-- Google fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
