@@ -224,12 +224,10 @@
 
 .landing-stats-rings-svg {
     position: absolute;
-    height: 100%;
-    width: auto;
-    aspect-ratio: 1;
-    top: 0;
-    left: 0;
-    transform: translateX(-50%);
+    width: 700px;
+    height: 700px;
+    bottom: -350px;
+    left: -250px;
     pointer-events: none;
     z-index: 0;
 }
