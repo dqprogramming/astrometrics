@@ -1,0 +1,351 @@
+/* =============================================
+   Landing Page Styles
+   ============================================= */
+
+/* --- Header --- */
+.landing-header {
+    padding: 16px 0;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.landing-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.landing-header-logo {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.landing-header-logo .mini-logo {
+    height: 36px;
+}
+
+.landing-header-logo-text {
+    font-family: 'Spectral', serif;
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 1.2;
+    color: #212129;
+    white-space: nowrap;
+}
+
+.landing-nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    flex: 1;
+    justify-content: center;
+}
+
+.landing-nav-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: #212129;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.2s;
+}
+
+.landing-nav-link:hover {
+    color: #666;
+}
+
+.landing-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+}
+
+.btn-get-involved {
+    display: inline-block;
+    padding: 10px 22px;
+    background-color: #212129;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: background-color 0.2s;
+}
+
+.btn-get-involved:hover {
+    background-color: #3a3a45;
+}
+
+/* Hamburger icon (mobile only) */
+.menu-icon-landing {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.menu-icon-landing span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: #212129;
+    border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+    .landing-nav {
+        display: none;
+    }
+    .btn-get-involved {
+        display: none;
+    }
+    .menu-icon-landing {
+        display: flex;
+    }
+}
+
+
+/* --- Hero + Features wrapper --- */
+.landing-hero-features-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.landing-circles-svg {
+    position: absolute;
+    width: 850px;
+    height: 850px;
+    top: -200px;
+    right: -80px;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* --- Hero Section --- */
+.landing-hero {
+    position: relative;
+    padding: 80px 0 60px;
+    background-color: transparent;
+    min-height: 420px;
+}
+
+.landing-hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+.landing-hero-content {
+    max-width: 100%;
+    padding-left: 20px;
+    border-left: 2px solid #212129;
+}
+
+.landing-hero-heading {
+    font-size: 3.4rem;
+    line-height: 1.12;
+    margin-bottom: 20px;
+    font-weight: 700;
+    color: #212129;
+}
+
+.landing-hero-sub {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 28px;
+    max-width: 460px;
+}
+
+/* Dark button variant */
+.btn-dark {
+    background-color: #212129 !important;
+    color: #fff !important;
+}
+
+.btn-dark:hover {
+    background-color: #3a3a45 !important;
+}
+
+@media (max-width: 768px) {
+    .landing-hero-heading {
+        font-size: 2.2rem;
+    }
+    .landing-circles-svg {
+        width: 650px;
+        height: 650px;
+        top: -150px;
+        right: -60px;
+    }
+}
+
+@media (max-width: 480px) {
+    .landing-hero {
+        padding: 50px 0 40px;
+    }
+    .landing-hero-heading {
+        font-size: 1.6rem;
+    }
+    .landing-circles-svg {
+        width: 500px;
+        height: 500px;
+        top: -100px;
+        right: -40px;
+    }
+}
+
+
+/* --- Features Section --- */
+.landing-features {
+    position: relative;
+    padding: 0 0 60px;
+    background: transparent;
+    z-index: 2;
+}
+
+.landing-features .brochure-button {
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+
+/* --- 45% Stats Section --- */
+.landing-stats {
+    position: relative;
+    background-color: #FFDE59;
+    padding: 80px 0;
+    overflow: hidden;
+}
+
+.landing-stats-rings-svg {
+    position: absolute;
+    height: 100%;
+    width: auto;
+    aspect-ratio: 1;
+    top: 0;
+    left: 0;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.landing-stats .container {
+    position: relative;
+    z-index: 1;
+}
+
+.landing-stats-inner {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+}
+
+.landing-stats-left {
+    flex: 0 0 45%;
+    text-align: right;
+    padding-right: 40px;
+}
+
+.landing-stats-number {
+    font-size: 8rem;
+    line-height: 1;
+    color: #212129;
+    font-weight: 700;
+}
+
+.landing-stats-right {
+    flex: 1;
+    border-left: 2px solid #212129;
+    padding-left: 30px;
+}
+
+.landing-stats-raised {
+    margin-bottom: 12px;
+}
+
+.landing-stats-amount {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #212129;
+    display: block;
+    line-height: 1.1;
+}
+
+.landing-stats-target {
+    font-size: 1.1rem;
+    color: #212129;
+    font-weight: 500;
+}
+
+.landing-stats-desc {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    max-width: 360px;
+}
+
+.landing-stats-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .landing-stats-inner {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+    .landing-stats-left {
+        flex: 0 0 auto;
+        text-align: center;
+        padding-right: 0;
+    }
+    .landing-stats-right {
+        border-left: none;
+        border-top: 2px solid #212129;
+        padding-left: 0;
+        padding-top: 24px;
+        text-align: center;
+    }
+    .landing-stats-desc {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .landing-stats-buttons {
+        justify-content: center;
+    }
+    .landing-stats-number {
+        font-size: 5rem;
+    }
+    .landing-stats-rings-svg {
+        height: 100%;
+        width: auto;
+    }
+}
+
+
+/* --- Footer adjustments for landing --- */
+.footer-legal {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(33, 33, 41, 0.15);
+    font-size: 12px;
+    line-height: 1.5;
+    color: #444;
+}
+
+.footer-legal a {
+    color: #212129;
+    text-decoration: underline;
+}

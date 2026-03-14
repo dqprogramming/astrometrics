@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero + Features wrapper (circles span both) -->
+<div class="landing-hero-features-wrapper">
+    <!-- Concentric circles SVG -->
+    <svg class="landing-circles-svg" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="500" cy="500" r="130" fill="none" stroke="#FFDE59" stroke-width="70"/>
+        <circle cx="500" cy="500" r="250" fill="none" stroke="#FFDE59" stroke-width="70"/>
+        <circle cx="500" cy="500" r="370" fill="none" stroke="#FFDE59" stroke-width="70"/>
+        <circle cx="500" cy="500" r="490" fill="none" stroke="#FFDE59" stroke-width="70"/>
+    </svg>
+
+    <!-- Hero Section -->
+    <section class="landing-hero">
+        <div class="container">
+            <div class="landing-hero-content">
+                <h1 class="landing-hero-heading spectral-bold">
+                    We're a collective of libraries
+                    and university publishers
+                    reshaping academic research.
+                </h1>
+                <p class="landing-hero-sub">
+                    Add a bit more info here, means we can be a bit more punchy
+                    to the point above and adipiscing elit, sed do a cursus semper.
+                </p>
+                <a href="mailto:info@openjournalscollective.org?subject=Open Journals Collective"
+                   class="btn btn-dark spectral-bold">JOIN THE MOVEMENT</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="landing-features">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="features">
+                    <div class="feature-card blue">
+                        <img src="/static/img/home-col-1.jpg"
+                             alt="Publishing research: an image of a man working on a laptop"
+                             class="feature-image">
+                        <div class="feature-number">01</div>
+                        <div class="feature-title">Publishing cutting-edge
+                            research.
+                        </div>
+                        <br>
+                        <p class="feature-text">We publish leading academic journals
+                            that are openly available – free to read, published with no
+                            embargos, and with no author payments. We believe that
+                            high-quality research should be available to all. </p>
+                    </div>
+
+                    <div class="feature-card green">
+                        <img src="/static/img/home-col-2.jpg"
+                             alt="Research communities: an image of women working outside on a laptop and clipboard"
+                             class="feature-image">
+                        <div class="feature-number">02</div>
+                        <div class="feature-title">Giving back to research
+                            communities.
+                        </div>
+                        <p class="feature-text">We work closely with libraries and
+                            funders to support the transition from a profit-driven
+                            commercial publishing model to a community-governed
+                            publishing model. All funds are invested in our journals and
+                            the research communities that make them possible. </p>
+                    </div>
+
+                    <div class="feature-card pink">
+                        <img src="/static/img/home-col-3.jpg"
+                             alt="Academic journals: an image of a library with many staircases"
+                             class="feature-image">
+                        <div class="feature-number">03</div>
+                        <div class="feature-title">Building a sustainable future for
+                            academic journals.
+                        </div>
+                        <p class="feature-text">Our expertise as mission-driven publishers places us at the heart of the academic community. We provide a sustainable future for academic journals, providing financial, legal and technological support.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-4 brochure-button">
+                <a href="https://drive.google.com/file/d/1-i_9uipCHMAOn0FGufHdF09cK7SK4FsH/view?usp=sharing"
+                   class="btn spectral-bold">DOWNLOAD BROCHURE</a>
+            </div>
+            <div class="col-4 brochure-button">
+                <a href="https://www.openjournalscollective.org/catalogue/"
+                   class="btn spectral-bold">SEARCH CATALOGUE</a>
+            </div>
+            <div class="col-4 brochure-button">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdotiDEvbJJdVf5tnoWmmx0_SUAD64LcNaX0_MjjQWD1K7aoA/viewform"
+                   class="btn spectral-bold">SUPPORT US</a>
+            </div>
+        </div>
+    </div>
+</section>
+</div><!-- end .landing-hero-features-wrapper -->
+
+<!-- 45% Stats Section -->
+<section class="landing-stats">
+    <svg class="landing-stats-rings-svg" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="500" cy="500" r="150" fill="none" stroke="#fff" stroke-width="60" opacity="0.5"/>
+        <circle cx="500" cy="500" r="270" fill="none" stroke="#fff" stroke-width="60" opacity="0.5"/>
+        <circle cx="500" cy="500" r="390" fill="none" stroke="#fff" stroke-width="60" opacity="0.5"/>
+        <circle cx="500" cy="500" r="500" fill="none" stroke="#fff" stroke-width="60" opacity="0.5"/>
+    </svg>
+    <div class="container">
+        <div class="landing-stats-inner">
+            <div class="landing-stats-left">
+                <span class="landing-stats-number spectral-bold">45%</span>
+            </div>
+            <div class="landing-stats-right">
+                <div class="landing-stats-raised">
+                    <span class="landing-stats-amount spectral-bold">&pound;11,500</span>
+                    <span class="landing-stats-target">raised of &pound;14k</span>
+                </div>
+                <p class="landing-stats-desc">
+                    Lorem ipsum dolor sit amet, consectetur
+                    adipiscing elit, aliqu lorem lobortis nisi ut alip.
+                </p>
+                <div class="landing-stats-buttons">
+                    <a href="mailto:info@openjournalscollective.org?subject=Open Journals Collective"
+                       class="btn btn-dark spectral-bold">JOIN THE MOVEMENT</a>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdotiDEvbJJdVf5tnoWmmx0_SUAD64LcNaX0_MjjQWD1K7aoA/viewform"
+                       class="btn btn-dark spectral-bold">SHARE</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
