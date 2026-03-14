@@ -27,13 +27,13 @@
 }
 
 .landing-header-logo .mini-logo {
-    height: 36px;
+    height: 44px;
 }
 
 .landing-header-logo-text {
     font-family: 'Spectral', serif;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1.2;
     color: #212129;
     white-space: nowrap;
