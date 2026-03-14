@@ -3,6 +3,7 @@ CMS models for translatable rich-text content pages and snippets.
 """
 
 import bleach
+from django.core.cache import cache
 from django.db import models
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
@@ -170,6 +171,175 @@ class Post(models.Model):
         self.body = sanitize_html(self.body)
         self.summary = sanitize_html(self.summary)
         super().save(*args, **kwargs)
+
+
+class LandingPageSettings(models.Model):
+    """Singleton model for configurable landing page content.
+
+    Only one row should exist — use LandingPageSettings.load() to
+    fetch-or-create it.
+    """
+
+    # Hero section
+    hero_heading = models.TextField(
+        help_text="Main hero heading (translatable)",
+    )
+    hero_subheading = models.TextField(
+        blank=True,
+        help_text="Hero subheading text (translatable)",
+    )
+    hero_button_text = models.CharField(
+        max_length=100,
+        default="JOIN THE MOVEMENT",
+        help_text="Hero call-to-action button label (translatable)",
+    )
+    hero_button_url = models.CharField(
+        max_length=500,
+        blank=True,
+        help_text="Hero button link (URL or mailto:)",
+    )
+
+    # Feature card 1
+    feature_1_title = models.CharField(
+        max_length=255,
+        help_text="Feature card 1 title (translatable)",
+    )
+    feature_1_text = models.TextField(
+        blank=True,
+        help_text="Feature card 1 description (translatable)",
+    )
+    feature_1_button_text = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Feature card 1 button label (translatable)",
+    )
+    feature_1_button_url = models.CharField(
+        max_length=500,
+        blank=True,
+        help_text="Feature card 1 button link",
+    )
+
+    # Feature card 2
+    feature_2_title = models.CharField(
+        max_length=255,
+        help_text="Feature card 2 title (translatable)",
+    )
+    feature_2_text = models.TextField(
+        blank=True,
+        help_text="Feature card 2 description (translatable)",
+    )
+    feature_2_button_text = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Feature card 2 button label (translatable)",
+    )
+    feature_2_button_url = models.CharField(
+        max_length=500,
+        blank=True,
+        help_text="Feature card 2 button link",
+    )
+
+    # Feature card 3
+    feature_3_title = models.CharField(
+        max_length=255,
+        help_text="Feature card 3 title (translatable)",
+    )
+    feature_3_text = models.TextField(
+        blank=True,
+        help_text="Feature card 3 description (translatable)",
+    )
+    feature_3_button_text = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Feature card 3 button label (translatable)",
+    )
+    feature_3_button_url = models.CharField(
+        max_length=500,
+        blank=True,
+        help_text="Feature card 3 button link",
+    )
+
+    # Stats section
+    stats_fundraising_target = models.PositiveIntegerField(
+        default=0,
+        help_text="Fundraising target in GBP (whole pounds)",
+    )
+    stats_amount_raised = models.PositiveIntegerField(
+        default=0,
+        help_text="Amount raised so far in GBP (whole pounds)",
+    )
+    stats_description = models.TextField(
+        blank=True,
+        help_text="Stats section description text (translatable)",
+    )
+    stats_button_1_text = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Stats section first button label (translatable)",
+    )
+    stats_button_1_url = models.CharField(
+        max_length=500,
+        blank=True,
+        help_text="Stats section first button link",
+    )
+    stats_button_2_text = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Stats section second button label (translatable)",
+    )
+    stats_button_2_url = models.CharField(
+        max_length=500,
+        blank=True,
+        help_text="Stats section second button link",
+    )
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Landing Page Settings")
+        verbose_name_plural = _("Landing Page Settings")
+
+    def __str__(self):
+        return "Landing Page Settings"
+
+    CACHE_KEY = "landing_page_settings"
+    CACHE_TTL = 60 * 60  # 1 hour
+
+    @classmethod
+    def load(cls):
+        """Return the singleton instance, serving from cache when possible."""
+        obj = cache.get(cls.CACHE_KEY)
+        if obj is None:
+            obj, _created = cls.objects.get_or_create(pk=1)
+            cache.set(cls.CACHE_KEY, obj, cls.CACHE_TTL)
+        return obj
+
+    @property
+    def stats_percentage(self):
+        """Percentage of target raised, as an integer (no decimals)."""
+        if not self.stats_fundraising_target:
+            return 0
+        return int(
+            (self.stats_amount_raised / self.stats_fundraising_target) * 100
+        )
+
+    @property
+    def stats_amount_raised_display(self):
+        """Amount raised formatted as GBP currency: £11,500."""
+        return f"£{self.stats_amount_raised:,}"
+
+    @property
+    def stats_fundraising_target_display(self):
+        """Fundraising target formatted as GBP currency: £14,000."""
+        return f"£{self.stats_fundraising_target:,}"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+        cache.delete(self.CACHE_KEY)
+
+    def delete(self, *args, **kwargs):
+        pass
 
 
 class Snippet(models.Model):
