@@ -1,3 +1,9 @@
+## 1.6.0 (2026-03-14)
+
+### Feat
+
+- **cms**: add CMS management for landing page content
+
 ## 1.5.0 (2026-03-14)
 
 ### Feat
