@@ -67,11 +67,6 @@ body {
   flex: 1;
 }
 
-.site-header-text {
-  font-size: 1.1rem;
-  margin: 0;
-}
-
 .feature-number {
   font-weight: bold;
   font-family: 'Spectral', serif;
@@ -240,108 +235,6 @@ header {
   align-items: center;
   padding: 20px 0;
   border-bottom: 1px solid #eee;
-}
-
-.logo {
-  margin-right: 20px;
-}
-
-.mini-logo {
-  height: 30px;
-}
-
-.logo-text {
-  border-left: 2px solid #212129;
-  padding-left: 20px;
-  font-weight: 700;
-
-}
-
-.menu-icon {
-  text-align: right;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 0;
-}
-
-/* Fullscreen Navigation */
-.fullscreen-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #000000;
-  z-index: 1000;
-  color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  padding-top: 20px;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.fullscreen-nav.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-.close-icon {
-  text-align: right;
-  font-size: 40px;
-  cursor: pointer;
-  color: #ffffff;
-}
-
-.nav-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: calc(100% - 100px);
-  padding: 60px 0;
-}
-
-.nav-links {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.nav-link {
-  font-family: 'Spectral', serif;
-  font-size: 48px;
-  font-weight: 700;
-  color: #ffffff;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.nav-link:hover {
-  color: #71f7f2;
-}
-
-.nav-cta {
-  margin-top: 60px;
-}
-
-.nav-btn {
-  display: inline-block;
-  padding: 15px 30px;
-  background-color: #71f7f2;
-  color: #212129;
-  text-decoration: none;
-  border-radius: 50px;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-  text-transform: uppercase;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-}
-
-.nav-btn:hover {
-  background-color: #5ad8d3;
 }
 
 /* Hero Section */
@@ -793,10 +686,6 @@ header {
 
   .publishers-logos {
     justify-content: center;
-  }
-
-  .nav-link {
-    font-size: 36px;
   }
 
   .audience-buttons {
