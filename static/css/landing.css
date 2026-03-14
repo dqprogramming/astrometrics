@@ -215,7 +215,11 @@
         font-size: 5rem;
     }
     .landing-stats-rings-svg {
-        height: 100%;
-        width: auto;
+        width: 500px;
+        height: 500px;
+        bottom: auto;
+        top: -200px;
+        left: auto;
+        right: -250px;
     }
 }
