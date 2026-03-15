@@ -23,6 +23,8 @@ class PageForm(forms.ModelForm):
             "meta_description",
             "is_published",
             "sort_order",
+            "hero_bg",
+            "hero_arc_position",
         ]
         widgets = {
             "title": forms.TextInput(attrs={"class": "mgr-input"}),
@@ -37,6 +39,8 @@ class PageForm(forms.ModelForm):
             "sort_order": forms.NumberInput(
                 attrs={"class": "mgr-input", "style": "max-width:120px;"}
             ),
+            "hero_bg": forms.Select(attrs={"class": "mgr-input"}),
+            "hero_arc_position": forms.Select(attrs={"class": "mgr-input"}),
         }
 
     def __init__(self, *args, **kwargs):

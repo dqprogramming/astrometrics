@@ -92,6 +92,67 @@ class Page(models.Model):
         blank=True,
         help_text="SEO meta description (translatable)",
     )
+    HERO_BG_YELLOW = "yellow"
+    HERO_BG_BLUE = "blue"
+    HERO_BG_GREEN = "green"
+    HERO_BG_PINK = "pink"
+    HERO_BG_DARK = "dark"
+    HERO_BG_WHITE = "white"
+    HERO_BG_CHOICES = [
+        (HERO_BG_YELLOW, "Yellow"),
+        (HERO_BG_BLUE, "Blue"),
+        (HERO_BG_GREEN, "Green"),
+        (HERO_BG_PINK, "Pink"),
+        (HERO_BG_DARK, "Dark"),
+        (HERO_BG_WHITE, "White"),
+    ]
+    _HERO_BG_CSS = {
+        HERO_BG_YELLOW: "#FFDE59",
+        HERO_BG_BLUE: "#a5bfff",
+        HERO_BG_GREEN: "#78f2c1",
+        HERO_BG_PINK: "#ffd4f7",
+        HERO_BG_DARK: "#212129",
+        HERO_BG_WHITE: "#ffffff",
+    }
+    _HERO_TEXT_CSS = {
+        HERO_BG_YELLOW: "#38383f",
+        HERO_BG_BLUE: "#212129",
+        HERO_BG_GREEN: "#212129",
+        HERO_BG_PINK: "#212129",
+        HERO_BG_DARK: "#ffffff",
+        HERO_BG_WHITE: "#212129",
+    }
+
+    HERO_ARC_TOP_RIGHT = "top-right"
+    HERO_ARC_TOP_LEFT = "top-left"
+    HERO_ARC_BOTTOM_RIGHT = "bottom-right"
+    HERO_ARC_BOTTOM_LEFT = "bottom-left"
+    HERO_ARC_CENTER_RIGHT = "center-right"
+    HERO_ARC_CENTER_LEFT = "center-left"
+    HERO_ARC_NONE = "none"
+    HERO_ARC_CHOICES = [
+        (HERO_ARC_TOP_RIGHT, "Top right"),
+        (HERO_ARC_TOP_LEFT, "Top left"),
+        (HERO_ARC_CENTER_RIGHT, "Centre right"),
+        (HERO_ARC_CENTER_LEFT, "Centre left"),
+        (HERO_ARC_BOTTOM_RIGHT, "Bottom right"),
+        (HERO_ARC_BOTTOM_LEFT, "Bottom left"),
+        (HERO_ARC_NONE, "None"),
+    ]
+
+    hero_bg = models.CharField(
+        max_length=10,
+        choices=HERO_BG_CHOICES,
+        default=HERO_BG_YELLOW,
+        help_text="Hero section background colour",
+    )
+    hero_arc_position = models.CharField(
+        max_length=14,
+        choices=HERO_ARC_CHOICES,
+        default=HERO_ARC_TOP_RIGHT,
+        help_text="Position of the decorative arc in the hero section",
+    )
+
     is_published = models.BooleanField(
         default=False,
         help_text="Only published pages are visible on the site",
@@ -120,6 +181,14 @@ class Page(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def hero_bg_colour(self):
+        return self._HERO_BG_CSS.get(self.hero_bg, "#FFDE59")
+
+    @property
+    def hero_text_colour(self):
+        return self._HERO_TEXT_CSS.get(self.hero_bg, "#38383f")
 
     def save(self, *args, **kwargs):
         if not self.slug:

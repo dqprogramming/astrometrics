@@ -239,7 +239,11 @@ class PageCreateView(StaffRequiredMixin, CreateView):
     model = Page
     form_class = PageForm
     template_name = "cms/manager/page_form.html"
-    success_url = reverse_lazy("cms_manager:page_list")
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "cms_manager:page_edit", kwargs={"pk": self.object.pk}
+        )
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -257,7 +261,11 @@ class PageUpdateView(StaffRequiredMixin, UpdateView):
     model = Page
     form_class = PageForm
     template_name = "cms/manager/page_form.html"
-    success_url = reverse_lazy("cms_manager:page_list")
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "cms_manager:page_edit", kwargs={"pk": self.object.pk}
+        )
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)

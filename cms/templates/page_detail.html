@@ -20,15 +20,20 @@
 </div>
 {% endif %}
 
-<header class="news-detail-header">
-    <svg class="news-detail-header__arcs" viewBox="0 0 580 580" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" overflow="visible">
-        <circle cx="290" cy="290" r="100" fill="none" stroke="#212129" stroke-width="48" opacity="0.08"/>
-        <circle cx="290" cy="290" r="195" fill="none" stroke="#212129" stroke-width="48" opacity="0.08"/>
-        <circle cx="290" cy="290" r="290" fill="none" stroke="#212129" stroke-width="48" opacity="0.08"/>
-        <circle cx="290" cy="290" r="385" fill="none" stroke="#212129" stroke-width="48" opacity="0.08"/>
+<header class="news-detail-header page-hero--{{ page.hero_bg }}"
+        style="background:{{ page.hero_bg_colour }};">
+    {% if page.hero_arc_position != "none" %}
+    <svg class="page-hero__arcs--{{ page.hero_arc_position }}"
+         viewBox="0 0 580 580" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" overflow="visible">
+        <circle cx="290" cy="290" r="100" fill="none" stroke="{{ page.hero_text_colour }}" stroke-width="48" opacity="0.08"/>
+        <circle cx="290" cy="290" r="195" fill="none" stroke="{{ page.hero_text_colour }}" stroke-width="48" opacity="0.08"/>
+        <circle cx="290" cy="290" r="290" fill="none" stroke="{{ page.hero_text_colour }}" stroke-width="48" opacity="0.08"/>
+        <circle cx="290" cy="290" r="385" fill="none" stroke="{{ page.hero_text_colour }}" stroke-width="48" opacity="0.08"/>
     </svg>
+    {% endif %}
     <div class="container">
-        <h1 id="page-title" class="news-detail-header__title spectral-extrabold">
+        <h1 id="page-title" class="news-detail-header__title spectral-extrabold"
+            style="color:{{ page.hero_text_colour }};">
             {{ page.title }}
         </h1>
     </div>

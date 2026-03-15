@@ -258,7 +258,7 @@
 .news-detail-header {
     position: relative;
     background: var(--news-accent-yellow);
-    padding: 56px 0 64px;
+    padding: 72px 0 80px;
     overflow: hidden;
 }
 
@@ -266,6 +266,14 @@
     position: relative;
     z-index: 2;
 }
+
+/* Arc position variants for page hero */
+.page-hero__arcs--top-right    { position: absolute; width: 580px; height: 580px; top: -220px;    right: -140px;  z-index: 1; pointer-events: none; }
+.page-hero__arcs--top-left     { position: absolute; width: 580px; height: 580px; top: -220px;    left:  -140px;  z-index: 1; pointer-events: none; }
+.page-hero__arcs--center-right { position: absolute; width: 580px; height: 580px; top: 50%;       right: -200px;  z-index: 1; pointer-events: none; transform: translateY(-50%); }
+.page-hero__arcs--center-left  { position: absolute; width: 580px; height: 580px; top: 50%;       left:  -200px;  z-index: 1; pointer-events: none; transform: translateY(-50%); }
+.page-hero__arcs--bottom-right { position: absolute; width: 580px; height: 580px; bottom: -220px; right: -140px;  z-index: 1; pointer-events: none; }
+.page-hero__arcs--bottom-left  { position: absolute; width: 580px; height: 580px; bottom: -220px; left:  -140px;  z-index: 1; pointer-events: none; }
 
 .news-detail-header__arcs {
     position: absolute;
