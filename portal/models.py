@@ -92,6 +92,10 @@ class AuditLog(models.Model):
         blank=True,
         help_text="New value (for field updates) or item name (for M2M)",
     )
+    is_reversion = models.BooleanField(
+        default=False,
+        help_text="True when this entry was created by reverting a previous change",
+    )
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:

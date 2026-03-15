@@ -71,6 +71,9 @@
                     <span class="audit-action audit-action-{{ entry.action }}">
                         {{ entry.get_action_display }}
                     </span>
+                    {% if entry.is_reversion %}
+                    <span class="audit-action audit-action-reversion">Reversion</span>
+                    {% endif %}
                 </td>
                 <td>{{ entry.field }}</td>
                 <td class="audit-value">{{ entry.old_value|default:"—"|truncatechars:60 }}</td>
