@@ -1,3 +1,9 @@
+## 1.12.1 (2026-03-15)
+
+### Fix
+
+- **manager**: use valid bootstrap icon for footer dashboard card
+
 ## 1.12.0 (2026-03-15)
 
 ### Feat
