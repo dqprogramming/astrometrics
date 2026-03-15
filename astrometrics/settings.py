@@ -275,8 +275,13 @@ if DEBUG:
     MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
     INTERNAL_IPS = ["127.0.0.1"]
     # Detect Docker gateway IP so the toolbar shows inside containers
-    _hostname, _aliases, _ips = socket.gethostbyname_ex(socket.gethostname())
-    INTERNAL_IPS += [ip[: ip.rfind(".")] + ".1" for ip in _ips]
+    try:
+        _hostname, _aliases, _ips = socket.gethostbyname_ex(
+            socket.gethostname()
+        )
+        INTERNAL_IPS += [ip[: ip.rfind(".")] + ".1" for ip in _ips]
+    except OSError:
+        pass
 
 LOGGING = {
     "version": 1,
