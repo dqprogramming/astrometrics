@@ -52,7 +52,7 @@ _ALL_CARDS = [
     {
         "title": "Footer",
         "description": "Manage footer links, columns, and contact details.",
-        "icon": "layout-bottom",
+        "icon": "layout-text-window-reverse",
         "color": "#f59e0b",
         "url": reverse_lazy("cms_manager:footer"),
         "tags": ["content", "cms"],
