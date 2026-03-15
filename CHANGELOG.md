@@ -1,3 +1,16 @@
+## 1.9.0 (2026-03-15)
+
+### Feat
+
+- **footer**: add editable footer with manager UI
+
+### Fix
+
+- **a11y**: correct logo alt text and remove duplicates
+- **a11y**: increase disabled link contrast to meet WCAG AAA
+- **a11y**: WCAG 2.5.5 AAA target size for footer elements
+- **a11y**: WCAG remediation for footer and manager form
+
 ## 1.8.0 (2026-03-14)
 
 ### Feat
