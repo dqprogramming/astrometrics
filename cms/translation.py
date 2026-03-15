@@ -7,7 +7,14 @@ per-language columns (e.g. title_en, title_fr) automatically.
 
 from modeltranslation.translator import TranslationOptions, register
 
-from cms.models import LandingPageSettings, Page, Post, Snippet
+from cms.models import (
+    FooterLink,
+    FooterSettings,
+    LandingPageSettings,
+    Page,
+    Post,
+    Snippet,
+)
 
 
 @register(Page)
@@ -39,6 +46,23 @@ class LandingPageSettingsTranslationOptions(TranslationOptions):
         "stats_button_1_text",
         "stats_button_2_text",
     )
+
+
+@register(FooterSettings)
+class FooterSettingsTranslationOptions(TranslationOptions):
+    fields = (
+        "tagline_1",
+        "tagline_2",
+        "tagline_3",
+        "column_1_heading",
+        "column_2_heading",
+        "legal_text",
+    )
+
+
+@register(FooterLink)
+class FooterLinkTranslationOptions(TranslationOptions):
+    fields = ("label",)
 
 
 @register(Snippet)

@@ -5,7 +5,7 @@ Admin configuration for CMS models with translation support.
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
-from cms.models import Page, Post, Snippet
+from cms.models import FooterLink, FooterSettings, Page, Post, Snippet
 
 
 @admin.register(Page)
@@ -73,6 +73,22 @@ class PostAdmin(TranslationAdmin):
             },
         ),
     )
+
+
+class FooterLinkInline(admin.TabularInline):
+    model = FooterLink
+    extra = 1
+
+
+@admin.register(FooterSettings)
+class FooterSettingsAdmin(TranslationAdmin):
+    inlines = [FooterLinkInline]
+
+
+@admin.register(FooterLink)
+class FooterLinkAdmin(TranslationAdmin):
+    list_display = ["label", "column", "url", "sort_order"]
+    list_filter = ["column"]
 
 
 @admin.register(Snippet)
