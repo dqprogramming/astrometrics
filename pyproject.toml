@@ -14,7 +14,8 @@ dependencies = [
     "django-structlog>=8.0.0",
     "rich>=13.0.0",
     "structlog>=25.5.0",
-    "django-tinymce>=4.1.0"
+    "django-tinymce>=4.1.0",
+    "python-dotenv>=1.2.2",
 ]
 
 [tool.commitizen]
