@@ -1,3 +1,16 @@
+## 1.14.0 (2026-03-15)
+
+### Feat
+
+- **header**: configurable mobile sub-items, scrollable mobile nav, remove accordion toggles
+- **header**: add configurable header, nav menus, and per-item call-to-action
+
+### Fix
+
+- **manager**: reorder nav to Header, Footer, Landing Page
+- **a11y**: WCAG AAA target size for dropdown items and header CTA button
+- **a11y**: apply keyboard navigation to all dropdown menus
+
 ## 1.13.0 (2026-03-15)
 
 ### Feat
