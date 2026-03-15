@@ -2,6 +2,8 @@
 CMS models for translatable rich-text content pages and snippets.
 """
 
+import uuid
+
 import bleach
 from django.core.cache import cache
 from django.db import models
@@ -94,6 +96,12 @@ class Page(models.Model):
         default=False,
         help_text="Only published pages are visible on the site",
     )
+    preview_token = models.UUIDField(
+        default=uuid.uuid4,
+        editable=False,
+        unique=True,
+        help_text="Secret token for shareable preview URL",
+    )
     sort_order = models.IntegerField(
         default=0,
         help_text="Lower numbers appear first",
@@ -153,6 +161,12 @@ class Post(models.Model):
     is_published = models.BooleanField(
         default=False,
         help_text="Only published posts are visible on the site",
+    )
+    preview_token = models.UUIDField(
+        default=uuid.uuid4,
+        editable=False,
+        unique=True,
+        help_text="Secret token for shareable preview URL",
     )
     published_at = models.DateTimeField(
         null=True,

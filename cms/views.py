@@ -5,7 +5,7 @@ CMS views for static content pages.
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
 
-from .models import LandingPageSettings, Post
+from .models import LandingPageSettings, Page, Post
 
 
 def index_view(request):
@@ -31,3 +31,17 @@ def news_index_view(request):
 def news_detail_view(request, slug):
     post = get_object_or_404(Post, slug=slug, is_published=True)
     return render(request, "news_detail.html", {"post": post})
+
+
+def post_preview_view(request, token):
+    post = get_object_or_404(Post, preview_token=token)
+    return render(
+        request, "news_detail.html", {"post": post, "is_preview": True}
+    )
+
+
+def page_preview_view(request, token):
+    page = get_object_or_404(Page, preview_token=token)
+    return render(
+        request, "page_detail.html", {"page": page, "is_preview": True}
+    )

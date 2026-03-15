@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} — Open Journals Collective{% endblock %}
+
+{% block extra_head %}
+    {% if page.meta_description %}
+    <meta name="description" content="{{ page.meta_description }}">
+    {% endif %}
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="/static/css/news.css">
+{% endblock %}
+
+{% block content %}
+
+{% if is_preview %}
+<div class="preview-banner" role="alert">
+    <strong>Preview</strong> — this page is not yet published and is only visible via this link.
+</div>
+{% endif %}
+
+<header class="news-detail-header">
+    <svg class="news-detail-header__arcs" viewBox="0 0 580 580" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" overflow="visible">
+        <circle cx="290" cy="290" r="100" fill="none" stroke="#212129" stroke-width="48" opacity="0.08"/>
+        <circle cx="290" cy="290" r="195" fill="none" stroke="#212129" stroke-width="48" opacity="0.08"/>
+        <circle cx="290" cy="290" r="290" fill="none" stroke="#212129" stroke-width="48" opacity="0.08"/>
+        <circle cx="290" cy="290" r="385" fill="none" stroke="#212129" stroke-width="48" opacity="0.08"/>
+    </svg>
+    <div class="container">
+        <h1 id="page-title" class="news-detail-header__title spectral-extrabold">
+            {{ page.title }}
+        </h1>
+    </div>
+</header>
+
+{% if page.body %}
+<article class="news-detail-body" aria-labelledby="page-title">
+    <div class="container">
+        <div class="news-detail-body__inner">
+            {{ page.body|safe }}
+        </div>
+    </div>
+</article>
+{% endif %}
+
+{% endblock %}
