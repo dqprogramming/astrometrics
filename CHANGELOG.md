@@ -1,3 +1,9 @@
+## 1.15.0 (2026-03-15)
+
+### Feat
+
+- **cms**: add secret preview URLs for unpublished pages and posts
+
 ## 1.14.0 (2026-03-15)
 
 ### Feat
