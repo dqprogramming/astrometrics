@@ -3,9 +3,9 @@
     <div class="container footer-grid">
         <div class="footer-left">
             <h2 class="footer-title">
-                For Academics.<br>
-                For Libraries.<br>
-                For Publishers.
+                {{ footer.tagline_1 }}<br>
+                {{ footer.tagline_2 }}<br>
+                {{ footer.tagline_3 }}
             </h2>
             <div class="footer-pattern">
             </div>
@@ -13,23 +13,28 @@
         <div class="footer-right">
             <div class="footer-links">
                 <div class="footer-column">
-                    <h3>About OJC</h3>
-                    <a href="/#how-it-works">How It Works</a>
-                    <a href="/catalogue/">Our Journals</a>
-                    <a href="/#who-we-are">Info for Academics</a>
-                    <a href="/#who-we-are">Info for Libraries</a>
-                    <a href="/#who-we-are">Info for Publishers</a>
-                    <a href="/#news">News &amp; Updates</a>
+                    <h3>{{ footer.column_1_heading }}</h3>
+                    {% for link in footer.get_column_1_links %}
+                        {% if link.is_disabled %}
+                        <a href="#" class="social-disabled" aria-disabled="true" tabindex="-1" data-text="{{ link.label }}">{{ link.label }}</a>
+                        {% else %}
+                        <a href="{{ link.url }}" target="_blank" rel="noopener" data-text="{{ link.label }}">{{ link.label }}</a>
+                        {% endif %}
+                    {% endfor %}
                 </div>
                 <div class="footer-column">
-                    <h3>Contact us</h3>
-                    <a href="https://bsky.app/profile/ojcollective.bsky.social" target="_blank" rel="noopener">Bluesky</a>
-                    <a href="#" class="social-disabled" aria-disabled="true" tabindex="-1">Discord</a>
-                    <a href="https://www.linkedin.com/company/open-journals-collective" target="_blank" rel="noopener">LinkedIn</a>
+                    <h3>{{ footer.column_2_heading }}</h3>
+                    {% for link in footer.get_column_2_links %}
+                        {% if link.is_disabled %}
+                        <a href="#" class="social-disabled" aria-disabled="true" tabindex="-1" data-text="{{ link.label }}">{{ link.label }}</a>
+                        {% else %}
+                        <a href="{{ link.url }}" target="_blank" rel="noopener" data-text="{{ link.label }}">{{ link.label }}</a>
+                        {% endif %}
+                    {% endfor %}
                 </div>
             </div>
             <div class="footer-legal">
-                <p>Open Journals Collective is a <a href="https://find-and-update.company-information.service.gov.uk/company/16431892">Collective Community Interest Company (16431892)</a> based in the UK. A CIC is a special type of limited company that exists to benefit the community rather than private shareholders.</p>
+                {{ footer.legal_text|safe }}
             </div>
         </div>
     </div>

@@ -1,0 +1,154 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Footer{% endblock %}
+{% block page_title %}Footer{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> /
+Footer
+{% endblock %}
+{% block nav_footer %}active{% endblock %}
+
+{% block content %}
+<form method="post" id="footer-form" style="max-width:900px;">
+    {% csrf_token %}
+
+    {# ── Taglines ──────────────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-chat-quote"></i> Taglines
+        </div>
+
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.tagline_1.id_for_label }}">Tagline 1</label>
+            {{ form.tagline_1 }}
+            {% if form.tagline_1.errors %}<div class="mgr-error">{{ form.tagline_1.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.tagline_2.id_for_label }}">Tagline 2</label>
+            {{ form.tagline_2 }}
+            {% if form.tagline_2.errors %}<div class="mgr-error">{{ form.tagline_2.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.tagline_3.id_for_label }}">Tagline 3</label>
+            {{ form.tagline_3 }}
+            {% if form.tagline_3.errors %}<div class="mgr-error">{{ form.tagline_3.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    {# ── Column 1 ──────────────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-list-ul"></i> Column 1
+        </div>
+
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.column_1_heading.id_for_label }}">Heading</label>
+            {{ form.column_1_heading }}
+            {% if form.column_1_heading.errors %}<div class="mgr-error">{{ form.column_1_heading.errors.0 }}</div>{% endif %}
+        </div>
+
+        {{ col1_formset.management_form }}
+        <div id="col1-links" class="link-list">
+            {% for link_form in col1_formset %}
+            <div class="link-row {% if link_form.instance.pk and link_form.DELETE.value %}d-none{% endif %}" style="display:grid; grid-template-columns:auto 1fr 1fr auto; gap:0.5rem; align-items:center; margin-bottom:0.5rem;">
+                <span class="drag-handle" style="cursor:grab; padding:0 0.25rem;"><i class="bi bi-grip-vertical"></i></span>
+                {{ link_form.id }}
+                {{ link_form.sort_order }}
+                <div>{{ link_form.label }}{% if link_form.label.errors %}<div class="mgr-error">{{ link_form.label.errors.0 }}</div>{% endif %}</div>
+                <div>{{ link_form.url }}{% if link_form.url.errors %}<div class="mgr-error">{{ link_form.url.errors.0 }}</div>{% endif %}</div>
+                <div style="display:flex; align-items:center;">
+                    <span style="display:none;">{{ link_form.DELETE }}</span>
+                    <button type="button" class="btn-delete-link" title="Remove link" style="background:none; border:none; color:var(--danger, #dc3545); cursor:pointer; padding:0.25rem;">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" class="btn-mgr-secondary btn-add-link" data-target="col1-links" data-prefix="col1_links" style="margin-top:0.5rem;">
+            <i class="bi bi-plus-lg"></i> Add Link
+        </button>
+    </div>
+
+    {# ── Column 2 ──────────────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-list-ul"></i> Column 2
+        </div>
+
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.column_2_heading.id_for_label }}">Heading</label>
+            {{ form.column_2_heading }}
+            {% if form.column_2_heading.errors %}<div class="mgr-error">{{ form.column_2_heading.errors.0 }}</div>{% endif %}
+        </div>
+
+        {{ col2_formset.management_form }}
+        <div id="col2-links" class="link-list">
+            {% for link_form in col2_formset %}
+            <div class="link-row {% if link_form.instance.pk and link_form.DELETE.value %}d-none{% endif %}" style="display:grid; grid-template-columns:auto 1fr 1fr auto; gap:0.5rem; align-items:center; margin-bottom:0.5rem;">
+                <span class="drag-handle" style="cursor:grab; padding:0 0.25rem;"><i class="bi bi-grip-vertical"></i></span>
+                {{ link_form.id }}
+                {{ link_form.sort_order }}
+                <div>{{ link_form.label }}{% if link_form.label.errors %}<div class="mgr-error">{{ link_form.label.errors.0 }}</div>{% endif %}</div>
+                <div>{{ link_form.url }}{% if link_form.url.errors %}<div class="mgr-error">{{ link_form.url.errors.0 }}</div>{% endif %}</div>
+                <div style="display:flex; align-items:center;">
+                    <span style="display:none;">{{ link_form.DELETE }}</span>
+                    <button type="button" class="btn-delete-link" title="Remove link" style="background:none; border:none; color:var(--danger, #dc3545); cursor:pointer; padding:0.25rem;">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" class="btn-mgr-secondary btn-add-link" data-target="col2-links" data-prefix="col2_links" style="margin-top:0.5rem;">
+            <i class="bi bi-plus-lg"></i> Add Link
+        </button>
+    </div>
+
+    {# ── Legal Text ────────────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-shield-check"></i> Legal Text
+            <span style="font-weight:400; text-transform:none; letter-spacing:normal; color:var(--muted); opacity:.7;">(HTML and formatting will be sanitised on save)</span>
+        </div>
+
+        <div class="mgr-field">
+            {{ form.legal_text }}
+            {% if form.legal_text.errors %}<div class="mgr-error">{{ form.legal_text.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    <div style="display:flex; gap:.75rem; flex-wrap:wrap; max-width:300px;">
+        <button type="submit" class="btn-mgr-primary" style="flex:1; justify-content:center;">
+            <i class="bi bi-check2"></i> Save
+        </button>
+        <a href="{% url 'manager:dashboard' %}" class="btn-mgr-secondary" style="flex:1; justify-content:center;">
+            Cancel
+        </a>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+{{ form.media }}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+<script src="/static/js/footer-manager.js"></script>
+
+<template id="link-row-template">
+    <div class="link-row" style="display:grid; grid-template-columns:auto 1fr 1fr auto; gap:0.5rem; align-items:center; margin-bottom:0.5rem;">
+        <span class="drag-handle" style="cursor:grab; padding:0 0.25rem;"><i class="bi bi-grip-vertical"></i></span>
+        <input type="hidden" name="__prefix__-id" id="id___prefix__-id">
+        <input type="hidden" name="__prefix__-sort_order" id="id___prefix__-sort_order" value="0">
+        <div><input type="text" name="__prefix__-label" id="id___prefix__-label" class="mgr-input" maxlength="120"></div>
+        <div><input type="text" name="__prefix__-url" id="id___prefix__-url" class="mgr-input" maxlength="300"></div>
+        <div style="display:flex; align-items:center;">
+            <span style="display:none;"><input type="checkbox" name="__prefix__-DELETE" id="id___prefix__-DELETE"></span>
+            <button type="button" class="btn-delete-link" title="Remove link" style="background:none; border:none; color:var(--danger, #dc3545); cursor:pointer; padding:0.25rem;">
+                <i class="bi bi-trash"></i>
+            </button>
+        </div>
+    </div>
+</template>
+{% endblock %}

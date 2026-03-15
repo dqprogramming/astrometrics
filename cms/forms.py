@@ -1,7 +1,14 @@
 from django import forms
 from tinymce.widgets import TinyMCE
 
-from .models import LandingPageSettings, Page, Post, Snippet
+from .models import (
+    FooterLink,
+    FooterSettings,
+    LandingPageSettings,
+    Page,
+    Post,
+    Snippet,
+)
 
 
 class PageForm(forms.ModelForm):
@@ -164,6 +171,62 @@ class LandingPageSettingsForm(forms.ModelForm):
                 attrs={"class": "mgr-input"}
             ),
         }
+
+
+class FooterSettingsForm(forms.ModelForm):
+    class Meta:
+        model = FooterSettings
+        fields = [
+            "tagline_1",
+            "tagline_2",
+            "tagline_3",
+            "column_1_heading",
+            "column_2_heading",
+            "legal_text",
+        ]
+        widgets = {
+            "tagline_1": forms.TextInput(attrs={"class": "mgr-input"}),
+            "tagline_2": forms.TextInput(attrs={"class": "mgr-input"}),
+            "tagline_3": forms.TextInput(attrs={"class": "mgr-input"}),
+            "column_1_heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "column_2_heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "legal_text": TinyMCE(
+                mce_attrs={
+                    "height": 200,
+                    "menubar": False,
+                    "plugins": "link",
+                    "toolbar": ("bold italic underline | link"),
+                }
+            ),
+        }
+
+
+class FooterLinkForm(forms.ModelForm):
+    class Meta:
+        model = FooterLink
+        fields = ["label", "url", "sort_order"]
+        widgets = {
+            "label": forms.TextInput(attrs={"class": "mgr-input"}),
+            "url": forms.TextInput(attrs={"class": "mgr-input"}),
+            "sort_order": forms.HiddenInput(),
+        }
+
+
+Column1LinkFormSet = forms.inlineformset_factory(
+    FooterSettings,
+    FooterLink,
+    form=FooterLinkForm,
+    extra=0,
+    can_delete=True,
+)
+
+Column2LinkFormSet = forms.inlineformset_factory(
+    FooterSettings,
+    FooterLink,
+    form=FooterLinkForm,
+    extra=0,
+    can_delete=True,
+)
 
 
 class SnippetForm(forms.ModelForm):

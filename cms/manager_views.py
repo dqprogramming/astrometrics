@@ -5,14 +5,23 @@ from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.files.storage import default_storage
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-from .forms import LandingPageSettingsForm, PageForm, PostForm, SnippetForm
-from .models import LandingPageSettings, Page, Post, Snippet
+from .forms import (
+    Column1LinkFormSet,
+    Column2LinkFormSet,
+    FooterSettingsForm,
+    LandingPageSettingsForm,
+    PageForm,
+    PostForm,
+    SnippetForm,
+)
+from .models import FooterSettings, LandingPageSettings, Page, Post, Snippet
 
 # ruff: noqa: E501
 
@@ -79,6 +88,72 @@ class LandingPageSettingsUpdateView(StaffRequiredMixin, UpdateView):
     def form_valid(self, form):
         messages.success(self.request, "Landing page settings updated.")
         return super().form_valid(form)
+
+
+# ── Footer Settings ──────────────────────────────────────────────────────────
+
+
+class FooterSettingsUpdateView(StaffRequiredMixin, View):
+    template_name = "cms/manager/footer_form.html"
+
+    def _get_formsets(self, footer, data=None):
+        col1_qs = footer.links.filter(column=1)
+        col2_qs = footer.links.filter(column=2)
+        col1_formset = Column1LinkFormSet(
+            data, instance=footer, prefix="col1_links", queryset=col1_qs
+        )
+        col2_formset = Column2LinkFormSet(
+            data, instance=footer, prefix="col2_links", queryset=col2_qs
+        )
+        return col1_formset, col2_formset
+
+    def get(self, request):
+        footer = FooterSettings.load()
+        form = FooterSettingsForm(instance=footer)
+        col1_formset, col2_formset = self._get_formsets(footer)
+        return render(
+            request,
+            self.template_name,
+            {
+                "form": form,
+                "col1_formset": col1_formset,
+                "col2_formset": col2_formset,
+            },
+        )
+
+    def post(self, request):
+        footer = FooterSettings.load()
+        form = FooterSettingsForm(request.POST, instance=footer)
+        col1_formset, col2_formset = self._get_formsets(footer, request.POST)
+
+        if (
+            form.is_valid()
+            and col1_formset.is_valid()
+            and col2_formset.is_valid()
+        ):
+            form.save()
+            for link in col1_formset.save(commit=False):
+                link.column = 1
+                link.save()
+            for link in col1_formset.deleted_objects:
+                link.delete()
+            for link in col2_formset.save(commit=False):
+                link.column = 2
+                link.save()
+            for link in col2_formset.deleted_objects:
+                link.delete()
+            messages.success(request, "Footer settings updated.")
+            return redirect(reverse_lazy("cms_manager:footer"))
+
+        return render(
+            request,
+            self.template_name,
+            {
+                "form": form,
+                "col1_formset": col1_formset,
+                "col2_formset": col2_formset,
+            },
+        )
 
 
 # ── Pages ─────────────────────────────────────────────────────────────────────
