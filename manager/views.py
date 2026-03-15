@@ -12,6 +12,7 @@ from journals.models import (
     Publisher,
     Subject,
 )
+from portal.models import PublisherUser
 
 # ruff: noqa: E501
 
@@ -24,6 +25,14 @@ class StaffRequiredMixin(UserPassesTestMixin):
 
 
 _ALL_CARDS = [
+    {
+        "title": "Landing Page",
+        "description": "Edit the homepage hero, features, stats, and call-to-action content.",
+        "icon": "house-heart",
+        "color": "#6366f1",
+        "url": reverse_lazy("cms_manager:landing_page"),
+        "tags": ["content", "cms"],
+    },
     {
         "title": "Pages",
         "description": "Manage static CMS pages — about, contact, and other site pages.",
@@ -38,6 +47,14 @@ _ALL_CARDS = [
         "icon": "newspaper",
         "color": "#0ea5e9",
         "url": reverse_lazy("cms_manager:post_list"),
+        "tags": ["content", "cms"],
+    },
+    {
+        "title": "Footer",
+        "description": "Manage footer links, columns, and contact details.",
+        "icon": "layout-text-window-reverse",
+        "color": "#f59e0b",
+        "url": reverse_lazy("cms_manager:footer"),
         "tags": ["content", "cms"],
     },
     {
@@ -104,6 +121,22 @@ _ALL_CARDS = [
         "url": reverse_lazy("journals_manager:import"),
         "tags": ["catalogue", "data"],
     },
+    {
+        "title": "Portal Users",
+        "description": "Link user accounts to publishers to grant portal access.",
+        "icon": "person-badge",
+        "color": "#0ea5e9",
+        "url": reverse_lazy("portal_manager:publisher_user_list"),
+        "tags": ["portal"],
+    },
+    {
+        "title": "Audit Log",
+        "description": "View a full history of changes made through the publisher portal.",
+        "icon": "clock-history",
+        "color": "#64748b",
+        "url": reverse_lazy("portal_manager:audit_log"),
+        "tags": ["portal"],
+    },
 ]
 
 
@@ -118,6 +151,7 @@ def _counts():
         "Languages": Language.objects.count(),
         "Package Bands": PackageBand.objects.count(),
         "Archiving Services": ArchivingService.objects.count(),
+        "Portal Users": PublisherUser.objects.count(),
     }
 
 
@@ -149,6 +183,7 @@ class DashboardView(StaffRequiredMixin, TemplateView):
             ("content", "Content"),
             ("catalogue", "Catalogue"),
             ("data", "Data"),
+            ("portal", "Portal"),
         ]
         return ctx
 

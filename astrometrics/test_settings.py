@@ -11,7 +11,7 @@ import dj_database_url
 
 from astrometrics.settings import *  # noqa: F401, F403
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
+DATABASE_URL = os.environ.get("TEST_DATABASE_URL")
 
 if DATABASE_URL:
     DATABASES = {

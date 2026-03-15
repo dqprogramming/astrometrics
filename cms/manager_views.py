@@ -319,6 +319,12 @@ class PostCreateView(StaffRequiredMixin, CreateView):
     template_name = "cms/manager/post_form.html"
     success_url = reverse_lazy("cms_manager:post_list")
 
+    def get_initial(self):
+        initial = super().get_initial()
+        user = self.request.user
+        initial["byline"] = user.get_full_name() or user.username
+        return initial
+
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx["action"] = "Create"

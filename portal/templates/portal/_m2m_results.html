@@ -1,0 +1,18 @@
+{% if results %}
+<div class="m2m-results-inner">
+    {% for item in results %}
+    <button type="button"
+            class="m2m-result-item"
+            hx-post="{% url 'portal:subject_add' journal.pk %}"
+            hx-vals='{"item_id": "{{ item.pk }}"}'
+            hx-target="#portal-m2m-subjects"
+            hx-swap="outerHTML">
+        <i class="bi bi-plus"></i> {{ item.name }}
+    </button>
+    {% endfor %}
+</div>
+{% elif q %}
+<div class="m2m-results-inner">
+    <span class="m2m-empty-results">No subjects match "{{ q }}"</span>
+</div>
+{% endif %}

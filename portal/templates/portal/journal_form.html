@@ -1,0 +1,52 @@
+{% extends "portal/base.html" %}
+
+{% block title %}Edit Journal{% endblock %}
+
+{% block content %}
+<div class="portal-page-header">
+    <div>
+        <h1 class="portal-page-title">Edit Journal</h1>
+        <p class="portal-page-sub"><a href="{% url 'portal:dashboard' %}">← Back to Dashboard</a></p>
+    </div>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="portal-two-col">
+
+        <div class="portal-form-card">
+            {% for field in form %}
+            <div class="portal-field">
+                <label class="portal-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {% if field.field.widget.input_type == 'checkbox' %}
+                <div class="portal-checkbox-wrap">
+                    {{ field }}
+                    <span>{{ field.label }}</span>
+                </div>
+                {% else %}
+                {{ field }}
+                {% endif %}
+                {% if field.help_text %}<div class="portal-help">{{ field.help_text }}</div>{% endif %}
+                {% if field.errors %}<div class="portal-error">{{ field.errors.0 }}</div>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            <div class="portal-form-card">
+                <div class="portal-section-label">Subjects</div>
+                {% include "portal/_m2m_widget.html" with journal=object items=subjects %}
+            </div>
+
+            <div class="portal-form-actions">
+                <button type="submit" class="portal-btn-primary">
+                    <i class="bi bi-check2"></i> Save
+                </button>
+                <a href="{% url 'portal:dashboard' %}" class="portal-btn-secondary">Cancel</a>
+            </div>
+        </div>
+
+    </div>
+</form>
+{% endblock %}

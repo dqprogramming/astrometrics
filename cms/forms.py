@@ -52,6 +52,7 @@ class PostForm(forms.ModelForm):
             "slug",
             "summary",
             "body",
+            "byline",
             "meta_description",
             "is_published",
             "published_at",
@@ -66,6 +67,7 @@ class PostForm(forms.ModelForm):
             ),
             "summary": TinyMCE(attrs={"rows": 6}),
             "body": TinyMCE(),
+            "byline": forms.TextInput(attrs={"class": "mgr-input"}),
             "meta_description": forms.TextInput(attrs={"class": "mgr-input"}),
             "published_at": forms.DateTimeInput(
                 attrs={"class": "mgr-input", "type": "datetime-local"},

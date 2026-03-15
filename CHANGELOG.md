@@ -1,3 +1,46 @@
+## 1.13.0 (2026-03-15)
+
+### Feat
+
+- **portal**: flag audit log entries created by a reversion
+
+## 1.12.1 (2026-03-15)
+
+### Fix
+
+- **manager**: use valid bootstrap icon for footer dashboard card
+
+## 1.12.0 (2026-03-15)
+
+### Feat
+
+- **manager**: add landing page and footer to dashboard, reorder sidebar
+
+### Fix
+
+- **config**: load .env file via python-dotenv at settings startup
+
+## 1.11.0 (2026-03-15)
+
+### Feat
+
+- **config**: move settings to environment variables
+- adds publisher portal
+
+### Fix
+
+- repair broken uv.lock from line-wrapped paste
+
+## 1.10.0 (2026-03-15)
+
+### Feat
+
+- **cms**: add news index and detail pages
+
+### Fix
+
+- **cms**: resolve conflicting migration and guard debug toolbar hostname lookup
+
 ## 1.9.1 (2026-03-15)
 
 ### Fix

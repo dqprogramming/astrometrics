@@ -1,0 +1,51 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Portal Users{% endblock %}
+{% block page_title %}Portal Users{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> / Portal Users
+{% endblock %}
+{% block nav_portal_users %}active{% endblock %}
+
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+    <p class="mgr-muted" style="margin:0;">Users linked to publishers for portal access.</p>
+    <a href="{% url 'portal_manager:publisher_user_create' %}" class="btn-mgr-primary">
+        <i class="bi bi-plus"></i> Add Portal User
+    </a>
+</div>
+
+{% if publisher_users %}
+<div class="mgr-table-wrap">
+    <table class="mgr-table">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th>Publisher</th>
+                <th>Added</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pu in publisher_users %}
+            <tr>
+                <td><strong>{{ pu.user.username }}</strong></td>
+                <td>{{ pu.user.email|default:"—" }}</td>
+                <td>{{ pu.publisher.name }}</td>
+                <td>{{ pu.created_at|date:"Y-m-d" }}</td>
+                <td style="text-align:right;">
+                    <a href="{% url 'portal_manager:publisher_user_delete' pu.pk %}"
+                       class="btn-mgr-danger-sm">
+                        <i class="bi bi-trash"></i> Remove
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="mgr-empty">No portal users yet. Use "Add Portal User" to link an account to a publisher.</p>
+{% endif %}
+{% endblock %}

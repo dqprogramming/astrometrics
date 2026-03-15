@@ -264,6 +264,18 @@ body {
 [data-theme="light"] .btn-mgr-danger { border-color: rgba(207,34,46,.4); }
 [data-theme="light"] .btn-mgr-danger:hover { background: #ffebe9; }
 
+.btn-mgr-danger-sm {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.25rem 0.6rem;
+    background: transparent;
+    color: var(--red-fg);
+    border: 1px solid rgba(248,81,73,.4); border-radius: 6px;
+    font-size: 0.8125rem; font-weight: 500;
+    cursor: pointer; text-decoration: none;
+    transition: background .12s, border-color .12s;
+}
+.btn-mgr-danger-sm:hover { background: rgba(218,54,51,.15); border-color: var(--red-fg); color: var(--red-fg); }
+
 /* ── Tables ───────────────────────────────────────────────────────────────── */
 
 .mgr-table-wrap {
