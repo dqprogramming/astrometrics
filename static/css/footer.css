@@ -96,6 +96,9 @@
   font-weight: 700;
   margin-bottom: 4px;
   color: #212129;
+  /* WCAG 2.5.5: ensure 44px minimum box size */
+  padding-block: 14px;
+  margin-block: -14px;
 }
 
 .footer-column a,
@@ -106,6 +109,9 @@
   color: #212129;
   text-decoration: none;
   transition: font-weight 0.15s;
+  /* WCAG 2.5.5: ensure 44px minimum target size */
+  padding-block: 14px;
+  margin-block: -14px;
 }
 
 /* Reserve space for bold text so hover doesn't shift layout */
@@ -136,6 +142,8 @@
   opacity: 0.5;
   cursor: default;
   pointer-events: none;
+  padding-block: 14px;
+  margin-block: -14px;
 }
 
 .footer-legal {
@@ -150,6 +158,13 @@
 .footer-legal a {
     color: #212129;
     text-decoration: underline;
+    /* WCAG 2.5.5: ensure 44x44px minimum target size */
+    display: inline-block;
+    min-width: 44px;
+    min-height: 44px;
+    line-height: 44px;
+    margin-block: -14px;
+    text-align: center;
 }
 
 .sr-only {
