@@ -45,13 +45,13 @@ class PageAdmin(TranslationAdmin):
 class PostAdmin(TranslationAdmin):
     list_display = [
         "title",
-        "slug",
+        "byline",
         "is_published",
         "published_at",
         "updated_at",
     ]
     list_filter = ["is_published", "published_at"]
-    search_fields = ["title", "slug", "summary", "body"]
+    search_fields = ["title", "slug", "summary", "body", "byline"]
     prepopulated_fields = {"slug": ("title",)}
     readonly_fields = ["created_at", "updated_at"]
     date_hierarchy = "published_at"
@@ -63,7 +63,7 @@ class PostAdmin(TranslationAdmin):
         ),
         (
             "Publishing",
-            {"fields": ("is_published", "published_at")},
+            {"fields": ("byline", "is_published", "published_at")},
         ),
         (
             "Metadata",
