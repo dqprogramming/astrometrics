@@ -43,6 +43,20 @@
 
         <div style="display:flex; flex-direction:column; gap:1rem;">
             <div class="mgr-form-card">
+                <div class="mgr-form-section-label">Hero</div>
+
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.hero_bg.id_for_label }}">Background colour</label>
+                    {{ form.hero_bg }}
+                </div>
+
+                <div class="mgr-field" style="margin-bottom:0;">
+                    <label class="mgr-label" for="{{ form.hero_arc_position.id_for_label }}">Arc position</label>
+                    {{ form.hero_arc_position }}
+                </div>
+            </div>
+
+            <div class="mgr-form-card">
                 <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">Publishing</div>
 
                 <div class="mgr-field">
@@ -62,15 +76,24 @@
 
                 {% if object.preview_token %}
                 <div class="mgr-field" style="margin-bottom:0;">
-                    <div class="mgr-label">Preview link</div>
-                    <button type="button"
-                            class="btn-mgr-secondary"
-                            style="width:100%; justify-content:center;"
-                            data-preview-url="{{ request.scheme }}://{{ request.get_host }}{% url 'cms:page-preview' object.preview_token %}"
-                            onclick="navigator.clipboard.writeText(this.dataset.previewUrl).then(() => { this.textContent = '✓ Copied'; setTimeout(() => { this.innerHTML = '<i class=\'bi bi-link-45deg\'></i> Copy preview link'; }, 2000); })">
-                        <i class="bi bi-link-45deg"></i> Copy preview link
-                    </button>
-                    <div class="mgr-help">Share this link to let others view the page before publishing.</div>
+                    <div class="mgr-label">Preview</div>
+                    <div style="display:flex; gap:.5rem;">
+                        <a href="{% url 'cms:page-preview' object.preview_token %}"
+                           target="_blank"
+                           rel="noopener"
+                           class="btn-mgr-secondary"
+                           style="flex:1; justify-content:center;">
+                            <i class="bi bi-box-arrow-up-right"></i> Open
+                        </a>
+                        <button type="button"
+                                class="btn-mgr-secondary"
+                                style="flex:1; justify-content:center;"
+                                data-preview-url="{{ request.scheme }}://{{ request.get_host }}{% url 'cms:page-preview' object.preview_token %}"
+                                onclick="navigator.clipboard.writeText(this.dataset.previewUrl).then(() => { this.textContent = '✓ Copied'; setTimeout(() => { this.innerHTML = '<i class=\'bi bi-link-45deg\'></i> Copy'; }, 2000); })">
+                            <i class="bi bi-link-45deg"></i> Copy
+                        </button>
+                    </div>
+                    <div class="mgr-help">Share to let others view before publishing.</div>
                 </div>
                 {% endif %}
             </div>
