@@ -60,10 +60,11 @@
                 </div>
 
                 <div class="mgr-field">
-                    <div class="mgr-checkbox-wrap">
+                    <label class="mgr-switch">
                         {{ form.is_published }}
-                        <label for="{{ form.is_published.id_for_label }}" style="font-size:.875rem; cursor:pointer;">Published</label>
-                    </div>
+                        <span class="mgr-switch__track"></span>
+                        <span class="mgr-switch__label">Published</span>
+                    </label>
                     <div class="mgr-help">Only published posts appear on the site.</div>
                 </div>
 
