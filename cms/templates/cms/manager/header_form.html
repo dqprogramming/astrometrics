@@ -1,0 +1,177 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Header &amp; Menus{% endblock %}
+{% block page_title %}Header &amp; Menus{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> /
+Header &amp; Menus
+{% endblock %}
+{% block nav_header %}active{% endblock %}
+
+{% block content %}
+<form method="post" id="header-form" style="max-width:900px;">
+    {% csrf_token %}
+
+    {# -- Branding -------------------------------------------------- #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-image" aria-hidden="true"></i> Branding
+        </div>
+
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.logo_line_1.id_for_label }}">Logo Line 1</label>
+            {{ form.logo_line_1 }}
+            {% if form.logo_line_1.errors %}<div class="mgr-error">{{ form.logo_line_1.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.logo_line_2.id_for_label }}">Logo Line 2</label>
+            {{ form.logo_line_2 }}
+            {% if form.logo_line_2.errors %}<div class="mgr-error">{{ form.logo_line_2.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.logo_line_3.id_for_label }}">Logo Line 3</label>
+            {{ form.logo_line_3 }}
+            {% if form.logo_line_3.errors %}<div class="mgr-error">{{ form.logo_line_3.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.cta_label.id_for_label }}">Call-to-Action Label</label>
+            {{ form.cta_label }}
+            {% if form.cta_label.errors %}<div class="mgr-error">{{ form.cta_label.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.cta_url.id_for_label }}">Call-to-Action URL</label>
+            {{ form.cta_url }}
+            {% if form.cta_url.errors %}<div class="mgr-error">{{ form.cta_url.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    {# -- Navigation Menu ------------------------------------------- #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-list-ul" aria-hidden="true"></i> Navigation Menu
+        </div>
+
+        {{ formset.management_form }}
+        <div id="menu-items" class="link-list">
+            {% for item_form in formset %}
+            <div class="menu-item-row {% if item_form.instance.parent_id %}sub-item-row{% else %}top-level-row{% endif %} {% if item_form.instance.pk and item_form.DELETE.value %}d-none{% endif %}"
+                 style="margin-bottom:0.5rem;"
+                 data-item-pk="{{ item_form.instance.pk|default:'' }}">
+                <div class="item-main" style="display:grid; grid-template-columns:auto 1fr 1fr auto auto auto; gap:0.5rem; align-items:center;">
+                    <span class="drag-handle" aria-label="Drag to reorder" style="cursor:grab; padding:0 0.25rem;"><i class="bi bi-grip-vertical" aria-hidden="true"></i></span>
+                    {{ item_form.id }}
+                    {{ item_form.sort_order }}
+                    {{ item_form.parent }}
+                    <div>{{ item_form.label }}{% if item_form.label.errors %}<div class="mgr-error">{{ item_form.label.errors.0 }}</div>{% endif %}</div>
+                    <div>{{ item_form.url }}{% if item_form.url.errors %}<div class="mgr-error">{{ item_form.url.errors.0 }}</div>{% endif %}</div>
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        {% if not item_form.instance.parent_id %}
+                        <label class="cta-toggle-label" style="display:flex; align-items:center; gap:0.25rem; font-size:0.8rem; white-space:nowrap;" title="Show call-to-action button in dropdown">
+                            {{ item_form.show_cta_in_dropdown }} Call to Action
+                        </label>
+                        <button type="button" class="btn-expand-toggle" aria-expanded="true" aria-label="Toggle sub-items" style="background:none; border:none; cursor:pointer; padding:0.25rem;">
+                            <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                        </button>
+                        {% endif %}
+                        <span style="display:none;">{{ item_form.DELETE }}</span>
+                        <button type="button" class="btn-delete-link" title="Remove item" aria-label="Remove item" style="background:none; border:none; color:var(--danger, #dc3545); cursor:pointer; padding:0.25rem;">
+                            <i class="bi bi-trash" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+                {% if not item_form.instance.parent_id %}
+                <div class="cta-fields" style="margin-left:2rem; margin-top:0.25rem; grid-template-columns:1fr 1fr; gap:0.5rem; display:{% if item_form.show_cta_in_dropdown.value %}grid{% else %}none{% endif %};">
+                    <div>{{ item_form.cta_text }}{% if item_form.cta_text.errors %}<div class="mgr-error">{{ item_form.cta_text.errors.0 }}</div>{% endif %}</div>
+                    <div>{{ item_form.cta_url }}{% if item_form.cta_url.errors %}<div class="mgr-error">{{ item_form.cta_url.errors.0 }}</div>{% endif %}</div>
+                </div>
+                <div class="sub-items" style="margin-left:2rem; border-left:2px solid var(--border, #dee2e6); padding-left:0.75rem; margin-top:0.25rem;">
+                    {# Sub-items will be moved here by JS #}
+                </div>
+                <button type="button" class="btn-mgr-secondary btn-add-sub-item" style="margin-left:2rem; margin-top:0.25rem; font-size:0.8rem;"
+                        {% if not item_form.instance.pk %}disabled title="Save first to add sub-items"{% endif %}>
+                    <i class="bi bi-plus-lg" aria-hidden="true"></i> Add sub-item
+                </button>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" class="btn-mgr-secondary" id="btn-add-top-level" style="margin-top:0.5rem;">
+            <i class="bi bi-plus-lg" aria-hidden="true"></i> Add top-level item
+        </button>
+    </div>
+
+    {# -- Save / Cancel --------------------------------------------- #}
+    <div style="display:flex; gap:.75rem; flex-wrap:wrap; max-width:300px;">
+        <button type="submit" class="btn-mgr-primary" style="flex:1; justify-content:center;">
+            <i class="bi bi-check2" aria-hidden="true"></i> Save
+        </button>
+        <a href="{% url 'manager:dashboard' %}" class="btn-mgr-secondary" style="flex:1; justify-content:center;">
+            Cancel
+        </a>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+<script src="/static/js/header-manager.js"></script>
+
+<template id="top-level-template">
+    <div class="menu-item-row top-level-row" style="margin-bottom:0.5rem;" data-item-pk="">
+        <div class="item-main" style="display:grid; grid-template-columns:auto 1fr 1fr auto auto auto; gap:0.5rem; align-items:center;">
+            <span class="drag-handle" aria-label="Drag to reorder" style="cursor:grab; padding:0 0.25rem;"><i class="bi bi-grip-vertical" aria-hidden="true"></i></span>
+            <input type="hidden" name="__prefix__-id" id="id___prefix__-id">
+            <input type="hidden" name="__prefix__-sort_order" id="id___prefix__-sort_order" value="0">
+            <input type="hidden" name="__prefix__-parent" id="id___prefix__-parent" value="">
+            <div><input type="text" name="__prefix__-label" id="id___prefix__-label" class="mgr-input" maxlength="255" aria-label="Menu item label"></div>
+            <div><input type="text" name="__prefix__-url" id="id___prefix__-url" class="mgr-input" maxlength="500" aria-label="Menu item URL"></div>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+                <label class="cta-toggle-label" style="display:flex; align-items:center; gap:0.25rem; font-size:0.8rem; white-space:nowrap;" title="Show call-to-action button in dropdown">
+                    <input type="checkbox" name="__prefix__-show_cta_in_dropdown" id="id___prefix__-show_cta_in_dropdown" disabled> Call to Action
+                </label>
+                <button type="button" class="btn-expand-toggle" aria-expanded="true" aria-label="Toggle sub-items" style="background:none; border:none; cursor:pointer; padding:0.25rem;">
+                    <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                </button>
+                <span style="display:none;"><input type="checkbox" name="__prefix__-DELETE" id="id___prefix__-DELETE"></span>
+                <button type="button" class="btn-delete-link" title="Remove item" aria-label="Remove item" style="background:none; border:none; color:var(--danger, #dc3545); cursor:pointer; padding:0.25rem;">
+                    <i class="bi bi-trash" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+        <div class="cta-fields" style="margin-left:2rem; margin-top:0.25rem; display:none; grid-template-columns:1fr 1fr; gap:0.5rem;">
+            <div><input type="text" name="__prefix__-cta_text" id="id___prefix__-cta_text" class="mgr-input" maxlength="255" aria-label="Call-to-action button text" placeholder="Call to action display name"></div>
+            <div><input type="text" name="__prefix__-cta_url" id="id___prefix__-cta_url" class="mgr-input" maxlength="500" aria-label="Call-to-action button URL" placeholder="Call to action URL"></div>
+        </div>
+        <div class="sub-items" style="margin-left:2rem; border-left:2px solid var(--border, #dee2e6); padding-left:0.75rem; margin-top:0.25rem;"></div>
+        <button type="button" class="btn-mgr-secondary btn-add-sub-item" style="margin-left:2rem; margin-top:0.25rem; font-size:0.8rem;" disabled title="Save first to add sub-items">
+            <i class="bi bi-plus-lg" aria-hidden="true"></i> Add sub-item
+        </button>
+    </div>
+</template>
+
+<template id="sub-item-template">
+    <div class="menu-item-row sub-item-row" style="margin-bottom:0.25rem;" data-item-pk="">
+        <div class="item-main" style="display:grid; grid-template-columns:auto 1fr 1fr auto; gap:0.5rem; align-items:center;">
+            <span class="drag-handle" aria-label="Drag to reorder" style="cursor:grab; padding:0 0.25rem;"><i class="bi bi-grip-vertical" aria-hidden="true"></i></span>
+            <input type="hidden" name="__prefix__-id" id="id___prefix__-id">
+            <input type="hidden" name="__prefix__-sort_order" id="id___prefix__-sort_order" value="0">
+            <input type="hidden" name="__prefix__-parent" id="id___prefix__-parent" value="">
+            <input type="hidden" name="__prefix__-show_cta_in_dropdown" id="id___prefix__-show_cta_in_dropdown" value="">
+            <input type="hidden" name="__prefix__-cta_text" id="id___prefix__-cta_text" value="">
+            <input type="hidden" name="__prefix__-cta_url" id="id___prefix__-cta_url" value="">
+            <div><input type="text" name="__prefix__-label" id="id___prefix__-label" class="mgr-input" maxlength="255" aria-label="Menu item label"></div>
+            <div><input type="text" name="__prefix__-url" id="id___prefix__-url" class="mgr-input" maxlength="500" aria-label="Menu item URL"></div>
+            <div style="display:flex; align-items:center;">
+                <span style="display:none;"><input type="checkbox" name="__prefix__-DELETE" id="id___prefix__-DELETE"></span>
+                <button type="button" class="btn-delete-link" title="Remove item" aria-label="Remove item" style="background:none; border:none; color:var(--danger, #dc3545); cursor:pointer; padding:0.25rem;">
+                    <i class="bi bi-trash" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
+{% endblock %}

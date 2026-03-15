@@ -315,8 +315,69 @@ button.close-icon {
     outline-color: #71f7f2;
 }
 
+/* --- Mobile accordion (expandable nav groups) --- */
+.mobile-nav-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-nav-toggle {
+    all: unset;
+    font-family: 'Spectral', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: #ffffff;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mobile-nav-toggle:hover {
+    color: #71f7f2;
+}
+
+.mobile-nav-toggle::after {
+    content: '+';
+    font-family: sans-serif;
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 1;
+}
+
+.mobile-nav-toggle[aria-expanded="true"]::after {
+    content: '\2212'; /* minus sign */
+}
+
+.mobile-nav-submenu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 0 8px 1rem;
+}
+
+.nav-sub-link {
+    font-family: 'Spectral', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav-sub-link:hover {
+    color: #71f7f2;
+}
+
 @media (max-width: 768px) {
     .nav-link {
         font-size: 36px;
+    }
+    .mobile-nav-toggle {
+        font-size: 36px;
+    }
+    .nav-sub-link {
+        font-size: 24px;
     }
 }
