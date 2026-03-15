@@ -1,3 +1,13 @@
+## 1.12.0 (2026-03-15)
+
+### Feat
+
+- **manager**: add landing page and footer to dashboard, reorder sidebar
+
+### Fix
+
+- **config**: load .env file via python-dotenv at settings startup
+
 ## 1.11.0 (2026-03-15)
 
 ### Feat
