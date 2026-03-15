@@ -53,11 +53,25 @@
                     <div class="mgr-help">Only published pages appear on the site.</div>
                 </div>
 
-                <div class="mgr-field" style="margin-bottom:0;">
+                <div class="mgr-field">
                     <label class="mgr-label" for="{{ form.sort_order.id_for_label }}">Sort Order</label>
                     {{ form.sort_order }}
                     <div class="mgr-help">Lower numbers appear first.</div>
                 </div>
+
+                {% if object.preview_token %}
+                <div class="mgr-field" style="margin-bottom:0;">
+                    <div class="mgr-label">Preview link</div>
+                    <button type="button"
+                            class="btn-mgr-secondary"
+                            style="width:100%; justify-content:center;"
+                            data-preview-url="{{ request.scheme }}://{{ request.get_host }}{% url 'cms:page-preview' object.preview_token %}"
+                            onclick="navigator.clipboard.writeText(this.dataset.previewUrl).then(() => { this.textContent = '✓ Copied'; setTimeout(() => { this.innerHTML = '<i class=\'bi bi-link-45deg\'></i> Copy preview link'; }, 2000); })">
+                        <i class="bi bi-link-45deg"></i> Copy preview link
+                    </button>
+                    <div class="mgr-help">Share this link to let others view the page before publishing.</div>
+                </div>
+                {% endif %}
             </div>
 
             <div class="mgr-form-card">

@@ -14,6 +14,12 @@
 
 {% block content %}
 
+{% if is_preview %}
+<div class="preview-banner" role="alert">
+    <strong>Preview</strong> — this post is not yet published and is only visible via this link.
+</div>
+{% endif %}
+
 <!-- Article header -->
 <header class="news-detail-header">
     <!-- Concentric arcs decoration -->
