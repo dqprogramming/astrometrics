@@ -1,3 +1,13 @@
+## 1.10.0 (2026-03-15)
+
+### Feat
+
+- **cms**: add news index and detail pages
+
+### Fix
+
+- **cms**: resolve conflicting migration and guard debug toolbar hostname lookup
+
 ## 1.9.1 (2026-03-15)
 
 ### Fix
