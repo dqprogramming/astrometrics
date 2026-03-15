@@ -1,3 +1,9 @@
+## 1.9.1 (2026-03-15)
+
+### Fix
+
+- **a11y**: remove target size overrides from inline legal link
+
 ## 1.9.0 (2026-03-15)
 
 ### Feat
