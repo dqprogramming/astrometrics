@@ -77,11 +77,11 @@
     top: 100%;
     left: 0;
     background-color: #212129;
-    padding: 20px 24px;
+    padding: 12px 24px;
     min-width: 200px;
     z-index: 200;
     flex-direction: column;
-    gap: 6px;
+    gap: 0;
     border-radius: 0 0 8px 8px;
 }
 
@@ -105,7 +105,10 @@
     text-decoration: none;
     font-size: 14px;
     font-weight: 400;
-    padding: 4px 0;
+    padding: 12px 0;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
     transition: font-weight 0.15s;
 }
 
@@ -120,11 +123,14 @@
 
 .landing-dropdown-cta {
     margin-top: 12px;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     border: 2px solid #fff;
     border-radius: 50px;
-    padding: 8px 20px;
+    padding: 10px 20px;
+    min-height: 44px;
     font-size: 12px;
     transition: border-color 0.2s;
 }
@@ -147,8 +153,11 @@
 }
 
 .btn-get-involved {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 10px 22px;
+    min-height: 44px;
     background-color: #212129;
     color: #fff;
     text-decoration: none;
@@ -246,6 +255,8 @@ button.close-icon {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .fullscreen-nav.active {
@@ -264,7 +275,8 @@ button.close-icon {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: calc(100% - 100px);
+    flex: 1;
+    min-height: 0;
     padding: 60px 0;
 }
 
@@ -315,8 +327,31 @@ button.close-icon {
     outline-color: #71f7f2;
 }
 
+.mobile-nav-submenu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 0 8px 1rem;
+}
+
+.nav-sub-link {
+    font-family: 'Spectral', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav-sub-link:hover {
+    color: #71f7f2;
+}
+
 @media (max-width: 768px) {
     .nav-link {
         font-size: 36px;
+    }
+    .nav-sub-link {
+        font-size: 24px;
     }
 }

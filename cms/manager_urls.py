@@ -7,6 +7,8 @@ app_name = "cms_manager"
 urlpatterns = [
     # TinyMCE image upload
     path("image-upload/", views.image_upload, name="image_upload"),
+    # Header
+    path("header/", views.HeaderSettingsUpdateView.as_view(), name="header"),
     # Footer
     path("footer/", views.FooterSettingsUpdateView.as_view(), name="footer"),
     # Landing Page

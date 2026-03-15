@@ -466,6 +466,143 @@ class FooterLink(models.Model):
         cache.delete(FooterSettings.CACHE_KEY)
 
 
+class HeaderSettings(models.Model):
+    """Singleton model for configurable header content.
+
+    Only one row should exist — use HeaderSettings.load() to
+    fetch-or-create it.
+    """
+
+    logo_line_1 = models.CharField(
+        max_length=100,
+        default="Open",
+        help_text="Logo text line 1 (translatable)",
+    )
+    logo_line_2 = models.CharField(
+        max_length=100,
+        default="Journals",
+        help_text="Logo text line 2 (translatable)",
+    )
+    logo_line_3 = models.CharField(
+        max_length=100,
+        default="Collective",
+        help_text="Logo text line 3 (translatable)",
+    )
+    cta_label = models.CharField(
+        max_length=100,
+        default="GET INVOLVED",
+        help_text="CTA button label (translatable)",
+    )
+    cta_url = models.CharField(
+        max_length=500,
+        default="mailto:info@openjournalscollective.org?subject=Open Journals Collective",
+        help_text="CTA button URL",
+    )
+    show_mobile_sub_items = models.BooleanField(
+        default=True,
+        help_text="Show sub-menu items in the mobile navigation",
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Header Settings")
+        verbose_name_plural = _("Header Settings")
+
+    def __str__(self):
+        return "Header Settings"
+
+    CACHE_KEY = "header_settings"
+    CACHE_TTL = 60 * 60  # 1 hour
+
+    @classmethod
+    def load(cls):
+        """Return the singleton instance, serving from cache when possible."""
+        obj = cache.get(cls.CACHE_KEY)
+        if obj is None:
+            obj, _created = cls.objects.get_or_create(pk=1)
+            items = list(
+                obj.menu_items.filter(parent__isnull=True)
+                .prefetch_related("children")
+                .order_by("sort_order")
+            )
+            obj._prefetched_menu_items = items
+            cache.set(cls.CACHE_KEY, obj, cls.CACHE_TTL)
+        return obj
+
+    def get_menu_items(self):
+        if hasattr(self, "_prefetched_menu_items"):
+            return self._prefetched_menu_items
+        return list(
+            self.menu_items.filter(parent__isnull=True)
+            .prefetch_related("children")
+            .order_by("sort_order")
+        )
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+        cache.delete(self.CACHE_KEY)
+
+    def delete(self, *args, **kwargs):
+        pass
+
+
+class MenuItem(models.Model):
+    """A navigation item in the header menu, supporting one level of nesting."""
+
+    header = models.ForeignKey(
+        HeaderSettings,
+        related_name="menu_items",
+        on_delete=models.CASCADE,
+    )
+    parent = models.ForeignKey(
+        "self",
+        null=True,
+        blank=True,
+        related_name="children",
+        on_delete=models.CASCADE,
+    )
+    label = models.CharField(
+        max_length=255, help_text="Menu item label (translatable)"
+    )
+    url = models.CharField(
+        max_length=500, blank=True, help_text="Menu item URL"
+    )
+    sort_order = models.PositiveIntegerField(default=0)
+    show_cta_in_dropdown = models.BooleanField(
+        default=False,
+        help_text="Show call-to-action button in this item's dropdown (top-level only)",
+    )
+    cta_text = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Call-to-action button text (falls back to global if empty, translatable)",
+    )
+    cta_url = models.CharField(
+        max_length=500,
+        blank=True,
+        help_text="Call-to-action button URL (falls back to global if empty)",
+    )
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return self.label
+
+    @property
+    def is_disabled(self):
+        return not self.url or self.url == "#"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete(HeaderSettings.CACHE_KEY)
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        cache.delete(HeaderSettings.CACHE_KEY)
+
+
 class Snippet(models.Model):
     """A reusable translatable rich-text content block.
 

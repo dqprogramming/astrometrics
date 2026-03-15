@@ -4,7 +4,9 @@ from tinymce.widgets import TinyMCE
 from .models import (
     FooterLink,
     FooterSettings,
+    HeaderSettings,
     LandingPageSettings,
+    MenuItem,
     Page,
     Post,
     Snippet,
@@ -231,6 +233,73 @@ Column2LinkFormSet = forms.inlineformset_factory(
     FooterSettings,
     FooterLink,
     form=FooterLinkForm,
+    extra=0,
+    can_delete=True,
+)
+
+
+class HeaderSettingsForm(forms.ModelForm):
+    class Meta:
+        model = HeaderSettings
+        fields = [
+            "logo_line_1",
+            "logo_line_2",
+            "logo_line_3",
+            "cta_label",
+            "cta_url",
+            "show_mobile_sub_items",
+        ]
+        widgets = {
+            "logo_line_1": forms.TextInput(attrs={"class": "mgr-input"}),
+            "logo_line_2": forms.TextInput(attrs={"class": "mgr-input"}),
+            "logo_line_3": forms.TextInput(attrs={"class": "mgr-input"}),
+            "cta_label": forms.TextInput(attrs={"class": "mgr-input"}),
+            "cta_url": forms.TextInput(attrs={"class": "mgr-input"}),
+        }
+
+
+class MenuItemForm(forms.ModelForm):
+    class Meta:
+        model = MenuItem
+        fields = [
+            "label",
+            "url",
+            "sort_order",
+            "parent",
+            "show_cta_in_dropdown",
+            "cta_text",
+            "cta_url",
+        ]
+        widgets = {
+            "label": forms.TextInput(
+                attrs={"class": "mgr-input", "aria-label": "Menu item label"}
+            ),
+            "url": forms.TextInput(
+                attrs={"class": "mgr-input", "aria-label": "Menu item URL"}
+            ),
+            "sort_order": forms.HiddenInput(),
+            "parent": forms.HiddenInput(),
+            "cta_text": forms.TextInput(
+                attrs={
+                    "class": "mgr-input",
+                    "aria-label": "Call-to-action button text",
+                    "placeholder": "Call to action display name",
+                }
+            ),
+            "cta_url": forms.TextInput(
+                attrs={
+                    "class": "mgr-input",
+                    "aria-label": "Call-to-action button URL",
+                    "placeholder": "Call to action URL",
+                }
+            ),
+        }
+
+
+MenuItemFormSet = forms.inlineformset_factory(
+    HeaderSettings,
+    MenuItem,
+    form=MenuItemForm,
     extra=0,
     can_delete=True,
 )

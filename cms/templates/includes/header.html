@@ -5,29 +5,31 @@
             <div class="landing-header-logo">
                 <img src="/static/img/OJC-logo.svg" class="mini-logo"
                      alt="Open Journals Collective logo">
-                <span class="landing-header-logo-text">Open<br>Journals<br>Collective</span>
+                <span class="landing-header-logo-text">{{ header.logo_line_1 }}<br>{{ header.logo_line_2 }}<br>{{ header.logo_line_3 }}</span>
             </div>
             <nav class="landing-nav" id="landing-nav">
-                <div class="landing-nav-dropdown">
-                    <a href="/#who-we-are" class="landing-nav-link" aria-haspopup="true" aria-expanded="false">About OJC</a>
-                    <div class="landing-nav-dropdown-menu">
-                        <a href="/#who-we-are" class="landing-dropdown-item">About us</a>
-                        <a href="/#team" class="landing-dropdown-item">Our team</a>
-                        <a href="/#members" class="landing-dropdown-item">Our members</a>
-                        <a href="/#manifesto" class="landing-dropdown-item">Our Manifesto</a>
-                        <a href="/#model" class="landing-dropdown-item">Our model</a>
-                        <a href="mailto:info@openjournalscollective.org?subject=Open Journals Collective"
-                           class="btn-get-involved landing-dropdown-cta">GET INVOLVED</a>
+                {% for item in header.get_menu_items %}
+                    {% if item.children.all %}
+                    <div class="landing-nav-dropdown">
+                        <a href="{{ item.url }}" class="landing-nav-link" aria-haspopup="true" aria-expanded="false">{{ item.label }}</a>
+                        <div class="landing-nav-dropdown-menu">
+                            {% for child in item.children.all %}
+                            <a href="{{ child.url }}" class="landing-dropdown-item">{{ child.label }}</a>
+                            {% endfor %}
+                            {% if item.show_cta_in_dropdown %}
+                            <a href="{% firstof item.cta_url header.cta_url %}"
+                               class="btn-get-involved landing-dropdown-cta">{% firstof item.cta_text header.cta_label %}</a>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
-                <a href="/#how-it-works" class="landing-nav-link">How it works</a>
-                <a href="/catalogue/" class="landing-nav-link">Our Journals</a>
-                <a href="/#start-here" class="landing-nav-link">Start here</a>
-                <a href="/#news" class="landing-nav-link">News &amp; updates</a>
+                    {% else %}
+                    <a href="{{ item.url }}" class="landing-nav-link">{{ item.label }}</a>
+                    {% endif %}
+                {% endfor %}
             </nav>
             <div class="landing-header-actions">
-                <a href="mailto:info@openjournalscollective.org?subject=Open Journals Collective"
-                   class="btn-get-involved">GET INVOLVED</a>
+                <a href="{{ header.cta_url }}"
+                   class="btn-get-involved">{{ header.cta_label }}</a>
                 <button class="menu-icon-landing" id="menu-toggle"
                         aria-label="Toggle menu" aria-expanded="false" type="button">
                     <span></span>
@@ -49,23 +51,28 @@
             </div>
             <div class="logo-text col-8 spectral-bold">
                 <span class="site-header-text">
-                    Open Journals Collective
+                    {{ header.logo_line_1 }} {{ header.logo_line_2 }} {{ header.logo_line_3 }}
                 </span>
             </div>
             <button class="close-icon col-1" id="close-nav" aria-label="Close menu" type="button">&times;</button>
         </div>
         <div class="nav-content">
             <div class="nav-links">
-                <a href="/#who-we-are" class="nav-link">About OJC.</a>
-                <a href="/#how-it-works" class="nav-link">How it works.</a>
-                <a href="/catalogue/" class="nav-link">Our Journals.</a>
-                <a href="/#start-here" class="nav-link">Start here.</a>
-                <a href="/#news" class="nav-link">News &amp; updates.</a>
+                {% for item in header.get_menu_items %}
+                    <a href="{{ item.url }}" class="nav-link">{{ item.label }}.</a>
+                    {% if header.show_mobile_sub_items and item.children.all %}
+                    <div class="mobile-nav-submenu">
+                        {% for child in item.children.all %}
+                        <a href="{{ child.url }}" class="nav-sub-link">{{ child.label }}</a>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                {% endfor %}
             </div>
             <div class="nav-cta">
                 <a target="_blank" rel="noopener"
-                   href="mailto:info@openjournalscollective.org?subject=Open Journals Collective"
-                   class="nav-btn">GET INVOLVED</a>
+                   href="{{ header.cta_url }}"
+                   class="nav-btn">{{ header.cta_label }}</a>
             </div>
         </div>
     </div>

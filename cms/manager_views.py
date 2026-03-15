@@ -16,12 +16,21 @@ from .forms import (
     Column1LinkFormSet,
     Column2LinkFormSet,
     FooterSettingsForm,
+    HeaderSettingsForm,
     LandingPageSettingsForm,
+    MenuItemFormSet,
     PageForm,
     PostForm,
     SnippetForm,
 )
-from .models import FooterSettings, LandingPageSettings, Page, Post, Snippet
+from .models import (
+    FooterSettings,
+    HeaderSettings,
+    LandingPageSettings,
+    Page,
+    Post,
+    Snippet,
+)
 
 # ruff: noqa: E501
 
@@ -88,6 +97,50 @@ class LandingPageSettingsUpdateView(StaffRequiredMixin, UpdateView):
     def form_valid(self, form):
         messages.success(self.request, "Landing page settings updated.")
         return super().form_valid(form)
+
+
+# ── Header Settings ─────────────────────────────────────────────────────────
+
+
+class HeaderSettingsUpdateView(StaffRequiredMixin, View):
+    template_name = "cms/manager/header_form.html"
+
+    def get(self, request):
+        header = HeaderSettings.load()
+        form = HeaderSettingsForm(instance=header)
+        formset = MenuItemFormSet(instance=header, prefix="menu_items")
+        return render(
+            request,
+            self.template_name,
+            {"form": form, "formset": formset},
+        )
+
+    def post(self, request):
+        header = HeaderSettings.load()
+        form = HeaderSettingsForm(request.POST, instance=header)
+        formset = MenuItemFormSet(
+            request.POST, instance=header, prefix="menu_items"
+        )
+
+        if form.is_valid() and formset.is_valid():
+            form.save()
+
+            # First pass: save top-level items (no parent)
+            for item in formset.save(commit=False):
+                item.save()
+
+            # Delete removed items
+            for item in formset.deleted_objects:
+                item.delete()
+
+            messages.success(request, "Header settings updated.")
+            return redirect(reverse_lazy("cms_manager:header"))
+
+        return render(
+            request,
+            self.template_name,
+            {"form": form, "formset": formset},
+        )
 
 
 # ── Footer Settings ──────────────────────────────────────────────────────────

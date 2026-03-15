@@ -30,6 +30,12 @@
         </a>
 
         <span class="mgr-nav-section">Content</span>
+        <a href="{% url 'cms_manager:header' %}" class="mgr-nav-link {% block nav_header %}{% endblock %}">
+            <i class="bi bi-layout-text-sidebar-reverse"></i> Header &amp; Menus
+        </a>
+        <a href="{% url 'cms_manager:footer' %}" class="mgr-nav-link {% block nav_footer %}{% endblock %}">
+            <i class="bi bi-layout-text-window-reverse"></i> Footer
+        </a>
         <a href="{% url 'cms_manager:landing_page' %}" class="mgr-nav-link {% block nav_landing_page %}{% endblock %}">
             <i class="bi bi-house-heart"></i> Landing Page
         </a>
@@ -38,9 +44,6 @@
         </a>
         <a href="{% url 'cms_manager:post_list' %}" class="mgr-nav-link {% block nav_posts %}{% endblock %}">
             <i class="bi bi-newspaper"></i> Posts
-        </a>
-        <a href="{% url 'cms_manager:footer' %}" class="mgr-nav-link {% block nav_footer %}{% endblock %}">
-            <i class="bi bi-layout-text-window-reverse"></i> Footer
         </a>
         <a href="{% url 'cms_manager:snippet_list' %}" class="mgr-nav-link {% block nav_snippets %}{% endblock %}">
             <i class="bi bi-puzzle"></i> Snippets
