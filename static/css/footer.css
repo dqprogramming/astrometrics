@@ -158,13 +158,6 @@
 .footer-legal a {
     color: #212129;
     text-decoration: underline;
-    /* WCAG 2.5.5: ensure 44x44px minimum target size */
-    display: inline-block;
-    min-width: 44px;
-    min-height: 44px;
-    line-height: 44px;
-    margin-block: -14px;
-    text-align: center;
 }
 
 .sr-only {
