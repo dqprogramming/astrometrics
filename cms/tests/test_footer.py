@@ -444,8 +444,8 @@ class FooterTemplateTests(TestCase):
         cache.clear()
         response = self.client.get(reverse("cms:index"))
         self.assertContains(response, "Disabled Link")
-        self.assertContains(response, "social-disabled")
-        self.assertContains(response, 'aria-disabled="true"')
+        self.assertContains(response, '<span class="social-disabled"')
+        self.assertNotContains(response, 'aria-disabled="true"')
 
     def test_footer_renders_legal_text(self):
         response = self.client.get(reverse("cms:index"))

@@ -60,6 +60,12 @@
         setFormCount(prefix, count + 1);
         initDeleteButton(newRow);
         updateSortOrders(listEl);
+
+        // Focus the first text input in the new row for keyboard users
+        var firstInput = newRow.querySelector('input[type="text"]');
+        if (firstInput) {
+            firstInput.focus();
+        }
     }
 
     function initDeleteButton(row) {

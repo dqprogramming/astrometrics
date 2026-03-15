@@ -191,12 +191,13 @@ class FooterSettingsForm(forms.ModelForm):
             "column_1_heading": forms.TextInput(attrs={"class": "mgr-input"}),
             "column_2_heading": forms.TextInput(attrs={"class": "mgr-input"}),
             "legal_text": TinyMCE(
+                attrs={"aria-label": "Legal text"},
                 mce_attrs={
                     "height": 200,
                     "menubar": False,
                     "plugins": "link",
                     "toolbar": ("bold italic underline | link"),
-                }
+                },
             ),
         }
 
@@ -206,8 +207,12 @@ class FooterLinkForm(forms.ModelForm):
         model = FooterLink
         fields = ["label", "url", "sort_order"]
         widgets = {
-            "label": forms.TextInput(attrs={"class": "mgr-input"}),
-            "url": forms.TextInput(attrs={"class": "mgr-input"}),
+            "label": forms.TextInput(
+                attrs={"class": "mgr-input", "aria-label": "Link label"}
+            ),
+            "url": forms.TextInput(
+                attrs={"class": "mgr-input", "aria-label": "Link URL"}
+            ),
             "sort_order": forms.HiddenInput(),
         }
 
