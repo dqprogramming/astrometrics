@@ -77,11 +77,11 @@
     top: 100%;
     left: 0;
     background-color: #212129;
-    padding: 20px 24px;
+    padding: 12px 24px;
     min-width: 200px;
     z-index: 200;
     flex-direction: column;
-    gap: 6px;
+    gap: 0;
     border-radius: 0 0 8px 8px;
 }
 
@@ -105,7 +105,10 @@
     text-decoration: none;
     font-size: 14px;
     font-weight: 400;
-    padding: 4px 0;
+    padding: 12px 0;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
     transition: font-weight 0.15s;
 }
 
@@ -120,11 +123,14 @@
 
 .landing-dropdown-cta {
     margin-top: 12px;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     border: 2px solid #fff;
     border-radius: 50px;
-    padding: 8px 20px;
+    padding: 10px 20px;
+    min-height: 44px;
     font-size: 12px;
     transition: border-color 0.2s;
 }
@@ -147,8 +153,11 @@
 }
 
 .btn-get-involved {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 10px 22px;
+    min-height: 44px;
     background-color: #212129;
     color: #fff;
     text-decoration: none;
