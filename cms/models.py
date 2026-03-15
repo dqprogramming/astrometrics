@@ -346,6 +346,121 @@ class LandingPageSettings(models.Model):
         pass
 
 
+class FooterSettings(models.Model):
+    """Singleton model for configurable footer content.
+
+    Only one row should exist — use FooterSettings.load() to
+    fetch-or-create it.
+    """
+
+    tagline_1 = models.CharField(
+        max_length=255,
+        default="For Academics.",
+        help_text="First tagline (translatable)",
+    )
+    tagline_2 = models.CharField(
+        max_length=255,
+        default="For Libraries.",
+        help_text="Second tagline (translatable)",
+    )
+    tagline_3 = models.CharField(
+        max_length=255,
+        default="For Publishers.",
+        help_text="Third tagline (translatable)",
+    )
+    column_1_heading = models.CharField(
+        max_length=255,
+        default="About OJC",
+        help_text="Column 1 heading (translatable)",
+    )
+    column_2_heading = models.CharField(
+        max_length=255,
+        default="Contact us",
+        help_text="Column 2 heading (translatable)",
+    )
+    legal_text = models.TextField(
+        blank=True,
+        help_text="Legal text (rich text, translatable)",
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Footer Settings")
+        verbose_name_plural = _("Footer Settings")
+
+    def __str__(self):
+        return "Footer Settings"
+
+    CACHE_KEY = "footer_settings"
+    CACHE_TTL = 60 * 60  # 1 hour
+
+    @classmethod
+    def load(cls):
+        """Return the singleton instance, serving from cache when possible."""
+        obj = cache.get(cls.CACHE_KEY)
+        if obj is None:
+            obj, _created = cls.objects.get_or_create(pk=1)
+            links = list(obj.links.all())
+            obj._prefetched_links = links
+            cache.set(cls.CACHE_KEY, obj, cls.CACHE_TTL)
+        return obj
+
+    def get_column_1_links(self):
+        if hasattr(self, "_prefetched_links"):
+            return [lnk for lnk in self._prefetched_links if lnk.column == 1]
+        return self.links.filter(column=1)
+
+    def get_column_2_links(self):
+        if hasattr(self, "_prefetched_links"):
+            return [lnk for lnk in self._prefetched_links if lnk.column == 2]
+        return self.links.filter(column=2)
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        self.legal_text = sanitize_html(self.legal_text)
+        super().save(*args, **kwargs)
+        cache.delete(self.CACHE_KEY)
+
+    def delete(self, *args, **kwargs):
+        pass
+
+
+class FooterLink(models.Model):
+    """A link in one of the footer's two columns."""
+
+    COLUMN_CHOICES = [(1, "Column 1"), (2, "Column 2")]
+
+    footer = models.ForeignKey(
+        FooterSettings,
+        related_name="links",
+        on_delete=models.CASCADE,
+    )
+    column = models.PositiveIntegerField(choices=COLUMN_CHOICES)
+    label = models.CharField(
+        max_length=255, help_text="Link label (translatable)"
+    )
+    url = models.CharField(max_length=500, blank=True, help_text="Link URL")
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return self.label
+
+    @property
+    def is_disabled(self):
+        return not self.url or self.url == "#"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete(FooterSettings.CACHE_KEY)
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        cache.delete(FooterSettings.CACHE_KEY)
+
+
 class Snippet(models.Model):
     """A reusable translatable rich-text content block.
 
