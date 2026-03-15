@@ -1,3 +1,9 @@
+## 1.13.0 (2026-03-15)
+
+### Feat
+
+- **portal**: flag audit log entries created by a reversion
+
 ## 1.12.1 (2026-03-15)
 
 ### Fix
