@@ -1,3 +1,14 @@
+## 1.11.0 (2026-03-15)
+
+### Feat
+
+- **config**: move settings to environment variables
+- adds publisher portal
+
+### Fix
+
+- repair broken uv.lock from line-wrapped paste
+
 ## 1.10.0 (2026-03-15)
 
 ### Feat
