@@ -1,3 +1,9 @@
+## 1.16.0 (2026-03-15)
+
+### Feat
+
+- use switches over checkboxes
+
 ## 1.15.0 (2026-03-15)
 
 ### Feat
