@@ -140,6 +140,11 @@ class Post(models.Model):
         blank=True,
         help_text="Rich-text HTML content (translatable)",
     )
+    byline = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Author name displayed on the post. Defaults to the creating user's name.",
+    )
     meta_description = models.CharField(
         max_length=320,
         blank=True,

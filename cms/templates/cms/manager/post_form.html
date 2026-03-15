@@ -53,6 +53,13 @@
                 <div class="mgr-form-section-label">Publishing</div>
 
                 <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.byline.id_for_label }}">Byline</label>
+                    {{ form.byline }}
+                    <div class="mgr-help">Author name shown on the post.</div>
+                    {% if form.byline.errors %}<div class="mgr-error">{{ form.byline.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="mgr-field">
                     <div class="mgr-checkbox-wrap">
                         {{ form.is_published }}
                         <label for="{{ form.is_published.id_for_label }}" style="font-size:.875rem; cursor:pointer;">Published</label>

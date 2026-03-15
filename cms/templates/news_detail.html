@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} — Open Journals Collective{% endblock %}
+
+{% block extra_head %}
+    {% if post.meta_description %}
+    <meta name="description" content="{{ post.meta_description }}">
+    {% endif %}
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="/static/css/news.css">
+{% endblock %}
+
+{% block content %}
+
+<!-- Article header -->
+<header class="news-detail-header">
+    <!-- Concentric arcs decoration -->
+    <svg class="news-detail-header__arcs" viewBox="0 0 580 580" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" overflow="visible">
+        <circle cx="290" cy="290" r="100" fill="none" stroke="#212129" stroke-width="48" opacity="0.08"/>
+        <circle cx="290" cy="290" r="195" fill="none" stroke="#212129" stroke-width="48" opacity="0.08"/>
+        <circle cx="290" cy="290" r="290" fill="none" stroke="#212129" stroke-width="48" opacity="0.08"/>
+        <circle cx="290" cy="290" r="385" fill="none" stroke="#212129" stroke-width="48" opacity="0.08"/>
+    </svg>
+    <div class="container">
+
+        <a href="{% url 'cms:news-index' %}" class="news-detail-header__back spectral-bold">
+            <span class="news-detail-header__back-arrow" aria-hidden="true">←</span>
+            Back to News
+        </a>
+
+        <time class="news-detail-header__date" datetime="{{ post.published_at|date:'Y-m-d' }}">
+            {{ post.published_at|date:"j F Y" }}
+        </time>
+
+        <h1 id="post-title" class="news-detail-header__title spectral-extrabold">
+            {{ post.title }}
+        </h1>
+
+        {% if post.summary %}
+        <div class="news-detail-header__summary">
+            {{ post.summary|safe }}
+        </div>
+        {% endif %}
+
+        {% if post.byline %}
+        <p class="news-detail-header__byline">By {{ post.byline }}</p>
+        {% endif %}
+
+    </div>
+</header>
+
+<!-- Article body -->
+{% if post.body %}
+<article class="news-detail-body" aria-labelledby="post-title">
+    <div class="container">
+        <div class="news-detail-body__inner">
+            {{ post.body|safe }}
+        </div>
+    </div>
+</article>
+{% endif %}
+
+<!-- Footer nav -->
+<footer class="news-detail-footer" aria-label="Post navigation">
+    <div class="container">
+        <a href="{% url 'cms:news-index' %}" class="news-detail-header__back spectral-bold">
+            <span class="news-detail-header__back-arrow" aria-hidden="true">←</span>
+            Back to News
+        </a>
+    </div>
+</footer>
+
+{% endblock %}
