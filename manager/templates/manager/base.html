@@ -68,6 +68,14 @@
         <a href="{% url 'journals_manager:import' %}" class="mgr-nav-link {% block nav_import %}{% endblock %}">
             <i class="bi bi-upload"></i> Import
         </a>
+
+        <span class="mgr-nav-section">Portal</span>
+        <a href="{% url 'portal_manager:publisher_user_list' %}" class="mgr-nav-link {% block nav_portal_users %}{% endblock %}">
+            <i class="bi bi-person-badge"></i> Portal Users
+        </a>
+        <a href="{% url 'portal_manager:audit_log' %}" class="mgr-nav-link {% block nav_audit_log %}{% endblock %}">
+            <i class="bi bi-clock-history"></i> Audit Log
+        </a>
     </nav>
 
     <div class="mgr-sidebar-footer">

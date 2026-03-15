@@ -1,0 +1,26 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Remove Portal User{% endblock %}
+{% block page_title %}Remove Portal User{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> /
+<a href="{% url 'portal_manager:publisher_user_list' %}">Portal Users</a> /
+Remove
+{% endblock %}
+{% block nav_portal_users %}active{% endblock %}
+
+{% block content %}
+<div class="mgr-form-card" style="max-width:480px;">
+    <p>Remove portal access for <strong>{{ object.user.username }}</strong> from <strong>{{ object.publisher.name }}</strong>?</p>
+    <p class="mgr-help">The user account will not be deleted, only their portal access will be revoked.</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mgr-form-actions">
+            <button type="submit" class="btn-mgr-danger">
+                <i class="bi bi-trash"></i> Remove Access
+            </button>
+            <a href="{% url 'portal_manager:publisher_user_list' %}" class="btn-mgr-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+<div class="m2m-widget" id="portal-m2m-subjects">
+    <div class="m2m-tags">
+        {% for item in items %}
+        <span class="m2m-tag">
+            <span>{{ item.name }}</span>
+            <button type="button"
+                    hx-post="{% url 'portal:subject_remove' journal.pk item.pk %}"
+                    hx-target="#portal-m2m-subjects"
+                    hx-swap="outerHTML"
+                    class="m2m-tag-remove"
+                    aria-label="Remove {{ item.name }}">
+                <i class="bi bi-x"></i>
+            </button>
+        </span>
+        {% empty %}
+        <span class="m2m-none">No subjects added yet</span>
+        {% endfor %}
+    </div>
+    <div class="m2m-search-wrap">
+        <input type="text"
+               class="portal-input"
+               placeholder="Search subjects…"
+               hx-get="{% url 'portal:subject_search' journal.pk %}"
+               hx-target="#portal-m2m-subjects-results"
+               hx-trigger="input changed delay:200ms, focus"
+               name="q"
+               autocomplete="off">
+        <div id="portal-m2m-subjects-results" class="m2m-results"></div>
+    </div>
+</div>

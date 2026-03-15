@@ -1,0 +1,22 @@
+{% if results %}
+<div class="m2m-results-inner">
+    {% for user in results %}
+    <button type="button"
+            class="m2m-result-item"
+            data-user-id="{{ user.pk }}"
+            data-user-label="{{ user.get_full_name|default:user.username }} ({{ user.username }})">
+        <i class="bi bi-person"></i>
+        {% if user.get_full_name %}
+            <strong>{{ user.get_full_name }}</strong>&nbsp;<span style="opacity:.6;">{{ user.username }}</span>
+        {% else %}
+            {{ user.username }}
+        {% endif %}
+        {% if user.email %}<span style="opacity:.5; font-size:.8em;">{{ user.email }}</span>{% endif %}
+    </button>
+    {% endfor %}
+</div>
+{% elif q %}
+<div class="m2m-results-inner">
+    <span class="m2m-empty-results">No users match "{{ q }}"</span>
+</div>
+{% endif %}

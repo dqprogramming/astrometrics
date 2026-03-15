@@ -1,0 +1,116 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Audit Log{% endblock %}
+{% block page_title %}Audit Log{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> / Audit Log
+{% endblock %}
+{% block nav_audit_log %}active{% endblock %}
+
+{% block content %}
+<form method="get" style="display:flex; gap:.75rem; flex-wrap:wrap; margin-bottom:1.5rem; align-items:flex-end;">
+    <div style="flex:1; min-width:200px;">
+        <label class="mgr-label" style="font-size:.75rem;">Search</label>
+        <input type="text"
+               name="q"
+               value="{{ q }}"
+               class="mgr-input"
+               placeholder="Object, field, value…"
+               style="width:100%;">
+    </div>
+    <div>
+        <label class="mgr-label" style="font-size:.75rem;">User</label>
+        <select name="user" class="mgr-input" style="min-width:160px;">
+            <option value="">All users</option>
+            {% for u in portal_users %}
+            <option value="{{ u.pk }}" {% if selected_user == u.pk|stringformat:"s" %}selected{% endif %}>
+                {{ u.get_full_name|default:u.username }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label class="mgr-label" style="font-size:.75rem;">Publisher</label>
+        <select name="publisher" class="mgr-input" style="min-width:200px;">
+            <option value="">All publishers</option>
+            {% for p in publishers %}
+            <option value="{{ p.pk }}" {% if selected_publisher == p.pk|stringformat:"s" %}selected{% endif %}>
+                {{ p.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn-mgr-primary">Filter</button>
+    {% if q or selected_user or selected_publisher %}
+    <a href="{% url 'portal_manager:audit_log' %}" class="btn-mgr-secondary">Clear</a>
+    {% endif %}
+</form>
+
+{% if entries %}
+<div class="mgr-table-wrap">
+    <table class="mgr-table">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>User</th>
+                <th>Object</th>
+                <th>Action</th>
+                <th>Field</th>
+                <th>Old value</th>
+                <th>New value</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in entries %}
+            <tr>
+                <td style="white-space:nowrap;">{{ entry.timestamp|date:"Y-m-d H:i" }}</td>
+                <td>{{ entry.user.username|default:"—" }}</td>
+                <td><span title="{{ entry.content_type }}">{{ entry.object_repr }}</span></td>
+                <td>
+                    <span class="audit-action audit-action-{{ entry.action }}">
+                        {{ entry.get_action_display }}
+                    </span>
+                </td>
+                <td>{{ entry.field }}</td>
+                <td class="audit-value">{{ entry.old_value|default:"—"|truncatechars:60 }}</td>
+                <td class="audit-value">{{ entry.new_value|default:"—"|truncatechars:60 }}</td>
+                <td style="text-align:right; white-space:nowrap;">
+                    <form method="post"
+                          action="{% url 'portal_manager:audit_log_revert' entry.pk %}"
+                          style="display:inline;"
+                          onsubmit="return confirm('Revert this change?');">
+                        {% csrf_token %}
+                        <input type="hidden" name="return_params"
+                               value="{% if q %}q={{ q|urlencode }}&{% endif %}{% if selected_user %}user={{ selected_user }}&{% endif %}{% if selected_publisher %}publisher={{ selected_publisher }}{% endif %}">
+                        <button type="submit" class="btn-mgr-secondary" style="padding:.2rem .6rem; font-size:.8rem;">
+                            <i class="bi bi-arrow-counterclockwise"></i> Revert
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if is_paginated %}
+<div class="mgr-pagination">
+    {% if page_obj.has_previous %}
+    <a href="?{% if q %}q={{ q|urlencode }}&{% endif %}{% if selected_user %}user={{ selected_user }}&{% endif %}{% if selected_publisher %}publisher={{ selected_publisher }}&{% endif %}page={{ page_obj.previous_page_number }}" class="btn-mgr-secondary">
+        <i class="bi bi-chevron-left"></i> Previous
+    </a>
+    {% endif %}
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+    <a href="?{% if q %}q={{ q|urlencode }}&{% endif %}{% if selected_user %}user={{ selected_user }}&{% endif %}{% if selected_publisher %}publisher={{ selected_publisher }}&{% endif %}page={{ page_obj.next_page_number }}" class="btn-mgr-secondary">
+        Next <i class="bi bi-chevron-right"></i>
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<p class="mgr-empty">No audit log entries found.</p>
+{% endif %}
+{% endblock %}

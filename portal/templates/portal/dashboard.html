@@ -1,0 +1,37 @@
+{% extends "portal/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="portal-page-header">
+    <div>
+        <h1 class="portal-page-title">Dashboard</h1>
+        <p class="portal-page-sub">Managing: <strong>{{ publisher.name }}</strong></p>
+    </div>
+    <a href="{% url 'portal:publisher_edit' %}" class="portal-btn-secondary">
+        <i class="bi bi-pencil"></i> Edit Publisher Info
+    </a>
+</div>
+
+<div class="portal-section">
+    <h2 class="portal-section-title">Your Journals</h2>
+
+    {% if journals %}
+    <div class="portal-journal-list">
+        {% for journal in journals %}
+        <div class="portal-journal-card">
+            <div class="portal-journal-title">{{ journal.title }}</div>
+            {% if journal.issn %}
+            <div class="portal-journal-meta">ISSN: {{ journal.issn }}</div>
+            {% endif %}
+            <a href="{% url 'portal:journal_edit' journal.pk %}" class="portal-btn-sm">
+                <i class="bi bi-pencil"></i> Edit
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="portal-empty">No journals are linked to your publisher yet. Please contact the OJC team.</p>
+    {% endif %}
+</div>
+{% endblock %}

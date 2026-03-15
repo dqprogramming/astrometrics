@@ -12,6 +12,7 @@ from journals.models import (
     Publisher,
     Subject,
 )
+from portal.models import PublisherUser
 
 # ruff: noqa: E501
 
@@ -104,6 +105,22 @@ _ALL_CARDS = [
         "url": reverse_lazy("journals_manager:import"),
         "tags": ["catalogue", "data"],
     },
+    {
+        "title": "Portal Users",
+        "description": "Link user accounts to publishers to grant portal access.",
+        "icon": "person-badge",
+        "color": "#0ea5e9",
+        "url": reverse_lazy("portal_manager:publisher_user_list"),
+        "tags": ["portal"],
+    },
+    {
+        "title": "Audit Log",
+        "description": "View a full history of changes made through the publisher portal.",
+        "icon": "clock-history",
+        "color": "#64748b",
+        "url": reverse_lazy("portal_manager:audit_log"),
+        "tags": ["portal"],
+    },
 ]
 
 
@@ -118,6 +135,7 @@ def _counts():
         "Languages": Language.objects.count(),
         "Package Bands": PackageBand.objects.count(),
         "Archiving Services": ArchivingService.objects.count(),
+        "Portal Users": PublisherUser.objects.count(),
     }
 
 
@@ -149,6 +167,7 @@ class DashboardView(StaffRequiredMixin, TemplateView):
             ("content", "Content"),
             ("catalogue", "Catalogue"),
             ("data", "Data"),
+            ("portal", "Portal"),
         ]
         return ctx
 
