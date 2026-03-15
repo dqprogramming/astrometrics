@@ -41,7 +41,9 @@ class PortalUserMixin(LoginRequiredMixin):
         return self._publisher_user
 
 
-def _log(user, obj, action, field, old_value="", new_value=""):
+def _log(
+    user, obj, action, field, old_value="", new_value="", is_reversion=False
+):
     AuditLog.objects.create(
         user=user,
         content_type=ContentType.objects.get_for_model(obj),
@@ -51,6 +53,7 @@ def _log(user, obj, action, field, old_value="", new_value=""):
         field=field,
         old_value=old_value,
         new_value=new_value,
+        is_reversion=is_reversion,
     )
 
 
@@ -334,6 +337,7 @@ class RevertAuditLogView(StaffRequiredMixin, View):
                         entry.field,
                         old_value=entry.new_value,
                         new_value=entry.old_value,
+                        is_reversion=True,
                     )
                     messages.success(
                         request,
@@ -358,6 +362,7 @@ class RevertAuditLogView(StaffRequiredMixin, View):
                             AuditLog.ACTION_M2M_REMOVE,
                             entry.field,
                             old_value=entry.new_value,
+                            is_reversion=True,
                         )
                     else:
                         # Original remove → revert by adding back
@@ -371,6 +376,7 @@ class RevertAuditLogView(StaffRequiredMixin, View):
                             AuditLog.ACTION_M2M_ADD,
                             entry.field,
                             new_value=entry.old_value,
+                            is_reversion=True,
                         )
                     messages.success(
                         request,

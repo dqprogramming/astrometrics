@@ -164,6 +164,48 @@ class RevertAuditLogTests(TestCase):
         revert_entry = AuditLog.objects.order_by("-timestamp").first()
         self.assertEqual(revert_entry.user, self.staff)
         self.assertEqual(revert_entry.new_value, "Original Name")
+        self.assertTrue(revert_entry.is_reversion)
+
+    def test_revert_m2m_add_creates_reversion_entry(self):
+        self.journal.subjects.add(self.subject)
+        entry = self._make_log(
+            self.journal,
+            AuditLog.ACTION_M2M_ADD,
+            "subjects",
+            new_value="Biology",
+        )
+        self.client.login(username="staff", password="pass")
+        self.client.post(
+            reverse("portal_manager:audit_log_revert", kwargs={"pk": entry.pk})
+        )
+        revert_entry = AuditLog.objects.order_by("-timestamp").first()
+        self.assertTrue(revert_entry.is_reversion)
+        self.assertEqual(revert_entry.action, AuditLog.ACTION_M2M_REMOVE)
+
+    def test_revert_m2m_remove_creates_reversion_entry(self):
+        entry = self._make_log(
+            self.journal,
+            AuditLog.ACTION_M2M_REMOVE,
+            "subjects",
+            old_value="Biology",
+        )
+        self.client.login(username="staff", password="pass")
+        self.client.post(
+            reverse("portal_manager:audit_log_revert", kwargs={"pk": entry.pk})
+        )
+        revert_entry = AuditLog.objects.order_by("-timestamp").first()
+        self.assertTrue(revert_entry.is_reversion)
+        self.assertEqual(revert_entry.action, AuditLog.ACTION_M2M_ADD)
+
+    def test_original_entry_is_not_reversion(self):
+        entry = self._make_log(
+            self.publisher,
+            AuditLog.ACTION_UPDATE,
+            "name",
+            old_value="Original Name",
+            new_value="New Name",
+        )
+        self.assertFalse(entry.is_reversion)
 
     def test_revert_m2m_add(self):
         self.journal.subjects.add(self.subject)
