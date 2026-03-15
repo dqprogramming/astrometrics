@@ -26,6 +26,14 @@ class StaffRequiredMixin(UserPassesTestMixin):
 
 _ALL_CARDS = [
     {
+        "title": "Landing Page",
+        "description": "Edit the homepage hero, features, stats, and call-to-action content.",
+        "icon": "house-heart",
+        "color": "#6366f1",
+        "url": reverse_lazy("cms_manager:landing_page"),
+        "tags": ["content", "cms"],
+    },
+    {
         "title": "Pages",
         "description": "Manage static CMS pages — about, contact, and other site pages.",
         "icon": "file-text",
@@ -39,6 +47,14 @@ _ALL_CARDS = [
         "icon": "newspaper",
         "color": "#0ea5e9",
         "url": reverse_lazy("cms_manager:post_list"),
+        "tags": ["content", "cms"],
+    },
+    {
+        "title": "Footer",
+        "description": "Manage footer links, columns, and contact details.",
+        "icon": "layout-bottom",
+        "color": "#f59e0b",
+        "url": reverse_lazy("cms_manager:footer"),
         "tags": ["content", "cms"],
     },
     {
