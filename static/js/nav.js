@@ -3,19 +3,19 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeNav = document.getElementById('close-nav');
     const fullscreenNav = document.getElementById('fullscreen-nav');
     const navLinks = document.querySelectorAll('.nav-link');
-    const dropdownTrigger = document.querySelector('.landing-nav-dropdown > .landing-nav-link');
-    const dropdown = document.querySelector('.landing-nav-dropdown');
-
     // --- Dropdown aria-expanded + Escape to close ---
-    if (dropdownTrigger && dropdown) {
+    document.querySelectorAll('.landing-nav-dropdown').forEach(function (dropdown) {
+        var trigger = dropdown.querySelector('.landing-nav-link');
+        if (!trigger) return;
+
         var escapedDropdown = false;
 
         dropdown.addEventListener('mouseenter', function () {
             dropdown.classList.remove('dropdown-closed');
-            dropdownTrigger.setAttribute('aria-expanded', 'true');
+            trigger.setAttribute('aria-expanded', 'true');
         });
         dropdown.addEventListener('mouseleave', function () {
-            dropdownTrigger.setAttribute('aria-expanded', 'false');
+            trigger.setAttribute('aria-expanded', 'false');
         });
         dropdown.addEventListener('focusin', function () {
             if (escapedDropdown) {
@@ -23,20 +23,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             dropdown.classList.remove('dropdown-closed');
-            dropdownTrigger.setAttribute('aria-expanded', 'true');
+            trigger.setAttribute('aria-expanded', 'true');
         });
         dropdown.addEventListener('focusout', function (e) {
             if (!dropdown.contains(e.relatedTarget)) {
                 dropdown.classList.remove('dropdown-closed');
-                dropdownTrigger.setAttribute('aria-expanded', 'false');
+                trigger.setAttribute('aria-expanded', 'false');
             }
         });
         dropdown.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 escapedDropdown = true;
                 dropdown.classList.add('dropdown-closed');
-                dropdownTrigger.setAttribute('aria-expanded', 'false');
-                dropdownTrigger.focus();
+                trigger.setAttribute('aria-expanded', 'false');
+                trigger.focus();
                 return;
             }
 
@@ -48,20 +48,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 var currentIndex = Array.prototype.indexOf.call(items, document.activeElement);
 
                 if (e.key === 'ArrowDown') {
-                    // If on trigger or not in the menu yet, go to first item
                     var nextIndex = currentIndex < 0 ? 0 : Math.min(currentIndex + 1, items.length - 1);
                     items[nextIndex].focus();
                 } else {
-                    // ArrowUp: if on first item or trigger, focus trigger
                     if (currentIndex <= 0) {
-                        dropdownTrigger.focus();
+                        trigger.focus();
                     } else {
                         items[currentIndex - 1].focus();
                     }
                 }
             }
         });
-    }
+    });
 
     // --- Mobile menu open/close helpers ---
     function openMenu() {
