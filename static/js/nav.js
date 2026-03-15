@@ -127,18 +127,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --- Mobile accordion toggles ---
-    document.querySelectorAll('.mobile-nav-toggle').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            var expanded = btn.getAttribute('aria-expanded') === 'true';
-            btn.setAttribute('aria-expanded', !expanded);
-            var submenu = btn.nextElementSibling;
-            if (submenu) {
-                submenu.hidden = expanded;
-            }
-        });
-    });
-
     // --- Focus trap within fullscreen nav ---
     if (fullscreenNav) {
         fullscreenNav.addEventListener('keydown', function (event) {

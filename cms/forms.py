@@ -245,6 +245,7 @@ class HeaderSettingsForm(forms.ModelForm):
             "logo_line_3",
             "cta_label",
             "cta_url",
+            "show_mobile_sub_items",
         ]
         widgets = {
             "logo_line_1": forms.TextInput(attrs={"class": "mgr-input"}),

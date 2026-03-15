@@ -65,6 +65,10 @@ class HeaderSettingsModelTests(TestCase):
         self.assertEqual(settings.cta_label, "GET INVOLVED")
         self.assertIn("mailto:", settings.cta_url)
 
+    def test_show_mobile_sub_items_default_true(self):
+        settings = HeaderSettings.load()
+        self.assertTrue(settings.show_mobile_sub_items)
+
     def test_load_prefetches_menu_items(self):
         settings = HeaderSettings.load()
         MenuItem.objects.create(
@@ -684,7 +688,9 @@ class HeaderTemplateTests(TestCase):
         self.assertContains(response, "fullscreen-nav")
         self.assertContains(response, "About")
 
-    def test_header_renders_mobile_accordion(self):
+    def test_header_renders_mobile_sub_items_when_enabled(self):
+        self.header.show_mobile_sub_items = True
+        self.header.save()
         parent = MenuItem.objects.create(
             header=self.header,
             label="About OJC",
@@ -700,5 +706,28 @@ class HeaderTemplateTests(TestCase):
         )
         cache.clear()
         response = self.client.get(reverse("cms:index"))
-        self.assertContains(response, "mobile-nav-toggle")
-        self.assertContains(response, "mobile-nav-submenu")
+        content = response.content.decode()
+        self.assertIn("mobile-nav-submenu", content)
+        self.assertIn("nav-sub-link", content)
+
+    def test_header_hides_mobile_sub_items_when_disabled(self):
+        self.header.show_mobile_sub_items = False
+        self.header.save()
+        parent = MenuItem.objects.create(
+            header=self.header,
+            label="About OJC",
+            url="/#who-we-are",
+            sort_order=0,
+        )
+        MenuItem.objects.create(
+            header=self.header,
+            parent=parent,
+            label="Our team",
+            url="/#team",
+            sort_order=0,
+        )
+        cache.clear()
+        response = self.client.get(reverse("cms:index"))
+        content = response.content.decode()
+        self.assertNotIn("mobile-nav-submenu", content)
+        self.assertNotIn("nav-sub-link", content)

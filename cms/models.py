@@ -493,6 +493,10 @@ class HeaderSettings(models.Model):
         default="mailto:info@openjournalscollective.org?subject=Open Journals Collective",
         help_text="CTA button URL",
     )
+    show_mobile_sub_items = models.BooleanField(
+        default=True,
+        help_text="Show sub-menu items in the mobile navigation",
+    )
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:

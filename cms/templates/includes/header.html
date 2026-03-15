@@ -59,17 +59,13 @@
         <div class="nav-content">
             <div class="nav-links">
                 {% for item in header.get_menu_items %}
-                    {% if item.children.all %}
-                    <div class="mobile-nav-group">
-                        <button type="button" class="mobile-nav-toggle nav-link" aria-expanded="false">{{ item.label }}.</button>
-                        <div class="mobile-nav-submenu" hidden>
-                            {% for child in item.children.all %}
-                            <a href="{{ child.url }}" class="nav-sub-link">{{ child.label }}</a>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% else %}
                     <a href="{{ item.url }}" class="nav-link">{{ item.label }}.</a>
+                    {% if header.show_mobile_sub_items and item.children.all %}
+                    <div class="mobile-nav-submenu">
+                        {% for child in item.children.all %}
+                        <a href="{{ child.url }}" class="nav-sub-link">{{ child.label }}</a>
+                        {% endfor %}
+                    </div>
                     {% endif %}
                 {% endfor %}
             </div>
