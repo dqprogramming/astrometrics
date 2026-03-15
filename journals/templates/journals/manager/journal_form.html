@@ -129,16 +129,18 @@
         <div class="mgr-form-card">
             <div class="mgr-form-section-label">Indexing</div>
             <div class="mgr-field">
-                <div class="mgr-checkbox-wrap">
+                <label class="mgr-switch">
                     {{ form.in_doaj }}
-                    <label for="{{ form.in_doaj.id_for_label }}" style="font-size:.875rem; cursor:pointer;">Listed in DOAJ</label>
-                </div>
+                    <span class="mgr-switch__track"></span>
+                    <span class="mgr-switch__label">Listed in DOAJ</span>
+                </label>
             </div>
             <div class="mgr-field">
-                <div class="mgr-checkbox-wrap">
+                <label class="mgr-switch">
                     {{ form.in_scopus }}
-                    <label for="{{ form.in_scopus.id_for_label }}" style="font-size:.875rem; cursor:pointer;">Indexed in Scopus</label>
-                </div>
+                    <span class="mgr-switch__track"></span>
+                    <span class="mgr-switch__label">Indexed in Scopus</span>
+                </label>
             </div>
             <div class="mgr-field" style="margin-bottom:0;">
                 <label class="mgr-label" for="{{ form.wos_impact_factor.id_for_label }}">WoS Impact Factor</label>

@@ -46,10 +46,11 @@
                 <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">Publishing</div>
 
                 <div class="mgr-field">
-                    <div class="mgr-checkbox-wrap">
+                    <label class="mgr-switch">
                         {{ form.is_published }}
-                        <label for="{{ form.is_published.id_for_label }}" style="font-size:.875rem; cursor:pointer;">Published</label>
-                    </div>
+                        <span class="mgr-switch__track"></span>
+                        <span class="mgr-switch__label">Published</span>
+                    </label>
                     <div class="mgr-help">Only published pages appear on the site.</div>
                 </div>
 
