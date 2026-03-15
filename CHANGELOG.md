@@ -1,3 +1,9 @@
+## 1.17.0 (2026-03-15)
+
+### Feat
+
+- **cms**: add page hero customisation and preview improvements
+
 ## 1.16.0 (2026-03-15)
 
 ### Feat
