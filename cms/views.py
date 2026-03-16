@@ -13,6 +13,10 @@ def index_view(request):
     return render(request, "landing.html", {"landing": landing})
 
 
+def our_model_view(request):
+    return render(request, "our_model.html")
+
+
 def board_view(request):
     return render(request, "board.html")
 

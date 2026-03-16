@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}Our Model — Open Journals Collective{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="/static/css/our-model.css">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="model-hero">
+    <svg class="model-hero-circles" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" overflow="visible">
+        <circle cx="500" cy="500" r="200" fill="none" stroke="#71f7f2" stroke-width="90"/>
+        <circle cx="500" cy="500" r="370" fill="none" stroke="#71f7f2" stroke-width="90"/>
+    </svg>
+    <div class="container">
+        <h1 class="model-hero-heading spectral-bold">
+            By joining OJC, libraries support the long-term sustainability of non-profit, university-based <span class="highlight">journals.</span>
+        </h1>
+        <div class="model-hero-image-wrapper">
+            <img src="/static/img/our-model-hero.jpg"
+                 alt="A researcher browsing books in a library"
+                 class="model-hero-image">
+        </div>
+    </div>
+</section>
+
+<!-- The OJC Model Section -->
+<section class="model-section">
+    <div class="container">
+        <div class="model-intro">
+            <h2 class="spectral-bold">The OJC Model.</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras a orci at odio vehicula consequat. Morbi
+                malesuada imperdiet augue non ullamcorper. Vestibulum ante ipsum primis in faucibus orci luctus et
+                ultrices posuere cubilia curae; Sed in dui a magna gravida dignissim. Vivamus luctus libero nec nulla
+                finibus, ut blandit ligula porttitor.
+            </p>
+        </div>
+        <p class="model-collections-label">We offer three collections of diamond open access journals:</p>
+        <div class="model-collections">
+            <div class="model-collection-card">
+                <div class="model-collection-number spectral-bold">01</div>
+                <h3 class="model-collection-title">The Multidisciplinary Collection.</h3>
+                <a href="#" class="model-collection-link">view collection &rarr;</a>
+            </div>
+            <div class="model-collection-card">
+                <div class="model-collection-number spectral-bold">02</div>
+                <h3 class="model-collection-title">The Arts, Humanities &amp; Social Sciences Collection.</h3>
+                <a href="#" class="model-collection-link">view collection &rarr;</a>
+            </div>
+            <div class="model-collection-card">
+                <div class="model-collection-number spectral-bold">03</div>
+                <h3 class="model-collection-title">The Science, Engineering, Technology &amp; Maths Collection.</h3>
+                <a href="#" class="model-collection-link">view collection &rarr;</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Journal Funding Section -->
+<section class="model-funding">
+    <div class="container">
+        <div class="model-funding-inner">
+            <div class="model-funding-image">
+                <img src="/static/img/home-how-it-works-2.jpg"
+                     alt="Academic journals and research materials">
+            </div>
+            <div class="model-funding-content">
+                <h2 class="spectral-bold">Journal Funding.</h2>
+                <p>
+                    Unlike traditional subscriptions or APCs, library investment is used by OJC
+                    to fund its publisher partners and their journals. Each journal publishes a small
+                    number of articles each year and the costs of publication and editorial work are
+                    relatively low compared to commercial operations.
+                </p>
+                <p>
+                    Library supporters pay an annual fee that goes to support all journals across the
+                    collections. This model ensures that no individual author or reader bears the cost,
+                    aligning with OJC's mission to make research freely available to all. Libraries
+                    that join OJC are supporting the long-term viability of non-profit, university-based
+                    journals and helping to build a more equitable scholarly publishing ecosystem.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Journal Funding & Revenue Distribution Section -->
+<section class="model-revenue">
+    <div class="container">
+        <div class="model-revenue-header">
+            <h2 class="spectral-bold">Journal Funding &amp; Revenue Distribution.</h2>
+            <p>
+                OJC offers tiered pricing packages based on institutional size and budget.
+                Revenue is distributed to publishers to cover their editorial and publishing costs.
+            </p>
+        </div>
+
+        <div class="model-revenue-grid">
+            <div class="model-revenue-tables">
+                <!-- Package 1 -->
+                <div class="model-pricing-table">
+                    <h3>Package 1: Full Collection</h3>
+                    <p>Access to the complete OJC collection, including all journals.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Band</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Large research-intensive</td>
+                                <td>&pound;3,000</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Medium research</td>
+                                <td>&pound;2,000</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Small / teaching-focused</td>
+                                <td>&pound;1,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Package 2 -->
+                <div class="model-pricing-table">
+                    <h3>Package 2: Arts &amp; Humanities</h3>
+                    <p>Arts, Humanities &amp; Social Sciences collection, including 8 journals.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Band</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Large research-intensive</td>
+                                <td>&pound;2,000</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Medium research</td>
+                                <td>&pound;1,500</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Small / teaching-focused</td>
+                                <td>&pound;750</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Package 3 -->
+                <div class="model-pricing-table">
+                    <h3>Package 3: STEM</h3>
+                    <p>Science, Engineering, Technology &amp; Maths collection, including 5 journals.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Band</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Large research-intensive</td>
+                                <td>&pound;1,500</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Medium research</td>
+                                <td>&pound;1,000</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Small / teaching-focused</td>
+                                <td>&pound;500</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="model-revenue-callout">
+                <p class="spectral-bold">
+                    We will provide documentation, training events, and regular community meet-ups for OJC members.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Image Mosaic Section -->
+<section class="model-mosaic">
+    <div class="container">
+        <div class="model-mosaic-grid">
+            <img src="/static/img/home-col-1.jpg" alt="Research and publishing">
+            <img src="/static/img/home-col-2.jpg" alt="Academic collaboration">
+            <img src="/static/img/home-col-3.jpg" alt="Library and journals">
+            <img src="/static/img/home-how-it-works-2.jpg" alt="Academic work">
+            <img src="/static/img/home-how-it-works-3.jpg" alt="Research community">
+            <img src="/static/img/home-how-it-works.jpg" alt="Library resources">
+            <img src="/static/img/home-free-access.jpg" alt="Open access publishing">
+            <img src="/static/img/home-col-1.jpg" alt="Scholarly publications">
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="model-cta">
+    <div class="container">
+        <div class="model-cta-inner">
+            <div class="model-cta-content">
+                <h2 class="spectral-bold">Title here.</h2>
+                <p>
+                    The Open Journals Collective is a non-profit, community-driven initiative
+                    that provides libraries with an affordable way to support diamond open access
+                    journals. Our model ensures long-term sustainability for university-based
+                    publishers and their journals.
+                </p>
+                <a href="#" class="btn btn-dark spectral-bold">Learn more</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

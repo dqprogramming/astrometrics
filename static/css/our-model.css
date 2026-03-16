@@ -1,0 +1,382 @@
+/* =============================================
+   Our Model Page Styles
+   ============================================= */
+
+/* --- Hero Section --- */
+.model-hero {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 60px 0 60px;
+    background-color: #ffffff;
+}
+
+.model-hero .container {
+    position: relative;
+    z-index: 1;
+}
+
+.model-hero-circles {
+    position: absolute;
+    width: 900px;
+    height: 900px;
+    right: -50px;
+    bottom: -200px;
+    z-index: 0;
+    pointer-events: none;
+    clip-path: inset(0 0 0 0);
+}
+
+.model-hero-heading {
+    font-size: 3rem;
+    line-height: 1.15;
+    font-weight: 700;
+    color: #212129;
+    max-width: 100%;
+    margin-bottom: 40px;
+}
+
+.model-hero-image-wrapper {
+    width: 100%;
+    overflow: hidden;
+    height: 400px;
+}
+
+.model-hero-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    filter: grayscale(100%);
+    object-fit: cover;
+    object-position: center center;
+}
+
+/* --- OJC Model Section --- */
+.model-section {
+    padding: 80px 0;
+}
+
+.model-intro {
+    border-left: 2px solid #212129;
+    padding-left: 20px;
+    max-width: 700px;
+    margin-bottom: 40px;
+}
+
+.model-intro h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.model-intro p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.model-collections-label {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #212129;
+}
+
+.model-collections {
+    display: flex;
+    gap: 20px;
+}
+
+.model-collection-card {
+    flex: 1;
+    background-color: #71f7f2;
+    border-radius: 12px;
+    padding: 30px 24px;
+    text-align: center;
+}
+
+.model-collection-number {
+    font-family: 'Spectral', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: #212129;
+    margin-bottom: 12px;
+}
+
+.model-collection-title {
+    font-family: 'Spectral', serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #212129;
+    margin-bottom: 6px;
+}
+
+.model-collection-link {
+    font-size: 13px;
+    color: #212129;
+    text-decoration: underline;
+}
+
+/* --- Journal Funding Section --- */
+.model-funding {
+    padding: 80px 0;
+    background-color: #f5f5f5;
+}
+
+.model-funding-inner {
+    display: flex;
+    gap: 50px;
+    align-items: flex-start;
+}
+
+.model-funding-image {
+    flex: 0 0 40%;
+    max-width: 40%;
+}
+
+.model-funding-image img {
+    width: 100%;
+    height: auto;
+    filter: grayscale(100%);
+    display: block;
+}
+
+.model-funding-content {
+    flex: 1;
+    border-left: 2px solid #212129;
+    padding-left: 20px;
+}
+
+.model-funding-content h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.model-funding-content p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+/* --- Revenue Distribution Section --- */
+.model-revenue {
+    padding: 80px 0;
+}
+
+.model-revenue-header {
+    border-left: 2px solid #212129;
+    padding-left: 20px;
+    margin-bottom: 40px;
+    max-width: 500px;
+}
+
+.model-revenue-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.model-revenue-header p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
+}
+
+.model-revenue-grid {
+    display: flex;
+    gap: 30px;
+}
+
+.model-revenue-tables {
+    flex: 1;
+}
+
+.model-pricing-table {
+    margin-bottom: 30px;
+}
+
+.model-pricing-table h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #212129;
+}
+
+.model-pricing-table p {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.model-pricing-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.model-pricing-table thead th {
+    text-align: left;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-bottom: 2px solid #212129;
+    font-size: 13px;
+}
+
+.model-pricing-table tbody td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.model-pricing-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.model-revenue-callout {
+    flex: 0 0 320px;
+    background-color: #71f7f2;
+    padding: 40px 30px;
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+}
+
+.model-revenue-callout p {
+    font-family: 'Spectral', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #212129;
+}
+
+/* --- Image Mosaic Section --- */
+.model-mosaic {
+    padding: 40px 0;
+}
+
+.model-mosaic-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 200px);
+    gap: 8px;
+}
+
+.model-mosaic-grid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* --- CTA / Title Section --- */
+.model-cta {
+    padding: 80px 0;
+}
+
+.model-cta-inner {
+    display: flex;
+    gap: 50px;
+    align-items: flex-start;
+}
+
+.model-cta-content {
+    flex: 1;
+    border-left: 2px solid #212129;
+    padding-left: 20px;
+    max-width: 500px;
+}
+
+.model-cta-content h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.model-cta-content p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
+    margin-bottom: 24px;
+}
+
+.model-cta-accent {
+    flex: 0 0 50px;
+    border-top: 4px solid #71f7f2;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .model-hero-heading {
+        font-size: 1.8rem;
+    }
+
+    .model-hero-circles {
+        width: 600px;
+        height: 600px;
+        right: -100px;
+        bottom: -200px;
+    }
+
+    .model-hero-image-wrapper {
+        height: 280px;
+    }
+
+    .model-collections {
+        flex-direction: column;
+    }
+
+    .model-funding-inner {
+        flex-direction: column;
+    }
+
+    .model-funding-image {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .model-revenue-grid {
+        flex-direction: column;
+    }
+
+    .model-revenue-callout {
+        flex: 0 0 auto;
+    }
+
+    .model-mosaic-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(4, 160px);
+    }
+
+    .model-cta-inner {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .model-hero-heading {
+        font-size: 1.4rem;
+    }
+
+    .model-hero-circles {
+        width: 400px;
+        height: 400px;
+        right: -80px;
+        bottom: -120px;
+    }
+
+    .model-hero-image-wrapper {
+        height: 220px;
+    }
+
+    .model-collection-number {
+        font-size: 36px;
+    }
+
+    .model-mosaic-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: repeat(4, 140px);
+    }
+}

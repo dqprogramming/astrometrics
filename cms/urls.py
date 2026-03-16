@@ -9,6 +9,7 @@ from cms.views import (
     index_view,
     news_detail_view,
     news_index_view,
+    our_model_view,
     page_preview_view,
     partial_view,
     post_preview_view,
@@ -18,6 +19,7 @@ app_name = "cms"
 
 urlpatterns = [
     path("", index_view, name="index"),
+    path("our-model/", our_model_view, name="our-model"),
     path("board/", board_view, name="board"),
     path(
         "partial/<str:filename>",
