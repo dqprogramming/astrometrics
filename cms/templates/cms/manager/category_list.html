@@ -1,0 +1,38 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Categories{% endblock %}
+{% block page_title %}Categories{% endblock %}
+{% block breadcrumb %}<a href="{% url 'manager:dashboard' %}">Dashboard</a> / Categories{% endblock %}
+{% block nav_categories %}active{% endblock %}
+
+{% block content %}
+<div class="mgr-section-header">
+    <div>
+        <div class="mgr-section-title">{{ categories|length }} categor{{ categories|length|pluralize:"y,ies" }}</div>
+        <div class="mgr-section-sub">Categories for grouping news posts.</div>
+    </div>
+    <div style="display:flex; gap:.75rem; align-items:center;">
+        <div class="mgr-search-wrap">
+            <i class="bi bi-search"></i>
+            <label for="categorySearch" class="visually-hidden">Filter categories</label>
+            <input
+                class="mgr-search"
+                type="text"
+                id="categorySearch"
+                name="q"
+                placeholder="Filter categories…"
+                hx-get="{% url 'cms_manager:category_list' %}"
+                hx-trigger="input changed delay:300ms"
+                hx-target="#categoryTable"
+            >
+        </div>
+        <a href="{% url 'cms_manager:category_create' %}" class="btn-mgr-primary">
+            <i class="bi bi-plus"></i> New Category
+        </a>
+    </div>
+</div>
+
+<div id="categoryTable">
+    {% include "cms/manager/category_table.html" %}
+</div>
+{% endblock %}

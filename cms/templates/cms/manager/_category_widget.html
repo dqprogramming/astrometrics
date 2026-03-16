@@ -1,0 +1,31 @@
+<div class="m2m-widget" id="m2m-categories">
+    <div class="m2m-tags">
+        {% for item in items %}
+        <span class="m2m-tag">
+            <span>{{ item.name }}</span>
+            <button type="button"
+                    hx-post="{% url 'cms_manager:post_category_remove' post.pk item.pk %}"
+                    hx-target="#m2m-categories"
+                    hx-swap="outerHTML"
+                    hx-confirm=""
+                    class="m2m-tag-remove"
+                    aria-label="Remove {{ item.name }}">
+                <i class="bi bi-x"></i>
+            </button>
+        </span>
+        {% empty %}
+        <span class="m2m-none">No categories added yet</span>
+        {% endfor %}
+    </div>
+    <div class="m2m-search-wrap">
+        <input type="text"
+               class="mgr-input"
+               placeholder="Search or create category…"
+               hx-get="{% url 'cms_manager:post_category_search' post.pk %}"
+               hx-target="#m2m-categories-results"
+               hx-trigger="input changed delay:200ms, focus"
+               name="q"
+               autocomplete="off">
+        <div id="m2m-categories-results" class="m2m-results"></div>
+    </div>
+</div>

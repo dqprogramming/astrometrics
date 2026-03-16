@@ -2,6 +2,7 @@ from django import forms
 from tinymce.widgets import TinyMCE
 
 from .models import (
+    Category,
     FooterLink,
     FooterSettings,
     HeaderSettings,
@@ -11,6 +12,15 @@ from .models import (
     Post,
     Snippet,
 )
+
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ["name"]
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "mgr-input"}),
+        }
 
 
 class PageForm(forms.ModelForm):
@@ -58,6 +68,7 @@ class PostForm(forms.ModelForm):
             "body",
             "byline",
             "meta_description",
+            "featured_image",
             "is_published",
             "published_at",
         ]
@@ -73,6 +84,7 @@ class PostForm(forms.ModelForm):
             "body": TinyMCE(),
             "byline": forms.TextInput(attrs={"class": "mgr-input"}),
             "meta_description": forms.TextInput(attrs={"class": "mgr-input"}),
+            "featured_image": forms.HiddenInput(),
             "published_at": forms.DateTimeInput(
                 attrs={"class": "mgr-input", "type": "datetime-local"},
                 format="%Y-%m-%dT%H:%M",
