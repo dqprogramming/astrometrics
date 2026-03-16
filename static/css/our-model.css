@@ -205,13 +205,11 @@
 /* --- Revenue Distribution Section --- */
 .model-revenue {
     padding: 80px 0;
+    background-color: #e8e8e8;
 }
 
 .model-revenue-header {
-    border-left: 2px solid #212129;
-    padding-left: 20px;
     margin-bottom: 40px;
-    max-width: 500px;
 }
 
 .model-revenue-header h2 {
@@ -221,74 +219,135 @@
 }
 
 .model-revenue-header p {
-    font-size: 15px;
+    font-size: 13px;
     line-height: 1.7;
     color: #333;
 }
 
 .model-revenue-grid {
     display: flex;
-    gap: 30px;
+    gap: 40px;
+    align-items: flex-start;
 }
 
 .model-revenue-tables {
     flex: 1;
 }
 
-.model-pricing-table {
-    margin-bottom: 30px;
-}
-
-.model-pricing-table h3 {
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: #212129;
-}
-
-.model-pricing-table p {
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 12px;
-}
-
-.model-pricing-table table {
+/* Unified packages table */
+.model-packages-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 14px;
+    font-size: 13px;
+    table-layout: fixed;
 }
 
-.model-pricing-table thead th {
+.model-packages-table thead th {
     text-align: left;
-    font-weight: 600;
-    padding: 8px 12px;
-    border-bottom: 2px solid #212129;
+    font-weight: 700;
+    padding: 10px 16px;
+    font-size: 12px;
+    vertical-align: bottom;
+    background-color: #ffc4fc;
+}
+
+
+/* Column widths - consistent across header and data tables */
+.model-packages-table th:nth-child(1),
+.model-packages-table td:nth-child(1) {
+    width: 25%;
+}
+
+.model-packages-table th:nth-child(2),
+.model-packages-table td:nth-child(2) {
+    width: 25%;
+}
+
+.model-packages-table th:nth-child(3),
+.model-packages-table td:nth-child(3) {
+    width: 25%;
+}
+
+.model-packages-table th:nth-child(4),
+.model-packages-table td:nth-child(4) {
+    width: 25%;
+}
+
+.model-packages-table td {
+    padding: 6px 16px;
+}
+
+/* Data rows get borders */
+.model-packages-table .package-row td {
+    border: 1px solid #999;
+}
+
+/* Package header rows - no borders */
+.model-packages-table .package-header td {
+    padding: 10px 16px;
+    font-size: 12px;
+    line-height: 1.5;
+    border: none;
+}
+
+/* Gap between package tables */
+.model-revenue-tables .model-packages-table + .model-packages-table {
+    margin-top: 16px;
+}
+
+.model-packages-header-table {
+    margin-bottom: 0;
+}
+
+/* No gap between header table and first package table */
+.model-revenue-tables .model-packages-header-table + .model-packages-table {
+    margin-top: 0;
+}
+
+.model-packages-table .package-header strong {
     font-size: 13px;
 }
 
-.model-pricing-table tbody td {
-    padding: 8px 12px;
-    border-bottom: 1px solid #e0e0e0;
+/* Pink - Package A */
+.package-pink {
+    background-color: #ffd8fd;
 }
 
-.model-pricing-table tbody tr:last-child td {
-    border-bottom: none;
+.package-pink-light {
+    background-color: #ffecfe;
 }
 
+/* Green - Package B */
+.package-green {
+    background-color: #8ee8c8;
+}
+
+.package-green-light {
+    background-color: #d4f5e8;
+}
+
+/* Blue - Package C */
+.package-blue {
+    background-color: #a5bfff;
+}
+
+.package-blue-light {
+    background-color: #dce6ff;
+}
+
+/* Callout */
 .model-revenue-callout {
-    flex: 0 0 320px;
-    background-color: #71f7f2;
-    padding: 40px 30px;
-    display: flex;
-    align-items: center;
-    align-self: stretch;
+    flex: 0 0 300px;
+    border-left: 3px solid #212129;
+    padding-left: 24px;
+    align-self: flex-start;
 }
 
 .model-revenue-callout p {
     font-family: 'Spectral', serif;
-    font-size: 1.6rem;
+    font-size: 2rem;
     font-weight: 700;
-    line-height: 1.35;
+    line-height: 1.3;
     color: #212129;
 }
 
