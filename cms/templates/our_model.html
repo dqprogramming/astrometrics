@@ -15,11 +15,11 @@
     </svg>
     <div class="container">
         <h1 id="model-hero-heading" class="model-hero-heading spectral-bold">
-            By joining OJC, libraries support the long-term sustainability of non-profit, university-based <span class="highlight">journals.</span>
+            {{ settings.hero_heading|safe }}
         </h1>
         <div class="model-hero-image-wrapper">
             <img src="/static/img/our-model-hero.jpg"
-                 alt="A researcher browsing books in a library"
+                 alt="{{ settings.hero_image_alt }}"
                  class="model-hero-image">
         </div>
     </div>
@@ -29,33 +29,31 @@
 <section class="model-section" aria-labelledby="model-section-heading">
     <div class="container">
         <div class="model-intro">
-            <h2 id="model-section-heading" class="spectral-bold">The OJC Model.</h2>
-            <p>
-                Launched in January 2026, OJC is designed to raise collective investment for a transition to academic-led, non-profit diamond open access. Published by world leaders in non-profit and university-based digital publishing, the initiative offers libraries and funders the opportunity to support equitable research infrastructure for journals.
-            </p>
+            <h2 id="model-section-heading" class="spectral-bold">{{ settings.model_heading }}</h2>
+            {{ settings.model_body|safe }}
         </div>
-        <p class="model-collections-label">We offer three collections of diamond open access journals:</p>
+        <p class="model-collections-label">{{ settings.collections_label }}</p>
         <div class="model-collections">
             <div class="model-collection-card">
                 <div class="model-collection-circle">
-                    <span class="model-collection-number spectral-bold">01</span>
+                    <span class="model-collection-number spectral-bold">{{ settings.collection_1_number }}</span>
                 </div>
-                <h3 class="model-collection-title spectral-bold">The Multidisciplinary Collection</h3>
-                <a href="#" class="model-collection-link">BROWSE JOURNALS &rarr;</a>
+                <h3 class="model-collection-title spectral-bold">{{ settings.collection_1_title }}</h3>
+                <a href="{{ settings.collection_1_link_url }}" class="model-collection-link">{{ settings.collection_1_link_text }} &rarr;</a>
             </div>
             <div class="model-collection-card">
                 <div class="model-collection-circle">
-                    <span class="model-collection-number spectral-bold">02</span>
+                    <span class="model-collection-number spectral-bold">{{ settings.collection_2_number }}</span>
                 </div>
-                <h3 class="model-collection-title spectral-bold">The Arts, Humanities &amp; Social Sciences Collection.</h3>
-                <a href="#" class="model-collection-link">BROWSE JOURNALS &rarr;</a>
+                <h3 class="model-collection-title spectral-bold">{{ settings.collection_2_title }}</h3>
+                <a href="{{ settings.collection_2_link_url }}" class="model-collection-link">{{ settings.collection_2_link_text }} &rarr;</a>
             </div>
             <div class="model-collection-card">
                 <div class="model-collection-circle">
-                    <span class="model-collection-number spectral-bold">03</span>
+                    <span class="model-collection-number spectral-bold">{{ settings.collection_3_number }}</span>
                 </div>
-                <h3 class="model-collection-title spectral-bold">The Science, Engineering, Technology &amp; Maths Collection.</h3>
-                <a href="#" class="model-collection-link">BROWSE JOURNALS &rarr;</a>
+                <h3 class="model-collection-title spectral-bold">{{ settings.collection_3_title }}</h3>
+                <a href="{{ settings.collection_3_link_url }}" class="model-collection-link">{{ settings.collection_3_link_text }} &rarr;</a>
             </div>
         </div>
     </div>
@@ -68,34 +66,16 @@
             <div class="model-funding-images">
                 <div class="model-funding-img-upper">
                     <img src="/static/img/our-model-funding-upper.jpg"
-                         alt="Academic collaboration in a meeting room">
+                         alt="{{ settings.funding_upper_image_alt }}">
                 </div>
                 <div class="model-funding-img-lower">
                     <img src="/static/img/our-model-funding-lower.jpg"
-                         alt="Open access academic journals supported by OJC">
+                         alt="{{ settings.funding_lower_image_alt }}">
                 </div>
             </div>
             <div class="model-funding-content">
-                <h2 id="model-funding-heading" class="spectral-bold">Journal Funding.</h2>
-                <p>
-                    From December 2026 onwards, library investment raised by OJC
-                    will be shared with journals in our 3 Launch Collections.
-                </p>
-                <p>
-                    We have conducted extensive stakeholder interviews with diamond
-                    open access publishers, editors, and non-profit platform providers.
-                    This has led to the collective design of an equitable revenue
-                    distribution model in which journals included in OJC Collections
-                    can receive regular payments according to their size and need.
-                </p>
-                <p>
-                    We will share library funding raised through our investment
-                    programme with OJC journals. This has been designed to
-                    supplement any existing funding or income that journals
-                    receive, including support via their publishers' library
-                    membership models, income from scholarly societies,
-                    or funding from university departments.
-                </p>
+                <h2 id="model-funding-heading" class="spectral-bold">{{ settings.funding_heading }}</h2>
+                {{ settings.funding_body|safe }}
             </div>
         </div>
     </div>
@@ -106,12 +86,8 @@
     <div class="container">
         <div class="model-revenue-layout">
             <div class="model-revenue-header">
-                <h2 id="model-revenue-heading" class="spectral-bold">Journal Funding &amp;<br>Revenue Distribution.</h2>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                    enim ad minim veniam, quis nostrud exercitation ullamco.
-                </p>
+                <h2 id="model-revenue-heading" class="spectral-bold">{{ settings.revenue_heading }}</h2>
+                <p>{{ settings.revenue_description }}</p>
             </div>
 
             <div class="model-revenue-tables">
@@ -120,154 +96,40 @@
                     <caption class="sr-only">Revenue distribution package column headers</caption>
                     <thead>
                         <tr>
-                            <th scope="col">Package &amp; Band</th>
-                            <th scope="col">Journal Size</th>
-                            <th scope="col">No. of articles p/year</th>
-                            <th scope="col">Annual Funding</th>
+                            {% for col in columns %}
+                            <th scope="col" style="width: {{ col_width_pct }}%">{{ col.heading }}</th>
+                            {% endfor %}
                         </tr>
                     </thead>
                 </table>
 
-                <!-- Package A - Pink -->
-                <table class="model-packages-table">
-                    <caption class="sr-only">Package A (full fat) — full support for journals with no funding or income</caption>
+                {% for table in tables %}
+                <!-- {{ table.title }} -->
+                <table class="model-packages-table" aria-labelledby="table-heading-{{ table.pk }}">
+                    <caption class="sr-only">{{ table.title }} — {{ table.description }}</caption>
                     <thead>
-                        <tr class="package-header package-pink">
-                            <th scope="colgroup" colspan="4">
-                                <strong>Package A (full fat)</strong><br>
-                                Full support for journals with no funding or income.
+                        <tr class="package-header" style="background-color: {{ table.header_bg_colour }}; color: {{ table.text_colour }};">
+                            <th scope="colgroup" colspan="{{ num_columns }}" id="table-heading-{{ table.pk }}">
+                                <strong>{{ table.title }}</strong><br>
+                                {{ table.description }}
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="package-row package-pink-light">
-                            <td>1</td>
-                            <td>Tiny</td>
-                            <td>10</td>
-                            <td>&pound;10,500</td>
+                        {% for row in table.rows.all %}
+                        <tr class="package-row" style="background-color: {{ table.row_bg_colour }}; color: {{ table.text_colour }};">
+                            {% for cell_value in row.ordered_cells %}
+                            <td style="width: {{ col_width_pct }}%">{{ cell_value }}</td>
+                            {% endfor %}
                         </tr>
-                        <tr class="package-row package-pink-light">
-                            <td>2</td>
-                            <td>Small</td>
-                            <td>25</td>
-                            <td></td>
-                        </tr>
-                        <tr class="package-row package-pink-light">
-                            <td>3</td>
-                            <td>Medium</td>
-                            <td>50</td>
-                            <td>&pound;19,200</td>
-                        </tr>
-                        <tr class="package-row package-pink-light">
-                            <td>4</td>
-                            <td>Large</td>
-                            <td>100</td>
-                            <td>&pound;25,500</td>
-                        </tr>
-                        <tr class="package-row package-pink-light">
-                            <td>5</td>
-                            <td>Very Large</td>
-                            <td>500</td>
-                            <td></td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
-
-                <!-- Package B - Green -->
-                <table class="model-packages-table">
-                    <caption class="sr-only">Package B (semi-skimmed) — partial support for journals with minimal funding or income</caption>
-                    <thead>
-                        <tr class="package-header package-green">
-                            <th scope="colgroup" colspan="4">
-                                <strong>Package B (semi-skimmed)</strong><br>
-                                Partial support for journals with minimal funding or income.
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="package-row package-green-light">
-                            <td>1</td>
-                            <td>Tiny</td>
-                            <td>10</td>
-                            <td></td>
-                        </tr>
-                        <tr class="package-row package-green-light">
-                            <td>2</td>
-                            <td>Small</td>
-                            <td>25</td>
-                            <td>&pound;9,000</td>
-                        </tr>
-                        <tr class="package-row package-green-light">
-                            <td>3</td>
-                            <td>Medium</td>
-                            <td>50</td>
-                            <td>&pound;17,700</td>
-                        </tr>
-                        <tr class="package-row package-green-light">
-                            <td>4</td>
-                            <td>Large</td>
-                            <td>100</td>
-                            <td>&pound;24,000</td>
-                        </tr>
-                        <tr class="package-row package-green-light">
-                            <td>5</td>
-                            <td>Very Large</td>
-                            <td>500</td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <!-- Package C - Blue -->
-                <table class="model-packages-table">
-                    <caption class="sr-only">Package C (skimmed) — top-up support for journals with established funding or income</caption>
-                    <thead>
-                        <tr class="package-header package-blue">
-                            <th scope="colgroup" colspan="4">
-                                <strong>Package C (skimmed)</strong><br>
-                                Top-up support for journals with established funding or income.
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="package-row package-blue-light">
-                            <td>1</td>
-                            <td>Tiny</td>
-                            <td>10</td>
-                            <td>&pound;5,000</td>
-                        </tr>
-                        <tr class="package-row package-blue-light">
-                            <td>2</td>
-                            <td>Small</td>
-                            <td>25</td>
-                            <td>&pound;7,000</td>
-                        </tr>
-                        <tr class="package-row package-blue-light">
-                            <td>3</td>
-                            <td>Medium</td>
-                            <td>50</td>
-                            <td>&pound;9,350</td>
-                        </tr>
-                        <tr class="package-row package-blue-light">
-                            <td>4</td>
-                            <td>Large</td>
-                            <td>100</td>
-                            <td>&pound;12,500</td>
-                        </tr>
-                        <tr class="package-row package-blue-light">
-                            <td>5</td>
-                            <td>Very Large</td>
-                            <td>500</td>
-                            <td>&pound;24,500</td>
-                        </tr>
-                    </tbody>
-                </table>
+                {% endfor %}
             </div>
 
             <div class="model-revenue-callout">
-                <p class="spectral-bold">
-                    We will provide documentation, training events, and regular community meet-ups for OJC members.
-                </p>
+                <p class="spectral-bold">{{ settings.revenue_callout }}</p>
             </div>
         </div><!-- end model-revenue-layout -->
     </div>
@@ -278,21 +140,15 @@
     <div class="container">
         <div class="model-cta-inner">
             <div class="model-cta-content">
-                <h2 class="spectral-bold">Title here.</h2>
-                <p>
-                    We have designed a scalable pathway to migrate journals away
-                    from commercial publishers and subscription models. Titles can "flip"
-                    to diamond open access with the OJC, empowering libraries to cancel
-                    commercial journal subscriptions or walk away from Transformative
-                    Agreements. Working together, libraries, academics, scholarly
-                    associations, and university-affiliated publishers can build a
-                    fairer and more affordable journals publishing system.
-                </p>
-                <a href="#" class="btn btn-dark spectral-bold">Join the movement</a>
+                <h2 class="spectral-bold">{{ settings.cta_heading }}</h2>
+                {{ settings.cta_description|safe }}
+                {% if settings.cta_button_visible %}
+                <a href="{{ settings.cta_button_url }}" class="btn btn-dark spectral-bold">{{ settings.cta_button_text }}</a>
+                {% endif %}
             </div>
             <div class="model-cta-image">
                 <img src="/static/img/our-model-journals.jpg"
-                     alt="A collection of academic journal covers from OJC publishers">
+                     alt="{{ settings.cta_image_alt }}">
             </div>
         </div>
     </div>

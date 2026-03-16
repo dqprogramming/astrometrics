@@ -19,7 +19,6 @@ app_name = "cms"
 
 urlpatterns = [
     path("", index_view, name="index"),
-    path("our-model/", our_model_view, name="our-model"),
     path("board/", board_view, name="board"),
     path(
         "partial/<str:filename>",
@@ -30,4 +29,6 @@ urlpatterns = [
     path("news/<slug:slug>/", news_detail_view, name="news-detail"),
     path("preview/post/<uuid:token>/", post_preview_view, name="post-preview"),
     path("preview/page/<uuid:token>/", page_preview_view, name="page-preview"),
+    # Our Model — slug catch-all, placed last
+    path("<slug:slug>/", our_model_view, name="our-model"),
 ]

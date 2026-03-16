@@ -1,0 +1,328 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Our Model{% endblock %}
+{% block page_title %}Our Model{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> /
+Our Model
+{% endblock %}
+{% block nav_our_model %}active{% endblock %}
+
+{% block content %}
+<form method="post" style="max-width:900px;">
+    {% csrf_token %}
+
+    {# ── URL Slug ──────────────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-link-45deg"></i> URL
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.slug.id_for_label }}">Page Slug</label>
+            {{ form.slug }}
+            <div class="mgr-help">The URL path for this page, e.g. "our-model" → /our-model/</div>
+            {% if form.slug.errors %}<div class="mgr-error">{{ form.slug.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    {# ── Hero Section ──────────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-stars"></i> Hero Section
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.hero_heading.id_for_label }}">Heading</label>
+            {{ form.hero_heading }}
+            <div class="mgr-help">May contain &lt;span class="highlight"&gt; markup for highlighted text</div>
+            {% if form.hero_heading.errors %}<div class="mgr-error">{{ form.hero_heading.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.hero_image_alt.id_for_label }}">Hero Image Alt Text</label>
+            {{ form.hero_image_alt }}
+            {% if form.hero_image_alt.errors %}<div class="mgr-error">{{ form.hero_image_alt.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    {# ── OJC Model Section ─────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-diagram-3"></i> The OJC Model
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.model_heading.id_for_label }}">Heading</label>
+            {{ form.model_heading }}
+            {% if form.model_heading.errors %}<div class="mgr-error">{{ form.model_heading.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.model_body.id_for_label }}">Body</label>
+            {{ form.model_body }}
+            {% if form.model_body.errors %}<div class="mgr-error">{{ form.model_body.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.collections_label.id_for_label }}">Collections Label</label>
+            {{ form.collections_label }}
+            {% if form.collections_label.errors %}<div class="mgr-error">{{ form.collections_label.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    {# ── Collection Cards ──────────────────────────────────────── #}
+    {% for n in "123" %}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-card-text"></i> Collection {{ n }}
+        </div>
+        <div style="display:grid; grid-template-columns:80px 1fr; gap:1rem;">
+            <div class="mgr-field">
+                <label class="mgr-label">Number</label>
+                {% if n == "1" %}{{ form.collection_1_number }}{% endif %}
+                {% if n == "2" %}{{ form.collection_2_number }}{% endif %}
+                {% if n == "3" %}{{ form.collection_3_number }}{% endif %}
+            </div>
+            <div class="mgr-field">
+                <label class="mgr-label">Title</label>
+                {% if n == "1" %}{{ form.collection_1_title }}{% if form.collection_1_title.errors %}<div class="mgr-error">{{ form.collection_1_title.errors.0 }}</div>{% endif %}{% endif %}
+                {% if n == "2" %}{{ form.collection_2_title }}{% if form.collection_2_title.errors %}<div class="mgr-error">{{ form.collection_2_title.errors.0 }}</div>{% endif %}{% endif %}
+                {% if n == "3" %}{{ form.collection_3_title }}{% if form.collection_3_title.errors %}<div class="mgr-error">{{ form.collection_3_title.errors.0 }}</div>{% endif %}{% endif %}
+            </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="mgr-field" style="margin-bottom:0;">
+                <label class="mgr-label">Link Text</label>
+                {% if n == "1" %}{{ form.collection_1_link_text }}{% endif %}
+                {% if n == "2" %}{{ form.collection_2_link_text }}{% endif %}
+                {% if n == "3" %}{{ form.collection_3_link_text }}{% endif %}
+            </div>
+            <div class="mgr-field" style="margin-bottom:0;">
+                <label class="mgr-label">Link URL</label>
+                {% if n == "1" %}{{ form.collection_1_link_url }}{% endif %}
+                {% if n == "2" %}{{ form.collection_2_link_url }}{% endif %}
+                {% if n == "3" %}{{ form.collection_3_link_url }}{% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    {# ── Funding Section ───────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-cash-stack"></i> Journal Funding
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.funding_heading.id_for_label }}">Heading</label>
+            {{ form.funding_heading }}
+            {% if form.funding_heading.errors %}<div class="mgr-error">{{ form.funding_heading.errors.0 }}</div>{% endif %}
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.funding_upper_image_alt.id_for_label }}">Upper Image Alt Text</label>
+                {{ form.funding_upper_image_alt }}
+            </div>
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.funding_lower_image_alt.id_for_label }}">Lower Image Alt Text</label>
+                {{ form.funding_lower_image_alt }}
+            </div>
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.funding_body.id_for_label }}">Body</label>
+            {{ form.funding_body }}
+            {% if form.funding_body.errors %}<div class="mgr-error">{{ form.funding_body.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    {# ── Revenue Distribution ──────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-table"></i> Revenue Distribution
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.revenue_heading.id_for_label }}">Heading</label>
+            {{ form.revenue_heading }}
+            {% if form.revenue_heading.errors %}<div class="mgr-error">{{ form.revenue_heading.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.revenue_description.id_for_label }}">Description</label>
+            {{ form.revenue_description }}
+            {% if form.revenue_description.errors %}<div class="mgr-error">{{ form.revenue_description.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.revenue_callout.id_for_label }}">Callout Text</label>
+            {{ form.revenue_callout }}
+            {% if form.revenue_callout.errors %}<div class="mgr-error">{{ form.revenue_callout.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    {# ── Table Columns ─────────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-layout-three-columns"></i> Table Columns
+        </div>
+        <div class="mgr-help" style="margin-bottom:1rem;">
+            Column headings shared across all package tables. Changes to columns take effect after saving.
+        </div>
+
+        {{ column_formset.management_form }}
+
+        <div id="column-formset">
+            {% for col_form in column_formset %}
+            <div class="column-form-row" data-col-id="{{ col_form.instance.pk|default_if_none:'' }}" data-col-index="{{ forloop.counter0 }}" style="display:flex; gap:0.75rem; align-items:center; margin-bottom:0.5rem;">
+                {{ col_form.id }}
+                {{ col_form.sort_order }}
+                <div style="flex:1;">{{ col_form.heading }}</div>
+                <label style="display:flex; align-items:center; gap:0.25rem; font-size:0.8rem; color:var(--muted);">
+                    {{ col_form.DELETE }} Delete
+                </label>
+            </div>
+            {% endfor %}
+        </div>
+
+        <button type="button" class="btn-mgr-secondary" style="margin-top:0.5rem;" id="add-column-btn">
+            <i class="bi bi-plus"></i> Add Column
+        </button>
+    </div>
+
+    {# ── Package Tables ────────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-grid-3x3"></i> Package Tables
+        </div>
+
+        {{ table_formset.management_form }}
+
+        {% for table_form in table_formset %}
+        <div class="table-form-card" style="border:1px solid var(--border); border-radius:8px; padding:1rem; margin-bottom:1rem;">
+            {{ table_form.id }}
+            {{ table_form.sort_order }}
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                <strong>{{ table_form.instance.title|default:"New Table" }}</strong>
+                <label style="display:flex; align-items:center; gap:0.25rem; font-size:0.8rem; color:var(--muted);">
+                    {{ table_form.DELETE }} Delete Table
+                </label>
+            </div>
+
+            <div class="mgr-field">
+                <label class="mgr-label">Title</label>
+                {{ table_form.title }}
+            </div>
+            <div class="mgr-field">
+                <label class="mgr-label">Description</label>
+                {{ table_form.description }}
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
+                <div class="mgr-field" style="margin-bottom:0;">
+                    <label class="mgr-label">Colour Preset</label>
+                    {{ table_form.colour_preset }}
+                </div>
+                <div class="mgr-field custom-colour-field" style="margin-bottom:0;">
+                    <label class="mgr-label">Header BG</label>
+                    {{ table_form.custom_header_bg }}
+                </div>
+                <div class="mgr-field custom-colour-field" style="margin-bottom:0;">
+                    <label class="mgr-label">Row BG</label>
+                    {{ table_form.custom_row_bg }}
+                </div>
+                <div class="mgr-field custom-colour-field" style="margin-bottom:0;">
+                    <label class="mgr-label">Text Colour</label>
+                    {{ table_form.custom_text_colour }}
+                </div>
+            </div>
+
+            {# ── Row/Cell Grid ─────────────────────────────────── #}
+            {% if table_form.instance.pk %}
+            <div class="mgr-help" style="margin-bottom:0.5rem;">Data Grid</div>
+            <div style="overflow-x:auto;">
+                <table class="data-grid-table" data-table-pk="{{ table_form.instance.pk }}" style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+                    <thead>
+                        <tr>
+                            {% for col in columns %}
+                            <th class="grid-col-header" data-col-id="{{ col.pk }}" style="padding:0.35rem 0.5rem; text-align:left; border-bottom:1px solid var(--border);">{{ col.heading }}</th>
+                            {% endfor %}
+                            <th style="padding:0.35rem 0.5rem; width:60px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="grid-{{ table_form.instance.pk }}">
+                        {% for row_data in table_form.instance.grid_rows %}
+                        <tr>
+                            {% for cell in row_data.cells %}
+                            <td class="grid-cell" data-col-id="{{ cell.column_pk }}" style="padding:0.25rem 0.5rem;">
+                                <input type="text" name="cell_{{ table_form.instance.pk }}_{{ row_data.pk }}_{{ cell.column_pk }}" value="{{ cell.value }}" class="mgr-input" style="width:100%;">
+                            </td>
+                            {% endfor %}
+                            <td style="padding:0.25rem 0.5rem;">
+                                <label style="font-size:0.75rem; color:var(--muted); display:flex; align-items:center; gap:0.25rem;">
+                                    <input type="checkbox" name="delete_row_{{ table_form.instance.pk }}_{{ row_data.pk }}"> Del
+                                </label>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" class="btn-mgr-secondary add-row-btn" data-table-pk="{{ table_form.instance.pk }}" style="margin-top:0.5rem; font-size:0.8rem;">
+                <i class="bi bi-plus"></i> Add Row
+            </button>
+            {% else %}
+            <div class="mgr-help">Save the form first to add rows to this table.</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <button type="button" class="btn-mgr-secondary" style="margin-top:0.5rem;" id="add-table-btn">
+            <i class="bi bi-plus"></i> Add Table
+        </button>
+    </div>
+
+    {# ── CTA Section ───────────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-megaphone"></i> Call to Action
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.cta_heading.id_for_label }}">Heading</label>
+            {{ form.cta_heading }}
+            {% if form.cta_heading.errors %}<div class="mgr-error">{{ form.cta_heading.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.cta_description.id_for_label }}">Description</label>
+            {{ form.cta_description }}
+            {% if form.cta_description.errors %}<div class="mgr-error">{{ form.cta_description.errors.0 }}</div>{% endif %}
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.cta_button_text.id_for_label }}">Button Text</label>
+                {{ form.cta_button_text }}
+            </div>
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.cta_button_url.id_for_label }}">Button URL</label>
+                {{ form.cta_button_url }}
+            </div>
+        </div>
+        <div style="display:grid; grid-template-columns:auto 1fr; gap:1rem; align-items:center;">
+            <div class="mgr-field" style="margin-bottom:0;">
+                <label style="display:flex; align-items:center; gap:0.5rem;">
+                    {{ form.cta_button_visible }} Show Button
+                </label>
+            </div>
+        </div>
+        <div class="mgr-field" style="margin-top:1rem;">
+            <label class="mgr-label" for="{{ form.cta_image_alt.id_for_label }}">Image Alt Text</label>
+            {{ form.cta_image_alt }}
+        </div>
+    </div>
+
+    <div style="display:flex; gap:.75rem; flex-wrap:wrap; max-width:300px;">
+        <button type="submit" class="btn-mgr-primary" style="flex:1; justify-content:center;">
+            <i class="bi bi-check2"></i> Save
+        </button>
+        <a href="{% url 'manager:dashboard' %}" class="btn-mgr-secondary" style="flex:1; justify-content:center;">
+            Cancel
+        </a>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+{{ form.media }}
+<script src="/static/js/our-model-manager.js"></script>
+{% endblock %}

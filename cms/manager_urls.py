@@ -17,6 +17,12 @@ urlpatterns = [
         views.LandingPageSettingsUpdateView.as_view(),
         name="landing_page",
     ),
+    # Our Model
+    path(
+        "our-model/",
+        views.OurModelPageSettingsUpdateView.as_view(),
+        name="our_model",
+    ),
     # Pages
     path("pages/", views.PageListView.as_view(), name="page_list"),
     path("pages/new/", views.PageCreateView.as_view(), name="page_create"),

@@ -721,3 +721,360 @@ class Snippet(models.Model):
     def save(self, *args, **kwargs):
         self.body = sanitize_html(self.body)
         super().save(*args, **kwargs)
+
+
+class OurModelPageSettings(models.Model):
+    """Singleton model for the Our Model page content.
+
+    Only one row should exist — use OurModelPageSettings.load() to
+    fetch-or-create it.
+    """
+
+    # URL
+    slug = models.SlugField(
+        default="our-model",
+        help_text="URL slug for the page",
+    )
+
+    # Hero section
+    hero_heading = models.TextField(
+        help_text="Main hero heading — may contain <span class='highlight'> markup (translatable)",
+    )
+    hero_image_alt = models.CharField(
+        max_length=255,
+        default="",
+        help_text="Alt text for the hero image (translatable)",
+    )
+
+    # OJC Model section
+    model_heading = models.CharField(
+        max_length=255,
+        help_text="OJC Model section heading (translatable)",
+    )
+    model_body = models.TextField(
+        blank=True,
+        help_text="OJC Model section body — rich text (translatable)",
+    )
+    collections_label = models.TextField(
+        blank=True,
+        help_text="Label above collection cards (translatable)",
+    )
+
+    # Collection 1
+    collection_1_number = models.CharField(max_length=10, default="01")
+    collection_1_title = models.CharField(
+        max_length=255, help_text="Collection 1 title (translatable)"
+    )
+    collection_1_link_text = models.CharField(
+        max_length=100,
+        default="BROWSE JOURNALS",
+        help_text="Collection 1 link label (translatable)",
+    )
+    collection_1_link_url = models.CharField(max_length=500, blank=True)
+
+    # Collection 2
+    collection_2_number = models.CharField(max_length=10, default="02")
+    collection_2_title = models.CharField(
+        max_length=255, help_text="Collection 2 title (translatable)"
+    )
+    collection_2_link_text = models.CharField(
+        max_length=100,
+        default="BROWSE JOURNALS",
+        help_text="Collection 2 link label (translatable)",
+    )
+    collection_2_link_url = models.CharField(max_length=500, blank=True)
+
+    # Collection 3
+    collection_3_number = models.CharField(max_length=10, default="03")
+    collection_3_title = models.CharField(
+        max_length=255, help_text="Collection 3 title (translatable)"
+    )
+    collection_3_link_text = models.CharField(
+        max_length=100,
+        default="BROWSE JOURNALS",
+        help_text="Collection 3 link label (translatable)",
+    )
+    collection_3_link_url = models.CharField(max_length=500, blank=True)
+
+    # Funding section
+    funding_heading = models.CharField(
+        max_length=255, help_text="Funding section heading (translatable)"
+    )
+    funding_upper_image_alt = models.CharField(
+        max_length=255,
+        default="",
+        help_text="Alt text for upper funding image (translatable)",
+    )
+    funding_lower_image_alt = models.CharField(
+        max_length=255,
+        default="",
+        help_text="Alt text for lower funding image (translatable)",
+    )
+    funding_body = models.TextField(
+        blank=True,
+        help_text="Funding section body — rich text (translatable)",
+    )
+
+    # Revenue section
+    revenue_heading = models.CharField(
+        max_length=255,
+        help_text="Revenue distribution heading (translatable)",
+    )
+    revenue_description = models.TextField(
+        blank=True,
+        help_text="Revenue description — plain text (translatable)",
+    )
+    revenue_callout = models.TextField(
+        blank=True,
+        help_text="Revenue callout text (translatable)",
+    )
+
+    # CTA section
+    cta_heading = models.CharField(
+        max_length=255, help_text="CTA heading (translatable)"
+    )
+    cta_description = models.TextField(
+        blank=True,
+        help_text="CTA description — rich text (translatable)",
+    )
+    cta_button_text = models.CharField(
+        max_length=100, help_text="CTA button label (translatable)"
+    )
+    cta_button_url = models.CharField(max_length=500, blank=True)
+    cta_button_visible = models.BooleanField(default=True)
+    cta_image_alt = models.CharField(
+        max_length=255,
+        default="",
+        help_text="Alt text for CTA image (translatable)",
+    )
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Our Model Page Settings")
+        verbose_name_plural = _("Our Model Page Settings")
+
+    def __str__(self):
+        return "Our Model Page Settings"
+
+    CACHE_KEY = "our_model_page_settings"
+    CACHE_TTL = 60 * 60  # 1 hour
+
+    @classmethod
+    def load(cls):
+        """Return the singleton instance, serving from cache when possible."""
+        obj = cache.get(cls.CACHE_KEY)
+        if obj is None:
+            obj, _created = cls.objects.get_or_create(pk=1)
+            # Prefetch related data for template rendering
+            columns = list(obj.table_columns.order_by("sort_order"))
+            tables = list(
+                obj.package_tables.prefetch_related("rows__cells").order_by(
+                    "sort_order"
+                )
+            )
+            obj._prefetched_columns = columns
+            obj._prefetched_tables = tables
+            cache.set(cls.CACHE_KEY, obj, cls.CACHE_TTL)
+        return obj
+
+    def get_table_columns(self):
+        if hasattr(self, "_prefetched_columns"):
+            return self._prefetched_columns
+        return list(self.table_columns.order_by("sort_order"))
+
+    def get_package_tables(self):
+        if hasattr(self, "_prefetched_tables"):
+            return self._prefetched_tables
+        return list(
+            self.package_tables.prefetch_related("rows__cells").order_by(
+                "sort_order"
+            )
+        )
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        self.model_body = sanitize_html(self.model_body)
+        self.funding_body = sanitize_html(self.funding_body)
+        self.cta_description = sanitize_html(self.cta_description)
+        super().save(*args, **kwargs)
+        cache.delete(self.CACHE_KEY)
+
+    def delete(self, *args, **kwargs):
+        pass
+
+
+class OurModelTableColumn(models.Model):
+    """Column header shared across all package tables."""
+
+    settings = models.ForeignKey(
+        OurModelPageSettings,
+        related_name="table_columns",
+        on_delete=models.CASCADE,
+    )
+    heading = models.CharField(
+        max_length=100, help_text="Column heading (translatable)"
+    )
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return self.heading
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete(OurModelPageSettings.CACHE_KEY)
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        cache.delete(OurModelPageSettings.CACHE_KEY)
+
+
+class OurModelPackageTable(models.Model):
+    """A colour-coded package table in the revenue distribution section."""
+
+    COLOUR_PINK = "pink"
+    COLOUR_GREEN = "green"
+    COLOUR_BLUE = "blue"
+    COLOUR_CUSTOM = "custom"
+    COLOUR_CHOICES = [
+        (COLOUR_PINK, "Pink"),
+        (COLOUR_GREEN, "Green"),
+        (COLOUR_BLUE, "Blue"),
+        (COLOUR_CUSTOM, "Custom"),
+    ]
+    _COLOUR_MAP = {
+        COLOUR_PINK: {"header": "#ffd8fd", "rows": "#ffecfe"},
+        COLOUR_GREEN: {"header": "#8ee8c8", "rows": "#d4f5e8"},
+        COLOUR_BLUE: {"header": "#a5bfff", "rows": "#dce6ff"},
+    }
+
+    settings = models.ForeignKey(
+        OurModelPageSettings,
+        related_name="package_tables",
+        on_delete=models.CASCADE,
+    )
+    title = models.CharField(
+        max_length=255, help_text="Table title (translatable)"
+    )
+    description = models.TextField(
+        blank=True, help_text="Table description (translatable)"
+    )
+    colour_preset = models.CharField(
+        max_length=10, choices=COLOUR_CHOICES, default=COLOUR_PINK
+    )
+    custom_header_bg = models.CharField(
+        max_length=7,
+        blank=True,
+        help_text="Hex colour for header (custom only)",
+    )
+    custom_row_bg = models.CharField(
+        max_length=7, blank=True, help_text="Hex colour for rows (custom only)"
+    )
+    custom_text_colour = models.CharField(
+        max_length=7, blank=True, help_text="Hex colour for text (custom only)"
+    )
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def header_bg_colour(self):
+        if self.colour_preset == self.COLOUR_CUSTOM:
+            return self.custom_header_bg
+        return self._COLOUR_MAP.get(self.colour_preset, {}).get(
+            "header", "#ffd8fd"
+        )
+
+    @property
+    def row_bg_colour(self):
+        if self.colour_preset == self.COLOUR_CUSTOM:
+            return self.custom_row_bg
+        return self._COLOUR_MAP.get(self.colour_preset, {}).get(
+            "rows", "#ffecfe"
+        )
+
+    @property
+    def text_colour(self):
+        if self.colour_preset == self.COLOUR_CUSTOM:
+            return self.custom_text_colour or "#212129"
+        return "#212129"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete(OurModelPageSettings.CACHE_KEY)
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        cache.delete(OurModelPageSettings.CACHE_KEY)
+
+
+class OurModelPackageRow(models.Model):
+    """A row in a package table. Cell values are stored in OurModelPackageCell."""
+
+    table = models.ForeignKey(
+        OurModelPackageTable,
+        related_name="rows",
+        on_delete=models.CASCADE,
+    )
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return f"Row {self.sort_order} of {self.table}"
+
+    def get_cells_by_column(self):
+        """Return a dict of {column_id: cell_value}."""
+        return {cell.column_id: cell.value for cell in self.cells.all()}
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete(OurModelPageSettings.CACHE_KEY)
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        cache.delete(OurModelPageSettings.CACHE_KEY)
+
+
+class OurModelPackageCell(models.Model):
+    """A single cell value at the intersection of a row and a column."""
+
+    row = models.ForeignKey(
+        OurModelPackageRow,
+        related_name="cells",
+        on_delete=models.CASCADE,
+    )
+    column = models.ForeignKey(
+        OurModelTableColumn,
+        on_delete=models.CASCADE,
+    )
+    value = models.CharField(
+        max_length=255, blank=True, help_text="Cell value (translatable)"
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["row", "column"],
+                name="unique_cell_per_row_column",
+            )
+        ]
+
+    def __str__(self):
+        return self.value
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete(OurModelPageSettings.CACHE_KEY)
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        cache.delete(OurModelPageSettings.CACHE_KEY)

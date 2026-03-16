@@ -7,6 +7,9 @@ from .models import (
     HeaderSettings,
     LandingPageSettings,
     MenuItem,
+    OurModelPackageTable,
+    OurModelPageSettings,
+    OurModelTableColumn,
     Page,
     Post,
     Snippet,
@@ -320,3 +323,199 @@ class SnippetForm(forms.ModelForm):
             ),
             "body": TinyMCE(),
         }
+
+
+_RESTRICTED_TINYMCE = {
+    "height": 200,
+    "menubar": False,
+    "plugins": "",
+    "toolbar": "bold italic underline",
+}
+
+
+class OurModelPageSettingsForm(forms.ModelForm):
+    class Meta:
+        model = OurModelPageSettings
+        fields = [
+            "slug",
+            "hero_heading",
+            "hero_image_alt",
+            "model_heading",
+            "model_body",
+            "collections_label",
+            "collection_1_number",
+            "collection_1_title",
+            "collection_1_link_text",
+            "collection_1_link_url",
+            "collection_2_number",
+            "collection_2_title",
+            "collection_2_link_text",
+            "collection_2_link_url",
+            "collection_3_number",
+            "collection_3_title",
+            "collection_3_link_text",
+            "collection_3_link_url",
+            "funding_heading",
+            "funding_upper_image_alt",
+            "funding_lower_image_alt",
+            "funding_body",
+            "revenue_heading",
+            "revenue_description",
+            "revenue_callout",
+            "cta_heading",
+            "cta_description",
+            "cta_button_text",
+            "cta_button_url",
+            "cta_button_visible",
+            "cta_image_alt",
+        ]
+        widgets = {
+            "slug": forms.TextInput(attrs={"class": "mgr-input"}),
+            "hero_heading": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 3}
+            ),
+            "hero_image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
+            "model_heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "model_body": TinyMCE(
+                attrs={"aria-label": "OJC Model body"},
+                mce_attrs=_RESTRICTED_TINYMCE,
+            ),
+            "collections_label": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 2}
+            ),
+            "collection_1_number": forms.TextInput(
+                attrs={"class": "mgr-input", "style": "max-width:80px;"}
+            ),
+            "collection_1_title": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "collection_1_link_text": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "collection_1_link_url": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "collection_2_number": forms.TextInput(
+                attrs={"class": "mgr-input", "style": "max-width:80px;"}
+            ),
+            "collection_2_title": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "collection_2_link_text": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "collection_2_link_url": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "collection_3_number": forms.TextInput(
+                attrs={"class": "mgr-input", "style": "max-width:80px;"}
+            ),
+            "collection_3_title": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "collection_3_link_text": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "collection_3_link_url": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "funding_heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "funding_upper_image_alt": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "funding_lower_image_alt": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "funding_body": TinyMCE(
+                attrs={"aria-label": "Funding body"},
+                mce_attrs=_RESTRICTED_TINYMCE,
+            ),
+            "revenue_heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "revenue_description": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 3}
+            ),
+            "revenue_callout": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 3}
+            ),
+            "cta_heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "cta_description": TinyMCE(
+                attrs={"aria-label": "CTA description"},
+                mce_attrs=_RESTRICTED_TINYMCE,
+            ),
+            "cta_button_text": forms.TextInput(attrs={"class": "mgr-input"}),
+            "cta_button_url": forms.TextInput(attrs={"class": "mgr-input"}),
+            "cta_image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
+        }
+
+
+class OurModelTableColumnForm(forms.ModelForm):
+    class Meta:
+        model = OurModelTableColumn
+        fields = ["heading", "sort_order"]
+        widgets = {
+            "heading": forms.TextInput(
+                attrs={"class": "mgr-input", "aria-label": "Column heading"}
+            ),
+            "sort_order": forms.HiddenInput(),
+        }
+
+
+OurModelTableColumnFormSet = forms.inlineformset_factory(
+    OurModelPageSettings,
+    OurModelTableColumn,
+    form=OurModelTableColumnForm,
+    extra=0,
+    can_delete=True,
+)
+
+
+class OurModelPackageTableForm(forms.ModelForm):
+    class Meta:
+        model = OurModelPackageTable
+        fields = [
+            "title",
+            "description",
+            "colour_preset",
+            "custom_header_bg",
+            "custom_row_bg",
+            "custom_text_colour",
+            "sort_order",
+        ]
+        widgets = {
+            "title": forms.TextInput(attrs={"class": "mgr-input"}),
+            "description": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 2}
+            ),
+            "colour_preset": forms.Select(attrs={"class": "mgr-input"}),
+            "custom_header_bg": forms.TextInput(
+                attrs={
+                    "type": "color",
+                    "class": "mgr-input",
+                    "style": "max-width:80px;",
+                }
+            ),
+            "custom_row_bg": forms.TextInput(
+                attrs={
+                    "type": "color",
+                    "class": "mgr-input",
+                    "style": "max-width:80px;",
+                }
+            ),
+            "custom_text_colour": forms.TextInput(
+                attrs={
+                    "type": "color",
+                    "class": "mgr-input",
+                    "style": "max-width:80px;",
+                }
+            ),
+            "sort_order": forms.HiddenInput(),
+        }
+
+
+OurModelPackageTableFormSet = forms.inlineformset_factory(
+    OurModelPageSettings,
+    OurModelPackageTable,
+    form=OurModelPackageTableForm,
+    extra=0,
+    can_delete=True,
+)

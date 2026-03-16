@@ -3,9 +3,10 @@ CMS views for static content pages.
 """
 
 from django.core.paginator import Paginator
+from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 
-from .models import LandingPageSettings, Page, Post
+from .models import LandingPageSettings, OurModelPageSettings, Page, Post
 
 
 def index_view(request):
@@ -13,8 +14,37 @@ def index_view(request):
     return render(request, "landing.html", {"landing": landing})
 
 
-def our_model_view(request):
-    return render(request, "our_model.html")
+def our_model_view(request, slug=None):
+    settings = OurModelPageSettings.load()
+    if slug and slug != settings.slug:
+        raise Http404
+
+    columns = settings.get_table_columns()
+    tables = settings.get_package_tables()
+    num_columns = len(columns)
+    col_width_pct = (100 // num_columns) if num_columns else 25
+
+    # Pre-build ordered cell lists for template rendering
+    for table in tables:
+        for row in table.rows.all():
+            cells_by_col = {
+                cell.column_id: cell.value for cell in row.cells.all()
+            }
+            row.ordered_cells = [
+                cells_by_col.get(col.pk, "") for col in columns
+            ]
+
+    return render(
+        request,
+        "our_model.html",
+        {
+            "settings": settings,
+            "columns": columns,
+            "tables": tables,
+            "num_columns": num_columns,
+            "col_width_pct": col_width_pct,
+        },
+    )
 
 
 def board_view(request):
