@@ -7,6 +7,53 @@ app_name = "cms_manager"
 urlpatterns = [
     # TinyMCE image upload
     path("image-upload/", views.image_upload, name="image_upload"),
+    # Featured image upload (generic — for new posts not yet saved)
+    path(
+        "post-image-upload/",
+        views.post_featured_image_upload,
+        name="post_featured_image_upload",
+    ),
+    # Featured image upload (post-specific — auto-saves immediately)
+    path(
+        "posts/<int:pk>/image-upload/",
+        views.post_featured_image_upload,
+        name="post_featured_image_upload_pk",
+    ),
+    # Post category tag widget
+    path(
+        "posts/<int:pk>/categories/search/",
+        views.PostCategorySearchView.as_view(),
+        name="post_category_search",
+    ),
+    path(
+        "posts/<int:pk>/categories/add/",
+        views.PostCategoryAddView.as_view(),
+        name="post_category_add",
+    ),
+    path(
+        "posts/<int:pk>/categories/<int:item_pk>/remove/",
+        views.PostCategoryRemoveView.as_view(),
+        name="post_category_remove",
+    ),
+    # Categories
+    path(
+        "categories/", views.CategoryListView.as_view(), name="category_list"
+    ),
+    path(
+        "categories/new/",
+        views.CategoryCreateView.as_view(),
+        name="category_create",
+    ),
+    path(
+        "categories/<int:pk>/edit/",
+        views.CategoryUpdateView.as_view(),
+        name="category_edit",
+    ),
+    path(
+        "categories/<int:pk>/delete/",
+        views.CategoryDeleteView.as_view(),
+        name="category_delete",
+    ),
     # Header
     path("header/", views.HeaderSettingsUpdateView.as_view(), name="header"),
     # Footer

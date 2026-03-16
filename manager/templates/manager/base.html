@@ -45,6 +45,9 @@
         <a href="{% url 'cms_manager:post_list' %}" class="mgr-nav-link {% block nav_posts %}{% endblock %}">
             <i class="bi bi-newspaper"></i> Posts
         </a>
+        <a href="{% url 'cms_manager:category_list' %}" class="mgr-nav-link {% block nav_categories %}{% endblock %}">
+            <i class="bi bi-tags"></i> Categories
+        </a>
         <a href="{% url 'cms_manager:snippet_list' %}" class="mgr-nav-link {% block nav_snippets %}{% endblock %}">
             <i class="bi bi-puzzle"></i> Snippets
         </a>

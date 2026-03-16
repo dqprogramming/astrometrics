@@ -197,7 +197,12 @@ TINYMCE_DEFAULT_CONFIG = {
         "/static/css/normalize.min.css",
         "/static/css/font.css",
         "/static/css/app.css",
+        "/static/css/news.css",
     ],
+    # Scope the editor body inside the same class used on the front end
+    # so all rich-text styles (tables, lists, blockquotes etc.) apply.
+    "body_class": "news-detail-body__inner",
+    "content_style": "body.news-detail-body__inner { padding: 16px 24px; }",
     # Paste cleanup — setup is eval'd into a real JS function by
     # django-tinymce's init_tinymce.js. DOM-based so we can surgically
     # strip junk without destroying semantic structure.

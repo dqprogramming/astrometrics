@@ -4,15 +4,17 @@ import uuid
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.files.storage import default_storage
-from django.http import JsonResponse
-from django.shortcuts import redirect, render
+from django.http import Http404, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
+from django.utils.text import slugify
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from .forms import (
+    CategoryForm,
     Column1LinkFormSet,
     Column2LinkFormSet,
     FooterSettingsForm,
@@ -24,6 +26,7 @@ from .forms import (
     SnippetForm,
 )
 from .models import (
+    Category,
     FooterSettings,
     HeaderSettings,
     LandingPageSettings,
@@ -75,6 +78,185 @@ def image_upload(request):
     saved_path = default_storage.save(filename, uploaded)
     url = default_storage.url(saved_path)
     return JsonResponse({"location": url})
+
+
+@csrf_exempt
+@require_POST
+def post_featured_image_upload(request, pk=None):
+    """Featured image upload endpoint for Post forms.
+
+    If pk is provided, saves the URL directly to the post and returns
+    {"url": "...", "saved": true} so the JS can skip the manual form save.
+    Without pk (new post, not yet saved), returns {"url": "..."} only.
+    """
+    if not (request.user.is_active and request.user.is_staff):
+        return JsonResponse({"error": "Forbidden"}, status=403)
+
+    uploaded = request.FILES.get("image")
+    if not uploaded:
+        return JsonResponse({"error": "No file received"}, status=400)
+
+    if uploaded.content_type not in _ALLOWED_IMAGE_TYPES:
+        return JsonResponse({"error": "Unsupported file type"}, status=400)
+
+    ext = os.path.splitext(uploaded.name)[1].lower()
+    if ext not in _ALLOWED_IMAGE_EXTENSIONS:
+        return JsonResponse(
+            {"error": "Unsupported file extension"}, status=400
+        )
+
+    filename = f"cms/posts/{uuid.uuid4().hex}{ext}"
+    saved_path = default_storage.save(filename, uploaded)
+    url = default_storage.url(saved_path)
+
+    if pk is not None:
+        get_object_or_404(Post, pk=pk)
+        Post.objects.filter(pk=pk).update(featured_image=url)
+        return JsonResponse({"url": url, "saved": True})
+
+    return JsonResponse({"url": url})
+
+
+# ── Post category tag widget ──────────────────────────────────────────────────
+
+
+class PostCategorySearchView(StaffRequiredMixin, View):
+    def get(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        q = request.GET.get("q", "").strip()
+        current = post.categories.all()
+        if q:
+            results = (
+                Category.objects.filter(name__icontains=q)
+                .exclude(pk__in=current)
+                .order_by("name")[:10]
+            )
+            can_create = not Category.objects.filter(name__iexact=q).exists()
+        else:
+            results = []
+            can_create = False
+        return render(
+            request,
+            "cms/manager/_category_results.html",
+            {
+                "results": results,
+                "post": post,
+                "q": q,
+                "can_create": can_create,
+            },
+        )
+
+
+class PostCategoryAddView(StaffRequiredMixin, View):
+    def post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        item_id = request.POST.get("item_id")
+        name = request.POST.get("name", "").strip()
+        if item_id:
+            category = get_object_or_404(Category, pk=item_id)
+        elif name:
+            category, _ = Category.objects.get_or_create(
+                name=name,
+                defaults={"slug": slugify(name)},
+            )
+        else:
+            raise Http404
+        post.categories.add(category)
+        return render(
+            request,
+            "cms/manager/_category_widget.html",
+            {"post": post, "items": post.categories.order_by("name")},
+        )
+
+
+class PostCategoryRemoveView(StaffRequiredMixin, View):
+    def post(self, request, pk, item_pk):
+        post = get_object_or_404(Post, pk=pk)
+        post.categories.remove(item_pk)
+        return render(
+            request,
+            "cms/manager/_category_widget.html",
+            {"post": post, "items": post.categories.order_by("name")},
+        )
+
+
+# ── Categories ────────────────────────────────────────────────────────────────
+
+
+class CategoryListView(StaffRequiredMixin, ListView):
+    model = Category
+    template_name = "cms/manager/category_list.html"
+    context_object_name = "categories"
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        q = self.request.GET.get("q", "").strip()
+        if q:
+            qs = qs.filter(name__icontains=q)
+        return qs
+
+    def get(self, request, *args, **kwargs):
+        if request.headers.get("HX-Request"):
+            return render(
+                request,
+                "cms/manager/category_table.html",
+                {"categories": self.get_queryset()},
+            )
+        return super().get(request, *args, **kwargs)
+
+
+class CategoryCreateView(StaffRequiredMixin, CreateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = "cms/manager/category_form.html"
+    success_url = reverse_lazy("cms_manager:category_list")
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["action"] = "Create"
+        return ctx
+
+    def form_valid(self, form):
+        messages.success(
+            self.request, f'Category "{form.instance.name}" created.'
+        )
+        return super().form_valid(form)
+
+
+class CategoryUpdateView(StaffRequiredMixin, UpdateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = "cms/manager/category_form.html"
+    success_url = reverse_lazy("cms_manager:category_list")
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["action"] = "Edit"
+        return ctx
+
+    def form_valid(self, form):
+        messages.success(
+            self.request, f'Category "{form.instance.name}" updated.'
+        )
+        return super().form_valid(form)
+
+
+class CategoryDeleteView(StaffRequiredMixin, DeleteView):
+    model = Category
+    template_name = "cms/manager/confirm_delete.html"
+    success_url = reverse_lazy("cms_manager:category_list")
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["object_type"] = "Category"
+        ctx["cancel_url"] = reverse_lazy("cms_manager:category_list")
+        return ctx
+
+    def form_valid(self, form):
+        messages.success(
+            self.request, f'Category "{self.object.name}" deleted.'
+        )
+        return super().form_valid(form)
 
 
 # ── Landing Page Settings ────────────────────────────────────────────────────

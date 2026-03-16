@@ -20,6 +20,20 @@
     <div class="container">
         <h1 class="news-hero__heading spectral-extrabold">News.</h1>
         <p class="news-hero__strapline">The latest from Open Journals Collective</p>
+        {% if categories %}
+        <nav class="news-category-filters" aria-label="Filter by category">
+            <a href="{% url 'cms:news-index' %}"
+               class="news-category-badge {% if not active_category %}news-category-badge--active{% endif %}">
+                All
+            </a>
+            {% for cat in categories %}
+            <a href="{% url 'cms:news-index' %}?category={{ cat.slug }}"
+               class="news-category-badge {% if active_category.slug == cat.slug %}news-category-badge--active{% endif %}">
+                {{ cat.name }}
+            </a>
+            {% endfor %}
+        </nav>
+        {% endif %}
     </div>
 </section>
 
@@ -34,7 +48,10 @@
             <div class="news-card__image-col">
                 <div class="news-card__img-wrapper">
                     <div class="news-card__img-block">
-                        <!-- Concentric circles motif, echoing the homepage -->
+                        {% if post.featured_image %}
+                        <img src="{{ post.featured_image }}" alt="{{ post.title }}"
+                             style="width:100%; height:100%; object-fit:cover; display:block;">
+                        {% else %}
                         <svg class="news-card__img-circles"
                              viewBox="0 0 400 400"
                              xmlns="http://www.w3.org/2000/svg"
@@ -43,6 +60,7 @@
                             <circle cx="200" cy="200" r="115" fill="none" stroke="#212129" stroke-width="28"/>
                             <circle cx="200" cy="200" r="175" fill="none" stroke="#212129" stroke-width="28"/>
                         </svg>
+                        {% endif %}
                     </div>
                     <div class="news-card__img-accent"></div>
                 </div>
@@ -50,6 +68,13 @@
 
             <!-- Post content -->
             <div class="news-card__content">
+                {% if post.categories.all %}
+                <div style="display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:.5rem;">
+                    {% for cat in post.categories.all %}
+                    <a href="{% url 'cms:news-index' %}?category={{ cat.slug }}" class="news-category-badge">{{ cat.name }}</a>
+                    {% endfor %}
+                </div>
+                {% endif %}
                 <time class="news-card__date" datetime="{{ post.published_at|date:'Y-m-d' }}">
                     {{ post.published_at|date:"j F Y" }}
                 </time>
@@ -79,7 +104,7 @@
         {% if page_obj.has_other_pages %}
         <nav class="news-pagination" aria-label="News pagination">
             {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}"
+            <a href="?{% if active_category %}category={{ active_category.slug }}&{% endif %}page={{ page_obj.previous_page_number }}"
                class="news-pagination__link spectral-bold">
                 <span aria-hidden="true">←</span> Previous
             </a>
@@ -88,7 +113,7 @@
                 Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
             </span>
             {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}"
+            <a href="?{% if active_category %}category={{ active_category.slug }}&{% endif %}page={{ page_obj.next_page_number }}"
                class="news-pagination__link spectral-bold">
                 Next <span aria-hidden="true">→</span>
             </a>

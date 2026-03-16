@@ -373,6 +373,11 @@ body {
 .mgr-checkbox-wrap { display: flex; align-items: center; gap: 0.5rem; }
 .mgr-checkbox-wrap input[type="checkbox"] { accent-color: var(--accent); width: 15px; height: 15px; }
 
+/* Checkbox list (e.g. categories on post form) */
+.mgr-checkbox-list ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .4rem; }
+.mgr-checkbox-list li { display: flex; align-items: center; gap: .5rem; font-size: .9rem; color: var(--text); }
+.mgr-checkbox-list input[type="checkbox"] { accent-color: var(--accent); width: 15px; height: 15px; flex-shrink: 0; }
+
 /* Toggle switch */
 .mgr-switch { display: flex; align-items: center; gap: 0.625rem; cursor: pointer; user-select: none; }
 .mgr-switch input[type="checkbox"] { position: absolute; opacity: 0; width: 0; height: 0; }

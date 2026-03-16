@@ -1,0 +1,33 @@
+<table class="mgr-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Slug</th>
+            <th>Posts</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category in categories %}
+        <tr>
+            <td>{{ category.name }}</td>
+            <td><code>{{ category.slug }}</code></td>
+            <td>{{ category.posts.count }}</td>
+            <td class="mgr-table-actions">
+                <a href="{% url 'cms_manager:category_edit' category.pk %}" class="btn-mgr-secondary btn-mgr-sm">
+                    <i class="bi bi-pencil"></i> Edit
+                </a>
+                <a href="{% url 'cms_manager:category_delete' category.pk %}" class="btn-mgr-danger btn-mgr-sm">
+                    <i class="bi bi-trash"></i>
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" style="text-align:center; color:var(--text-muted); padding:2rem;">
+                No categories yet.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

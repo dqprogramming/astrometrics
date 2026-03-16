@@ -5,7 +5,7 @@ CMS views for static content pages.
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
 
-from .models import LandingPageSettings, Page, Post
+from .models import Category, LandingPageSettings, Page, Post
 
 
 def index_view(request):
@@ -23,9 +23,24 @@ def partial_view(request, filename):
 
 def news_index_view(request):
     posts = Post.objects.filter(is_published=True).order_by("-published_at")
+    categories = Category.objects.all()
+    active_category = None
+    category_slug = request.GET.get("category")
+    if category_slug:
+        active_category = Category.objects.filter(slug=category_slug).first()
+        if active_category:
+            posts = posts.filter(categories=active_category)
     paginator = Paginator(posts, 8)
     page_obj = paginator.get_page(request.GET.get("page"))
-    return render(request, "news.html", {"page_obj": page_obj})
+    return render(
+        request,
+        "news.html",
+        {
+            "page_obj": page_obj,
+            "categories": categories,
+            "active_category": active_category,
+        },
+    )
 
 
 def news_detail_view(request, slug):
