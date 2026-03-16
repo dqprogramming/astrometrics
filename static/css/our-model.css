@@ -210,6 +210,8 @@
 
 .model-revenue-header {
     margin-bottom: 40px;
+    grid-column: 1;
+    grid-row: 1;
 }
 
 .model-revenue-header h2 {
@@ -224,14 +226,16 @@
     color: #333;
 }
 
-.model-revenue-grid {
-    display: flex;
-    gap: 40px;
-    align-items: flex-start;
+.model-revenue-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    grid-template-rows: auto 1fr;
+    gap: 0 40px;
 }
 
 .model-revenue-tables {
-    flex: 1;
+    grid-column: 1;
+    grid-row: 2;
 }
 
 /* Unified packages table */
@@ -335,12 +339,13 @@
     background-color: #dce6ff;
 }
 
-/* Callout */
+/* Callout styling */
 .model-revenue-callout {
-    flex: 0 0 300px;
+    grid-column: 2;
+    grid-row: 2;
     border-left: 3px solid #212129;
     padding-left: 24px;
-    align-self: flex-start;
+    align-self: start;
 }
 
 .model-revenue-callout p {
@@ -437,12 +442,14 @@
         min-height: 350px;
     }
 
-    .model-revenue-grid {
-        flex-direction: column;
+
+    .model-revenue-layout {
+        grid-template-columns: 1fr;
     }
 
     .model-revenue-callout {
-        flex: 0 0 auto;
+        grid-column: 1;
+        grid-row: 3;
     }
 
     .model-mosaic-grid {
