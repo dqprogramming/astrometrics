@@ -8,13 +8,13 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="model-hero">
+<section class="model-hero" aria-labelledby="model-hero-heading">
     <svg class="model-hero-circles" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" overflow="visible">
         <circle cx="500" cy="500" r="200" fill="none" stroke="#71f7f2" stroke-width="90"/>
         <circle cx="500" cy="500" r="370" fill="none" stroke="#71f7f2" stroke-width="90"/>
     </svg>
     <div class="container">
-        <h1 class="model-hero-heading spectral-bold">
+        <h1 id="model-hero-heading" class="model-hero-heading spectral-bold">
             By joining OJC, libraries support the long-term sustainability of non-profit, university-based <span class="highlight">journals.</span>
         </h1>
         <div class="model-hero-image-wrapper">
@@ -26,10 +26,10 @@
 </section>
 
 <!-- The OJC Model Section -->
-<section class="model-section">
+<section class="model-section" aria-labelledby="model-section-heading">
     <div class="container">
         <div class="model-intro">
-            <h2 class="spectral-bold">The OJC Model.</h2>
+            <h2 id="model-section-heading" class="spectral-bold">The OJC Model.</h2>
             <p>
                 Launched in January 2026, OJC is designed to raise collective investment for a transition to academic-led, non-profit diamond open access. Published by world leaders in non-profit and university-based digital publishing, the initiative offers libraries and funders the opportunity to support equitable research infrastructure for journals.
             </p>
@@ -62,7 +62,7 @@
 </section>
 
 <!-- Journal Funding Section -->
-<section class="model-funding">
+<section class="model-funding" aria-labelledby="model-funding-heading">
     <div class="container">
         <div class="model-funding-inner">
             <div class="model-funding-images">
@@ -72,11 +72,11 @@
                 </div>
                 <div class="model-funding-img-lower">
                     <img src="/static/img/our-model-funding-lower.jpg"
-                         alt="Research and academic journals">
+                         alt="Open access academic journals supported by OJC">
                 </div>
             </div>
             <div class="model-funding-content">
-                <h2 class="spectral-bold">Journal Funding.</h2>
+                <h2 id="model-funding-heading" class="spectral-bold">Journal Funding.</h2>
                 <p>
                     From December 2026 onwards, library investment raised by OJC
                     will be shared with journals in our 3 Launch Collections.
@@ -102,11 +102,11 @@
 </section>
 
 <!-- Journal Funding & Revenue Distribution Section -->
-<section class="model-revenue">
+<section class="model-revenue" aria-labelledby="model-revenue-heading">
     <div class="container">
         <div class="model-revenue-layout">
             <div class="model-revenue-header">
-                <h2 class="spectral-bold">Journal Funding &amp;<br>Revenue Distribution.</h2>
+                <h2 id="model-revenue-heading" class="spectral-bold">Journal Funding &amp;<br>Revenue Distribution.</h2>
                 <p>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                     eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
@@ -117,25 +117,29 @@
             <div class="model-revenue-tables">
                 <!-- Column headers -->
                 <table class="model-packages-table model-packages-header-table">
+                    <caption class="sr-only">Revenue distribution package column headers</caption>
                     <thead>
                         <tr>
-                            <th>Package &amp; Band</th>
-                            <th>Journal Size</th>
-                            <th>No. of articles p/year</th>
-                            <th>Annual Funding</th>
+                            <th scope="col">Package &amp; Band</th>
+                            <th scope="col">Journal Size</th>
+                            <th scope="col">No. of articles p/year</th>
+                            <th scope="col">Annual Funding</th>
                         </tr>
                     </thead>
                 </table>
 
                 <!-- Package A - Pink -->
                 <table class="model-packages-table">
-                    <tbody>
+                    <caption class="sr-only">Package A (full fat) — full support for journals with no funding or income</caption>
+                    <thead>
                         <tr class="package-header package-pink">
-                            <td colspan="4">
+                            <th scope="colgroup" colspan="4">
                                 <strong>Package A (full fat)</strong><br>
                                 Full support for journals with no funding or income.
-                            </td>
+                            </th>
                         </tr>
+                    </thead>
+                    <tbody>
                         <tr class="package-row package-pink-light">
                             <td>1</td>
                             <td>Tiny</td>
@@ -171,13 +175,16 @@
 
                 <!-- Package B - Green -->
                 <table class="model-packages-table">
-                    <tbody>
+                    <caption class="sr-only">Package B (semi-skimmed) — partial support for journals with minimal funding or income</caption>
+                    <thead>
                         <tr class="package-header package-green">
-                            <td colspan="4">
+                            <th scope="colgroup" colspan="4">
                                 <strong>Package B (semi-skimmed)</strong><br>
                                 Partial support for journals with minimal funding or income.
-                            </td>
+                            </th>
                         </tr>
+                    </thead>
+                    <tbody>
                         <tr class="package-row package-green-light">
                             <td>1</td>
                             <td>Tiny</td>
@@ -213,13 +220,16 @@
 
                 <!-- Package C - Blue -->
                 <table class="model-packages-table">
-                    <tbody>
+                    <caption class="sr-only">Package C (skimmed) — top-up support for journals with established funding or income</caption>
+                    <thead>
                         <tr class="package-header package-blue">
-                            <td colspan="4">
+                            <th scope="colgroup" colspan="4">
                                 <strong>Package C (skimmed)</strong><br>
                                 Top-up support for journals with established funding or income.
-                            </td>
+                            </th>
                         </tr>
+                    </thead>
+                    <tbody>
                         <tr class="package-row package-blue-light">
                             <td>1</td>
                             <td>Tiny</td>
@@ -264,7 +274,7 @@
 </section>
 
 <!-- CTA Section -->
-<section class="model-cta">
+<section class="model-cta" aria-label="Join the movement">
     <div class="container">
         <div class="model-cta-inner">
             <div class="model-cta-content">

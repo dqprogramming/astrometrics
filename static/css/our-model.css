@@ -133,6 +133,18 @@
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    display: inline-block;
+    padding: 6px 0;
+    margin: -6px 0;
+}
+
+.model-collection-link:hover {
+    text-decoration: underline;
+}
+
+.model-collection-link:focus-visible {
+    outline: 2px solid #212129;
+    outline-offset: 2px;
 }
 
 /* --- Journal Funding Section --- */
@@ -246,7 +258,7 @@
     table-layout: fixed;
 }
 
-.model-packages-table thead th {
+.model-packages-header-table thead th {
     text-align: left;
     font-weight: 700;
     padding: 10px 16px;
@@ -283,15 +295,23 @@
 
 /* Data rows get borders */
 .model-packages-table .package-row td {
-    border: 1px solid #999;
+    border: 1px solid #767676;
 }
 
 /* Package header rows - no borders */
-.model-packages-table .package-header td {
+.model-packages-table .package-header td,
+.model-packages-table .package-header th {
     padding: 10px 16px;
     font-size: 12px;
     line-height: 1.5;
+    font-weight: normal;
+    text-align: left;
     border: none;
+}
+
+/* Outer border on package tables (not the column-header table) */
+.model-packages-table:not(.model-packages-header-table) {
+    border: 1px solid #767676;
 }
 
 /* Gap between package tables */
@@ -310,6 +330,12 @@
 
 .model-packages-table .package-header strong {
     font-size: 13px;
+}
+
+/* Explicit text colour for table cells */
+.model-packages-table td,
+.model-packages-table th {
+    color: #212129;
 }
 
 /* Pink - Package A */
