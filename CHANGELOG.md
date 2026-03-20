@@ -1,3 +1,10 @@
+## 1.19.0 (2026-03-20)
+
+### Feat
+
+- **cms**: migrate Our Team page to database-backed CMS with contact form
+- **cms**: add Our Team page with team sections and contact form
+
 ## 1.18.0 (2026-03-20)
 
 ### Feat
