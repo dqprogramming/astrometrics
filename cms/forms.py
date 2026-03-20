@@ -3,6 +3,8 @@ from tinymce.widgets import TinyMCE
 
 from .models import (
     Category,
+    ContactFormSettings,
+    ContactRecipient,
     FooterLink,
     FooterSettings,
     HeaderSettings,
@@ -14,6 +16,8 @@ from .models import (
     Page,
     Post,
     Snippet,
+    TeamMember,
+    TeamSection,
 )
 
 
@@ -531,3 +535,82 @@ OurModelPackageTableFormSet = forms.inlineformset_factory(
     extra=0,
     can_delete=True,
 )
+
+
+class TeamSectionForm(forms.ModelForm):
+    class Meta:
+        model = TeamSection
+        fields = ["name", "sort_order"]
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "mgr-input"}),
+            "sort_order": forms.HiddenInput(),
+        }
+
+
+class TeamMemberForm(forms.ModelForm):
+    class Meta:
+        model = TeamMember
+        fields = [
+            "name",
+            "description",
+            "linkedin_url",
+            "image",
+            "sort_order",
+        ]
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "mgr-input"}),
+            "description": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 3}
+            ),
+            "linkedin_url": forms.TextInput(attrs={"class": "mgr-input"}),
+            "image": forms.HiddenInput(),
+            "sort_order": forms.HiddenInput(),
+        }
+
+
+TeamMemberFormSet = forms.inlineformset_factory(
+    TeamSection,
+    TeamMember,
+    form=TeamMemberForm,
+    extra=0,
+    can_delete=True,
+)
+
+
+class ContactFormSettingsForm(forms.ModelForm):
+    class Meta:
+        model = ContactFormSettings
+        fields = ["from_email"]
+        widgets = {
+            "from_email": forms.EmailInput(attrs={"class": "mgr-input"}),
+        }
+
+
+class ContactRecipientForm(forms.ModelForm):
+    class Meta:
+        model = ContactRecipient
+        fields = ["email", "sort_order"]
+        widgets = {
+            "email": forms.EmailInput(
+                attrs={"class": "mgr-input", "aria-label": "Recipient email"}
+            ),
+            "sort_order": forms.HiddenInput(),
+        }
+
+
+ContactRecipientFormSet = forms.inlineformset_factory(
+    ContactFormSettings,
+    ContactRecipient,
+    form=ContactRecipientForm,
+    extra=0,
+    can_delete=True,
+)
+
+
+class ContactSubmissionForm(forms.Form):
+    """Public-facing contact form."""
+
+    name = forms.CharField(max_length=255)
+    email = forms.EmailField()
+    subject = forms.CharField(max_length=255, required=False)
+    message = forms.CharField(widget=forms.Textarea)

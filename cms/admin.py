@@ -5,7 +5,17 @@ Admin configuration for CMS models with translation support.
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
-from cms.models import FooterLink, FooterSettings, Page, Post, Snippet
+from cms.models import (
+    ContactFormSettings,
+    ContactRecipient,
+    FooterLink,
+    FooterSettings,
+    Page,
+    Post,
+    Snippet,
+    TeamMember,
+    TeamSection,
+)
 
 
 @admin.register(Page)
@@ -96,3 +106,31 @@ class SnippetAdmin(TranslationAdmin):
     list_display = ["name", "key", "updated_at"]
     search_fields = ["name", "key", "body"]
     readonly_fields = ["created_at", "updated_at"]
+
+
+class TeamMemberInline(admin.TabularInline):
+    model = TeamMember
+    extra = 1
+
+
+@admin.register(TeamSection)
+class TeamSectionAdmin(TranslationAdmin):
+    list_display = ["name", "sort_order"]
+    inlines = [TeamMemberInline]
+
+
+@admin.register(TeamMember)
+class TeamMemberAdmin(TranslationAdmin):
+    list_display = ["name", "section", "sort_order"]
+    list_filter = ["section"]
+
+
+class ContactRecipientInline(admin.TabularInline):
+    model = ContactRecipient
+    extra = 1
+
+
+@admin.register(ContactFormSettings)
+class ContactFormSettingsAdmin(admin.ModelAdmin):
+    list_display = ["from_email", "updated_at"]
+    inlines = [ContactRecipientInline]

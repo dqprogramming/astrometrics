@@ -54,6 +54,12 @@ urlpatterns = [
         views.CategoryDeleteView.as_view(),
         name="category_delete",
     ),
+    # Contact Form Settings
+    path(
+        "contact-form/",
+        views.ContactFormSettingsUpdateView.as_view(),
+        name="contact_form",
+    ),
     # Header
     path("header/", views.HeaderSettingsUpdateView.as_view(), name="header"),
     # Footer
@@ -69,6 +75,32 @@ urlpatterns = [
         "our-model/",
         views.OurModelPageSettingsUpdateView.as_view(),
         name="our_model",
+    ),
+    # Our Team
+    path(
+        "our-team/",
+        views.OurTeamManagerView.as_view(),
+        name="our_team",
+    ),
+    path(
+        "our-team/section/add/",
+        views.OurTeamSectionAddView.as_view(),
+        name="our_team_section_add",
+    ),
+    path(
+        "our-team/section/<int:pk>/delete/",
+        views.OurTeamSectionDeleteView.as_view(),
+        name="our_team_section_delete",
+    ),
+    path(
+        "our-team/member/<int:pk>/delete/",
+        views.OurTeamMemberDeleteView.as_view(),
+        name="our_team_member_delete",
+    ),
+    path(
+        "our-team/member-image-upload/",
+        views.team_member_image_upload,
+        name="team_member_image_upload",
     ),
     # Pages
     path("pages/", views.PageListView.as_view(), name="page_list"),
