@@ -1,0 +1,230 @@
+/* Our Team Page Styles */
+
+/* Wavy background */
+.team-page {
+    position: relative;
+    overflow: hidden;
+}
+
+.team-bg-waves {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.team-bg-waves svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Page header bar */
+.team-header-bar {
+    background-color: #71f7f2;
+    padding: 30px 0;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.team-header-bar h1 {
+    font-family: 'Spectral', serif;
+    font-weight: 700;
+    font-size: 2rem;
+    color: #212129;
+    margin: 0;
+}
+
+/* Team sections */
+.team-section {
+    position: relative;
+    z-index: 1;
+    padding: 60px 0 20px;
+}
+
+.team-section h2 {
+    font-family: 'Spectral', serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    color: #212129;
+}
+
+/* Team grid */
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+/* Team card */
+.team-card {
+    background: #fff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.team-card-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    filter: grayscale(100%);
+    display: block;
+}
+
+.team-card-info {
+    background-color: #71f7f2;
+    padding: 16px;
+    flex: 1;
+}
+
+.team-card-title {
+    font-size: 0.85rem;
+    font-weight: 400;
+    margin-bottom: 2px;
+    color: #212129;
+}
+
+.team-card-name {
+    font-family: 'Spectral', serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    color: #212129;
+    line-height: 1.2;
+}
+
+.team-card-desc {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: #212129;
+    margin-bottom: 12px;
+}
+
+.team-card-link {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #212129;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+}
+
+.team-card-link:hover {
+    text-decoration: underline;
+}
+
+/* Contact section */
+.team-contact {
+    background-color: #f0f0f1;
+    padding: 60px 0;
+    position: relative;
+    z-index: 1;
+}
+
+.team-contact-inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+}
+
+.team-contact-text {
+    flex: 0 0 40%;
+}
+
+.team-contact-text p {
+    font-family: 'Spectral', serif;
+    font-style: italic;
+    font-size: 1.6rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #212129;
+}
+
+.team-contact-form {
+    flex: 1;
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.team-contact-form .form-group {
+    margin-bottom: 20px;
+}
+
+.team-contact-form input,
+.team-contact-form textarea {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
+    font-family: sans-serif;
+    font-size: 0.95rem;
+    color: #212129;
+    background: transparent;
+    outline: none;
+    resize: none;
+}
+
+.team-contact-form input::placeholder,
+.team-contact-form textarea::placeholder {
+    color: #999;
+}
+
+.team-contact-form input:focus,
+.team-contact-form textarea:focus {
+    border-bottom-color: #212129;
+    box-shadow: none !important;
+}
+
+.team-contact-form textarea {
+    min-height: 120px;
+}
+
+.team-contact-form .btn-send {
+    display: inline-block;
+    background: #212129;
+    color: #fff;
+    border: none;
+    padding: 10px 28px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.team-contact-form .btn-send:hover {
+    opacity: 0.85;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .team-contact-inner {
+        flex-direction: column;
+    }
+
+    .team-contact-text {
+        flex: none;
+        width: 100%;
+    }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

@@ -57,6 +57,10 @@ def board_view(request):
     return render(request, "board.html")
 
 
+def our_team_view(request):
+    return render(request, "our_team.html")
+
+
 def partial_view(request, filename):
     return render(request, f"partial/{filename}")
 

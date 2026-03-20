@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block title %}Our Team — Open Journals Collective{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="/static/css/our-team.css">
+{% endblock %}
+
+{% block content %}
+<div class="team-page">
+    <!-- Wavy background SVG -->
+    <div class="team-bg-waves" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 4000" preserveAspectRatio="none">
+            <!-- Wave line 1 -->
+            <path d="M-50,100 C200,50 350,250 500,200 C650,150 700,350 900,300 C1100,250 1200,100 1450,150
+                     L1450,600 C1200,500 1100,700 900,650 C700,600 650,800 500,750
+                     C350,700 200,500 -50,550
+                     L-50,1000 C200,950 350,1150 500,1100 C650,1050 700,1250 900,1200
+                     C1100,1150 1200,1000 1450,1050
+                     L1450,1500 C1200,1400 1100,1600 900,1550 C700,1500 650,1700 500,1650
+                     C350,1600 200,1400 -50,1450
+                     L-50,1900 C200,1850 350,2050 500,2000 C650,1950 700,2150 900,2100
+                     C1100,2050 1200,1900 1450,1950
+                     L1450,2400 C1200,2300 1100,2500 900,2450 C700,2400 650,2600 500,2550
+                     C350,2500 200,2300 -50,2350
+                     L-50,2800 C200,2750 350,2950 500,2900 C650,2850 700,3050 900,3000
+                     C1100,2950 1200,2800 1450,2850
+                     L1450,3300 C1200,3200 1100,3400 900,3350 C700,3300 650,3500 500,3450
+                     C350,3400 200,3200 -50,3250 Z"
+                  fill="none" stroke="#e0e0e0" stroke-width="2" opacity="0.6"/>
+            <!-- Wave line 2 -->
+            <path d="M1450,50 C1200,100 1050,0 900,50 C750,100 600,0 400,50
+                     C200,100 100,250 -50,200
+                     L-50,650 C100,600 200,750 400,700 C600,650 750,550 900,600
+                     C1050,650 1200,550 1450,600
+                     L1450,1050 C1200,1000 1050,900 900,950 C750,1000 600,900 400,950
+                     C200,1000 100,1150 -50,1100
+                     L-50,1550 C100,1500 200,1650 400,1600 C600,1550 750,1450 900,1500
+                     C1050,1550 1200,1450 1450,1500
+                     L1450,1950 C1200,1900 1050,1800 900,1850 C750,1900 600,1800 400,1850
+                     C200,1900 100,2050 -50,2000
+                     L-50,2450 C100,2400 200,2550 400,2500 C600,2450 750,2350 900,2400
+                     C1050,2450 1200,2350 1450,2400
+                     L1450,2850 C1200,2800 1050,2700 900,2750 C750,2800 600,2700 400,2750
+                     C200,2800 100,2950 -50,2900
+                     L-50,3350 C100,3300 200,3450 400,3400 C600,3350 750,3250 900,3300
+                     C1050,3350 1200,3250 1450,3300 Z"
+                  fill="none" stroke="#d5d5d5" stroke-width="2" opacity="0.5"/>
+            <!-- Wave line 3 -->
+            <path d="M-50,250 C150,200 300,350 500,300 C700,250 800,400 1000,350
+                     C1200,300 1350,200 1450,250
+                     L1450,700 C1350,650 1200,750 1000,700 C800,650 700,800 500,750
+                     C300,700 150,550 -50,600
+                     L-50,1050 C150,1000 300,1150 500,1100 C700,1050 800,1200 1000,1150
+                     C1200,1100 1350,1000 1450,1050
+                     L1450,1500 C1350,1450 1200,1550 1000,1500 C800,1450 700,1600 500,1550
+                     C300,1500 150,1350 -50,1400
+                     L-50,1850 C150,1800 300,1950 500,1900 C700,1850 800,2000 1000,1950
+                     C1200,1900 1350,1800 1450,1850
+                     L1450,2300 C1350,2250 1200,2350 1000,2300 C800,2250 700,2400 500,2350
+                     C300,2300 150,2150 -50,2200
+                     L-50,2650 C150,2600 300,2750 500,2700 C700,2650 800,2800 1000,2750
+                     C1200,2700 1350,2600 1450,2650
+                     L1450,3100 C1350,3050 1200,3150 1000,3100 C800,3050 700,3200 500,3150
+                     C300,3100 150,2950 -50,3000 Z"
+                  fill="none" stroke="#d0d0d0" stroke-width="2" opacity="0.5"/>
+        </svg>
+    </div>
+
+    <!-- Page header -->
+    <section class="team-header-bar">
+        <h1 class="spectral-bold">Our team.</h1>
+    </section>
+
+    <!-- OJC Directors -->
+    <section class="team-section" aria-labelledby="directors-heading">
+        <div class="container">
+            <h2 id="directors-heading" class="spectral-bold">OJC Directors.</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <img src="/static/img/team/director-1.jpg" alt="Professor Caroline Edwards"
+                         class="team-card-image">
+                    <div class="team-card-info">
+                        <p class="team-card-title">Professor</p>
+                        <p class="team-card-name spectral-bold">Caroline Edwards.</p>
+                        <p class="team-card-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit sed diam nonummy.</p>
+                        <a href="#" class="team-card-link">LinkedIn &rarr;</a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="/static/img/team/director-2.jpg" alt="Joanna Ball"
+                         class="team-card-image">
+                    <div class="team-card-info">
+                        <p class="team-card-title"></p>
+                        <p class="team-card-name spectral-bold">Joanna Ball.</p>
+                        <p class="team-card-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit sed diam nonummy.</p>
+                        <a href="#" class="team-card-link">LinkedIn &rarr;</a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="/static/img/team/director-3.jpg" alt="Rupert Gatti"
+                         class="team-card-image">
+                    <div class="team-card-info">
+                        <p class="team-card-title"></p>
+                        <p class="team-card-name spectral-bold">Rupert Gatti.</p>
+                        <p class="team-card-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit sed diam nonummy.</p>
+                        <a href="#" class="team-card-link">LinkedIn &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OJC Executive Team -->
+    <section class="team-section" aria-labelledby="exec-heading">
+        <div class="container">
+            <h2 id="exec-heading" class="spectral-bold">OJC Executive Team.</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <img src="/static/img/team/exec-1.jpg" alt="Lidia Uziel"
+                         class="team-card-image">
+                    <div class="team-card-info">
+                        <p class="team-card-title"></p>
+                        <p class="team-card-name spectral-bold">Lidia Uziel.</p>
+                        <p class="team-card-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit sed diam nonummy.</p>
+                        <a href="#" class="team-card-link">LinkedIn &rarr;</a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="/static/img/team/exec-2.jpg" alt="Sarah Thompson"
+                         class="team-card-image">
+                    <div class="team-card-info">
+                        <p class="team-card-title"></p>
+                        <p class="team-card-name spectral-bold">Sarah Thompson.</p>
+                        <p class="team-card-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit sed diam nonummy.</p>
+                        <a href="#" class="team-card-link">LinkedIn &rarr;</a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="/static/img/team/exec-3.jpg" alt="Charles Watkinson"
+                         class="team-card-image">
+                    <div class="team-card-info">
+                        <p class="team-card-title"></p>
+                        <p class="team-card-name spectral-bold">Charles Watkinson.</p>
+                        <p class="team-card-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit sed diam nonummy.</p>
+                        <a href="#" class="team-card-link">LinkedIn &rarr;</a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="/static/img/team/exec-4.jpg" alt="Rebecca Wojturska"
+                         class="team-card-image">
+                    <div class="team-card-info">
+                        <p class="team-card-title"></p>
+                        <p class="team-card-name spectral-bold">Rebecca Wojturska.</p>
+                        <p class="team-card-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit sed diam nonummy.</p>
+                        <a href="#" class="team-card-link">LinkedIn &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OJC Staff -->
+    <section class="team-section" aria-labelledby="staff-heading">
+        <div class="container">
+            <h2 id="staff-heading" class="spectral-bold">OJC Staff.</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <img src="/static/img/team/staff-1.jpg" alt="Staff member 1"
+                         class="team-card-image">
+                    <div class="team-card-info">
+                        <p class="team-card-title"></p>
+                        <p class="team-card-name spectral-bold">Staff Member.</p>
+                        <p class="team-card-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit sed diam nonummy.</p>
+                        <a href="#" class="team-card-link">LinkedIn &rarr;</a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="/static/img/team/staff-2.jpg" alt="Staff member 2"
+                         class="team-card-image">
+                    <div class="team-card-info">
+                        <p class="team-card-title"></p>
+                        <p class="team-card-name spectral-bold">Staff Member.</p>
+                        <p class="team-card-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit sed diam nonummy.</p>
+                        <a href="#" class="team-card-link">LinkedIn &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Contact Form Section -->
+<section class="team-contact" aria-labelledby="contact-heading">
+    <div class="container">
+        <div class="team-contact-inner">
+            <div class="team-contact-text">
+                <p id="contact-heading">If you'd like to get in touch with a member of our team, please use the contact form.</p>
+            </div>
+            <div class="team-contact-form">
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Your name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Your email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="subject" placeholder="Subject">
+                    </div>
+                    <div class="form-group">
+                        <textarea name="message" placeholder="Your message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-send">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
