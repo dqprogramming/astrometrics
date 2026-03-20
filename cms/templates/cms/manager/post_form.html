@@ -14,6 +14,7 @@
 {% block content %}
 <form method="post">
     {% csrf_token %}
+    {{ form.featured_image }}
 
     <div style="display:grid; grid-template-columns:1fr 280px; gap:1.25rem; align-items:start;">
 
@@ -49,6 +50,45 @@
         </div>
 
         <div style="display:flex; flex-direction:column; gap:1rem;">
+
+            <!-- Featured Image -->
+            <div class="mgr-form-card">
+                <div class="mgr-form-section-label">Featured Image</div>
+                <div class="mgr-field" style="margin-bottom:0;">
+
+                    {% if object.featured_image %}
+                    <div id="featured-image-preview" style="margin-bottom:.75rem;">
+                        <img src="{{ object.featured_image }}" alt="Featured image" style="max-width:100%; border-radius:4px; border:1px solid var(--border);">
+                    </div>
+                    {% else %}
+                    <div id="featured-image-preview" style="display:none; margin-bottom:.75rem;">
+                        <img src="" alt="Preview" style="max-width:100%; border-radius:4px; border:1px solid var(--border);">
+                    </div>
+                    {% endif %}
+
+                    <label class="btn-mgr-secondary" style="cursor:pointer; display:inline-flex; gap:.4rem; align-items:center; width:100%; justify-content:center;">
+                        <i class="bi bi-upload"></i> Choose image
+                        <input type="file" id="featured-image-file" accept="image/jpeg,image/png,image/gif,image/webp" style="display:none;">
+                    </label>
+
+                    <div id="featured-image-progress" style="display:none; margin-top:.75rem;">
+                        <div style="background:var(--border); border-radius:999px; height:6px; overflow:hidden;">
+                            <div id="featured-image-progress-bar" style="height:100%; width:0; background:var(--accent); border-radius:999px; transition:width .05s linear;"></div>
+                        </div>
+                        <div id="featured-image-progress-text" style="font-size:12px; color:var(--text-muted); margin-top:.3rem; text-align:center;">Uploading…</div>
+                    </div>
+
+                    <div id="featured-image-error" style="display:none;" class="mgr-error"></div>
+
+                    {% if object.featured_image %}
+                    <button type="button" id="featured-image-clear" class="btn-mgr-danger" style="width:100%; justify-content:center; margin-top:.5rem; font-size:12px;">
+                        <i class="bi bi-x"></i> Remove image
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Publishing -->
             <div class="mgr-form-card">
                 <div class="mgr-form-section-label">Publishing</div>
 
@@ -71,7 +111,7 @@
                 <div class="mgr-field">
                     <label class="mgr-label" for="{{ form.published_at.id_for_label }}">Publish Date</label>
                     {{ form.published_at }}
-                    <div class="mgr-help">Used for ordering in listings.</div>
+                    <div class="mgr-help">Auto-set when first published. Override if needed.</div>
                     {% if form.published_at.errors %}<div class="mgr-error">{{ form.published_at.errors.0 }}</div>{% endif %}
                 </div>
 
@@ -99,6 +139,19 @@
                 {% endif %}
             </div>
 
+            <!-- Categories -->
+            <div class="mgr-form-card">
+                <div class="mgr-form-section-label">Categories</div>
+                <div class="mgr-field" style="margin-bottom:0;">
+                    {% if object.pk %}
+                        {% include "cms/manager/_category_widget.html" with post=object items=object.categories.all %}
+                    {% else %}
+                    <div class="mgr-help">Categories can be added after the post is saved.</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- SEO -->
             <div class="mgr-form-card">
                 <div class="mgr-form-section-label">SEO</div>
                 <div class="mgr-field" style="margin-bottom:0;">
@@ -120,4 +173,95 @@
 
     </div>
 </form>
+
+<script>
+(function () {
+    var fileInput = document.getElementById('featured-image-file');
+    if (!fileInput) return;
+
+    var hiddenInput = document.getElementById('id_featured_image');
+    var preview = document.getElementById('featured-image-preview');
+    var previewImg = preview.querySelector('img');
+    var progressWrap = document.getElementById('featured-image-progress');
+    var progressBar = document.getElementById('featured-image-progress-bar');
+    var progressText = document.getElementById('featured-image-progress-text');
+    var errorEl = document.getElementById('featured-image-error');
+    var clearBtn = document.getElementById('featured-image-clear');
+
+    fileInput.addEventListener('change', function () {
+        var file = this.files[0];
+        if (!file) return;
+
+        progressWrap.style.display = 'block';
+        progressBar.style.width = '0';
+        progressText.textContent = 'Uploading…';
+        errorEl.style.display = 'none';
+
+        var formData = new FormData();
+        formData.append('image', file);
+        formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.upload.addEventListener('progress', function (e) {
+            if (e.lengthComputable) {
+                var pct = Math.round((e.loaded / e.total) * 100);
+                progressBar.style.width = pct + '%';
+                progressText.textContent = pct + '%';
+            }
+        });
+
+        xhr.addEventListener('load', function () {
+            progressWrap.style.display = 'none';
+            if (xhr.status === 200) {
+                var data = JSON.parse(xhr.responseText);
+                hiddenInput.value = data.url;
+                previewImg.src = data.url;
+                preview.style.display = 'block';
+                if (data.saved) {
+                    progressText.textContent = '✓ Saved';
+                    progressWrap.style.display = 'block';
+                    setTimeout(function () { progressWrap.style.display = 'none'; }, 2000);
+                }
+                if (!clearBtn) {
+                    var btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.id = 'featured-image-clear';
+                    btn.className = 'btn-mgr-danger';
+                    btn.style.cssText = 'width:100%; justify-content:center; margin-top:.5rem; font-size:12px;';
+                    btn.innerHTML = '<i class="bi bi-x"></i> Remove image';
+                    btn.addEventListener('click', clearImage);
+                    fileInput.closest('.mgr-field').appendChild(btn);
+                    clearBtn = btn;
+                }
+            } else {
+                var err = JSON.parse(xhr.responseText);
+                errorEl.textContent = err.error || 'Upload failed';
+                errorEl.style.display = 'block';
+            }
+        });
+
+        xhr.addEventListener('error', function () {
+            progressWrap.style.display = 'none';
+            errorEl.textContent = 'Upload failed — please try again';
+            errorEl.style.display = 'block';
+        });
+
+        var uploadUrl = {% if object.pk %}'{% url "cms_manager:post_featured_image_upload_pk" object.pk %}'{% else %}'{% url "cms_manager:post_featured_image_upload" %}'{% endif %};
+        xhr.open('POST', uploadUrl);
+        xhr.send(formData);
+    });
+
+    function clearImage() {
+        hiddenInput.value = '';
+        previewImg.src = '';
+        preview.style.display = 'none';
+        if (clearBtn) clearBtn.remove();
+        clearBtn = null;
+        fileInput.value = '';
+    }
+
+    if (clearBtn) clearBtn.addEventListener('click', clearImage);
+})();
+</script>
 {% endblock %}

@@ -7,6 +7,7 @@ import uuid
 import bleach
 from django.core.cache import cache
 from django.db import models
+from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
@@ -69,6 +70,26 @@ def sanitize_html(value):
         attributes=ALLOWED_ATTRIBUTES,
         strip=True,
     )
+
+
+class Category(models.Model):
+    """A category for grouping news posts."""
+
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=100, unique=True)
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = _("Category")
+        verbose_name_plural = _("Categories")
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 
 class Page(models.Model):
@@ -237,6 +258,16 @@ class Post(models.Model):
         unique=True,
         help_text="Secret token for shareable preview URL",
     )
+    featured_image = models.CharField(
+        max_length=500,
+        blank=True,
+        help_text="Featured image URL — uploaded via the manager",
+    )
+    categories = models.ManyToManyField(
+        Category,
+        blank=True,
+        related_name="posts",
+    )
     published_at = models.DateTimeField(
         null=True,
         blank=True,
@@ -258,6 +289,8 @@ class Post(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
+        if self.is_published and not self.published_at:
+            self.published_at = timezone.now()
         if not self.slug:
             self.slug = slugify(self.title)
         self.body = sanitize_html(self.body)

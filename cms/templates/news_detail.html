@@ -22,7 +22,6 @@
 
 <!-- Article header -->
 <header class="news-detail-header">
-    <!-- Concentric arcs decoration -->
     <svg class="news-detail-header__arcs" viewBox="0 0 580 580" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" overflow="visible">
         <circle cx="290" cy="290" r="100" fill="none" stroke="#212129" stroke-width="48" opacity="0.08"/>
         <circle cx="290" cy="290" r="195" fill="none" stroke="#212129" stroke-width="48" opacity="0.08"/>
@@ -36,22 +35,59 @@
             Back to News
         </a>
 
+        {% if post.featured_image %}
+        <div class="news-detail-header__split">
+
+            <div class="news-detail-header__image-col">
+                <div class="news-detail-header__img-wrapper">
+                    <div class="news-detail-header__img-block">
+                        <img src="{{ post.featured_image }}" alt="{{ post.title }}">
+                    </div>
+                    <div class="news-detail-header__img-accent"></div>
+                </div>
+            </div>
+
+            <div class="news-detail-header__text-col">
+                <time class="news-detail-header__date" datetime="{{ post.published_at|date:'Y-m-d' }}">
+                    {{ post.published_at|date:"j F Y" }}
+                </time>
+                {% if post.categories.all %}
+                <div class="news-detail-header__categories">
+                    {% for cat in post.categories.all %}
+                    <a href="{% url 'cms:news-index' %}?category={{ cat.slug }}" class="news-category-badge">{{ cat.name }}</a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <h1 id="post-title" class="news-detail-header__title spectral-extrabold">{{ post.title }}</h1>
+                {% if post.summary %}
+                <div class="news-detail-header__summary">{{ post.summary|safe }}</div>
+                {% endif %}
+                {% if post.byline %}
+                <p class="news-detail-header__byline">By {{ post.byline }}</p>
+                {% endif %}
+            </div>
+
+        </div>
+        {% else %}
+
         <time class="news-detail-header__date" datetime="{{ post.published_at|date:'Y-m-d' }}">
             {{ post.published_at|date:"j F Y" }}
         </time>
-
-        <h1 id="post-title" class="news-detail-header__title spectral-extrabold">
-            {{ post.title }}
-        </h1>
-
-        {% if post.summary %}
-        <div class="news-detail-header__summary">
-            {{ post.summary|safe }}
+        {% if post.categories.all %}
+        <div class="news-detail-header__categories">
+            {% for cat in post.categories.all %}
+            <a href="{% url 'cms:news-index' %}?category={{ cat.slug }}" class="news-category-badge">{{ cat.name }}</a>
+            {% endfor %}
         </div>
         {% endif %}
-
+        <h1 id="post-title" class="news-detail-header__title spectral-extrabold">{{ post.title }}</h1>
+        {% if post.summary %}
+        <div class="news-detail-header__summary">{{ post.summary|safe }}</div>
+        {% endif %}
         {% if post.byline %}
         <p class="news-detail-header__byline">By {{ post.byline }}</p>
+        {% endif %}
+
         {% endif %}
 
     </div>
