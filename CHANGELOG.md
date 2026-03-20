@@ -1,3 +1,19 @@
+## 1.18.0 (2026-03-20)
+
+### Feat
+
+- **cms**: add CMS-driven Our Model singleton page with dynamic revenue tables
+- **cms**: redesign CTA section with journal covers image and update styling
+- **cms**: redesign revenue distribution section with colour-coded package tables
+- **cms**: redesign OJC Model and Journal Funding sections
+- **cms**: add Our Model page with hero, collections, funding, and revenue sections
+
+### Fix
+
+- **cms**: add merge migration and format imports
+- **a11y**: remediate WCAG AAA issues on Our Model page
+- **cms**: align revenue section layout using CSS grid
+
 ## 1.17.0 (2026-03-15)
 
 ### Feat
