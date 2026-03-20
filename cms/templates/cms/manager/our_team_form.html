@@ -77,11 +77,17 @@
                 {% endfor %}
             </div>
 
-            <button type="button" class="btn btn-sm btn-outline-primary mt-2 btn-add-member"
-                    data-section-pk="{{ item.section.pk }}"
-                    data-prefix="members_{{ item.section.pk }}">
-                <i class="bi bi-plus"></i> Add Member
-            </button>
+            <div class="d-flex gap-2 mt-2">
+                <button type="button" class="btn btn-sm btn-outline-primary btn-add-member"
+                        data-section-pk="{{ item.section.pk }}"
+                        data-prefix="members_{{ item.section.pk }}">
+                    <i class="bi bi-plus"></i> Add Member
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary btn-sort-surname"
+                        data-section-pk="{{ item.section.pk }}">
+                    <i class="bi bi-sort-alpha-down"></i> Sort by surname
+                </button>
+            </div>
         </div>
         {% empty %}
         <p class="text-muted">No sections yet. Add one below.</p>

@@ -1,6 +1,12 @@
 (function () {
     'use strict';
 
+    var dirty = false;
+
+    function markDirty() {
+        dirty = true;
+    }
+
     // -- Helpers --------------------------------------------------------------
 
     function setPreviewImage(preview, url) {
@@ -34,6 +40,7 @@
                     var input = card.querySelector('.section-sort-order');
                     if (input) input.value = idx;
                 });
+                markDirty();
             }
         });
     }
@@ -47,6 +54,7 @@
             animation: 150,
             onEnd: function () {
                 updateMemberSortOrders(listEl);
+                markDirty();
             }
         });
     }
@@ -59,10 +67,52 @@
         });
     }
 
+    // -- Sort by surname ------------------------------------------------------
+
+    function getSurname(nameStr) {
+        var parts = (nameStr || '').trim().replace(/\.$/, '').split(/\s+/);
+        return (parts.length > 1 ? parts[parts.length - 1] : parts[0] || '').toLowerCase();
+    }
+
+    function sortBySurname(sectionPk) {
+        var listEl = document.getElementById('member-list-' + sectionPk);
+        if (!listEl) return;
+
+        var rows = Array.prototype.slice.call(listEl.querySelectorAll('.member-row'));
+        // Separate visible from hidden (deleted) rows
+        var visible = [];
+        var hidden = [];
+        rows.forEach(function (row) {
+            var deleteCheckbox = row.querySelector('input[name$="-DELETE"]');
+            if ((deleteCheckbox && deleteCheckbox.checked) || row.style.display === 'none') {
+                hidden.push(row);
+            } else {
+                visible.push(row);
+            }
+        });
+
+        visible.sort(function (a, b) {
+            var nameA = a.querySelector('input[name$="-name"]');
+            var nameB = b.querySelector('input[name$="-name"]');
+            var surnameA = getSurname(nameA ? nameA.value : '');
+            var surnameB = getSurname(nameB ? nameB.value : '');
+            return surnameA.localeCompare(surnameB);
+        });
+
+        // Re-append in sorted order (hidden rows at the end)
+        visible.concat(hidden).forEach(function (row) {
+            listEl.appendChild(row);
+        });
+
+        updateMemberSortOrders(listEl);
+        markDirty();
+    }
+
     // -- Delete section -------------------------------------------------------
 
     window.deleteSection = function (pk) {
         if (!confirm('Delete this entire section and all its members? This cannot be undone.')) return;
+        dirty = false; // navigating intentionally
         var form = document.createElement('form');
         form.method = 'POST';
         form.action = '/manager/cms/board/section/' + pk + '/delete/';
@@ -91,6 +141,7 @@
             } else {
                 row.remove();
             }
+            markDirty();
         });
     }
 
@@ -133,6 +184,8 @@
 
         var firstInput = newRow.querySelector('input[type="text"]');
         if (firstInput) firstInput.focus();
+
+        markDirty();
     }
 
     // -- Image upload ---------------------------------------------------------
@@ -164,6 +217,7 @@
                         var preview = row.querySelector('.team-image-preview');
                         if (preview) setPreviewImage(preview, data.url);
                     }
+                    markDirty();
                 }
             };
             xhr.send(formData);
@@ -184,6 +238,7 @@
                 if (preview) setPreviewPlaceholder(preview);
             }
             btn.remove();
+            markDirty();
         });
     }
 
@@ -203,12 +258,30 @@
             });
         });
 
-        // Update sort orders on form submit
+        document.querySelectorAll('.btn-sort-surname').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                sortBySurname(btn.dataset.sectionPk);
+            });
+        });
+
+        // Track text/textarea edits as dirty
         var form = document.getElementById('board-form');
         if (form) {
+            form.addEventListener('input', markDirty);
+
+            // Update sort orders on form submit
             form.addEventListener('submit', function () {
+                dirty = false; // submitting intentionally
                 document.querySelectorAll('.member-list').forEach(updateMemberSortOrders);
             });
         }
+
+        // Warn on navigation with unsaved changes
+        window.addEventListener('beforeunload', function (e) {
+            if (dirty) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
     });
 })();
