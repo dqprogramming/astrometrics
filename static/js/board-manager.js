@@ -7,14 +7,14 @@
         dirty = true;
     }
 
-    // ── Helpers ─────────────────────────────────────────────────────────────
+    // -- Helpers --------------------------------------------------------------
 
     function setPreviewImage(preview, url) {
         while (preview.firstChild) preview.removeChild(preview.firstChild);
         var img = document.createElement('img');
         img.src = url;
         img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
-        img.alt = 'Team member photo';
+        img.alt = 'Board member photo';
         preview.appendChild(img);
     }
 
@@ -26,7 +26,7 @@
         preview.appendChild(icon);
     }
 
-    // ── Sortable: sections ──────────────────────────────────────────────────
+    // -- Sortable: sections ---------------------------------------------------
 
     function initSectionSortable() {
         var list = document.getElementById('section-list');
@@ -45,7 +45,7 @@
         });
     }
 
-    // ── Sortable: members within each section ───────────────────────────────
+    // -- Sortable: members within each section --------------------------------
 
     function initMemberSortable(listEl) {
         if (!listEl) return;
@@ -67,7 +67,7 @@
         });
     }
 
-    // ── Sort by surname ─────────────────────────────────────────────────────
+    // -- Sort by surname ------------------------------------------------------
 
     function getSurname(nameStr) {
         var parts = (nameStr || '').trim().replace(/\.$/, '').split(/\s+/);
@@ -108,14 +108,14 @@
         markDirty();
     }
 
-    // ── Delete section ──────────────────────────────────────────────────────
+    // -- Delete section -------------------------------------------------------
 
     window.deleteSection = function (pk) {
         if (!confirm('Delete this entire section and all its members? This cannot be undone.')) return;
         dirty = false; // navigating intentionally
         var form = document.createElement('form');
         form.method = 'POST';
-        form.action = '/manager/cms/our-team/section/' + pk + '/delete/';
+        form.action = '/manager/cms/board/section/' + pk + '/delete/';
         var csrf = document.querySelector('[name=csrfmiddlewaretoken]');
         if (csrf) {
             var input = document.createElement('input');
@@ -128,11 +128,11 @@
         form.submit();
     };
 
-    // ── Delete member ───────────────────────────────────────────────────────
+    // -- Delete member --------------------------------------------------------
 
     function initDeleteMember(btn) {
         btn.addEventListener('click', function () {
-            if (!confirm('Remove this team member? This cannot be undone.')) return;
+            if (!confirm('Remove this board member? This cannot be undone.')) return;
             var row = btn.closest('.member-row');
             var deleteCheckbox = row.querySelector('input[name$="-DELETE"]');
             if (deleteCheckbox) {
@@ -145,7 +145,7 @@
         });
     }
 
-    // ── Add member ──────────────────────────────────────────────────────────
+    // -- Add member -----------------------------------------------------------
 
     function addMember(sectionPk, prefix) {
         var listEl = document.getElementById('member-list-' + sectionPk);
@@ -188,7 +188,7 @@
         markDirty();
     }
 
-    // ── Image upload ────────────────────────────────────────────────────────
+    // -- Image upload ---------------------------------------------------------
 
     function initImageUpload(fileInput) {
         if (!fileInput) return;
@@ -203,7 +203,7 @@
             var hiddenInput = document.getElementById(targetId);
 
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/manager/cms/our-team/member-image-upload/');
+            xhr.open('POST', '/manager/cms/board/member-image-upload/');
             var csrf = document.querySelector('[name=csrfmiddlewaretoken]');
             if (csrf) xhr.setRequestHeader('X-CSRFToken', csrf.value);
 
@@ -224,7 +224,7 @@
         });
     }
 
-    // ── Clear image ─────────────────────────────────────────────────────────
+    // -- Clear image ----------------------------------------------------------
 
     function initClearImage(btn) {
         btn.addEventListener('click', function () {
@@ -242,7 +242,7 @@
         });
     }
 
-    // ── Init ────────────────────────────────────────────────────────────────
+    // -- Init -----------------------------------------------------------------
 
     document.addEventListener('DOMContentLoaded', function () {
         initSectionSortable();
@@ -265,7 +265,7 @@
         });
 
         // Track text/textarea edits as dirty
-        var form = document.getElementById('our-team-form');
+        var form = document.getElementById('board-form');
         if (form) {
             form.addEventListener('input', markDirty);
 

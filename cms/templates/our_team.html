@@ -27,6 +27,8 @@
                 <div class="team-card">
                     {% if member.image %}
                     <img src="{{ member.image }}" alt="{{ member.name }}" class="team-card-image">
+                    {% else %}
+                    <div class="team-card-placeholder" aria-hidden="true"></div>
                     {% endif %}
                     <div class="team-card-info">
                         <p class="team-card-name spectral-bold">{{ member.name }}</p>

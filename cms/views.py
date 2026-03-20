@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404, render
 
 from .forms import ContactSubmissionForm
 from .models import (
+    BoardSection,
     Category,
     ContactFormSettings,
     LandingPageSettings,
@@ -61,7 +62,10 @@ def our_model_view(request, slug=None):
 
 
 def board_view(request):
-    return render(request, "board.html")
+    sections = BoardSection.objects.prefetch_related("members").order_by(
+        "sort_order"
+    )
+    return render(request, "board.html", {"sections": sections})
 
 
 def our_team_view(request):

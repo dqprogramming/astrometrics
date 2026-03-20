@@ -1,12 +1,12 @@
 {% extends "manager/base.html" %}
 {% load static %}
 
-{% block title %}Our Team{% endblock %}
-{% block page_title %}Our Team{% endblock %}
-{% block nav_our_team %}active{% endblock %}
+{% block title %}OJC Boards{% endblock %}
+{% block page_title %}OJC Boards{% endblock %}
+{% block nav_board %}active{% endblock %}
 
 {% block content %}
-<form method="post" id="our-team-form">
+<form method="post" id="board-form">
     {% csrf_token %}
 
     <div id="section-list">
@@ -96,11 +96,11 @@
 
     <div class="d-flex gap-2 mt-3 mb-4">
         <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Save</button>
-        <a href="{% url 'cms_manager:our_team' %}" class="btn btn-outline-secondary">Cancel</a>
+        <a href="{% url 'cms_manager:board' %}" class="btn btn-outline-secondary">Cancel</a>
     </div>
 </form>
 
-<form method="post" action="{% url 'cms_manager:our_team_section_add' %}" class="mb-4">
+<form method="post" action="{% url 'cms_manager:board_section_add' %}" class="mb-4">
     {% csrf_token %}
     <button type="submit" class="btn btn-outline-primary">
         <i class="bi bi-plus-circle"></i> Add Section
@@ -153,5 +153,5 @@
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-<script src="{% static 'js/our-team-manager.js' %}"></script>
+<script src="{% static 'js/board-manager.js' %}"></script>
 {% endblock %}

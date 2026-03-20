@@ -1,330 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open Journals Collective | Boards</title>
+{% extends "base.html" %}
 
-    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
+{% block title %}OJC Boards — Open Journals Collective{% endblock %}
 
-    <!-- app styles -->
-    <link rel="stylesheet" href="/static/css/app.css">
-    <link rel="stylesheet" href="/static/css/font.css">
+{% block extra_css %}
+    <link rel="stylesheet" href="/static/css/our-team.css">
+{% endblock %}
 
-    <!-- normalize -->
-    <link rel="stylesheet" href="/static/css/normalize.min.css">
+{% block content %}
+<div class="team-page">
+    <!-- Brand lines background (geometric parallel lines with curves) -->
+    <div class="team-bg-waves" aria-hidden="true"></div>
 
-    <!-- Google fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
-          rel="stylesheet">
-
-    <!-- Glide/carousel -->
-    <!-- Required Core Stylesheet -->
-    <link rel="stylesheet" href="/static/css/glide.core.min.css">
-    <!-- Optional Theme Stylesheet -->
-    <link rel="stylesheet" href="/static/css/glide.theme.min.css">
-    <script src="/static/js/glide.min.js"></script>
-    <script src="/static/js/nav.js"></script>
-    <script src="/static/js/a11y.js"></script>
-
-    <!-- htmx -->
-    <script src="/static/js/htmx-1.9.12.min.js"></script>
-</head>
-<body>
-<!-- Header -->
-<header>
-    <div class="container">
-        <div class="row">
-            <div class="logo col-2">
-                <img src="/static/img/OJC-logo.svg" class="mini-logo"
-                     alt="Open Journals Collective logo">
-            </div>
-            <div class="logo-text col-8 spectral-bold">
-                <p class="site-header-text">Open Journals Collective</p>
-            </div>
-            <div
-                    class="menu-icon col-1"
-                    id="menu-toggle"
-                    role="button"
-                    tabindex="0"
-                    aria-label="Toggle menu"
-            >
-                ≡
-            </div>
-
+    <!-- Page header -->
+    <section class="team-header-bar">
+        <div class="container">
+            <h1 class="spectral-bold">OJC Boards.</h1>
         </div>
-    </div>
-</header>
+    </section>
 
-<!-- Fullscreen Navigation -->
-<div class="fullscreen-nav" id="fullscreen-nav">
-    <div class="container">
-        <div class="row">
-            <div class="col-2">
-                <img src="/static/img/ojc-nav-logo.svg" class="mini-logo"
-                     alt="Open Journals Collective">
-            </div>
-            <div class="logo-text col-8 spectral-bold">
-                <span class="site-header-text">
-                    Open Journals Collective
-                </span>
-            </div>
-            <div class="close-icon col-1" id="close-nav">×</div>
-        </div>
-        <div class="nav-content">
-            <div class="nav-links">
-                <a href="/#who-we-are" class="nav-link">Who we are.</a>
-                <a href="/#how-it-works" class="nav-link">How it works.</a>
-                <a href="/#publishers" class="nav-link">Publishers onboard.</a>
-                <a href="/#contact" class="nav-link">Contact.</a>
-                <a href="/board/" class="nav-link">OJC Boards.</a>
-            </div>
-            <div class="nav-cta">
-                <a target="_blank"
-                   href="mailto:caroline.edwards@bbk.ac.uk?subject=Open Journals Collective"
-                   class="nav-btn">JOIN
-                    THE MOVEMENT</a>
+    {% for section in sections %}
+    <section class="team-section" aria-labelledby="section-{{ section.pk }}-heading">
+        <div class="container">
+            <h2 id="section-{{ section.pk }}-heading" class="spectral-bold">{{ section.name }}</h2>
+            <div class="team-grid">
+                {% for member in section.members.all %}
+                <div class="team-card">
+                    {% if member.image %}
+                    <img src="{{ member.image }}" alt="{{ member.name }}" class="team-card-image">
+                    {% else %}
+                    <div class="team-card-placeholder" aria-hidden="true"></div>
+                    {% endif %}
+                    <div class="team-card-info">
+                        <p class="team-card-name spectral-bold">{{ member.name }}</p>
+                        <p class="team-card-desc">{{ member.description }}</p>
+                        {% if member.linkedin_url %}
+                        <a href="{{ member.linkedin_url }}" class="team-card-link" target="_blank" rel="noopener">LinkedIn &rarr;</a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
             </div>
         </div>
-    </div>
+    </section>
+    {% endfor %}
 </div>
-
-<section class="publishers-section">
-    <div class="container">
-        <div class="row">
-            <div class="col-6">
-                <h1>OJC Boards.</h1>
-                <div class="hero-content">
-                    <p class="spectral-bold">
-                        This page lists the board members of the OJC committees.
-                    </p>
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="cta-image-container">
-                    <img src="/static/img/home-free-access.jpg" alt="People in library"
-                         class="cta-image">
-                    <div class="board-image-accent"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="how-it-works container board-grid">
-    <h2>OJC Publishers’ Board</h2>
-    <div class="features board-features">
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/caroline edwards.jpg" alt="Caroline Edwards">
-            <p><strong>Caroline Edwards</strong><br><em>Executive Director, Open Library of Humanities</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/charles watkinson.jpg" alt="Charles Watkinson">
-            <p><strong>Charles Watkinson</strong><br><em>Director, Michigan University Press</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/joanna ball.jpg" alt="Joanna Ball">
-            <p><strong>Joanna Ball</strong><br><em>Managing Director, Directory of Open Access Journals</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/catherine mitchell.jpg" alt="Catherine Mitchell">
-            <p><strong>Catherine Mitchell</strong><br><em>Director of Publishing, Archives, and Digitization at California Digital Library, University of California</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/rebecca wojturska.jpg" alt="Rebecca Wojturska">
-            <p><strong>Rebecca Wojturska</strong><br><em>Open Access Publishing Officer, Edinburgh Diamond</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/ian caswell.jpg" alt="Ian Caswell">
-            <p><strong>Ian Caswell</strong><br><em>Journals Manager, UCL Press</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/Philippa Grand.jpg" alt="Philippa Grand">
-            <p><strong>Philippa Grand</strong><br><em>Head of Publishing, LSE Press</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/jocelyn dawson.jpg" alt="Jocelyn Dawson">
-            <p><strong>Jocelyn Dawson</strong><br><em>Director of Journals, University of Pennsylvania Press</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/Jessica Dallaire-Clark.png" alt="Jessica Dallaire-Clark">
-            <p><strong>Jessica Dallaire-Clark</strong><br><em>Senior Coordinator, Open Access Development, Érudit</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/john_atkinson.jpeg" alt="John Atkinson">
-            <p><strong>John Atkinson</strong><br><em>Press Manager, University of Westminster Press</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/Johan%20Rooryck.jpg" alt="Johan Rooryck">
-            <p><strong>Johan Rooryck</strong><br><em>Co-coordinator of the European Diamond Capacity Hub,  PI on the EU-funded ALMASI project, and Co-Editor-in-Chief of the Diamond OA journal <em>Glossa: a journal of general linguistics</em></em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/sofie wennstrom.jpg" alt="Sofie Wennström">
-            <p><strong>Sofie Wennström</strong><br><em>Stockholm University Library, Chair of LIBER’s Open Access Working Group</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/james%20baker.webp" alt="James Baker">
-            <p><strong>James Baker</strong><br><em>Professor of Digital Humanities and Director of the Digital Humanities programme, University of Southampton, UK</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/jos%20baeten.jpg" alt="Prof.dr. J.C.M. Baeten">
-            <p><strong>Prof.dr. J.C.M. Baeten</strong><br><em> Fellow at CWI, the Research Institute for Mathematics and Computer Science in the Netherlands and President of MathOA, Mathematics in Open Access</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/jan%20willem%20wijnen.jpg" alt="Dr Jan Willem Wijnen">
-            <p><strong>Dr Jan Willem Wijnen</strong><br><em>Programme Manager of open journals.nl, the Dutch diamond open access publishing platform managed by the KNAW Humanities Cluster</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/mark%20c%20wilson.jpg" alt="Dr Mark C Wilson">
-            <p><strong>Dr Mark C. Wilson</strong><br><em> Visiting Professor, Smith College, US, and Founder of the Free Journal Network</em></p>
-        </div>
-    </div>
-
-    <h2>OJC Library Board</h2>
-    <div class="features board-features">
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/curtis brundy.jpg" alt="Curtis Brundy">
-            <p><strong>Curtis Brundy</strong><br><em>Dean Elect of University Libraries, University of Massachusetts</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/matthew kopel.jpg" alt="Matthew Kopel">
-            <p><strong>Matthew Kopel</strong><br><em>Open Access and Intellectual Property Librarian, Princeton University Library</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/theo andrew.jpeg" alt="Theo Andrew">
-            <p><strong>Theo Andrew</strong><br><em>Scholarly Communications Manager, University of Edinburgh Library</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/Yuan Li .png" alt="Yuan Li">
-            <p><strong>Yuan Li</strong><br><em>Director of Open Scholarship and Research Data Services, Harvard University Library</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/laura hanscom.jpg" alt="Laura Hanscom">
-            <p><strong>Laura Hanscom</strong><br><em>Head of Scholarly Communications and Collections Strategy, MIT Library</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/galadriel chilton.avif" alt="Galardriel Chilton">
-            <p><strong>Galadriel Chilton</strong><br><em>Director of Collections Initiatives for the Ivy Plus Libraries Confederation, Yale University</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/andrew barker.png" alt="Andrew Barker">
-            <p><strong>Andrew Barker</strong><br><em>Director of Library Services, Lancaster University</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/Sarah Thompson.jpg" alt="Sarah Thompson">
-            <p><strong>Sarah Thompson</strong><br><em>Assistant Director, Content and Open Research, University of York</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/lidia uziel.jpg" alt="Lidia Uziel">
-            <p><strong>Lidia Uziel</strong><br><em>Associate University Librarian for Research Resources & Scholar, University of California, Santa Barbara</em></p>
-        </div>
-        <div class="feature-card">
-            <div class="grey-placeholder"></div>
-            <p><strong>Jane Saunders</strong><br><em>Associate Director for Content and Discovery, University of Leeds Library</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/patrick hart.jpeg" alt="Patrick Hart">
-            <p><strong>Patrick Hart</strong><br><em>Curator, National Library of Scotland</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/bethany logan.jpg" alt="Bethany Logan">
-            <p><strong>Bethany Logan</strong><br><em>Associate Director, University of Sussex Library</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/matt kingcroft.jpeg" alt="Matthew Kingcroft">
-            <p><strong>Matthew Kingcroft</strong><br><em>Open Research Manager (Open Access and Publishing), University of St Andrews</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/chris banks.jpg" alt="Chris Banks">
-            <p><strong>Chris Banks</strong><br><em>Former Director of Library Services, Imperial College London and Honorary Research Fellow, University of Manchester</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/Ratna%20Dhaliwal.jpg" alt="Ratna Dhaliwal">
-            <p><strong>Ratna Dhaliwal</strong><br><em>Collections Librarian, University of Saskatchewan, Canada</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/sam_moore.jpg" alt="Samuel A. Moore">
-            <p><strong>Samuel A. Moore</strong><br><em>Scholarly Communication Specialist at Cambridge University Library, Affiliated Lecturer at Cambridge Digital Humanities, and Principal Investigator of Materialising Open Research Practices in the Humanities and Social Sciences (MORPHSS)</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/pete_barr.jpg" alt="Peter Barr">
-            <p><strong>Peter Barr</strong><br><em>Head of (Library) Content & Collections, University of Sheffield</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/Wilhelm%20Widmark.jpg" alt="Wilhelm Widmark">
-            <p><strong>Wilhelm Widmark</strong><br><em>Library Director, Stockholm University, Sweden</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/danny_kingsley.png" alt="Danny Kingsley">
-            <p><strong>Danny Kingsley</strong><br><em>Director of Library Services (Information), Deakin University, Australia</em></p>
-        </div>
-        <div class="feature-card">
-            <img class="feature-image" src="/static/img/board/louise%20otting.jpeg" alt="Louise Otting-Geevers">
-            <p><strong>Louise Otting-Geevers</strong><br><em> Collection and License Manager, TU Delft Library, The Netherlands</em></p>
-        </div>
-    </div>
-
-    <div>
-        <h2>Publishers Involved</h2>
-        <ul class="publishers-ul">
-            <li>African Journals Online</li>
-            <li>Center for Digital Humanities, Princeton University </li>
-            <li>Critical Public Health Network</li>
-            <li>Edinburgh Diamond at the University of Edinburgh </li>
-            <li>Érudit</li>
-            <li>Scholarship Publishing at the California Digital Library </li>
-            <li>Free Journal Network</li>
-            <li>LSE Press</li>
-            <li>MathOA</li>
-            <li>MPub at Michigan University Press</li>
-            <li>Open Library of Humanities</li>
-            <li>Pluto Journals</li>
-            <li>Stockholm University Press</li>
-            <li>UCL Press</li>
-            <li>University of Pennsylvania Press</li>
-            <li>University of Westminster Press</li>
-        </ul>
-    </div>
-</section>
-
-<!-- Footer Section -->
-<footer class="footer" id="contact">
-    <div class="container ">
-        <div class="row">
-            <div class="footer-content">
-                <div class="footer-left col-6">
-                    <h2 class="footer-title">
-                        For Academics.<br>
-                        For Libraries.<br>
-                        For Publishers.
-                    </h2>
-                    <div class="footer-pattern">
-                    </div>
-                </div>
-                <div class="footer-right col-6">
-                    <div class="footer-links">
-                        <div class="footer-column">
-                            <h3>Connect</h3>
-                            <a href="#">Bluesky</a>
-                        </div>
-
-                        <div class="footer-column">
-                            <h3>Contact</h3>
-                            <p><a href="mailto:caroline.edwards@bbk.ac.uk">caroline.edwards@bbk.ac.uk</a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
-
-<script>
-
-</script>
-
-</body>
-</html>
+{% endblock %}
