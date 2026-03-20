@@ -1111,3 +1111,122 @@ class OurModelPackageCell(models.Model):
     def delete(self, *args, **kwargs):
         super().delete(*args, **kwargs)
         cache.delete(OurModelPageSettings.CACHE_KEY)
+
+
+class TeamSection(models.Model):
+    """A section grouping team members (e.g. Directors, Executive, Staff)."""
+
+    name = models.CharField(max_length=255)
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+        verbose_name = _("Team Section")
+        verbose_name_plural = _("Team Sections")
+
+    def __str__(self):
+        return self.name
+
+
+class TeamMember(models.Model):
+    """A team member belonging to a section."""
+
+    section = models.ForeignKey(
+        TeamSection,
+        related_name="members",
+        on_delete=models.CASCADE,
+    )
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    linkedin_url = models.CharField(max_length=500, blank=True)
+    image = models.CharField(max_length=500, blank=True)
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        self.description = sanitize_html(self.description)
+        super().save(*args, **kwargs)
+
+
+class ContactFormSettings(models.Model):
+    """Singleton model for contact form configuration.
+
+    Only one row should exist — use ContactFormSettings.load() to
+    fetch-or-create it.
+    """
+
+    from_email = models.EmailField(
+        default="noreply@example.com",
+        help_text="Sender address for contact form emails",
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Contact Form Settings")
+        verbose_name_plural = _("Contact Form Settings")
+
+    def __str__(self):
+        return "Contact Form Settings"
+
+    CACHE_KEY = "contact_form_settings"
+    CACHE_TTL = 60 * 60  # 1 hour
+
+    @classmethod
+    def load(cls):
+        """Return the singleton instance, serving from cache when possible."""
+        obj = cache.get(cls.CACHE_KEY)
+        if obj is None:
+            obj, _created = cls.objects.get_or_create(pk=1)
+            obj._prefetched_recipients = list(
+                obj.recipients.order_by("sort_order")
+            )
+            cache.set(cls.CACHE_KEY, obj, cls.CACHE_TTL)
+        return obj
+
+    def get_recipient_emails(self):
+        if hasattr(self, "_prefetched_recipients"):
+            return [r.email for r in self._prefetched_recipients]
+        return list(
+            self.recipients.order_by("sort_order").values_list(
+                "email", flat=True
+            )
+        )
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+        cache.delete(self.CACHE_KEY)
+
+    def delete(self, *args, **kwargs):
+        pass
+
+
+class ContactRecipient(models.Model):
+    """An email address that receives contact form submissions."""
+
+    settings = models.ForeignKey(
+        ContactFormSettings,
+        related_name="recipients",
+        on_delete=models.CASCADE,
+    )
+    email = models.EmailField()
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return self.email
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete(ContactFormSettings.CACHE_KEY)
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        cache.delete(ContactFormSettings.CACHE_KEY)

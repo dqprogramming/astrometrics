@@ -2,17 +2,24 @@
 CMS views for static content pages.
 """
 
+import structlog
+from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 
+from .forms import ContactSubmissionForm
 from .models import (
     Category,
+    ContactFormSettings,
     LandingPageSettings,
     OurModelPageSettings,
     Page,
     Post,
+    TeamSection,
 )
+
+logger = structlog.get_logger(__name__)
 
 
 def index_view(request):
@@ -58,7 +65,50 @@ def board_view(request):
 
 
 def our_team_view(request):
-    return render(request, "our_team.html")
+    sections = TeamSection.objects.prefetch_related("members").order_by(
+        "sort_order"
+    )
+    contact_form = ContactSubmissionForm()
+    contact_sent = False
+
+    if request.method == "POST":
+        contact_form = ContactSubmissionForm(request.POST)
+        if contact_form.is_valid():
+            settings = ContactFormSettings.load()
+            recipients = settings.get_recipient_emails()
+            if recipients:
+                cd = contact_form.cleaned_data
+                subject = cd["subject"] or "Contact form submission"
+                body = (
+                    f"Name: {cd['name']}\n"
+                    f"Email: {cd['email']}\n\n"
+                    f"{cd['message']}"
+                )
+                email = EmailMessage(
+                    subject=subject,
+                    body=body,
+                    from_email=settings.from_email,
+                    to=recipients,
+                    reply_to=[cd["email"]],
+                )
+                try:
+                    email.send()
+                except Exception:
+                    logger.exception("contact_form_email_failed")
+                contact_sent = True
+            else:
+                contact_sent = True
+            contact_form = ContactSubmissionForm()
+
+    return render(
+        request,
+        "our_team.html",
+        {
+            "sections": sections,
+            "contact_form": contact_form,
+            "contact_sent": contact_sent,
+        },
+    )
 
 
 def partial_view(request, filename):

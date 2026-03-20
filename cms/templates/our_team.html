@@ -13,125 +13,34 @@
 
     <!-- Page header -->
     <section class="team-header-bar">
-        <h1 class="spectral-bold">Our team.</h1>
-    </section>
-
-    <!-- OJC Directors -->
-    <section class="team-section" aria-labelledby="directors-heading">
         <div class="container">
-            <h2 id="directors-heading" class="spectral-bold">OJC Directors.</h2>
-            <div class="team-grid">
-                <div class="team-card">
-                    <img src="/static/img/team/director-1.jpg" alt="Professor Caroline Edwards"
-                         class="team-card-image">
-                    <div class="team-card-info">
-                        <p class="team-card-title">Professor</p>
-                        <p class="team-card-name spectral-bold">Caroline Edwards.</p>
-                        <p class="team-card-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit sed diam nonummy.</p>
-                        <a href="#" class="team-card-link">LinkedIn &rarr;</a>
-                    </div>
-                </div>
-                <div class="team-card">
-                    <img src="/static/img/team/director-2.jpg" alt="Joanna Ball"
-                         class="team-card-image">
-                    <div class="team-card-info">
-                        <p class="team-card-title"></p>
-                        <p class="team-card-name spectral-bold">Joanna Ball.</p>
-                        <p class="team-card-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit sed diam nonummy.</p>
-                        <a href="#" class="team-card-link">LinkedIn &rarr;</a>
-                    </div>
-                </div>
-                <div class="team-card">
-                    <img src="/static/img/team/director-3.jpg" alt="Rupert Gatti"
-                         class="team-card-image">
-                    <div class="team-card-info">
-                        <p class="team-card-title"></p>
-                        <p class="team-card-name spectral-bold">Rupert Gatti.</p>
-                        <p class="team-card-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit sed diam nonummy.</p>
-                        <a href="#" class="team-card-link">LinkedIn &rarr;</a>
-                    </div>
-                </div>
-            </div>
+            <h1 class="spectral-bold">Our team.</h1>
         </div>
     </section>
 
-    <!-- OJC Executive Team -->
-    <section class="team-section" aria-labelledby="exec-heading">
+    {% for section in sections %}
+    <section class="team-section" aria-labelledby="section-{{ section.pk }}-heading">
         <div class="container">
-            <h2 id="exec-heading" class="spectral-bold">OJC Executive Team.</h2>
+            <h2 id="section-{{ section.pk }}-heading" class="spectral-bold">{{ section.name }}</h2>
             <div class="team-grid">
+                {% for member in section.members.all %}
                 <div class="team-card">
-                    <img src="/static/img/team/exec-1.jpg" alt="Lidia Uziel"
-                         class="team-card-image">
+                    {% if member.image %}
+                    <img src="{{ member.image }}" alt="{{ member.name }}" class="team-card-image">
+                    {% endif %}
                     <div class="team-card-info">
-                        <p class="team-card-title"></p>
-                        <p class="team-card-name spectral-bold">Lidia Uziel.</p>
-                        <p class="team-card-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit sed diam nonummy.</p>
-                        <a href="#" class="team-card-link">LinkedIn &rarr;</a>
+                        <p class="team-card-name spectral-bold">{{ member.name }}</p>
+                        <p class="team-card-desc">{{ member.description }}</p>
+                        {% if member.linkedin_url %}
+                        <a href="{{ member.linkedin_url }}" class="team-card-link" target="_blank" rel="noopener">LinkedIn &rarr;</a>
+                        {% endif %}
                     </div>
                 </div>
-                <div class="team-card">
-                    <img src="/static/img/team/exec-2.jpg" alt="Sarah Thompson"
-                         class="team-card-image">
-                    <div class="team-card-info">
-                        <p class="team-card-title"></p>
-                        <p class="team-card-name spectral-bold">Sarah Thompson.</p>
-                        <p class="team-card-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit sed diam nonummy.</p>
-                        <a href="#" class="team-card-link">LinkedIn &rarr;</a>
-                    </div>
-                </div>
-                <div class="team-card">
-                    <img src="/static/img/team/exec-3.jpg" alt="Charles Watkinson"
-                         class="team-card-image">
-                    <div class="team-card-info">
-                        <p class="team-card-title"></p>
-                        <p class="team-card-name spectral-bold">Charles Watkinson.</p>
-                        <p class="team-card-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit sed diam nonummy.</p>
-                        <a href="#" class="team-card-link">LinkedIn &rarr;</a>
-                    </div>
-                </div>
-                <div class="team-card">
-                    <img src="/static/img/team/exec-4.jpg" alt="Rebecca Wojturska"
-                         class="team-card-image">
-                    <div class="team-card-info">
-                        <p class="team-card-title"></p>
-                        <p class="team-card-name spectral-bold">Rebecca Wojturska.</p>
-                        <p class="team-card-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit sed diam nonummy.</p>
-                        <a href="#" class="team-card-link">LinkedIn &rarr;</a>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>
-
-    <!-- OJC Staff -->
-    <section class="team-section" aria-labelledby="staff-heading">
-        <div class="container">
-            <h2 id="staff-heading" class="spectral-bold">OJC Staff.</h2>
-            <div class="team-grid">
-                <div class="team-card">
-                    <img src="/static/img/team/staff-1.jpg" alt="Staff member 1"
-                         class="team-card-image">
-                    <div class="team-card-info">
-                        <p class="team-card-title"></p>
-                        <p class="team-card-name spectral-bold">Staff Member.</p>
-                        <p class="team-card-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit sed diam nonummy.</p>
-                        <a href="#" class="team-card-link">LinkedIn &rarr;</a>
-                    </div>
-                </div>
-                <div class="team-card">
-                    <img src="/static/img/team/staff-2.jpg" alt="Staff member 2"
-                         class="team-card-image">
-                    <div class="team-card-info">
-                        <p class="team-card-title"></p>
-                        <p class="team-card-name spectral-bold">Staff Member.</p>
-                        <p class="team-card-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit sed diam nonummy.</p>
-                        <a href="#" class="team-card-link">LinkedIn &rarr;</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    {% endfor %}
 </div>
 
 <!-- Contact Form Section -->
@@ -142,22 +51,40 @@
                 <p id="contact-heading">If you'd like to get in touch with a member of our team, please use the contact form.</p>
             </div>
             <div class="team-contact-form">
+                {% if contact_sent %}
+                <div class="contact-success">
+                    <p>Your message has been sent. We will get back to you soon.</p>
+                </div>
+                {% else %}
                 <form method="post" action="">
                     {% csrf_token %}
                     <div class="form-group">
-                        <input type="text" name="name" placeholder="Your name" required>
+                        <input type="text" name="name" placeholder="Your name" required
+                               value="{{ contact_form.name.value|default:'' }}">
+                        {% if contact_form.name.errors %}
+                        <span class="form-error">{{ contact_form.name.errors.0 }}</span>
+                        {% endif %}
                     </div>
                     <div class="form-group">
-                        <input type="email" name="email" placeholder="Your email" required>
+                        <input type="email" name="email" placeholder="Your email" required
+                               value="{{ contact_form.email.value|default:'' }}">
+                        {% if contact_form.email.errors %}
+                        <span class="form-error">{{ contact_form.email.errors.0 }}</span>
+                        {% endif %}
                     </div>
                     <div class="form-group">
-                        <input type="text" name="subject" placeholder="Subject">
+                        <input type="text" name="subject" placeholder="Subject"
+                               value="{{ contact_form.subject.value|default:'' }}">
                     </div>
                     <div class="form-group">
-                        <textarea name="message" placeholder="Your message" required></textarea>
+                        <textarea name="message" placeholder="Your message" required>{{ contact_form.message.value|default:'' }}</textarea>
+                        {% if contact_form.message.errors %}
+                        <span class="form-error">{{ contact_form.message.errors.0 }}</span>
+                        {% endif %}
                     </div>
                     <button type="submit" class="btn-send">Send</button>
                 </form>
+                {% endif %}
             </div>
         </div>
     </div>

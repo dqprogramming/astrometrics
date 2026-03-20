@@ -20,6 +20,8 @@ from cms.models import (
     Page,
     Post,
     Snippet,
+    TeamMember,
+    TeamSection,
 )
 
 
@@ -127,3 +129,13 @@ class OurModelPackageTableTranslationOptions(TranslationOptions):
 @register(OurModelPackageCell)
 class OurModelPackageCellTranslationOptions(TranslationOptions):
     fields = ("value",)
+
+
+@register(TeamSection)
+class TeamSectionTranslationOptions(TranslationOptions):
+    fields = ("name",)
+
+
+@register(TeamMember)
+class TeamMemberTranslationOptions(TranslationOptions):
+    fields = ("name", "description")

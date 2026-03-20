@@ -30,6 +30,9 @@
         </a>
 
         <span class="mgr-nav-section">Content</span>
+        <a href="{% url 'cms_manager:contact_form' %}" class="mgr-nav-link {% block nav_contact_form %}{% endblock %}">
+            <i class="bi bi-envelope"></i> Contact Us Form
+        </a>
         <a href="{% url 'cms_manager:header' %}" class="mgr-nav-link {% block nav_header %}{% endblock %}">
             <i class="bi bi-layout-text-sidebar-reverse"></i> Header &amp; Menus
         </a>
@@ -41,6 +44,9 @@
         </a>
         <a href="{% url 'cms_manager:our_model' %}" class="mgr-nav-link {% block nav_our_model %}{% endblock %}">
             <i class="bi bi-diagram-3"></i> Our Model
+        </a>
+        <a href="{% url 'cms_manager:our_team' %}" class="mgr-nav-link {% block nav_our_team %}{% endblock %}">
+            <i class="bi bi-people"></i> Our Team
         </a>
         <a href="{% url 'cms_manager:page_list' %}" class="mgr-nav-link {% block nav_pages %}{% endblock %}">
             <i class="bi bi-file-text"></i> Pages

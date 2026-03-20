@@ -24,7 +24,7 @@
 .team-header-bar {
     background-color: #71f7f2;
     padding: 30px 0;
-    text-align: center;
+    text-align: left;
     position: relative;
     z-index: 1;
 }
