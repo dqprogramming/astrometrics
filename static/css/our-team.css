@@ -51,6 +51,8 @@
     font-size: 1.8rem;
     margin-bottom: 30px;
     color: #212129;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #d0d0d0;
 }
 
 /* Team grid */
