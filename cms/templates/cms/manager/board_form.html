@@ -1,0 +1,151 @@
+{% extends "manager/base.html" %}
+{% load static %}
+
+{% block title %}OJC Boards{% endblock %}
+{% block page_title %}OJC Boards{% endblock %}
+{% block nav_board %}active{% endblock %}
+
+{% block content %}
+<form method="post" id="board-form">
+    {% csrf_token %}
+
+    <div id="section-list">
+        {% for item in section_data %}
+        <div class="mgr-form-card mb-4 section-card" data-section-pk="{{ item.section.pk }}">
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <span class="section-drag-handle" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+                <input type="text" name="section_{{ item.section.pk }}_name"
+                       value="{{ item.section.name }}" class="mgr-input flex-grow-1">
+                <input type="hidden" name="section_{{ item.section.pk }}_sort_order"
+                       value="{{ item.section.sort_order }}" class="section-sort-order">
+                <button type="button" class="btn btn-sm btn-outline-danger"
+                        onclick="deleteSection({{ item.section.pk }})">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+
+            {{ item.formset.management_form }}
+
+            <div class="member-list" id="member-list-{{ item.section.pk }}">
+                {% for form in item.formset %}
+                <div class="member-row border rounded p-3 mb-2 {% if form.instance.DELETE %}d-none{% endif %}">
+                    <div class="d-flex align-items-start gap-2">
+                        <span class="member-drag-handle mt-2" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+
+                        <div class="flex-grow-1">
+                            {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+
+                            {# Image upload area #}
+                            <div class="mb-2 d-flex align-items-center gap-2">
+                                <div class="team-image-preview" style="width:90px;height:60px;background:#eee;border-radius:4px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+                                    {% if form.instance.image %}
+                                    <img src="{{ form.instance.image }}" style="width:100%;height:100%;object-fit:cover;">
+                                    {% else %}
+                                    <i class="bi bi-person-square" style="font-size:1.5rem;color:#999;"></i>
+                                    {% endif %}
+                                </div>
+                                <input type="file" accept="image/*" class="form-control form-control-sm member-image-file" style="max-width:200px;"
+                                       data-target="id_members_{{ item.section.pk }}-{{ forloop.counter0 }}-image">
+                                {% if form.instance.image %}
+                                <button type="button" class="btn btn-sm btn-outline-secondary btn-clear-image"
+                                        data-target="id_members_{{ item.section.pk }}-{{ forloop.counter0 }}-image">Clear</button>
+                                {% endif %}
+                            </div>
+
+                            <div class="row g-2 mb-2">
+                                <div class="col-md-6">
+                                    <label class="form-label small">Name</label>
+                                    {{ form.name }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small">LinkedIn URL</label>
+                                    {{ form.linkedin_url }}
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Description</label>
+                                {{ form.description }}
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-sm btn-outline-danger mt-2 btn-delete-member"
+                                data-member-pk="{{ form.instance.pk|default:'' }}">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <button type="button" class="btn btn-sm btn-outline-primary mt-2 btn-add-member"
+                    data-section-pk="{{ item.section.pk }}"
+                    data-prefix="members_{{ item.section.pk }}">
+                <i class="bi bi-plus"></i> Add Member
+            </button>
+        </div>
+        {% empty %}
+        <p class="text-muted">No sections yet. Add one below.</p>
+        {% endfor %}
+    </div>
+
+    <div class="d-flex gap-2 mt-3 mb-4">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Save</button>
+        <a href="{% url 'cms_manager:board' %}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+</form>
+
+<form method="post" action="{% url 'cms_manager:board_section_add' %}" class="mb-4">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-outline-primary">
+        <i class="bi bi-plus-circle"></i> Add Section
+    </button>
+</form>
+
+{# Template for new member rows #}
+{% for item in section_data %}
+<template id="member-template-{{ item.section.pk }}">
+    <div class="member-row border rounded p-3 mb-2">
+        <div class="d-flex align-items-start gap-2">
+            <span class="member-drag-handle mt-2" style="cursor:grab;"><i class="bi bi-grip-vertical"></i></span>
+            <div class="flex-grow-1">
+                <input type="hidden" name="members_{{ item.section.pk }}-__prefix__-id" value="">
+                <input type="hidden" name="members_{{ item.section.pk }}-__prefix__-section" value="{{ item.section.pk }}">
+                <input type="hidden" name="members_{{ item.section.pk }}-__prefix__-image" id="id_members_{{ item.section.pk }}-__prefix__-image" value="">
+                <input type="hidden" name="members_{{ item.section.pk }}-__prefix__-sort_order" value="0">
+
+                <div class="mb-2 d-flex align-items-center gap-2">
+                    <div class="team-image-preview" style="width:90px;height:60px;background:#eee;border-radius:4px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+                        <i class="bi bi-person-square" style="font-size:1.5rem;color:#999;"></i>
+                    </div>
+                    <input type="file" accept="image/*" class="form-control form-control-sm member-image-file" style="max-width:200px;"
+                           data-target="id_members_{{ item.section.pk }}-__prefix__-image">
+                </div>
+
+                <div class="row g-2 mb-2">
+                    <div class="col-md-6">
+                        <label class="form-label small">Name</label>
+                        <input type="text" name="members_{{ item.section.pk }}-__prefix__-name" class="mgr-input">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small">LinkedIn URL</label>
+                        <input type="text" name="members_{{ item.section.pk }}-__prefix__-linkedin_url" class="mgr-input">
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label small">Description</label>
+                    <textarea name="members_{{ item.section.pk }}-__prefix__-description" class="mgr-textarea" rows="3"></textarea>
+                </div>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-danger mt-2 btn-delete-member">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    </div>
+</template>
+{% endfor %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script src="{% static 'js/board-manager.js' %}"></script>
+{% endblock %}

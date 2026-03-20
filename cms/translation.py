@@ -8,6 +8,8 @@ per-language columns (e.g. title_en, title_fr) automatically.
 from modeltranslation.translator import TranslationOptions, register
 
 from cms.models import (
+    BoardMember,
+    BoardSection,
     FooterLink,
     FooterSettings,
     HeaderSettings,
@@ -129,6 +131,16 @@ class OurModelPackageTableTranslationOptions(TranslationOptions):
 @register(OurModelPackageCell)
 class OurModelPackageCellTranslationOptions(TranslationOptions):
     fields = ("value",)
+
+
+@register(BoardSection)
+class BoardSectionTranslationOptions(TranslationOptions):
+    fields = ("name",)
+
+
+@register(BoardMember)
+class BoardMemberTranslationOptions(TranslationOptions):
+    fields = ("name", "description")
 
 
 @register(TeamSection)
