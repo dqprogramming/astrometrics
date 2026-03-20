@@ -1,0 +1,275 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 4000">
+  <defs>
+    <style>
+      .ln { fill: #dcdcdc; }
+    </style>
+  </defs>
+
+  <!-- Track A: enters from top-right, goes down, curves left, goes left, curves down, exits bottom -->
+  <!-- Vertical segment top-right -->
+  <rect class="ln" x="1100" y="0" width="14.5" height="300"/>
+  <rect class="ln" x="1122.7" y="0" width="14.5" height="300"/>
+  <rect class="ln" x="1145.4" y="0" width="14.5" height="300"/>
+
+  <!-- Quarter-circle: turning left at (1100, 300) - top-right to bottom-left curve -->
+  <path class="ln" d="M1100,300 v14.5 c0,14.6-11.9,26.5-26.5,26.5 h-14.5 v-14.5 h14.5 c6.6,0,12-5.4,12-12 v-14.5 z"/>
+  <path class="ln" d="M1122.7,300 v14.5 c0,27.1-22.1,49.2-49.2,49.2 h-14.5 v-14.5 h14.5 c19.2,0,34.7-15.6,34.7-34.7 v-14.5 z"/>
+  <path class="ln" d="M1145.4,300 v14.5 c0,39.7-32.3,71.9-71.9,71.9 h-14.5 v-14.5 h14.5 c31.7,0,57.4-25.7,57.4-57.4 v-14.5 z"/>
+
+  <!-- Horizontal segment going left -->
+  <rect class="ln" x="700" y="327" width="373.5" height="14.5"/>
+  <rect class="ln" x="700" y="349.7" width="373.5" height="14.5"/>
+  <rect class="ln" x="700" y="372.4" width="373.5" height="14.5"/>
+
+  <!-- Quarter-circle: turning down at (700, 327) -->
+  <path class="ln" d="M700,327 h-14.5 c-14.6,0-26.5,11.9-26.5,26.5 v14.5 h14.5 v-14.5 c0-6.6,5.4-12,12-12 h14.5 z"/>
+  <path class="ln" d="M700,349.7 h-14.5 c-27.1,0-49.2,22.1-49.2,49.2 v14.5 h14.5 v-14.5 c0-19.2,15.6-34.7,34.7-34.7 h14.5 z"/>
+  <path class="ln" d="M700,372.4 h-14.5 c-39.7,0-71.9,32.3-71.9,71.9 v14.5 h14.5 v-14.5 c0-31.7,25.7-57.4,57.4-57.4 h14.5 z"/>
+
+  <!-- Vertical segment going down -->
+  <rect class="ln" x="659" y="444.3" width="14.5" height="350"/>
+  <rect class="ln" x="636.3" y="399" width="14.5" height="395.3"/>
+  <rect class="ln" x="613.6" y="444.3" width="14.5" height="350"/>
+
+  <!-- Track B: enters from top-left, goes right, curves down -->
+  <!-- Horizontal segment top-left -->
+  <rect class="ln" x="0" y="80" width="350" height="14.5"/>
+  <rect class="ln" x="0" y="102.7" width="350" height="14.5"/>
+  <rect class="ln" x="0" y="125.4" width="350" height="14.5"/>
+
+  <!-- Quarter-circle: turning down at (350, 80) -->
+  <path class="ln" d="M350,80 h14.5 c14.6,0,26.5,11.9,26.5,26.5 v14.5 h-14.5 v-14.5 c0-6.6-5.4-12-12-12 h-14.5 z"/>
+  <path class="ln" d="M350,102.7 h14.5 c27.1,0,49.2,22.1,49.2,49.2 v14.5 h-14.5 v-14.5 c0-19.2-15.6-34.7-34.7-34.7 h-14.5 z"/>
+  <path class="ln" d="M350,125.4 h14.5 c39.7,0,71.9,32.3,71.9,71.9 v14.5 h-14.5 v-14.5 c0-31.7-25.7-57.4-57.4-57.4 h-14.5 z"/>
+
+  <!-- Vertical segment going down -->
+  <rect class="ln" x="377" y="197.3" width="14.5" height="280"/>
+  <rect class="ln" x="399.7" y="152" width="14.5" height="325.3"/>
+  <rect class="ln" x="422.4" y="197.3" width="14.5" height="280"/>
+
+  <!-- Quarter-circle: turning right at bottom -->
+  <path class="ln" d="M377,477.3 v14.5 c0,14.6,11.9,26.5,26.5,26.5 h14.5 v-14.5 h-14.5 c-6.6,0-12-5.4-12-12 v-14.5 z"/>
+  <path class="ln" d="M399.7,477.3 v14.5 c0,27.1,22.1,49.2,49.2,49.2 h14.5 v-14.5 h-14.5 c-19.2,0-34.7-15.6-34.7-34.7 v-14.5 z"/>
+  <path class="ln" d="M422.4,477.3 v14.5 c0,39.7,32.3,71.9,71.9,71.9 h14.5 v-14.5 h-14.5 c-31.7,0-57.4-25.7-57.4-57.4 v-14.5 z"/>
+
+  <!-- Horizontal segment going right from curve -->
+  <rect class="ln" x="494.3" y="504.3" width="170" height="14.5"/>
+  <rect class="ln" x="449" y="527" width="215.3" height="14.5"/>
+  <rect class="ln" x="494.3" y="549.7" width="170" height="14.5"/>
+
+  <!-- Track C: enters from right side, goes left, curves down, goes down long -->
+  <!-- Horizontal segment from right -->
+  <rect class="ln" x="900" y="600" width="500" height="14.5"/>
+  <rect class="ln" x="900" y="622.7" width="500" height="14.5"/>
+  <rect class="ln" x="900" y="645.4" width="500" height="14.5"/>
+
+  <!-- Quarter-circle: turning down at (900, 600) -->
+  <path class="ln" d="M900,600 h-14.5 c-14.6,0-26.5,11.9-26.5,26.5 v14.5 h14.5 v-14.5 c0-6.6,5.4-12,12-12 h14.5 z"/>
+  <path class="ln" d="M900,622.7 h-14.5 c-27.1,0-49.2,22.1-49.2,49.2 v14.5 h14.5 v-14.5 c0-19.2,15.6-34.7,34.7-34.7 h14.5 z"/>
+  <path class="ln" d="M900,645.4 h-14.5 c-39.7,0-71.9,32.3-71.9,71.9 v14.5 h14.5 v-14.5 c0-31.7,25.7-57.4,57.4-57.4 h14.5 z"/>
+
+  <!-- Vertical segment going down long -->
+  <rect class="ln" x="859" y="717.3" width="14.5" height="500"/>
+  <rect class="ln" x="836.3" y="672" width="14.5" height="545.3"/>
+  <rect class="ln" x="813.6" y="717.3" width="14.5" height="500"/>
+
+  <!-- Track D: from left, across middle area -->
+  <rect class="ln" x="0" y="900" width="250" height="14.5"/>
+  <rect class="ln" x="0" y="922.7" width="250" height="14.5"/>
+  <rect class="ln" x="0" y="945.4" width="250" height="14.5"/>
+
+  <!-- Quarter-circle: turning down -->
+  <path class="ln" d="M250,900 h14.5 c14.6,0,26.5,11.9,26.5,26.5 v14.5 h-14.5 v-14.5 c0-6.6-5.4-12-12-12 h-14.5 z"/>
+  <path class="ln" d="M250,922.7 h14.5 c27.1,0,49.2,22.1,49.2,49.2 v14.5 h-14.5 v-14.5 c0-19.2-15.6-34.7-34.7-34.7 h-14.5 z"/>
+  <path class="ln" d="M250,945.4 h14.5 c39.7,0,71.9,32.3,71.9,71.9 v14.5 h-14.5 v-14.5 c0-31.7-25.7-57.4-57.4-57.4 h-14.5 z"/>
+
+  <!-- Vertical going down -->
+  <rect class="ln" x="277" y="1017.3" width="14.5" height="400"/>
+  <rect class="ln" x="299.7" y="972" width="14.5" height="445.3"/>
+  <rect class="ln" x="322.4" y="1017.3" width="14.5" height="400"/>
+
+  <!-- Track E: vertical from top center-right area, going down to curve right -->
+  <rect class="ln" x="1250" y="500" width="14.5" height="400"/>
+  <rect class="ln" x="1272.7" y="500" width="14.5" height="400"/>
+  <rect class="ln" x="1295.4" y="500" width="14.5" height="400"/>
+
+  <!-- Curve right and down more -->
+  <path class="ln" d="M1250,900 v14.5 c0,14.6-11.9,26.5-26.5,26.5 h-14.5 v-14.5 h14.5 c6.6,0,12-5.4,12-12 v-14.5 z"/>
+  <path class="ln" d="M1272.7,900 v14.5 c0,27.1-22.1,49.2-49.2,49.2 h-14.5 v-14.5 h14.5 c19.2,0,34.7-15.6,34.7-34.7 v-14.5 z"/>
+  <path class="ln" d="M1295.4,900 v14.5 c0,39.7-32.3,71.9-71.9,71.9 h-14.5 v-14.5 h14.5 c31.7,0,57.4-25.7,57.4-57.4 v-14.5 z"/>
+
+  <!-- Horizontal going left -->
+  <rect class="ln" x="900" y="927" width="309" height="14.5"/>
+  <rect class="ln" x="900" y="949.7" width="309" height="14.5"/>
+  <rect class="ln" x="900" y="972.4" width="309" height="14.5"/>
+
+  <!-- Track F: extends down from Track C into lower sections -->
+  <!-- Curve left at bottom of Track C -->
+  <path class="ln" d="M859,1217.3 v14.5 c0,14.6-11.9,26.5-26.5,26.5 h-14.5 v-14.5 h14.5 c6.6,0,12-5.4,12-12 v-14.5 z"/>
+  <path class="ln" d="M836.3,1217.3 v14.5 c0,27.1-22.1,49.2-49.2,49.2 h-14.5 v-14.5 h14.5 c19.2,0,34.7-15.6,34.7-34.7 v-14.5 z"/>
+  <path class="ln" d="M813.6,1217.3 v14.5 c0,39.7-32.3,71.9-71.9,71.9 h-14.5 v-14.5 h14.5 c31.7,0,57.4-25.7,57.4-57.4 v-14.5 z"/>
+
+  <!-- Horizontal going left -->
+  <rect class="ln" x="400" y="1244.3" width="418" height="14.5"/>
+  <rect class="ln" x="400" y="1267" width="373" height="14.5"/>
+  <rect class="ln" x="400" y="1289.7" width="328" height="14.5"/>
+
+  <!-- Track G: from right side middle, curves down into lower area -->
+  <rect class="ln" x="1050" y="1100" width="350" height="14.5"/>
+  <rect class="ln" x="1050" y="1122.7" width="350" height="14.5"/>
+  <rect class="ln" x="1050" y="1145.4" width="350" height="14.5"/>
+
+  <!-- Curve down -->
+  <path class="ln" d="M1050,1100 h-14.5 c-14.6,0-26.5,11.9-26.5,26.5 v14.5 h14.5 v-14.5 c0-6.6,5.4-12,12-12 h14.5 z"/>
+  <path class="ln" d="M1050,1122.7 h-14.5 c-27.1,0-49.2,22.1-49.2,49.2 v14.5 h14.5 v-14.5 c0-19.2,15.6-34.7,34.7-34.7 h14.5 z"/>
+  <path class="ln" d="M1050,1145.4 h-14.5 c-39.7,0-71.9,32.3-71.9,71.9 v14.5 h14.5 v-14.5 c0-31.7,25.7-57.4,57.4-57.4 h14.5 z"/>
+
+  <!-- Long vertical down -->
+  <rect class="ln" x="1009" y="1217.3" width="14.5" height="600"/>
+  <rect class="ln" x="986.3" y="1172" width="14.5" height="645.3"/>
+  <rect class="ln" x="963.6" y="1217.3" width="14.5" height="600"/>
+
+  <!-- Track H: horizontal from left in lower section -->
+  <rect class="ln" x="0" y="1500" width="300" height="14.5"/>
+  <rect class="ln" x="0" y="1522.7" width="300" height="14.5"/>
+  <rect class="ln" x="0" y="1545.4" width="300" height="14.5"/>
+
+  <!-- Curve down -->
+  <path class="ln" d="M300,1500 h14.5 c14.6,0,26.5,11.9,26.5,26.5 v14.5 h-14.5 v-14.5 c0-6.6-5.4-12-12-12 h-14.5 z"/>
+  <path class="ln" d="M300,1522.7 h14.5 c27.1,0,49.2,22.1,49.2,49.2 v14.5 h-14.5 v-14.5 c0-19.2-15.6-34.7-34.7-34.7 h-14.5 z"/>
+  <path class="ln" d="M300,1545.4 h14.5 c39.7,0,71.9,32.3,71.9,71.9 v14.5 h-14.5 v-14.5 c0-31.7-25.7-57.4-57.4-57.4 h-14.5 z"/>
+
+  <!-- Vertical down -->
+  <rect class="ln" x="327" y="1617.3" width="14.5" height="500"/>
+  <rect class="ln" x="349.7" y="1572" width="14.5" height="545.3"/>
+  <rect class="ln" x="372.4" y="1617.3" width="14.5" height="500"/>
+
+  <!-- Track I: from right, curves down, long vertical -->
+  <rect class="ln" x="1100" y="1900" width="300" height="14.5"/>
+  <rect class="ln" x="1100" y="1922.7" width="300" height="14.5"/>
+  <rect class="ln" x="1100" y="1945.4" width="300" height="14.5"/>
+
+  <path class="ln" d="M1100,1900 h-14.5 c-14.6,0-26.5,11.9-26.5,26.5 v14.5 h14.5 v-14.5 c0-6.6,5.4-12,12-12 h14.5 z"/>
+  <path class="ln" d="M1100,1922.7 h-14.5 c-27.1,0-49.2,22.1-49.2,49.2 v14.5 h14.5 v-14.5 c0-19.2,15.6-34.7,34.7-34.7 h14.5 z"/>
+  <path class="ln" d="M1100,1945.4 h-14.5 c-39.7,0-71.9,32.3-71.9,71.9 v14.5 h14.5 v-14.5 c0-31.7,25.7-57.4,57.4-57.4 h14.5 z"/>
+
+  <rect class="ln" x="1059" y="2017.3" width="14.5" height="500"/>
+  <rect class="ln" x="1036.3" y="1972" width="14.5" height="545.3"/>
+  <rect class="ln" x="1013.6" y="2017.3" width="14.5" height="500"/>
+
+  <!-- Track J: horizontal from left lower -->
+  <rect class="ln" x="0" y="2100" width="400" height="14.5"/>
+  <rect class="ln" x="0" y="2122.7" width="400" height="14.5"/>
+  <rect class="ln" x="0" y="2145.4" width="400" height="14.5"/>
+
+  <!-- Curve down -->
+  <path class="ln" d="M400,2100 h14.5 c14.6,0,26.5,11.9,26.5,26.5 v14.5 h-14.5 v-14.5 c0-6.6-5.4-12-12-12 h-14.5 z"/>
+  <path class="ln" d="M400,2122.7 h14.5 c27.1,0,49.2,22.1,49.2,49.2 v14.5 h-14.5 v-14.5 c0-19.2-15.6-34.7-34.7-34.7 h-14.5 z"/>
+  <path class="ln" d="M400,2145.4 h14.5 c39.7,0,71.9,32.3,71.9,71.9 v14.5 h-14.5 v-14.5 c0-31.7-25.7-57.4-57.4-57.4 h-14.5 z"/>
+
+  <rect class="ln" x="427" y="2217.3" width="14.5" height="400"/>
+  <rect class="ln" x="449.7" y="2172" width="14.5" height="445.3"/>
+  <rect class="ln" x="472.4" y="2217.3" width="14.5" height="400"/>
+
+  <!-- Track K: curve right from Track G vertical -->
+  <path class="ln" d="M1009,1817.3 v14.5 c0,14.6,11.9,26.5,26.5,26.5 h14.5 v-14.5 h-14.5 c-6.6,0-12-5.4-12-12 v-14.5 z"/>
+  <path class="ln" d="M986.3,1817.3 v14.5 c0,27.1,22.1,49.2,49.2,49.2 h14.5 v-14.5 h-14.5 c-19.2,0-34.7-15.6-34.7-34.7 v-14.5 z"/>
+  <path class="ln" d="M963.6,1817.3 v14.5 c0,39.7,32.3,71.9,71.9,71.9 h14.5 v-14.5 h-14.5 c-31.7,0-57.4-25.7-57.4-57.4 v-14.5 z"/>
+
+  <rect class="ln" x="1050" y="1844.3" width="350" height="14.5"/>
+  <rect class="ln" x="1050" y="1867" width="350" height="14.5"/>
+  <rect class="ln" x="1035.5" y="1889.7" width="364.5" height="14.5"/>
+
+  <!-- Track L: from left, horizontal mid-lower -->
+  <rect class="ln" x="0" y="2700" width="500" height="14.5"/>
+  <rect class="ln" x="0" y="2722.7" width="500" height="14.5"/>
+  <rect class="ln" x="0" y="2745.4" width="500" height="14.5"/>
+
+  <!-- Curve down -->
+  <path class="ln" d="M500,2700 h14.5 c14.6,0,26.5,11.9,26.5,26.5 v14.5 h-14.5 v-14.5 c0-6.6-5.4-12-12-12 h-14.5 z"/>
+  <path class="ln" d="M500,2722.7 h14.5 c27.1,0,49.2,22.1,49.2,49.2 v14.5 h-14.5 v-14.5 c0-19.2-15.6-34.7-34.7-34.7 h-14.5 z"/>
+  <path class="ln" d="M500,2745.4 h14.5 c39.7,0,71.9,32.3,71.9,71.9 v14.5 h-14.5 v-14.5 c0-31.7-25.7-57.4-57.4-57.4 h-14.5 z"/>
+
+  <rect class="ln" x="527" y="2817.3" width="14.5" height="400"/>
+  <rect class="ln" x="549.7" y="2772" width="14.5" height="445.3"/>
+  <rect class="ln" x="572.4" y="2817.3" width="14.5" height="400"/>
+
+  <!-- Track M: from right, horizontal lower -->
+  <rect class="ln" x="800" y="2500" width="600" height="14.5"/>
+  <rect class="ln" x="800" y="2522.7" width="600" height="14.5"/>
+  <rect class="ln" x="800" y="2545.4" width="600" height="14.5"/>
+
+  <path class="ln" d="M800,2500 h-14.5 c-14.6,0-26.5,11.9-26.5,26.5 v14.5 h14.5 v-14.5 c0-6.6,5.4-12,12-12 h14.5 z"/>
+  <path class="ln" d="M800,2522.7 h-14.5 c-27.1,0-49.2,22.1-49.2,49.2 v14.5 h14.5 v-14.5 c0-19.2,15.6-34.7,34.7-34.7 h14.5 z"/>
+  <path class="ln" d="M800,2545.4 h-14.5 c-39.7,0-71.9,32.3-71.9,71.9 v14.5 h14.5 v-14.5 c0-31.7,25.7-57.4,57.4-57.4 h14.5 z"/>
+
+  <rect class="ln" x="759" y="2617.3" width="14.5" height="600"/>
+  <rect class="ln" x="736.3" y="2572" width="14.5" height="645.3"/>
+  <rect class="ln" x="713.6" y="2617.3" width="14.5" height="600"/>
+
+  <!-- Track N: vertical from top, far right -->
+  <rect class="ln" x="1300" y="1200" width="14.5" height="500"/>
+  <rect class="ln" x="1322.7" y="1200" width="14.5" height="500"/>
+  <rect class="ln" x="1345.4" y="1200" width="14.5" height="500"/>
+
+  <!-- Curve left -->
+  <path class="ln" d="M1300,1700 v14.5 c0,14.6-11.9,26.5-26.5,26.5 h-14.5 v-14.5 h14.5 c6.6,0,12-5.4,12-12 v-14.5 z"/>
+  <path class="ln" d="M1322.7,1700 v14.5 c0,27.1-22.1,49.2-49.2,49.2 h-14.5 v-14.5 h14.5 c19.2,0,34.7-15.6,34.7-34.7 v-14.5 z"/>
+  <path class="ln" d="M1345.4,1700 v14.5 c0,39.7-32.3,71.9-71.9,71.9 h-14.5 v-14.5 h14.5 c31.7,0,57.4-25.7,57.4-57.4 v-14.5 z"/>
+
+  <rect class="ln" x="1100" y="1727" width="159" height="14.5"/>
+  <rect class="ln" x="1100" y="1749.7" width="159" height="14.5"/>
+  <rect class="ln" x="1100" y="1772.4" width="159" height="14.5"/>
+
+  <!-- Track O: bottom area, additional lines -->
+  <rect class="ln" x="200" y="3200" width="14.5" height="400"/>
+  <rect class="ln" x="222.7" y="3200" width="14.5" height="400"/>
+  <rect class="ln" x="245.4" y="3200" width="14.5" height="400"/>
+
+  <!-- Curve right at bottom -->
+  <path class="ln" d="M200,3600 v14.5 c0,14.6,11.9,26.5,26.5,26.5 h14.5 v-14.5 h-14.5 c-6.6,0-12-5.4-12-12 v-14.5 z"/>
+  <path class="ln" d="M222.7,3600 v14.5 c0,27.1,22.1,49.2,49.2,49.2 h14.5 v-14.5 h-14.5 c-19.2,0-34.7-15.6-34.7-34.7 v-14.5 z"/>
+  <path class="ln" d="M245.4,3600 v14.5 c0,39.7,32.3,71.9,71.9,71.9 h14.5 v-14.5 h-14.5 c-31.7,0-57.4-25.7-57.4-57.4 v-14.5 z"/>
+
+  <rect class="ln" x="317.3" y="3627" width="400" height="14.5"/>
+  <rect class="ln" x="272" y="3649.7" width="445.3" height="14.5"/>
+  <rect class="ln" x="317.3" y="3672.4" width="400" height="14.5"/>
+
+  <!-- Track P: from right lower area -->
+  <rect class="ln" x="1000" y="3100" width="400" height="14.5"/>
+  <rect class="ln" x="1000" y="3122.7" width="400" height="14.5"/>
+  <rect class="ln" x="1000" y="3145.4" width="400" height="14.5"/>
+
+  <path class="ln" d="M1000,3100 h-14.5 c-14.6,0-26.5,11.9-26.5,26.5 v14.5 h14.5 v-14.5 c0-6.6,5.4-12,12-12 h14.5 z"/>
+  <path class="ln" d="M1000,3122.7 h-14.5 c-27.1,0-49.2,22.1-49.2,49.2 v14.5 h14.5 v-14.5 c0-19.2,15.6-34.7,34.7-34.7 h14.5 z"/>
+  <path class="ln" d="M1000,3145.4 h-14.5 c-39.7,0-71.9,32.3-71.9,71.9 v14.5 h14.5 v-14.5 c0-31.7,25.7-57.4,57.4-57.4 h14.5 z"/>
+
+  <rect class="ln" x="959" y="3217.3" width="14.5" height="500"/>
+  <rect class="ln" x="936.3" y="3172" width="14.5" height="545.3"/>
+  <rect class="ln" x="913.6" y="3217.3" width="14.5" height="500"/>
+
+  <!-- Additional vertical at far right bottom -->
+  <rect class="ln" x="1200" y="2800" width="14.5" height="600"/>
+  <rect class="ln" x="1222.7" y="2800" width="14.5" height="600"/>
+  <rect class="ln" x="1245.4" y="2800" width="14.5" height="600"/>
+
+  <!-- Curve left at bottom -->
+  <path class="ln" d="M1200,3400 v14.5 c0,14.6-11.9,26.5-26.5,26.5 h-14.5 v-14.5 h14.5 c6.6,0,12-5.4,12-12 v-14.5 z"/>
+  <path class="ln" d="M1222.7,3400 v14.5 c0,27.1-22.1,49.2-49.2,49.2 h-14.5 v-14.5 h14.5 c19.2,0,34.7-15.6,34.7-34.7 v-14.5 z"/>
+  <path class="ln" d="M1245.4,3400 v14.5 c0,39.7-32.3,71.9-71.9,71.9 h-14.5 v-14.5 h14.5 c31.7,0,57.4-25.7,57.4-57.4 v-14.5 z"/>
+
+  <rect class="ln" x="900" y="3427" width="259" height="14.5"/>
+  <rect class="ln" x="900" y="3449.7" width="259" height="14.5"/>
+  <rect class="ln" x="900" y="3472.4" width="259" height="14.5"/>
+
+  <!-- Semi-circle decorations (like in original SVG) -->
+  <!-- Semi-circle at bottom of Track B -->
+  <path class="ln" d="M494.3,549.7 c-22.6,0-41-18.4-41-41 h14.5 c0,14.6,11.9,26.5,26.5,26.5 s26.5-11.9,26.5-26.5 h14.5 c0,22.6-18.4,41-41,41 Z"/>
+  <path class="ln" d="M494.3,572.4 c-35.1,0-63.7-28.6-63.7-63.7 h14.5 c0,27.1,22.1,49.2,49.2,49.2 s49.2-22.1,49.2-49.2 h14.5 c0,35.1-28.6,63.7-63.7,63.7 Z"/>
+  <path class="ln" d="M494.3,595.1 c-47.6,0-86.4-38.8-86.4-86.4 h14.5 c0,39.7,32.3,71.9,71.9,71.9 s71.9-32.3,71.9-71.9 h14.5 c0,47.6-38.8,86.4-86.4,86.4 Z"/>
+
+  <!-- Semi-circle at junction of Track E -->
+  <path class="ln" d="M900,927 c22.6,0,41,18.4,41,41 h-14.5 c0-14.6-11.9-26.5-26.5-26.5 s-26.5,11.9-26.5,26.5 h-14.5 c0-22.6,18.4-41,41-41 Z"/>
+  <path class="ln" d="M900,904.3 c35.1,0,63.7,28.6,63.7,63.7 h-14.5 c0-27.1-22.1-49.2-49.2-49.2 s-49.2,22.1-49.2,49.2 h-14.5 c0-35.1,28.6-63.7,63.7-63.7 Z"/>
+  <path class="ln" d="M900,881.6 c47.6,0,86.4,38.8,86.4,86.4 h-14.5 c0-39.7-32.3-71.9-71.9-71.9 s-71.9,32.3-71.9,71.9 h-14.5 c0-47.6,38.8-86.4,86.4-86.4 Z"/>
+</svg>
