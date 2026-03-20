@@ -1,0 +1,506 @@
+/* =============================================
+   Our Model Page Styles
+   ============================================= */
+
+/* --- Hero Section --- */
+.model-hero {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 60px 0 60px;
+    background-color: #ffffff;
+}
+
+.model-hero .container {
+    position: relative;
+    z-index: 1;
+}
+
+.model-hero-circles {
+    position: absolute;
+    width: 900px;
+    height: 900px;
+    right: -50px;
+    bottom: -200px;
+    z-index: 0;
+    pointer-events: none;
+    clip-path: inset(0 0 0 0);
+}
+
+.model-hero-heading {
+    font-size: 3rem;
+    line-height: 1.15;
+    font-weight: 700;
+    color: #212129;
+    max-width: 100%;
+    margin-bottom: 40px;
+}
+
+.model-hero-image-wrapper {
+    width: 100%;
+    overflow: hidden;
+    height: 400px;
+}
+
+.model-hero-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    filter: grayscale(100%);
+    object-fit: cover;
+    object-position: center center;
+}
+
+/* --- OJC Model Section --- */
+.model-section {
+    padding: 80px 0;
+    background-color: #e8e8e8;
+}
+
+.model-intro {
+    max-width: 100%;
+    margin-bottom: 40px;
+}
+
+.model-intro h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.model-intro p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.model-collections-label {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: #212129;
+    font-family: 'Spectral', serif;
+}
+
+.model-collections {
+    display: flex;
+    gap: 30px;
+}
+
+.model-collection-card {
+    flex: 1;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+.model-collection-card .model-collection-link {
+    margin-top: auto;
+}
+
+.model-collection-circle {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background-color: #71f7f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.model-collection-number {
+    font-family: 'Spectral', serif;
+    font-size: 56px;
+    font-weight: 700;
+    color: #212129;
+}
+
+.model-collection-title {
+    font-family: 'Spectral', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #212129;
+    margin-bottom: 12px;
+}
+
+.model-collection-link {
+    font-size: 12px;
+    font-weight: 700;
+    color: #212129;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    padding: 6px 0;
+    margin: -6px 0;
+}
+
+.model-collection-link:hover {
+    text-decoration: underline;
+}
+
+.model-collection-link:focus-visible {
+    outline: 2px solid #212129;
+    outline-offset: 2px;
+}
+
+/* --- Journal Funding Section --- */
+.model-funding {
+    padding: 80px 0;
+    background-color: #ffffff;
+}
+
+.model-funding-inner {
+    display: flex;
+    gap: 60px;
+    align-items: flex-start;
+}
+
+.model-funding-images {
+    flex: 0 0 42%;
+    max-width: 42%;
+    position: relative;
+    min-height: 450px;
+}
+
+.model-funding-img-upper {
+    position: relative;
+    width: 75%;
+    z-index: 1;
+    box-shadow: 8px 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.model-funding-img-upper img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: grayscale(100%);
+}
+
+.model-funding-img-lower {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 75%;
+    z-index: 2;
+    box-shadow: 8px 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.model-funding-img-lower img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: grayscale(100%);
+}
+
+.model-funding-content {
+    flex: 1;
+    padding-left: 20px;
+}
+
+.model-funding-content h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.model-funding-content p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+/* --- Revenue Distribution Section --- */
+.model-revenue {
+    padding: 80px 0;
+    background-color: #e8e8e8;
+}
+
+.model-revenue-header {
+    margin-bottom: 40px;
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.model-revenue-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.model-revenue-header p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #333;
+}
+
+.model-revenue-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    grid-template-rows: auto 1fr;
+    gap: 0 40px;
+}
+
+.model-revenue-tables {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+/* Unified packages table */
+.model-packages-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    table-layout: fixed;
+}
+
+.model-packages-header-table thead th {
+    text-align: left;
+    font-weight: 700;
+    padding: 10px 16px;
+    font-size: 12px;
+    vertical-align: bottom;
+    background-color: #ffc4fc;
+}
+
+
+/* Column widths - consistent across header and data tables */
+.model-packages-table th:nth-child(1),
+.model-packages-table td:nth-child(1) {
+    width: 25%;
+}
+
+.model-packages-table th:nth-child(2),
+.model-packages-table td:nth-child(2) {
+    width: 25%;
+}
+
+.model-packages-table th:nth-child(3),
+.model-packages-table td:nth-child(3) {
+    width: 25%;
+}
+
+.model-packages-table th:nth-child(4),
+.model-packages-table td:nth-child(4) {
+    width: 25%;
+}
+
+.model-packages-table td {
+    padding: 6px 16px;
+}
+
+/* Data rows get borders */
+.model-packages-table .package-row td {
+    border: 1px solid #767676;
+}
+
+/* Package header rows - no borders */
+.model-packages-table .package-header td,
+.model-packages-table .package-header th {
+    padding: 10px 16px;
+    font-size: 12px;
+    line-height: 1.5;
+    font-weight: normal;
+    text-align: left;
+    border: none;
+}
+
+/* Outer border on package tables (not the column-header table) */
+.model-packages-table:not(.model-packages-header-table) {
+    border: 1px solid #767676;
+}
+
+/* Gap between package tables */
+.model-revenue-tables .model-packages-table + .model-packages-table {
+    margin-top: 16px;
+}
+
+.model-packages-header-table {
+    margin-bottom: 0;
+}
+
+/* No gap between header table and first package table */
+.model-revenue-tables .model-packages-header-table + .model-packages-table {
+    margin-top: 0;
+}
+
+.model-packages-table .package-header strong {
+    font-size: 13px;
+}
+
+/* Explicit text colour for table cells */
+.model-packages-table td,
+.model-packages-table th {
+    color: #212129;
+}
+
+/* Pink - Package A */
+.package-pink {
+    background-color: #ffd8fd;
+}
+
+.package-pink-light {
+    background-color: #ffecfe;
+}
+
+/* Green - Package B */
+.package-green {
+    background-color: #8ee8c8;
+}
+
+.package-green-light {
+    background-color: #d4f5e8;
+}
+
+/* Blue - Package C */
+.package-blue {
+    background-color: #a5bfff;
+}
+
+.package-blue-light {
+    background-color: #dce6ff;
+}
+
+/* Callout styling */
+.model-revenue-callout {
+    grid-column: 2;
+    grid-row: 2;
+    border-left: 3px solid #212129;
+    padding-left: 24px;
+    align-self: start;
+}
+
+.model-revenue-callout p {
+    font-family: 'Spectral', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #212129;
+}
+
+/* Dark button variant */
+.btn-dark {
+    background-color: #212129 !important;
+    color: #fff !important;
+}
+
+.btn-dark:hover {
+    background-color: #3a3a45 !important;
+}
+
+/* --- CTA / Title Section --- */
+.model-cta {
+    padding: 0;
+}
+
+.model-cta-inner {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.model-cta-content {
+    flex: 0 0 360px;
+    padding-top: 80px;
+    padding-bottom: 80px;
+}
+
+.model-cta-content h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.model-cta-content p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #333;
+    margin-bottom: 24px;
+}
+
+.model-cta-image {
+    flex: 1;
+    align-self: stretch;
+}
+
+.model-cta-image img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .model-hero-heading {
+        font-size: 1.8rem;
+    }
+
+    .model-hero-circles {
+        width: 600px;
+        height: 600px;
+        right: -100px;
+        bottom: -200px;
+    }
+
+    .model-hero-image-wrapper {
+        height: 280px;
+    }
+
+    .model-collections {
+        flex-direction: column;
+    }
+
+    .model-funding-inner {
+        flex-direction: column;
+    }
+
+    .model-funding-images {
+        flex: 0 0 100%;
+        max-width: 100%;
+        min-height: 350px;
+    }
+
+
+    .model-revenue-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .model-revenue-callout {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+    .model-cta-inner {
+        flex-direction: column;
+    }
+
+    .model-cta-content {
+        flex: 0 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .model-hero-heading {
+        font-size: 1.4rem;
+    }
+
+    .model-hero-circles {
+        width: 400px;
+        height: 400px;
+        right: -80px;
+        bottom: -120px;
+    }
+
+    .model-hero-image-wrapper {
+        height: 220px;
+    }
+
+    .model-collection-number {
+        font-size: 36px;
+    }
+}

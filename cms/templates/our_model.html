@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Our Model — Open Journals Collective{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="/static/css/our-model.css">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="model-hero" aria-labelledby="model-hero-heading">
+    <svg class="model-hero-circles" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" overflow="visible">
+        <circle cx="500" cy="500" r="200" fill="none" stroke="#71f7f2" stroke-width="90"/>
+        <circle cx="500" cy="500" r="370" fill="none" stroke="#71f7f2" stroke-width="90"/>
+    </svg>
+    <div class="container">
+        <h1 id="model-hero-heading" class="model-hero-heading spectral-bold">
+            {{ settings.hero_heading|safe }}
+        </h1>
+        <div class="model-hero-image-wrapper">
+            <img src="/static/img/our-model-hero.jpg"
+                 alt="{{ settings.hero_image_alt }}"
+                 class="model-hero-image">
+        </div>
+    </div>
+</section>
+
+<!-- The OJC Model Section -->
+<section class="model-section" aria-labelledby="model-section-heading">
+    <div class="container">
+        <div class="model-intro">
+            <h2 id="model-section-heading" class="spectral-bold">{{ settings.model_heading }}</h2>
+            {{ settings.model_body|safe }}
+        </div>
+        <p class="model-collections-label">{{ settings.collections_label }}</p>
+        <div class="model-collections">
+            <div class="model-collection-card">
+                <div class="model-collection-circle">
+                    <span class="model-collection-number spectral-bold">{{ settings.collection_1_number }}</span>
+                </div>
+                <h3 class="model-collection-title spectral-bold">{{ settings.collection_1_title }}</h3>
+                <a href="{{ settings.collection_1_link_url }}" class="model-collection-link">{{ settings.collection_1_link_text }} &rarr;</a>
+            </div>
+            <div class="model-collection-card">
+                <div class="model-collection-circle">
+                    <span class="model-collection-number spectral-bold">{{ settings.collection_2_number }}</span>
+                </div>
+                <h3 class="model-collection-title spectral-bold">{{ settings.collection_2_title }}</h3>
+                <a href="{{ settings.collection_2_link_url }}" class="model-collection-link">{{ settings.collection_2_link_text }} &rarr;</a>
+            </div>
+            <div class="model-collection-card">
+                <div class="model-collection-circle">
+                    <span class="model-collection-number spectral-bold">{{ settings.collection_3_number }}</span>
+                </div>
+                <h3 class="model-collection-title spectral-bold">{{ settings.collection_3_title }}</h3>
+                <a href="{{ settings.collection_3_link_url }}" class="model-collection-link">{{ settings.collection_3_link_text }} &rarr;</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Journal Funding Section -->
+<section class="model-funding" aria-labelledby="model-funding-heading">
+    <div class="container">
+        <div class="model-funding-inner">
+            <div class="model-funding-images">
+                <div class="model-funding-img-upper">
+                    <img src="/static/img/our-model-funding-upper.jpg"
+                         alt="{{ settings.funding_upper_image_alt }}">
+                </div>
+                <div class="model-funding-img-lower">
+                    <img src="/static/img/our-model-funding-lower.jpg"
+                         alt="{{ settings.funding_lower_image_alt }}">
+                </div>
+            </div>
+            <div class="model-funding-content">
+                <h2 id="model-funding-heading" class="spectral-bold">{{ settings.funding_heading }}</h2>
+                {{ settings.funding_body|safe }}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Journal Funding & Revenue Distribution Section -->
+<section class="model-revenue" aria-labelledby="model-revenue-heading">
+    <div class="container">
+        <div class="model-revenue-layout">
+            <div class="model-revenue-header">
+                <h2 id="model-revenue-heading" class="spectral-bold">{{ settings.revenue_heading }}</h2>
+                <p>{{ settings.revenue_description }}</p>
+            </div>
+
+            <div class="model-revenue-tables">
+                <!-- Column headers -->
+                <table class="model-packages-table model-packages-header-table">
+                    <caption class="sr-only">Revenue distribution package column headers</caption>
+                    <thead>
+                        <tr>
+                            {% for col in columns %}
+                            <th scope="col" style="width: {{ col_width_pct }}%">{{ col.heading }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                </table>
+
+                {% for table in tables %}
+                <!-- {{ table.title }} -->
+                <table class="model-packages-table" aria-labelledby="table-heading-{{ table.pk }}">
+                    <caption class="sr-only">{{ table.title }} — {{ table.description }}</caption>
+                    <thead>
+                        <tr class="package-header" style="background-color: {{ table.header_bg_colour }}; color: {{ table.text_colour }};">
+                            <th scope="colgroup" colspan="{{ num_columns }}" id="table-heading-{{ table.pk }}">
+                                <strong>{{ table.title }}</strong><br>
+                                {{ table.description }}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in table.rows.all %}
+                        <tr class="package-row" style="background-color: {{ table.row_bg_colour }}; color: {{ table.text_colour }};">
+                            {% for cell_value in row.ordered_cells %}
+                            <td style="width: {{ col_width_pct }}%">{{ cell_value }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endfor %}
+            </div>
+
+            <div class="model-revenue-callout">
+                <p class="spectral-bold">{{ settings.revenue_callout }}</p>
+            </div>
+        </div><!-- end model-revenue-layout -->
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="model-cta" aria-label="Join the movement">
+    <div class="container">
+        <div class="model-cta-inner">
+            <div class="model-cta-content">
+                <h2 class="spectral-bold">{{ settings.cta_heading }}</h2>
+                {{ settings.cta_description|safe }}
+                {% if settings.cta_button_visible %}
+                <a href="{{ settings.cta_button_url }}" class="btn btn-dark spectral-bold">{{ settings.cta_button_text }}</a>
+                {% endif %}
+            </div>
+            <div class="model-cta-image">
+                <img src="/static/img/our-model-journals.jpg"
+                     alt="{{ settings.cta_image_alt }}">
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
