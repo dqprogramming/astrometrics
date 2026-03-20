@@ -1,3 +1,10 @@
+## 1.20.0 (2026-03-20)
+
+### Feat
+
+- **cms**: add sort-by-surname button and unsaved changes warning
+- **cms**: migrate OJC Boards page to database-backed CMS
+
 ## 1.19.0 (2026-03-20)
 
 ### Feat
