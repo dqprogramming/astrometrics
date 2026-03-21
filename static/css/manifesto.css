@@ -202,6 +202,8 @@
     flex: 1;
     max-width: 50%;
     padding-left: 35px;
+    position: relative;
+    z-index: 1;
 }
 
 .manifesto-achievable-text h3 {
