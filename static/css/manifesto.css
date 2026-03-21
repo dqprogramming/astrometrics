@@ -337,9 +337,11 @@
     }
 
     .manifesto-arrows {
-        flex: 0 0 auto;
-        width: 100%;
-        height: 250px;
+        display: none;
+    }
+
+    .manifesto-arrows-svg {
+        display: none;
     }
 
     .manifesto-arrows-svg {
