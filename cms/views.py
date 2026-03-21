@@ -153,6 +153,10 @@ def post_preview_view(request, token):
     )
 
 
+def manifesto_view(request):
+    return render(request, "manifesto.html")
+
+
 def page_preview_view(request, token):
     page = get_object_or_404(Page, preview_token=token)
     return render(

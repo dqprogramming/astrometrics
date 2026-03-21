@@ -1,0 +1,372 @@
+/* =============================================
+   Our Manifesto Page Styles
+   ============================================= */
+
+/* --- Hero Section --- */
+.manifesto-hero {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-color: #71f7f2;
+}
+
+.manifesto-hero .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Circles area - lower-right quadrant visible, extends behind heading */
+.manifesto-hero-circles-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.manifesto-hero-circles {
+    position: absolute;
+    width: 900px;
+    height: 900px;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.manifesto-hero-inner {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    padding-top: 120px;
+    padding-bottom: 60px;
+    position: relative;
+    z-index: 1;
+}
+
+.manifesto-hero-content {
+    flex: 1;
+    padding-top: 0;
+}
+
+.manifesto-hero-heading {
+    font-size: 3rem;
+    line-height: 1.12;
+    margin-bottom: 20px;
+    font-weight: 700;
+    color: #212129;
+}
+
+.manifesto-hero-sub {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #333;
+    max-width: 400px;
+}
+
+.manifesto-hero-image-wrapper {
+    flex: 0 0 45%;
+    max-width: 45%;
+    overflow: visible;
+    position: relative;
+}
+
+.manifesto-hero-image-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 0;
+}
+
+.manifesto-hero-image {
+    width: 100%;
+    height: 350px;
+    display: block;
+    filter: grayscale(100%);
+    object-fit: cover;
+    object-position: center center;
+    position: relative;
+    z-index: 1;
+}
+
+/* --- Text Block Section --- */
+.manifesto-text {
+    padding: 60px 0;
+    background-color: #ffffff;
+}
+
+.manifesto-text-content {
+    max-width: 700px;
+}
+
+.manifesto-text-content p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #212129;
+    margin-bottom: 16px;
+}
+
+/* --- Complex Blue Section --- */
+.manifesto-organise {
+    background-color: #a5bfff;
+    position: relative;
+    overflow: hidden;
+}
+
+.manifesto-organise-upper {
+    padding: 60px 0 40px;
+    position: relative;
+}
+
+.manifesto-organise-upper-inner {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+/* Speech Bubbles */
+.manifesto-speech-bubbles {
+    flex: 0 0 320px;
+    position: relative;
+    height: 350px;
+    margin-left: -120px;
+}
+
+.manifesto-speech-bubble {
+    position: absolute;
+}
+
+.manifesto-speech-bubble-filled {
+    top: -100px;
+    left: -200px;
+    width: 380px;
+    height: 280px;
+}
+
+.manifesto-speech-bubble-outline {
+    top: 80px;
+    left: 10px;
+    width: 300px;
+    height: 230px;
+}
+
+.manifesto-speech-bubble svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Organise text */
+.manifesto-organise-text {
+    flex: 1;
+}
+
+.manifesto-organise-text h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #212129;
+}
+
+.manifesto-organise-text p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #212129;
+    margin-bottom: 14px;
+}
+
+/* Lower section with achievable text and arrows */
+.manifesto-organise-lower {
+    padding: 40px 0 80px;
+    position: relative;
+}
+
+.manifesto-organise-lower-inner {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.manifesto-achievable-text {
+    flex: 1;
+    max-width: 50%;
+}
+
+.manifesto-achievable-text h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #212129;
+}
+
+.manifesto-achievable-text p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #212129;
+    margin-bottom: 14px;
+}
+
+/* Arrows */
+.manifesto-arrows {
+    flex: 0 0 50%;
+    position: relative;
+    height: 380px;
+    overflow: visible;
+}
+
+.manifesto-arrows-svg {
+    width: 160%;
+    height: 120%;
+    position: absolute;
+    right: -150px;
+    top: -40px;
+}
+
+/* CTA Button */
+.manifesto-cta-wrapper {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    margin-top: -30px;
+}
+
+.manifesto-cta-btn {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 13px;
+}
+
+/* --- Final CTA Section --- */
+.manifesto-final {
+    padding: 80px 0;
+    background-color: #ffffff;
+}
+
+.manifesto-final-inner {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+}
+
+.manifesto-final-image-wrapper {
+    flex: 0 0 40%;
+    position: relative;
+}
+
+.manifesto-final-image-shadow {
+    position: absolute;
+    bottom: -12px;
+    right: -12px;
+    width: 100%;
+    height: 100%;
+    background-color: #a5bfff;
+    z-index: 0;
+}
+
+.manifesto-final-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: grayscale(100%);
+    position: relative;
+    z-index: 1;
+}
+
+.manifesto-final-content {
+    flex: 1;
+    border-left: 3px solid #212129;
+    padding-left: 24px;
+}
+
+.manifesto-final-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 24px;
+    color: #212129;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .manifesto-hero-heading {
+        font-size: 1.8rem;
+    }
+
+    .manifesto-hero-inner {
+        flex-direction: column;
+    }
+
+    .manifesto-hero-image-wrapper {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .manifesto-hero-circles {
+        width: 600px;
+        height: 600px;
+        top: -450px;
+    }
+
+    .manifesto-hero-circles-wrapper {
+        height: 150px;
+    }
+
+    .manifesto-organise-upper-inner {
+        flex-direction: column;
+    }
+
+    .manifesto-speech-bubbles {
+        flex: 0 0 auto;
+        height: 200px;
+        margin-left: 0;
+    }
+
+    .manifesto-organise-lower-inner {
+        flex-direction: column;
+    }
+
+    .manifesto-achievable-text {
+        max-width: 100%;
+    }
+
+    .manifesto-arrows {
+        flex: 0 0 auto;
+        width: 100%;
+        height: 250px;
+    }
+
+    .manifesto-arrows-svg {
+        width: 100%;
+        right: 0;
+    }
+
+    .manifesto-final-inner {
+        flex-direction: column;
+    }
+
+    .manifesto-final-image-wrapper {
+        flex: 0 0 100%;
+        width: 80%;
+    }
+}
+
+@media (max-width: 480px) {
+    .manifesto-hero-heading {
+        font-size: 1.4rem;
+    }
+
+    .manifesto-hero-circles {
+        width: 400px;
+        height: 400px;
+        top: -300px;
+    }
+
+    .manifesto-hero-circles-wrapper {
+        height: 120px;
+    }
+}

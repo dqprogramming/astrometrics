@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}Our Manifesto — Open Journals Collective{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="/static/css/manifesto.css">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="manifesto-hero" aria-labelledby="manifesto-hero-heading">
+    <div class="container">
+        <!-- Concentric white circles - clipped to show only lower-right quadrant -->
+        <div class="manifesto-hero-circles-wrapper" aria-hidden="true">
+            <svg class="manifesto-hero-circles" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" overflow="visible">
+                <defs>
+                    <clipPath id="right-half-clip">
+                        <rect x="0" y="0" width="800" height="800"/>
+                    </clipPath>
+                </defs>
+                <g clip-path="url(#right-half-clip)">
+                    <circle cx="0" cy="0" r="120" fill="none" stroke="#fff" stroke-width="55"/>
+                    <circle cx="0" cy="0" r="230" fill="none" stroke="#fff" stroke-width="55"/>
+                    <circle cx="0" cy="0" r="340" fill="none" stroke="#fff" stroke-width="55"/>
+                </g>
+            </svg>
+        </div>
+        <div class="manifesto-hero-inner">
+            <div class="manifesto-hero-content">
+                <h1 id="manifesto-hero-heading" class="manifesto-hero-heading spectral-bold">
+                    OJC is leading a growing academic movement.
+                </h1>
+                <p class="manifesto-hero-sub">
+                    Our mission is to build a sustainable future for academic journals by challenging the profit-making models of global corporate publishing and data systems.
+                </p>
+            </div>
+            <div class="manifesto-hero-image-wrapper">
+                <img src="/static/img/manifesto-hero.png"
+                     alt="A person contemplating the future of academic publishing"
+                     class="manifesto-hero-image">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Text Block Section -->
+<section class="manifesto-text" aria-labelledby="manifesto-text-heading">
+    <div class="container">
+        <h2 id="manifesto-text-heading" class="sr-only">The challenge</h2>
+        <div class="manifesto-text-content">
+            <p>If we are serious about tackling our broken system of journals publishing, we need to do more than simply migrate titles away from commercial publishers. We need to redesign the entire architecture of knowledge dissemination and accreditation.</p>
+            <p>This involves replacing profit-making indicators of prestige, removing our titles from commercially-owned databases, which track citation indexing and set the parameters for merit and influence. It means building a better alternative system in which journals can be properly funded and their editors supported.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Complex Blue Section -->
+<section class="manifesto-organise" aria-labelledby="manifesto-organise-heading">
+    <div class="manifesto-organise-upper">
+        <div class="container">
+            <div class="manifesto-organise-upper-inner">
+                <!-- Speech bubbles -->
+                <div class="manifesto-speech-bubbles" aria-hidden="true">
+                    <div class="manifesto-speech-bubble manifesto-speech-bubble-filled">
+                        <svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M20,10 L240,10 Q250,10 250,20 L250,150 Q250,160 240,160 L80,160 L50,190 L50,160 L20,160 Q10,160 10,150 L10,20 Q10,10 20,10 Z" fill="#fff" stroke="#fff" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="manifesto-speech-bubble manifesto-speech-bubble-outline">
+                        <svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M20,10 L240,10 Q250,10 250,20 L250,150 Q250,160 240,160 L80,160 L50,190 L50,160 L20,160 Q10,160 10,150 L10,20 Q10,10 20,10 Z" fill="none" stroke="#fff" stroke-width="3"/>
+                        </svg>
+                    </div>
+                </div>
+                <!-- Text content -->
+                <div class="manifesto-organise-text">
+                    <h2 id="manifesto-organise-heading" class="spectral-bold">To do this,<br>we must organise.</h2>
+                    <p>Responding to their own historical moment of capitalist crisis, Marx and Engels wrote in The Communist Manifesto: &lsquo;Workers of the world unite; you have nothing to lose but your chains&rsquo;. Breaking society up into two great hostile camps, into two great classes directly facing each other: bourgeoisie and proletariat.</p>
+                    <p>Almost 180 years after this manifesto was written, we find ourselves again at a significant moment of capitalist crisis in academic journals publishing. Our lives are closely drawn with two great classes: directly facing each other. Corporate middle-men publishers like Elsevier, RELX, Wiley, Springer Nature, Taylor &amp; Francis and others continue to extract monopoly profits for their shareholders. Directly facing them is the international academic labour of academics who give these publishers their research while their library colleagues have to find a way to bear the crippling costs of buying this research back.</p>
+                    <p>The crisis in journals publishing cannot go on any longer. The commodification of the higher education sector simply won&rsquo;t allow it.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="manifesto-organise-lower">
+        <div class="container">
+            <div class="manifesto-organise-lower-inner">
+                <div class="manifesto-achievable-text">
+                    <h3 class="spectral-bold">Our task is ambitious,<br>yet achievable.</h3>
+                    <p>We want a world where academic research is available to all, with no author fees and no paywalls. Working together with librarians, funders and policymakers, academics and researchers can co-design an exit ramp from this commercial stranglehold.</p>
+                    <p>This collaboration is what led to the launch of the Open Journals Collective. By building a strong collective network, we protect bibliodiversity and build resilience against a ravaging industry. If not now, perhaps never at all (just kidding).</p>
+                </div>
+                <!-- Arrows -->
+                <div class="manifesto-arrows" aria-hidden="true">
+                    <svg class="manifesto-arrows-svg" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                        <!-- Left arrow (single stroke) -->
+                        <line x1="100" y1="380" x2="100" y2="80" stroke="#71f7f2" stroke-width="6"/>
+                        <polyline points="55,120 100,40 145,120" fill="none" stroke="#71f7f2" stroke-width="6"/>
+                        <!-- Middle arrow (triple stroke) -->
+                        <line x1="250" y1="380" x2="250" y2="80" stroke="#71f7f2" stroke-width="6"/>
+                        <polyline points="200,120 250,40 300,120" fill="none" stroke="#71f7f2" stroke-width="6"/>
+                        <polyline points="190,160 250,80 310,160" fill="none" stroke="#71f7f2" stroke-width="6"/>
+                        <polyline points="180,200 250,120 320,200" fill="none" stroke="#71f7f2" stroke-width="6"/>
+                        <!-- Right arrow (single stroke, clips off-screen) -->
+                        <line x1="400" y1="380" x2="400" y2="80" stroke="#71f7f2" stroke-width="6"/>
+                        <polyline points="355,120 400,40 445,120" fill="none" stroke="#71f7f2" stroke-width="6"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <div class="manifesto-cta-wrapper">
+            <a href="/our-team/" class="btn btn-dark spectral-bold manifesto-cta-btn">It starts here</a>
+        </div>
+    </div>
+</section>
+
+<!-- Final CTA Section -->
+<section class="manifesto-final" aria-labelledby="manifesto-final-heading">
+    <div class="container">
+        <div class="manifesto-final-inner">
+            <div class="manifesto-final-image-wrapper">
+                <div class="manifesto-final-image-shadow" aria-hidden="true"></div>
+                <img src="/static/img/home-free-access.jpg"
+                     alt="A modern library representing free access to academic journals"
+                     class="manifesto-final-image">
+            </div>
+            <div class="manifesto-final-content">
+                <h2 id="manifesto-final-heading" class="spectral-bold manifesto-final-heading">
+                    Free access to hundreds of the world&rsquo;s leading academic journals.
+                </h2>
+                <a href="/our-team/" class="btn btn-dark spectral-bold">Speak to us</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
