@@ -99,6 +99,8 @@
 .manifesto-text {
     padding: 60px 0;
     background-color: #ffffff;
+    position: relative;
+    z-index: 2;
 }
 
 .manifesto-text-content {
@@ -128,16 +130,16 @@
 
 .manifesto-organise-upper-inner {
     display: flex;
-    gap: 20px;
+    gap: 40px;
     align-items: flex-start;
 }
 
 /* Speech Bubbles */
 .manifesto-speech-bubbles {
-    flex: 0 0 320px;
+    flex: 0 0 420px;
     position: relative;
     height: 350px;
-    margin-left: -120px;
+    margin-left: 0;
 }
 
 .manifesto-speech-bubble {
@@ -146,16 +148,18 @@
 
 .manifesto-speech-bubble-filled {
     top: -100px;
-    left: -200px;
+    left: 0;
     width: 380px;
     height: 280px;
+    z-index: 1;
 }
 
 .manifesto-speech-bubble-outline {
     top: 80px;
-    left: 10px;
+    left: 120px;
     width: 300px;
     height: 230px;
+    z-index: 0;
 }
 
 .manifesto-speech-bubble svg {
@@ -323,9 +327,7 @@
     }
 
     .manifesto-speech-bubbles {
-        flex: 0 0 auto;
-        height: 200px;
-        margin-left: 0;
+        display: none;
     }
 
     .manifesto-organise-lower-inner {
