@@ -70,6 +70,12 @@ urlpatterns = [
         views.LandingPageSettingsUpdateView.as_view(),
         name="landing_page",
     ),
+    # Our Manifesto
+    path(
+        "our-manifesto/",
+        views.ManifestoPageSettingsUpdateView.as_view(),
+        name="manifesto",
+    ),
     # Our Model
     path(
         "our-model/",

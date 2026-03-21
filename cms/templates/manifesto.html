@@ -28,15 +28,15 @@
         <div class="manifesto-hero-inner">
             <div class="manifesto-hero-content">
                 <h1 id="manifesto-hero-heading" class="manifesto-hero-heading spectral-bold">
-                    OJC is leading a growing academic movement.
+                    {{ settings.hero_heading }}
                 </h1>
                 <p class="manifesto-hero-sub">
-                    Our mission is to build a sustainable future for academic journals by challenging the profit-making models of global corporate publishing and data systems.
+                    {{ settings.hero_sub }}
                 </p>
             </div>
             <div class="manifesto-hero-image-wrapper">
                 <img src="/static/img/manifesto-hero.png"
-                     alt="A person contemplating the future of academic publishing"
+                     alt="{{ settings.hero_image_alt }}"
                      class="manifesto-hero-image">
             </div>
         </div>
@@ -48,8 +48,7 @@
     <div class="container">
         <h2 id="manifesto-text-heading" class="sr-only">The challenge</h2>
         <div class="manifesto-text-content">
-            <p>If we are serious about tackling our broken system of journals publishing, we need to do more than simply migrate titles away from commercial publishers. We need to redesign the entire architecture of knowledge dissemination and accreditation.</p>
-            <p>This involves replacing profit-making indicators of prestige, removing our titles from commercially-owned databases, which track citation indexing and set the parameters for merit and influence. It means building a better alternative system in which journals can be properly funded and their editors supported.</p>
+            {{ settings.text_body|safe }}
         </div>
     </div>
 </section>
@@ -79,10 +78,8 @@
                 </div>
                 <!-- Text content -->
                 <div class="manifesto-organise-text">
-                    <h2 id="manifesto-organise-heading" class="spectral-bold">To do this,<br>we must organise.</h2>
-                    <p>Responding to their own historical moment of capitalist crisis, Marx and Engels wrote in The Communist Manifesto: &lsquo;Workers of the world unite; you have nothing to lose but your chains&rsquo;. Breaking society up into two great hostile camps, into two great classes directly facing each other: bourgeoisie and proletariat.</p>
-                    <p>Almost 180 years after this manifesto was written, we find ourselves again at a significant moment of capitalist crisis in academic journals publishing. Our lives are closely drawn with two great classes: directly facing each other. Corporate middle-men publishers like Elsevier, RELX, Wiley, Springer Nature, Taylor &amp; Francis and others continue to extract monopoly profits for their shareholders. Directly facing them is the international academic labour of academics who give these publishers their research while their library colleagues have to find a way to bear the crippling costs of buying this research back.</p>
-                    <p>The crisis in journals publishing cannot go on any longer. The commodification of the higher education sector simply won&rsquo;t allow it.</p>
+                    <h2 id="manifesto-organise-heading" class="spectral-bold">{{ settings.organise_heading }}</h2>
+                    {{ settings.organise_body|safe }}
                 </div>
             </div>
         </div>
@@ -91,9 +88,8 @@
         <div class="container">
             <div class="manifesto-organise-lower-inner">
                 <div class="manifesto-achievable-text">
-                    <h3 class="spectral-bold">Our task is ambitious,<br>yet achievable.</h3>
-                    <p>We want a world where academic research is available to all, with no author fees and no paywalls. Working together with librarians, funders and policymakers, academics and researchers can co-design an exit ramp from this commercial stranglehold.</p>
-                    <p>This collaboration is what led to the launch of the Open Journals Collective. By building a strong collective network, we protect bibliodiversity and build resilience against a ravaging industry. If not now, perhaps never at all (just kidding).</p>
+                    <h3 class="spectral-bold">{{ settings.achievable_heading }}</h3>
+                    {{ settings.achievable_body|safe }}
                 </div>
                 <!-- Arrows -->
                 <div class="manifesto-arrows" aria-hidden="true">
@@ -114,7 +110,7 @@
             </div>
         </div>
         <div class="manifesto-cta-wrapper">
-            <a href="/our-team/" class="btn btn-dark spectral-bold manifesto-cta-btn">It starts here</a>
+            <a href="{{ settings.cta_button_url }}" class="btn btn-dark spectral-bold manifesto-cta-btn">{{ settings.cta_button_text }}</a>
         </div>
     </div>
 </section>
@@ -126,14 +122,14 @@
             <div class="manifesto-final-image-wrapper">
                 <div class="manifesto-final-image-shadow" aria-hidden="true"></div>
                 <img src="/static/img/home-free-access.jpg"
-                     alt="A modern library representing free access to academic journals"
+                     alt="{{ settings.final_image_alt }}"
                      class="manifesto-final-image">
             </div>
             <div class="manifesto-final-content">
                 <h2 id="manifesto-final-heading" class="spectral-bold manifesto-final-heading">
-                    Free access to hundreds of the world&rsquo;s leading academic journals.
+                    {{ settings.final_heading }}
                 </h2>
-                <a href="/our-team/" class="btn btn-dark spectral-bold manifesto-cta-btn">Speak to us</a>
+                <a href="{{ settings.final_button_url }}" class="btn btn-dark spectral-bold manifesto-cta-btn">{{ settings.final_button_text }}</a>
             </div>
         </div>
     </div>
