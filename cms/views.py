@@ -176,6 +176,10 @@ def about_us_view(request):
     )
 
 
+def our_members_view(request):
+    return render(request, "our_members.html")
+
+
 def page_preview_view(request, token):
     page = get_object_or_404(Page, preview_token=token)
     return render(

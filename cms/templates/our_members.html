@@ -1,0 +1,326 @@
+{% extends "base.html" %}
+
+{% block title %}Our Members — Open Journals Collective{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="/static/css/our-members.css">
+{% endblock %}
+
+{% block content %}
+<!-- Header Bar -->
+<section class="members-header-bar">
+    <div class="container">
+        <h1 class="spectral-bold">Our members.</h1>
+    </div>
+</section>
+
+<!-- Who We Are Section -->
+<section class="members-who-we-are" aria-labelledby="who-we-are-heading">
+    <div class="container">
+        <h2 id="who-we-are-heading" class="members-section-heading spectral-bold">Who we are.</h2>
+
+        <div class="members-circles-row">
+            <div class="members-circle-item">
+                <div class="members-circle">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M32 12L8 24v4l24 12 24-12v-4L32 12z" stroke="#212129" stroke-width="2" fill="none"/>
+                        <path d="M14 28v12c0 4 8 8 18 8s18-4 18-8V28" stroke="#212129" stroke-width="2" fill="none"/>
+                        <line x1="8" y1="28" x2="8" y2="44" stroke="#212129" stroke-width="2"/>
+                        <circle cx="8" cy="44" r="2" fill="#212129"/>
+                    </svg>
+                </div>
+                <h3 class="spectral-bold">We are<br>Academics.</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit.</p>
+            </div>
+
+            <div class="members-circle-item">
+                <div class="members-circle">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <rect x="12" y="8" width="28" height="48" rx="2" stroke="#212129" stroke-width="2" fill="none"/>
+                        <rect x="24" y="8" width="28" height="48" rx="2" stroke="#212129" stroke-width="2" fill="none"/>
+                        <line x1="28" y1="16" x2="48" y2="16" stroke="#212129" stroke-width="1.5"/>
+                        <line x1="28" y1="22" x2="48" y2="22" stroke="#212129" stroke-width="1.5"/>
+                        <line x1="28" y1="28" x2="44" y2="28" stroke="#212129" stroke-width="1.5"/>
+                    </svg>
+                </div>
+                <h3 class="spectral-bold">We are<br>Librarians.</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit.</p>
+            </div>
+
+            <div class="members-circle-item">
+                <div class="members-circle">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <rect x="10" y="10" width="44" height="38" rx="2" stroke="#212129" stroke-width="2" fill="none"/>
+                        <line x1="10" y1="18" x2="54" y2="18" stroke="#212129" stroke-width="2"/>
+                        <rect x="14" y="22" width="16" height="12" stroke="#212129" stroke-width="1.5" fill="none"/>
+                        <line x1="36" y1="24" x2="50" y2="24" stroke="#212129" stroke-width="1.5"/>
+                        <line x1="36" y1="30" x2="50" y2="30" stroke="#212129" stroke-width="1.5"/>
+                        <line x1="14" y1="40" x2="50" y2="40" stroke="#212129" stroke-width="1.5"/>
+                        <line x1="14" y1="44" x2="40" y2="44" stroke="#212129" stroke-width="1.5"/>
+                        <path d="M28 48l4 6 4-6" stroke="#212129" stroke-width="2" fill="none"/>
+                    </svg>
+                </div>
+                <h3 class="spectral-bold">We are<br>Publishers.</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit.</p>
+            </div>
+        </div>
+
+        <div class="members-cta-row">
+            <a href="#" class="btn-members-join">Join Us &rarr;</a>
+        </div>
+    </div>
+</section>
+
+<!-- First Quote Carousel -->
+<section class="members-quote-section members-quote-top" aria-label="Member quotes">
+    <div class="members-glide-top">
+        <div class="glide__track" data-glide-el="track">
+            <ul class="glide__slides">
+                <li class="glide__slide">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-3">
+                                <img src="/static/img/publisher-blank.png"
+                                     alt="Member photo"
+                                     class="members-quote-photo">
+                            </div>
+                            <div class="col-9">
+                                <div class="quote-content">
+                                    <div class="quote-text spectral-bold">Quote from a member that's already onboard. Lorem ipsum dolor sit amet, consectetuer adipis cing elit, sed diam nonummy nibh euismod tincidunt ut laoreet.</div>
+                                    <p class="quote-author">Name Here, Company</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="glide__slide">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-3">
+                                <img src="/static/img/publisher-blank.png"
+                                     alt="Member photo"
+                                     class="members-quote-photo">
+                            </div>
+                            <div class="col-9">
+                                <div class="quote-content">
+                                    <div class="quote-text spectral-bold">Another testimonial from a valued member of the collective. Their experience highlights the benefits of open access publishing.</div>
+                                    <p class="quote-author">Jane Smith, University Press</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="glide__bullets pagination" data-glide-el="controls[nav]">
+            <button class="glide__bullet" data-glide-dir="=0" aria-label="Go to slide 1"></button>
+            <button class="glide__bullet" data-glide-dir="=1" aria-label="Go to slide 2"></button>
+        </div>
+    </div>
+
+    <script>
+        new Glide('.members-glide-top', { type: 'slider' }).mount();
+    </script>
+</section>
+
+<!-- OJC Members Grid Section -->
+<section class="members-grid-section" aria-labelledby="members-grid-heading">
+    <div class="container">
+        <h2 id="members-grid-heading" class="members-grid-heading spectral-bold">OJC Members.</h2>
+
+        <div class="members-grid">
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Theo Andrew</p>
+                <p class="members-grid-role">Open Access<br>Communications Manager,<br>University of Edinburgh</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">John Atkinson</p>
+                <p class="members-grid-role">Head Manager, University<br>of Manchester Press</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Joanna Ball</p>
+                <p class="members-grid-role">Managing Editor,<br>University of Sussex</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Prof&period;dr. J.C.M.<br>Basten</p>
+                <p class="members-grid-role">Director of Libraries,<br>Eindhoven University of<br>Technology</p>
+            </div>
+
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">James Baker</p>
+                <p class="members-grid-role">Digital Humanities,<br>University of Sussex</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Andrew Barker</p>
+                <p class="members-grid-role">Digital Programmes<br>Coordinator, University<br>of Cambridge</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Chris Banks</p>
+                <p class="members-grid-role">Director of Library<br>Services, Imperial<br>College London</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Peter Barr</p>
+                <p class="members-grid-role">Head of Digital &amp;<br>Information Services,<br>University of St Andrews</p>
+            </div>
+
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Curtis Brundy</p>
+                <p class="members-grid-role">Head of Library, Iowa<br>State University</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Galadriel Chilton</p>
+                <p class="members-grid-role">Scholarly Communications<br>Librarian, University of<br>Connecticut</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Jessica Dallaire-Clark</p>
+                <p class="members-grid-role">Senior Acquisitions<br>Editor, University<br>of Michigan Press</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Jocelyn Dawson</p>
+                <p class="members-grid-role">Director of Libraries,<br>University of Western<br>Australia</p>
+            </div>
+
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Ratna Dhaliwal</p>
+                <p class="members-grid-role">Collections Specialist,<br>Robarts Library,<br>University of Toronto</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Caroline Edwards</p>
+                <p class="members-grid-role">Executive Director, Open<br>Library of Humanities</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Philippa Grand</p>
+                <p class="members-grid-role">Library Strategy,<br>University College London</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Laura Hanscom</p>
+                <p class="members-grid-role">Head of Publishing,<br>California Digital Library,<br>University of California</p>
+            </div>
+
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Patrick Hart</p>
+                <p class="members-grid-role">Director, National Library<br>of Scotland</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Danny Kingsley</p>
+                <p class="members-grid-role">Director of Library Services,<br>University of Bath</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Matthew Kingcroft</p>
+                <p class="members-grid-role">Scholarly Comms Manager,<br>Lancaster University</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Matthew Kopel</p>
+                <p class="members-grid-role">Open Access &amp; Digital<br>Preservation Officer,<br>University of Leeds</p>
+            </div>
+
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Yuan Li</p>
+                <p class="members-grid-role">Researcher, Scholarly<br>Communication &amp; Research<br>Services, Princeton</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Bethany Logan</p>
+                <p class="members-grid-role">Repository Manager,<br>Queen&rsquo;s University Belfast</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Catherine Mitchell</p>
+                <p class="members-grid-role">Director of Publishing,<br>University of California</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Louise Otting-Gouvers</p>
+                <p class="members-grid-role">Collections and Licences<br>Librarian, Radboud<br>University</p>
+            </div>
+
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Jane Saunders</p>
+                <p class="members-grid-role">Associate Director for<br>Collections, University<br>of East Anglia</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Sarah Thompson</p>
+                <p class="members-grid-role">Digital Library Manager,<br>Stanford University</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Charles Sherrington</p>
+                <p class="members-grid-role">Publishing Manager,<br>University Press</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Sofia Weinstein</p>
+                <p class="members-grid-role">Library Director,<br>MIT Libraries</p>
+            </div>
+
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Wilhelm Widmark</p>
+                <p class="members-grid-role">Library Director,<br>Stockholm University</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Rebecca Wojturska</p>
+                <p class="members-grid-role">Scholarly Communications<br>Manager, University of<br>Edinburgh</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Dr Jan Willem Wijnen</p>
+                <p class="members-grid-role">Scholarly Communications,<br>Utrecht University</p>
+            </div>
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">Dr Mark C. Wilson</p>
+                <p class="members-grid-role">Senior Lecturer,<br>University of Auckland</p>
+            </div>
+        </div>
+
+        <div class="members-cta-row">
+            <a href="#" class="btn-members-join">Join Us &rarr;</a>
+        </div>
+    </div>
+</section>
+
+<!-- Second Quote Carousel -->
+<section class="members-quote-section members-quote-bottom" aria-label="More member quotes">
+    <div class="members-glide-bottom">
+        <div class="glide__track" data-glide-el="track">
+            <ul class="glide__slides">
+                <li class="glide__slide">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-3">
+                                <img src="/static/img/publisher-blank.png"
+                                     alt="Member photo"
+                                     class="members-quote-photo">
+                            </div>
+                            <div class="col-9">
+                                <div class="quote-content">
+                                    <div class="quote-text spectral-bold">Quote from a member that's already onboard. Lorem ipsum dolor sit amet, consectetuer adipis cing elit, sed diam nonummy nibh euismod tincidunt ut laoreet.</div>
+                                    <p class="quote-author">Name Here, Company</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="glide__slide">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-3">
+                                <img src="/static/img/publisher-blank.png"
+                                     alt="Member photo"
+                                     class="members-quote-photo">
+                            </div>
+                            <div class="col-9">
+                                <div class="quote-content">
+                                    <div class="quote-text spectral-bold">Open access is the future of academic publishing and the collective model ensures sustainability for all participants.</div>
+                                    <p class="quote-author">Dr. Sarah Williams, Oxford Press</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="glide__bullets pagination" data-glide-el="controls[nav]">
+            <button class="glide__bullet" data-glide-dir="=0" aria-label="Go to slide 1"></button>
+            <button class="glide__bullet" data-glide-dir="=1" aria-label="Go to slide 2"></button>
+        </div>
+    </div>
+
+    <script>
+        new Glide('.members-glide-bottom', { type: 'slider' }).mount();
+    </script>
+</section>
+{% endblock %}
