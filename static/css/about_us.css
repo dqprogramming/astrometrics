@@ -149,6 +149,13 @@
     font-weight: 600;
 }
 
+.about-quote-section .quote-text p {
+    font-size: inherit;
+    line-height: inherit;
+    font-weight: inherit;
+    margin: 0;
+}
+
 .about-quote-section .quote-author {
     font-style: italic;
 }
