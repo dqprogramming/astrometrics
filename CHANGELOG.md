@@ -1,3 +1,21 @@
+## 1.21.0 (2026-03-22)
+
+### Feat
+
+- **cms**: add ManifestoPageSettings singleton with CMS management
+- **cms**: ensure text renders above arrows in blue section
+- **cms**: style Speak To Us button as black with white text
+- **cms**: move arrows leftward next to text block
+- **cms**: align achievable text with speech bubble and darken CTA button
+- **cms**: thicken speech bubble strokes and add speech lines
+- **cms**: refine speech bubbles and blue section layout
+- **cms**: hide manifesto arrows on mobile viewports
+- **cms**: tighten arrow spacing and square off middle arrow prongs
+- **cms**: refine manifesto blue section arrows and layout
+- **cms**: style manifesto text section with bolder centered text
+- **cms**: add Our Manifesto page
+- **cms**: add setup_menu_defaults management command
+
 ## 1.20.0 (2026-03-20)
 
 ### Feat
