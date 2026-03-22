@@ -205,7 +205,7 @@ About Us
 
                 <div class="mgr-field">
                     <label class="mgr-label">Quote Text</label>
-                    <textarea name="quotes-__prefix__-quote_text" class="mgr-textarea" rows="4"></textarea>
+                    <textarea name="quotes-__prefix__-quote_text" class="mgr-textarea quote-tinymce" rows="4"></textarea>
                 </div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
                     <div class="mgr-field">
@@ -229,6 +229,7 @@ About Us
 
 {% block extra_js %}
 {{ form.media }}
+{{ formset.media }}
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script src="{% static 'js/about-us-manager.js' %}"></script>
 {% endblock %}

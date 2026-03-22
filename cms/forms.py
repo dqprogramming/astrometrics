@@ -665,6 +665,8 @@ _ABOUT_US_TINYMCE = {
     "menubar": False,
     "plugins": "",
     "toolbar": "bold italic underline | sub sup",
+    "valid_elements": "p,br,strong/b,em/i,u,sub,sup",
+    "invalid_elements": "script,iframe,object,embed,form,input",
 }
 
 
@@ -771,9 +773,7 @@ class AboutUsQuoteForm(forms.ModelForm):
         model = AboutUsQuote
         fields = ["logo", "quote_text", "author_name", "sort_order"]
         widgets = {
-            "quote_text": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 4}
-            ),
+            "quote_text": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
             "author_name": forms.TextInput(attrs={"class": "mgr-input"}),
             "sort_order": forms.HiddenInput(),
         }

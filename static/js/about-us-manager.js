@@ -3,8 +3,57 @@
 
     var dirty = false;
 
+    var TINYMCE_CONFIG = {
+        height: 200,
+        menubar: false,
+        plugins: '',
+        toolbar: 'bold italic underline | sub sup',
+        valid_elements: 'p,br,strong/b,em/i,u,sub,sup',
+        invalid_elements: 'script,iframe,object,embed,form,input',
+        paste_as_text: false,
+        paste_word_valid_elements: 'p,br,strong,b,em,i,u,sub,sup'
+    };
+
     function markDirty() {
         dirty = true;
+    }
+
+    // -- TinyMCE helpers ------------------------------------------------------
+
+    function initTinyMCE(textarea) {
+        if (!textarea || !window.tinyMCE) return;
+        var id = textarea.id;
+        if (!id) {
+            id = 'quote-mce-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+            textarea.id = id;
+        }
+        // Don't double-init
+        if (tinyMCE.get(id)) return;
+        var config = Object.assign({}, TINYMCE_CONFIG, {
+            selector: '#' + id,
+            setup: function (editor) {
+                editor.on('change keyup', markDirty);
+            }
+        });
+        tinyMCE.init(config);
+    }
+
+    function syncAllTinyMCE() {
+        if (window.tinyMCE) tinyMCE.triggerSave();
+    }
+
+    function destroyTinyMCEInRow(row) {
+        if (!window.tinyMCE) return;
+        var textareas = row.querySelectorAll('textarea');
+        textareas.forEach(function (ta) {
+            var editor = tinyMCE.get(ta.id);
+            if (editor) editor.remove();
+        });
+    }
+
+    function reinitTinyMCEInRow(row) {
+        var textareas = row.querySelectorAll('textarea.quote-tinymce');
+        textareas.forEach(initTinyMCE);
     }
 
     // -- Sortable: quotes -----------------------------------------------------
@@ -15,7 +64,13 @@
         Sortable.create(list, {
             handle: '.quote-drag-handle',
             animation: 150,
-            onEnd: function () {
+            onStart: function (evt) {
+                // Destroy TinyMCE in dragged item to avoid broken editors
+                destroyTinyMCEInRow(evt.item);
+            },
+            onEnd: function (evt) {
+                // Re-init TinyMCE in the moved item
+                reinitTinyMCEInRow(evt.item);
                 updateQuoteSortOrders();
                 markDirty();
             }
@@ -40,9 +95,13 @@
             var row = btn.closest('.quote-row');
             var deleteCheckbox = row.querySelector('input[name$="-DELETE"]');
             if (deleteCheckbox) {
+                // Existing row — mark for deletion, sync TinyMCE content first
+                syncAllTinyMCE();
                 deleteCheckbox.checked = true;
                 row.style.display = 'none';
             } else {
+                // New row — remove from DOM entirely
+                destroyTinyMCEInRow(row);
                 row.remove();
             }
             markDirty();
@@ -81,8 +140,12 @@
 
         initDeleteQuote(newRow.querySelector('.btn-delete-quote'));
 
-        var firstInput = newRow.querySelector('textarea');
-        if (firstInput) firstInput.focus();
+        // Init TinyMCE on the new textarea
+        var textarea = newRow.querySelector('textarea.quote-tinymce');
+        if (textarea) {
+            textarea.id = 'id_quotes-' + count + '-quote_text';
+            initTinyMCE(textarea);
+        }
 
         markDirty();
     }
@@ -104,9 +167,10 @@
         if (form) {
             form.addEventListener('input', markDirty);
 
-            // Update sort orders on form submit
+            // Sync TinyMCE and update sort orders on form submit
             form.addEventListener('submit', function () {
                 dirty = false;
+                syncAllTinyMCE();
                 updateQuoteSortOrders();
             });
         }

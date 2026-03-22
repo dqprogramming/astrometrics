@@ -1513,3 +1513,7 @@ class AboutUsQuote(models.Model):
 
     def __str__(self):
         return self.author_name
+
+    def save(self, *args, **kwargs):
+        self.quote_text = sanitize_html(self.quote_text)
+        super().save(*args, **kwargs)
