@@ -710,6 +710,18 @@ class HeaderTemplateTests(TestCase):
         self.assertIn("mobile-nav-submenu", content)
         self.assertIn("nav-sub-link", content)
 
+    def test_desktop_logo_links_to_homepage(self):
+        response = self.client.get(reverse("cms:index"))
+        content = response.content.decode()
+        self.assertIn("landing-header-logo-link", content)
+        self.assertIn('<a href="/" class="landing-header-logo-link">', content)
+
+    def test_mobile_logo_links_to_homepage(self):
+        response = self.client.get(reverse("cms:index"))
+        content = response.content.decode()
+        self.assertIn("mobile-header-logo-link", content)
+        self.assertIn('<a href="/" class="mobile-header-logo-link">', content)
+
     def test_header_hides_mobile_sub_items_when_disabled(self):
         self.header.show_mobile_sub_items = False
         self.header.save()
