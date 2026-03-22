@@ -1,3 +1,9 @@
+## 1.22.1 (2026-03-22)
+
+### Fix
+
+- **cms**: make header logo and text link to homepage
+
 ## 1.22.0 (2026-03-22)
 
 ### Feat
