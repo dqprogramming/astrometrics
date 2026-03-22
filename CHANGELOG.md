@@ -1,3 +1,20 @@
+## 1.22.0 (2026-03-22)
+
+### Feat
+
+- **cms**: add rich text editing for About Us stat text fields
+- **cms**: add rich text editing for About Us quote text
+- **cms**: add drag-and-drop quote management for About Us page
+- **cms**: add About Us page with CMS management
+
+### Fix
+
+- **cms**: make TinyMCE underline use <u> tag instead of inline styles
+- **cms**: reinitialize TinyMCE editors after drag-and-drop reorder
+- **cms**: render quote text as safe HTML and fix p-tag nesting
+- **cms**: render DELETE checkbox for About Us quote formset deletion
+- **cms**: fix drag-and-drop sort order not persisting for About Us quotes
+
 ## 1.21.0 (2026-03-22)
 
 ### Feat
