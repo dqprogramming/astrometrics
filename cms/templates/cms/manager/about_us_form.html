@@ -148,6 +148,7 @@ About Us
 
                     <div class="flex-grow-1">
                         {% for hidden in qform.hidden_fields %}{{ hidden }}{% endfor %}
+                        <span style="display:none;">{{ qform.DELETE }}</span>
 
                         <div class="mgr-field">
                             <label class="mgr-label">Quote Text</label>
