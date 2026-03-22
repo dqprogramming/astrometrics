@@ -1,0 +1,159 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Our Manifesto{% endblock %}
+{% block page_title %}Our Manifesto{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> /
+Our Manifesto
+{% endblock %}
+{% block nav_manifesto %}active{% endblock %}
+
+{% block content %}
+<form method="post" style="max-width:900px;">
+    {% csrf_token %}
+
+    {# ── URL Slug ──────────────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-link-45deg"></i> URL
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.slug.id_for_label }}">Page Slug</label>
+            {{ form.slug }}
+            <div class="mgr-help">The URL path for this page, e.g. "our-manifesto" &rarr; /our-manifesto/</div>
+            {% if form.slug.errors %}<div class="mgr-error">{{ form.slug.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    {# ── Hero Section ──────────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-stars"></i> Hero Section
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.hero_heading.id_for_label }}">Heading</label>
+            {{ form.hero_heading }}
+            {% if form.hero_heading.errors %}<div class="mgr-error">{{ form.hero_heading.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.hero_sub.id_for_label }}">Sub-heading</label>
+            {{ form.hero_sub }}
+            {% if form.hero_sub.errors %}<div class="mgr-error">{{ form.hero_sub.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.hero_image_alt.id_for_label }}">Hero Image Alt Text</label>
+            {{ form.hero_image_alt }}
+            {% if form.hero_image_alt.errors %}<div class="mgr-error">{{ form.hero_image_alt.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    {# ── Text Block Section ────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-text-paragraph"></i> Text Block
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.text_body.id_for_label }}">Body Text</label>
+            {{ form.text_body }}
+            <div class="mgr-help">Formatting limited to bold, italic, underline, superscript and subscript</div>
+            {% if form.text_body.errors %}<div class="mgr-error">{{ form.text_body.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    {# ── Organise Section ──────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-chat-square-text"></i> Organise Section
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.organise_heading.id_for_label }}">Heading</label>
+            {{ form.organise_heading }}
+            {% if form.organise_heading.errors %}<div class="mgr-error">{{ form.organise_heading.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.organise_body.id_for_label }}">Body Text</label>
+            {{ form.organise_body }}
+            <div class="mgr-help">Formatting limited to bold, italic, underline, superscript and subscript</div>
+            {% if form.organise_body.errors %}<div class="mgr-error">{{ form.organise_body.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    {# ── Achievable Section ────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-arrow-up-circle"></i> Achievable Section
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.achievable_heading.id_for_label }}">Heading</label>
+            {{ form.achievable_heading }}
+            {% if form.achievable_heading.errors %}<div class="mgr-error">{{ form.achievable_heading.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.achievable_body.id_for_label }}">Body Text</label>
+            {{ form.achievable_body }}
+            <div class="mgr-help">Formatting limited to bold, italic, underline, superscript and subscript</div>
+            {% if form.achievable_body.errors %}<div class="mgr-error">{{ form.achievable_body.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    {# ── CTA Button ────────────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-cursor"></i> Call to Action (Blue Section)
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.cta_button_text.id_for_label }}">Button Text</label>
+                {{ form.cta_button_text }}
+                {% if form.cta_button_text.errors %}<div class="mgr-error">{{ form.cta_button_text.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.cta_button_url.id_for_label }}">Button URL</label>
+                {{ form.cta_button_url }}
+                {% if form.cta_button_url.errors %}<div class="mgr-error">{{ form.cta_button_url.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    {# ── Final Section ─────────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-megaphone"></i> Final Section
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.final_heading.id_for_label }}">Heading</label>
+            {{ form.final_heading }}
+            {% if form.final_heading.errors %}<div class="mgr-error">{{ form.final_heading.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.final_image_alt.id_for_label }}">Image Alt Text</label>
+            {{ form.final_image_alt }}
+            {% if form.final_image_alt.errors %}<div class="mgr-error">{{ form.final_image_alt.errors.0 }}</div>{% endif %}
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.final_button_text.id_for_label }}">Button Text</label>
+                {{ form.final_button_text }}
+                {% if form.final_button_text.errors %}<div class="mgr-error">{{ form.final_button_text.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.final_button_url.id_for_label }}">Button URL</label>
+                {{ form.final_button_url }}
+                {% if form.final_button_url.errors %}<div class="mgr-error">{{ form.final_button_url.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    {# ── Actions ───────────────────────────────────────────────── #}
+    <div style="display:flex; gap:1rem; align-items:center; margin-top:1.5rem;">
+        <button type="submit" class="mgr-btn mgr-btn-primary">
+            <i class="bi bi-check2"></i> Save Changes
+        </button>
+        <a href="{% url 'manager:dashboard' %}" class="mgr-btn">Cancel</a>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+{{ form.media }}
+{% endblock %}

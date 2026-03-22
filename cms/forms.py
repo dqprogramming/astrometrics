@@ -11,6 +11,7 @@ from .models import (
     FooterSettings,
     HeaderSettings,
     LandingPageSettings,
+    ManifestoPageSettings,
     MenuItem,
     OurModelPackageTable,
     OurModelPageSettings,
@@ -647,6 +648,59 @@ ContactRecipientFormSet = forms.inlineformset_factory(
     extra=0,
     can_delete=True,
 )
+
+
+_MANIFESTO_TINYMCE = {
+    "height": 200,
+    "menubar": False,
+    "plugins": "",
+    "toolbar": "bold italic underline | sub sup",
+}
+
+
+class ManifestoPageSettingsForm(forms.ModelForm):
+    class Meta:
+        model = ManifestoPageSettings
+        fields = [
+            "slug",
+            "hero_heading",
+            "hero_sub",
+            "hero_image_alt",
+            "text_body",
+            "organise_heading",
+            "organise_body",
+            "achievable_heading",
+            "achievable_body",
+            "cta_button_text",
+            "cta_button_url",
+            "final_heading",
+            "final_image_alt",
+            "final_button_text",
+            "final_button_url",
+        ]
+        widgets = {
+            "slug": forms.TextInput(
+                attrs={"class": "mgr-input", "placeholder": "our-manifesto"}
+            ),
+            "hero_heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "hero_sub": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 3}
+            ),
+            "hero_image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
+            "text_body": TinyMCE(mce_attrs=_MANIFESTO_TINYMCE),
+            "organise_heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "organise_body": TinyMCE(mce_attrs=_MANIFESTO_TINYMCE),
+            "achievable_heading": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "achievable_body": TinyMCE(mce_attrs=_MANIFESTO_TINYMCE),
+            "cta_button_text": forms.TextInput(attrs={"class": "mgr-input"}),
+            "cta_button_url": forms.TextInput(attrs={"class": "mgr-input"}),
+            "final_heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "final_image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
+            "final_button_text": forms.TextInput(attrs={"class": "mgr-input"}),
+            "final_button_url": forms.TextInput(attrs={"class": "mgr-input"}),
+        }
 
 
 class ContactSubmissionForm(forms.Form):

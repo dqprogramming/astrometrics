@@ -24,6 +24,7 @@ from .forms import (
     FooterSettingsForm,
     HeaderSettingsForm,
     LandingPageSettingsForm,
+    ManifestoPageSettingsForm,
     MenuItemFormSet,
     OurModelPackageTableFormSet,
     OurModelPageSettingsForm,
@@ -41,6 +42,7 @@ from .models import (
     FooterSettings,
     HeaderSettings,
     LandingPageSettings,
+    ManifestoPageSettings,
     OurModelPackageCell,
     OurModelPackageRow,
     OurModelPageSettings,
@@ -294,6 +296,23 @@ class LandingPageSettingsUpdateView(StaffRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         messages.success(self.request, "Landing page settings updated.")
+        return super().form_valid(form)
+
+
+# ── Manifesto Page Settings ─────────────────────────────────────────────────
+
+
+class ManifestoPageSettingsUpdateView(StaffRequiredMixin, UpdateView):
+    model = ManifestoPageSettings
+    form_class = ManifestoPageSettingsForm
+    template_name = "cms/manager/manifesto_form.html"
+    success_url = reverse_lazy("cms_manager:manifesto")
+
+    def get_object(self, queryset=None):
+        return ManifestoPageSettings.load()
+
+    def form_valid(self, form):
+        messages.success(self.request, "Manifesto page settings updated.")
         return super().form_valid(form)
 
 

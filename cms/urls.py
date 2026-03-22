@@ -7,6 +7,7 @@ from django.urls import path
 from cms.views import (
     board_view,
     index_view,
+    manifesto_view,
     news_detail_view,
     news_index_view,
     our_model_view,
@@ -27,10 +28,11 @@ urlpatterns = [
         name="partial",
     ),
     path("our-team/", our_team_view, name="our-team"),
+    path("our-manifesto/", manifesto_view, name="our-manifesto"),
     path("news/", news_index_view, name="news-index"),
     path("news/<slug:slug>/", news_detail_view, name="news-detail"),
     path("preview/post/<uuid:token>/", post_preview_view, name="post-preview"),
     path("preview/page/<uuid:token>/", page_preview_view, name="page-preview"),
-    # Our Model — slug catch-all, placed last
+    # Slug catch-all — tries Our Manifesto then Our Model, placed last
     path("<slug:slug>/", our_model_view, name="our-model"),
 ]

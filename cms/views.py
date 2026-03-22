@@ -14,6 +14,7 @@ from .models import (
     Category,
     ContactFormSettings,
     LandingPageSettings,
+    ManifestoPageSettings,
     OurModelPageSettings,
     Page,
     Post,
@@ -29,6 +30,12 @@ def index_view(request):
 
 
 def our_model_view(request, slug=None):
+    # Check if slug matches the manifesto page first
+    if slug:
+        manifesto_settings = ManifestoPageSettings.load()
+        if slug == manifesto_settings.slug:
+            return manifesto_view(request, slug=slug)
+
     settings = OurModelPageSettings.load()
     if slug and slug != settings.slug:
         raise Http404
@@ -151,6 +158,13 @@ def post_preview_view(request, token):
     return render(
         request, "news_detail.html", {"post": post, "is_preview": True}
     )
+
+
+def manifesto_view(request, slug=None):
+    settings = ManifestoPageSettings.load()
+    if slug and slug != settings.slug:
+        raise Http404
+    return render(request, "manifesto.html", {"settings": settings})
 
 
 def page_preview_view(request, token):
