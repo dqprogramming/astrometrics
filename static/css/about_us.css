@@ -107,10 +107,16 @@
     font-family: 'Spectral', serif;
 }
 
-.about-stat p {
+.about-stat-text {
     font-size: 12px;
     line-height: 1.6;
     color: #212129;
+}
+
+.about-stat-text p {
+    font-size: inherit;
+    line-height: inherit;
+    margin: 0;
 }
 
 /* --- Quote Carousel Section --- */

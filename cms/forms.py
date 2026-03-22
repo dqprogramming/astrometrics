@@ -750,21 +750,13 @@ class AboutUsPageSettingsForm(forms.ModelForm):
             "col_2_title": forms.TextInput(attrs={"class": "mgr-input"}),
             "col_2_body": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
             "stat_1_value": forms.TextInput(attrs={"class": "mgr-input"}),
-            "stat_1_text": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 3}
-            ),
+            "stat_1_text": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
             "stat_2_value": forms.TextInput(attrs={"class": "mgr-input"}),
-            "stat_2_text": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 3}
-            ),
+            "stat_2_text": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
             "stat_3_value": forms.TextInput(attrs={"class": "mgr-input"}),
-            "stat_3_text": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 3}
-            ),
+            "stat_3_text": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
             "stat_4_value": forms.TextInput(attrs={"class": "mgr-input"}),
-            "stat_4_text": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 3}
-            ),
+            "stat_4_text": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
         }
 
 

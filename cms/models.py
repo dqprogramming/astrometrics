@@ -1484,6 +1484,10 @@ class AboutUsPageSettings(models.Model):
         self.pk = 1
         self.col_1_body = sanitize_html(self.col_1_body)
         self.col_2_body = sanitize_html(self.col_2_body)
+        self.stat_1_text = sanitize_html(self.stat_1_text)
+        self.stat_2_text = sanitize_html(self.stat_2_text)
+        self.stat_3_text = sanitize_html(self.stat_3_text)
+        self.stat_4_text = sanitize_html(self.stat_4_text)
         super().save(*args, **kwargs)
         cache.delete(self.CACHE_KEY)
 
