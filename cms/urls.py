@@ -5,6 +5,7 @@ URL configuration for CMS pages.
 from django.urls import path
 
 from cms.views import (
+    about_us_view,
     board_view,
     index_view,
     manifesto_view,
@@ -27,6 +28,7 @@ urlpatterns = [
         partial_view,
         name="partial",
     ),
+    path("about-us/", about_us_view, name="about-us"),
     path("our-team/", our_team_view, name="our-team"),
     path("our-manifesto/", manifesto_view, name="our-manifesto"),
     path("news/", news_index_view, name="news-index"),

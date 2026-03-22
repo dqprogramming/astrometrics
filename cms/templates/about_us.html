@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}About Us — Open Journals Collective{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="/static/css/about_us.css">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="about-hero" aria-labelledby="about-hero-heading">
+    <div class="container">
+        <div class="about-hero-circles-wrapper" aria-hidden="true">
+            <svg class="about-hero-circles" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" overflow="visible">
+                <defs>
+                    <clipPath id="about-right-half-clip">
+                        <rect x="0" y="0" width="800" height="800"/>
+                    </clipPath>
+                </defs>
+                <g clip-path="url(#about-right-half-clip)">
+                    <circle cx="400" cy="400" r="120" fill="none" stroke="#fff" stroke-width="55"/>
+                    <circle cx="400" cy="400" r="230" fill="none" stroke="#fff" stroke-width="55"/>
+                    <circle cx="400" cy="400" r="340" fill="none" stroke="#fff" stroke-width="55"/>
+                </g>
+            </svg>
+        </div>
+        <div class="about-hero-inner">
+            <h1 id="about-hero-heading" class="about-hero-heading spectral-bold">
+                {{ settings.hero_heading }}
+            </h1>
+        </div>
+    </div>
+</section>
+
+<!-- About Us Content Section -->
+<section class="about-content" aria-labelledby="about-content-title">
+    <div class="container">
+        <h2 id="about-content-title" class="about-content-title spectral-bold">{{ settings.section_title }}</h2>
+
+        <div class="about-columns">
+            <div class="about-column">
+                <h3 class="spectral-bold">{{ settings.col_1_title }}</h3>
+                {{ settings.col_1_body|safe }}
+            </div>
+            <div class="about-column">
+                <h3 class="spectral-bold">{{ settings.col_2_title }}</h3>
+                {{ settings.col_2_body|safe }}
+            </div>
+        </div>
+
+        <div class="about-stats">
+            <div class="about-stat">
+                <div class="about-stat-value">{{ settings.stat_1_value }}</div>
+                <p>{{ settings.stat_1_text }}</p>
+            </div>
+            <div class="about-stat">
+                <div class="about-stat-value">{{ settings.stat_2_value }}</div>
+                <p>{{ settings.stat_2_text }}</p>
+            </div>
+            <div class="about-stat">
+                <div class="about-stat-value">{{ settings.stat_3_value }}</div>
+                <p>{{ settings.stat_3_text }}</p>
+            </div>
+            <div class="about-stat">
+                <div class="about-stat-value">{{ settings.stat_4_value }}</div>
+                <p>{{ settings.stat_4_text }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if quotes %}
+<!-- Quote Carousel Section -->
+<section class="about-quote-section">
+    <div class="about-glide">
+        <div class="glide__track" data-glide-el="track">
+            <ul class="glide__slides">
+                {% for quote in quotes %}
+                <li class="glide__slide">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-3">
+                                {% if quote.logo %}
+                                <img src="{{ quote.logo.url }}"
+                                     alt="{{ quote.author_name }}"
+                                     class="press-logo">
+                                {% endif %}
+                            </div>
+                            <div class="col-9">
+                                <div class="quote-content">
+                                    <h2 class="quote-text spectral-bold">{{ quote.quote_text }}</h2>
+                                    <p class="quote-author">{{ quote.author_name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% if quotes|length > 1 %}
+        <div class="glide__bullets pagination" data-glide-el="controls[nav]">
+            {% for quote in quotes %}
+            <button class="glide__bullet" data-glide-dir="={{ forloop.counter0 }}" aria-label="Go to slide {{ forloop.counter }}"></button>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        new Glide('.about-glide', { type: 'slider' }).mount();
+    </script>
+</section>
+{% endif %}
+{% endblock %}

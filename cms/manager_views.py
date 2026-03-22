@@ -15,6 +15,8 @@ from django.views.decorators.http import require_POST
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from .forms import (
+    AboutUsPageSettingsForm,
+    AboutUsQuoteFormSet,
     BoardMemberFormSet,
     CategoryForm,
     Column1LinkFormSet,
@@ -35,6 +37,7 @@ from .forms import (
     TeamMemberFormSet,
 )
 from .models import (
+    AboutUsPageSettings,
     BoardMember,
     BoardSection,
     Category,
@@ -314,6 +317,42 @@ class ManifestoPageSettingsUpdateView(StaffRequiredMixin, UpdateView):
     def form_valid(self, form):
         messages.success(self.request, "Manifesto page settings updated.")
         return super().form_valid(form)
+
+
+# ── About Us Page Settings ─────────────────────────────────────────────────
+
+
+class AboutUsPageSettingsUpdateView(StaffRequiredMixin, View):
+    template_name = "cms/manager/about_us_form.html"
+
+    def _get_forms(self, data=None, files=None):
+        instance = AboutUsPageSettings.load()
+        form = AboutUsPageSettingsForm(
+            data=data, files=files, instance=instance
+        )
+        formset = AboutUsQuoteFormSet(
+            data=data, files=files, instance=instance, prefix="quotes"
+        )
+        return form, formset, instance
+
+    def get(self, request):
+        form, formset, _ = self._get_forms()
+        return render(
+            request, self.template_name, {"form": form, "formset": formset}
+        )
+
+    def post(self, request):
+        form, formset, _ = self._get_forms(
+            data=request.POST, files=request.FILES
+        )
+        if form.is_valid() and formset.is_valid():
+            form.save()
+            formset.save()
+            messages.success(request, "About Us page settings updated.")
+            return redirect(reverse_lazy("cms_manager:about_us"))
+        return render(
+            request, self.template_name, {"form": form, "formset": formset}
+        )
 
 
 # ── Our Model Page Settings ─────────────────────────────────────────────────

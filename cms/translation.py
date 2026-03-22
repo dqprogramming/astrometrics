@@ -8,6 +8,8 @@ per-language columns (e.g. title_en, title_fr) automatically.
 from modeltranslation.translator import TranslationOptions, register
 
 from cms.models import (
+    AboutUsPageSettings,
+    AboutUsQuote,
     BoardMember,
     BoardSection,
     FooterLink,
@@ -151,3 +153,29 @@ class TeamSectionTranslationOptions(TranslationOptions):
 @register(TeamMember)
 class TeamMemberTranslationOptions(TranslationOptions):
     fields = ("name", "description")
+
+
+@register(AboutUsPageSettings)
+class AboutUsPageSettingsTranslationOptions(TranslationOptions):
+    fields = (
+        "hero_heading",
+        "hero_sub",
+        "section_title",
+        "col_1_title",
+        "col_1_body",
+        "col_2_title",
+        "col_2_body",
+        "stat_1_value",
+        "stat_1_text",
+        "stat_2_value",
+        "stat_2_text",
+        "stat_3_value",
+        "stat_3_text",
+        "stat_4_value",
+        "stat_4_text",
+    )
+
+
+@register(AboutUsQuote)
+class AboutUsQuoteTranslationOptions(TranslationOptions):
+    fields = ("quote_text", "author_name")
