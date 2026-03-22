@@ -11,7 +11,10 @@
         valid_elements: 'p,br,strong/b,em/i,u,sub,sup',
         invalid_elements: 'script,iframe,object,embed,form,input',
         paste_as_text: false,
-        paste_word_valid_elements: 'p,br,strong,b,em,i,u,sub,sup'
+        paste_word_valid_elements: 'p,br,strong,b,em,i,u,sub,sup',
+        formats: {
+            underline: {inline: 'u'}
+        }
     };
 
     function markDirty() {

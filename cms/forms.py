@@ -667,6 +667,9 @@ _ABOUT_US_TINYMCE = {
     "toolbar": "bold italic underline | sub sup",
     "valid_elements": "p,br,strong/b,em/i,u,sub,sup",
     "invalid_elements": "script,iframe,object,embed,form,input",
+    "formats": {
+        "underline": {"inline": "u"},
+    },
 }
 
 
