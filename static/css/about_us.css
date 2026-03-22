@@ -1,0 +1,271 @@
+/* =============================================
+   About Us Page Styles
+   ============================================= */
+
+/* --- Hero Section --- */
+.about-hero {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-color: #71f7f2;
+}
+
+.about-hero .container {
+    position: relative;
+    z-index: 1;
+}
+
+.about-hero-circles-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.about-hero-circles {
+    position: absolute;
+    width: 900px;
+    height: 900px;
+    top: -100px;
+    right: -200px;
+    pointer-events: none;
+}
+
+.about-hero-inner {
+    padding: 120px 0 80px;
+    position: relative;
+    z-index: 1;
+    max-width: 70%;
+}
+
+.about-hero-heading {
+    font-size: 3rem;
+    line-height: 1.12;
+    font-weight: 700;
+    color: #212129;
+    margin: 0;
+}
+
+/* --- Content Section --- */
+.about-content {
+    padding: 80px 0 40px;
+    background-color: #ffffff;
+}
+
+.about-content-title {
+    text-align: center;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #212129;
+    margin-bottom: 50px;
+}
+
+.about-columns {
+    display: flex;
+    gap: 60px;
+    margin-bottom: 60px;
+}
+
+.about-column {
+    flex: 1;
+}
+
+.about-column h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #212129;
+    margin-bottom: 12px;
+}
+
+.about-column p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #212129;
+}
+
+/* Stats row */
+.about-stats {
+    display: flex;
+    gap: 0;
+}
+
+.about-stat {
+    flex: 1;
+    border-left: 2px solid #a5bfff;
+    padding: 20px 20px;
+}
+
+.about-stat-value {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #212129;
+    margin-bottom: 10px;
+    font-family: 'Spectral', serif;
+}
+
+.about-stat-text {
+    font-size: 12px;
+    line-height: 1.6;
+    color: #212129;
+}
+
+.about-stat-text p {
+    font-size: inherit;
+    line-height: inherit;
+    margin: 0;
+}
+
+/* --- Quote Carousel Section --- */
+.about-quote-section {
+    background-color: #a5bfff;
+    padding: 120px 0 80px;
+}
+
+.about-glide {
+    position: relative;
+    padding-bottom: 50px;
+}
+
+.about-quote-section .col-3 {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.about-quote-section .press-logo {
+    width: auto;
+    max-width: 100%;
+    max-height: 120px;
+}
+
+.about-quote-section .quote-content {
+    max-width: 600px;
+    border-left: 2px solid #212129;
+    padding-left: 20px;
+}
+
+.about-quote-section .quote-text {
+    font-size: 32px;
+    line-height: 1.3;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.about-quote-section .quote-text p {
+    font-size: inherit;
+    line-height: inherit;
+    font-weight: inherit;
+    margin: 0;
+}
+
+.about-quote-section .quote-author {
+    font-style: italic;
+}
+
+.about-quote-section .glide__bullets {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.about-quote-section .glide__bullet {
+    background-color: rgba(33, 33, 41, 0.3);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.about-quote-section .glide__bullet--active {
+    background-color: #212129;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .about-hero-inner {
+        max-width: 100%;
+        padding: 80px 0 60px;
+    }
+
+    .about-hero-heading {
+        font-size: 1.8rem;
+    }
+
+    .about-hero-circles {
+        width: 600px;
+        height: 600px;
+        top: -50px;
+        right: -200px;
+    }
+
+    .about-columns {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .about-stats {
+        flex-wrap: wrap;
+    }
+
+    .about-stat {
+        flex: 0 0 50%;
+        max-width: 50%;
+        margin-bottom: 20px;
+    }
+
+    .about-quote-section .row {
+        flex-direction: column;
+    }
+
+    .about-quote-section .col-3,
+    .about-quote-section .col-9 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .about-quote-section .col-3 {
+        margin-bottom: 20px;
+    }
+
+    .about-quote-section .press-logo {
+        max-width: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-hero-heading {
+        font-size: 1.4rem;
+    }
+
+    .about-hero-inner {
+        padding: 60px 0 40px;
+    }
+
+    .about-hero-circles {
+        width: 400px;
+        height: 400px;
+    }
+
+    .about-stats {
+        flex-direction: column;
+    }
+
+    .about-stat {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .about-quote-section .quote-text {
+        font-size: 1.2rem;
+    }
+}

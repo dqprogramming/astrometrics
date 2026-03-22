@@ -2,6 +2,8 @@ from django import forms
 from tinymce.widgets import TinyMCE
 
 from .models import (
+    AboutUsPageSettings,
+    AboutUsQuote,
     BoardMember,
     BoardSection,
     Category,
@@ -658,6 +660,19 @@ _MANIFESTO_TINYMCE = {
 }
 
 
+_ABOUT_US_TINYMCE = {
+    "height": 200,
+    "menubar": False,
+    "plugins": "",
+    "toolbar": "bold italic underline | sub sup",
+    "valid_elements": "p,br,strong/b,em/i,u,sub,sup",
+    "invalid_elements": "script,iframe,object,embed,form,input",
+    "formats": {
+        "underline": {"inline": "u"},
+    },
+}
+
+
 class ManifestoPageSettingsForm(forms.ModelForm):
     class Meta:
         model = ManifestoPageSettings
@@ -701,6 +716,74 @@ class ManifestoPageSettingsForm(forms.ModelForm):
             "final_button_text": forms.TextInput(attrs={"class": "mgr-input"}),
             "final_button_url": forms.TextInput(attrs={"class": "mgr-input"}),
         }
+
+
+class AboutUsPageSettingsForm(forms.ModelForm):
+    class Meta:
+        model = AboutUsPageSettings
+        fields = [
+            "slug",
+            "hero_heading",
+            "hero_sub",
+            "section_title",
+            "col_1_title",
+            "col_1_body",
+            "col_2_title",
+            "col_2_body",
+            "stat_1_value",
+            "stat_1_text",
+            "stat_2_value",
+            "stat_2_text",
+            "stat_3_value",
+            "stat_3_text",
+            "stat_4_value",
+            "stat_4_text",
+        ]
+        widgets = {
+            "slug": forms.TextInput(
+                attrs={"class": "mgr-input", "placeholder": "about-us"}
+            ),
+            "hero_heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "hero_sub": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 3}
+            ),
+            "section_title": forms.TextInput(attrs={"class": "mgr-input"}),
+            "col_1_title": forms.TextInput(attrs={"class": "mgr-input"}),
+            "col_1_body": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+            "col_2_title": forms.TextInput(attrs={"class": "mgr-input"}),
+            "col_2_body": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+            "stat_1_value": forms.TextInput(attrs={"class": "mgr-input"}),
+            "stat_1_text": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+            "stat_2_value": forms.TextInput(attrs={"class": "mgr-input"}),
+            "stat_2_text": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+            "stat_3_value": forms.TextInput(attrs={"class": "mgr-input"}),
+            "stat_3_text": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+            "stat_4_value": forms.TextInput(attrs={"class": "mgr-input"}),
+            "stat_4_text": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+        }
+
+
+class AboutUsQuoteForm(forms.ModelForm):
+    class Meta:
+        model = AboutUsQuote
+        fields = ["logo", "quote_text", "author_name", "sort_order"]
+        widgets = {
+            "quote_text": TinyMCE(
+                attrs={"class": "quote-tinymce"},
+                mce_attrs=_ABOUT_US_TINYMCE,
+            ),
+            "author_name": forms.TextInput(attrs={"class": "mgr-input"}),
+            "sort_order": forms.HiddenInput(),
+        }
+
+
+AboutUsQuoteFormSet = forms.inlineformset_factory(
+    AboutUsPageSettings,
+    AboutUsQuote,
+    form=AboutUsQuoteForm,
+    extra=0,
+    can_delete=True,
+)
 
 
 class ContactSubmissionForm(forms.Form):

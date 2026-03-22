@@ -76,6 +76,12 @@ urlpatterns = [
         views.ManifestoPageSettingsUpdateView.as_view(),
         name="manifesto",
     ),
+    # About Us
+    path(
+        "about-us/",
+        views.AboutUsPageSettingsUpdateView.as_view(),
+        name="about_us",
+    ),
     # Our Model
     path(
         "our-model/",

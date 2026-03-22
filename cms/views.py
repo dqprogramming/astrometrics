@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404, render
 
 from .forms import ContactSubmissionForm
 from .models import (
+    AboutUsPageSettings,
     BoardSection,
     Category,
     ContactFormSettings,
@@ -165,6 +166,14 @@ def manifesto_view(request, slug=None):
     if slug and slug != settings.slug:
         raise Http404
     return render(request, "manifesto.html", {"settings": settings})
+
+
+def about_us_view(request):
+    settings = AboutUsPageSettings.load()
+    quotes = settings.quotes.all()
+    return render(
+        request, "about_us.html", {"settings": settings, "quotes": quotes}
+    )
 
 
 def page_preview_view(request, token):

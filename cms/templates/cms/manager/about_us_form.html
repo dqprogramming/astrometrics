@@ -1,0 +1,235 @@
+{% extends "manager/base.html" %}
+{% load static %}
+
+{% block title %}About Us{% endblock %}
+{% block page_title %}About Us{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> /
+About Us
+{% endblock %}
+{% block nav_about_us %}active{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" style="max-width:900px;" id="about-us-form">
+    {% csrf_token %}
+
+    {# ── URL Slug ──────────────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-link-45deg"></i> URL
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.slug.id_for_label }}">Page Slug</label>
+            {{ form.slug }}
+            <div class="mgr-help">The URL path for this page, e.g. "about-us" &rarr; /about-us/</div>
+            {% if form.slug.errors %}<div class="mgr-error">{{ form.slug.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    {# ── Hero Section ──────────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-stars"></i> Hero Section
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.hero_heading.id_for_label }}">Heading</label>
+            {{ form.hero_heading }}
+            {% if form.hero_heading.errors %}<div class="mgr-error">{{ form.hero_heading.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.hero_sub.id_for_label }}">Sub-heading</label>
+            {{ form.hero_sub }}
+            {% if form.hero_sub.errors %}<div class="mgr-error">{{ form.hero_sub.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    {# ── Content Section ──────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-text-paragraph"></i> Content Section
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.section_title.id_for_label }}">Section Title</label>
+            {{ form.section_title }}
+            {% if form.section_title.errors %}<div class="mgr-error">{{ form.section_title.errors.0 }}</div>{% endif %}
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.col_1_title.id_for_label }}">Column 1 Title</label>
+                    {{ form.col_1_title }}
+                    {% if form.col_1_title.errors %}<div class="mgr-error">{{ form.col_1_title.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.col_1_body.id_for_label }}">Column 1 Body</label>
+                    {{ form.col_1_body }}
+                    <div class="mgr-help">Formatting limited to bold, italic, underline, superscript and subscript</div>
+                    {% if form.col_1_body.errors %}<div class="mgr-error">{{ form.col_1_body.errors.0 }}</div>{% endif %}
+                </div>
+            </div>
+            <div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.col_2_title.id_for_label }}">Column 2 Title</label>
+                    {{ form.col_2_title }}
+                    {% if form.col_2_title.errors %}<div class="mgr-error">{{ form.col_2_title.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.col_2_body.id_for_label }}">Column 2 Body</label>
+                    {{ form.col_2_body }}
+                    <div class="mgr-help">Formatting limited to bold, italic, underline, superscript and subscript</div>
+                    {% if form.col_2_body.errors %}<div class="mgr-error">{{ form.col_2_body.errors.0 }}</div>{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ── Stats Section ─────────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-bar-chart"></i> Statistics
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.stat_1_value.id_for_label }}">Stat 1 Value</label>
+                    {{ form.stat_1_value }}
+                </div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.stat_1_text.id_for_label }}">Stat 1 Text</label>
+                    {{ form.stat_1_text }}
+                </div>
+            </div>
+            <div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.stat_2_value.id_for_label }}">Stat 2 Value</label>
+                    {{ form.stat_2_value }}
+                </div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.stat_2_text.id_for_label }}">Stat 2 Text</label>
+                    {{ form.stat_2_text }}
+                </div>
+            </div>
+            <div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.stat_3_value.id_for_label }}">Stat 3 Value</label>
+                    {{ form.stat_3_value }}
+                </div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.stat_3_text.id_for_label }}">Stat 3 Text</label>
+                    {{ form.stat_3_text }}
+                </div>
+            </div>
+            <div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.stat_4_value.id_for_label }}">Stat 4 Value</label>
+                    {{ form.stat_4_value }}
+                </div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.stat_4_text.id_for_label }}">Stat 4 Text</label>
+                    {{ form.stat_4_text }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ── Quotes ────────────────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-chat-quote"></i> Quotes
+        </div>
+
+        {{ formset.management_form }}
+
+        <div id="quote-list">
+            {% for qform in formset %}
+            <div class="quote-row border rounded p-3 mb-2">
+                <div class="d-flex align-items-start gap-2">
+                    <span class="quote-drag-handle mt-2" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+
+                    <div class="flex-grow-1">
+                        {% for hidden in qform.hidden_fields %}{{ hidden }}{% endfor %}
+                        <span style="display:none;">{{ qform.DELETE }}</span>
+
+                        <div class="mgr-field">
+                            <label class="mgr-label">Quote Text</label>
+                            {{ qform.quote_text }}
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                            <div class="mgr-field">
+                                <label class="mgr-label">Author</label>
+                                {{ qform.author_name }}
+                            </div>
+                            <div class="mgr-field">
+                                <label class="mgr-label">Logo</label>
+                                {% if qform.instance.logo %}
+                                <div style="margin-bottom:0.5rem;">
+                                    <img src="{{ qform.instance.logo.url }}" alt="Logo preview" style="max-height:40px;">
+                                </div>
+                                {% endif %}
+                                {{ qform.logo }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-sm btn-outline-danger mt-2 btn-delete-quote">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="btn-add-quote">
+            <i class="bi bi-plus"></i> Add Quote
+        </button>
+    </div>
+
+    {# ── Actions ───────────────────────────────────────────────── #}
+    <div style="display:flex; gap:1rem; align-items:center; margin-top:1.5rem;">
+        <button type="submit" class="mgr-btn mgr-btn-primary">
+            <i class="bi bi-check2"></i> Save Changes
+        </button>
+        <a href="{% url 'manager:dashboard' %}" class="mgr-btn">Cancel</a>
+    </div>
+</form>
+
+{# Template for new quote rows #}
+<template id="quote-template">
+    <div class="quote-row border rounded p-3 mb-2">
+        <div class="d-flex align-items-start gap-2">
+            <span class="quote-drag-handle mt-2" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+
+            <div class="flex-grow-1">
+                <input type="hidden" name="quotes-__prefix__-id" value="">
+                <input type="hidden" name="quotes-__prefix__-sort_order" value="0">
+
+                <div class="mgr-field">
+                    <label class="mgr-label">Quote Text</label>
+                    <textarea name="quotes-__prefix__-quote_text" class="mgr-textarea quote-tinymce" rows="4"></textarea>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div class="mgr-field">
+                        <label class="mgr-label">Author</label>
+                        <input type="text" name="quotes-__prefix__-author_name" class="mgr-input">
+                    </div>
+                    <div class="mgr-field">
+                        <label class="mgr-label">Logo</label>
+                        <input type="file" name="quotes-__prefix__-logo" accept="image/*" class="form-control form-control-sm">
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-sm btn-outline-danger mt-2 btn-delete-quote">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    </div>
+</template>
+{% endblock %}
+
+{% block extra_js %}
+{{ form.media }}
+{{ formset.media }}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script src="{% static 'js/about-us-manager.js' %}"></script>
+{% endblock %}
