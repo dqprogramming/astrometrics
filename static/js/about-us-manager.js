@@ -22,38 +22,47 @@
 
     function initTinyMCE(textarea) {
         if (!textarea || !window.tinyMCE) return;
-        var id = textarea.id;
-        if (!id) {
-            id = 'quote-mce-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
-            textarea.id = id;
+        if (!textarea.id) {
+            textarea.id = 'quote-mce-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
         }
         // Don't double-init
-        if (tinyMCE.get(id)) return;
-        var config = Object.assign({}, TINYMCE_CONFIG, {
-            selector: '#' + id,
+        if (tinyMCE.get(textarea.id)) return;
+        tinyMCE.init(Object.assign({}, TINYMCE_CONFIG, {
+            target: textarea,
             setup: function (editor) {
                 editor.on('change keyup', markDirty);
             }
-        });
-        tinyMCE.init(config);
+        }));
     }
 
     function syncAllTinyMCE() {
         if (window.tinyMCE) tinyMCE.triggerSave();
     }
 
-    function destroyTinyMCEInRow(row) {
+    function destroyAllQuoteEditors() {
         if (!window.tinyMCE) return;
-        var textareas = row.querySelectorAll('textarea');
-        textareas.forEach(function (ta) {
+        var list = document.getElementById('quote-list');
+        if (!list) return;
+        list.querySelectorAll('textarea.quote-tinymce').forEach(function (ta) {
             var editor = tinyMCE.get(ta.id);
-            if (editor) editor.remove();
+            if (editor) {
+                editor.save();
+                editor.remove();
+            }
         });
     }
 
-    function reinitTinyMCEInRow(row) {
-        var textareas = row.querySelectorAll('textarea.quote-tinymce');
-        textareas.forEach(initTinyMCE);
+    function initAllQuoteEditors() {
+        if (!window.tinyMCE) return;
+        var list = document.getElementById('quote-list');
+        if (!list) return;
+        list.querySelectorAll('textarea.quote-tinymce').forEach(function (ta) {
+            // Only init visible rows (not deleted ones)
+            var row = ta.closest('.quote-row');
+            if (row && row.style.display !== 'none') {
+                initTinyMCE(ta);
+            }
+        });
     }
 
     // -- Sortable: quotes -----------------------------------------------------
@@ -64,13 +73,11 @@
         Sortable.create(list, {
             handle: '.quote-drag-handle',
             animation: 150,
-            onStart: function (evt) {
-                // Destroy TinyMCE in dragged item to avoid broken editors
-                destroyTinyMCEInRow(evt.item);
+            onStart: function () {
+                destroyAllQuoteEditors();
             },
-            onEnd: function (evt) {
-                // Re-init TinyMCE in the moved item
-                reinitTinyMCEInRow(evt.item);
+            onEnd: function () {
+                initAllQuoteEditors();
                 updateQuoteSortOrders();
                 markDirty();
             }
@@ -95,13 +102,24 @@
             var row = btn.closest('.quote-row');
             var deleteCheckbox = row.querySelector('input[name$="-DELETE"]');
             if (deleteCheckbox) {
-                // Existing row — mark for deletion, sync TinyMCE content first
-                syncAllTinyMCE();
+                // Existing row — sync content, destroy editor, mark for deletion
+                var ta = row.querySelector('textarea.quote-tinymce');
+                if (ta && window.tinyMCE) {
+                    var editor = tinyMCE.get(ta.id);
+                    if (editor) {
+                        editor.save();
+                        editor.remove();
+                    }
+                }
                 deleteCheckbox.checked = true;
                 row.style.display = 'none';
             } else {
-                // New row — remove from DOM entirely
-                destroyTinyMCEInRow(row);
+                // New row — destroy editor and remove from DOM
+                var ta2 = row.querySelector('textarea.quote-tinymce');
+                if (ta2 && window.tinyMCE) {
+                    var ed = tinyMCE.get(ta2.id);
+                    if (ed) ed.remove();
+                }
                 row.remove();
             }
             markDirty();

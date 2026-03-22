@@ -773,7 +773,10 @@ class AboutUsQuoteForm(forms.ModelForm):
         model = AboutUsQuote
         fields = ["logo", "quote_text", "author_name", "sort_order"]
         widgets = {
-            "quote_text": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+            "quote_text": TinyMCE(
+                attrs={"class": "quote-tinymce"},
+                mce_attrs=_ABOUT_US_TINYMCE,
+            ),
             "author_name": forms.TextInput(attrs={"class": "mgr-input"}),
             "sort_order": forms.HiddenInput(),
         }
