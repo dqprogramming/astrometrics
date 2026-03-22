@@ -114,12 +114,12 @@
     background-color: #212129;
 }
 
-.members-quote-bottom .quote-text,
-.members-quote-bottom .quote-author {
+.members-quote-section.members-quote-bottom .quote-text,
+.members-quote-section.members-quote-bottom .quote-author {
     color: #ffffff;
 }
 
-.members-quote-bottom .quote-content {
+.members-quote-section.members-quote-bottom .quote-content {
     border-left-color: #ffffff;
 }
 
@@ -218,12 +218,13 @@
 .members-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 30px 40px;
+    gap: 0 40px;
     margin-bottom: 40px;
 }
 
 .members-grid-item {
-    padding-bottom: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid #d0d0d0;
 }
 
 .members-grid-name {
