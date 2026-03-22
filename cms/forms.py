@@ -775,9 +775,7 @@ class AboutUsQuoteForm(forms.ModelForm):
                 attrs={"class": "mgr-textarea", "rows": 4}
             ),
             "author_name": forms.TextInput(attrs={"class": "mgr-input"}),
-            "sort_order": forms.NumberInput(
-                attrs={"class": "mgr-input", "style": "width:80px"}
-            ),
+            "sort_order": forms.HiddenInput(),
         }
 
 

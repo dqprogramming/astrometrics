@@ -1,4 +1,5 @@
 {% extends "manager/base.html" %}
+{% load static %}
 
 {% block title %}About Us{% endblock %}
 {% block page_title %}About Us{% endblock %}
@@ -9,7 +10,7 @@ About Us
 {% block nav_about_us %}active{% endblock %}
 
 {% block content %}
-<form method="post" enctype="multipart/form-data" style="max-width:900px;">
+<form method="post" enctype="multipart/form-data" style="max-width:900px;" id="about-us-form">
     {% csrf_token %}
 
     {# ── URL Slug ──────────────────────────────────────────────── #}
@@ -136,42 +137,51 @@ About Us
         <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
             <i class="bi bi-chat-quote"></i> Quotes
         </div>
+
         {{ formset.management_form }}
-        {% for qform in formset %}
-        <div class="mgr-form-card" style="margin-bottom:1rem; border:1px solid var(--border); padding:1rem;">
-            {% for hidden in qform.hidden_fields %}{{ hidden }}{% endfor %}
-            <div class="mgr-field">
-                <label class="mgr-label">Author</label>
-                {{ qform.author_name }}
-            </div>
-            <div class="mgr-field">
-                <label class="mgr-label">Quote Text</label>
-                {{ qform.quote_text }}
-            </div>
-            <div style="display:grid; grid-template-columns:1fr auto auto; gap:1rem; align-items:end;">
-                <div class="mgr-field">
-                    <label class="mgr-label">Logo</label>
-                    {% if qform.instance.logo %}
-                    <div style="margin-bottom:0.5rem;">
-                        <img src="{{ qform.instance.logo.url }}" alt="Logo preview" style="max-height:40px;">
+
+        <div id="quote-list">
+            {% for qform in formset %}
+            <div class="quote-row border rounded p-3 mb-2">
+                <div class="d-flex align-items-start gap-2">
+                    <span class="quote-drag-handle mt-2" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+
+                    <div class="flex-grow-1">
+                        {% for hidden in qform.hidden_fields %}{{ hidden }}{% endfor %}
+                        {{ qform.sort_order }}
+
+                        <div class="mgr-field">
+                            <label class="mgr-label">Quote Text</label>
+                            {{ qform.quote_text }}
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                            <div class="mgr-field">
+                                <label class="mgr-label">Author</label>
+                                {{ qform.author_name }}
+                            </div>
+                            <div class="mgr-field">
+                                <label class="mgr-label">Logo</label>
+                                {% if qform.instance.logo %}
+                                <div style="margin-bottom:0.5rem;">
+                                    <img src="{{ qform.instance.logo.url }}" alt="Logo preview" style="max-height:40px;">
+                                </div>
+                                {% endif %}
+                                {{ qform.logo }}
+                            </div>
+                        </div>
                     </div>
-                    {% endif %}
-                    {{ qform.logo }}
-                </div>
-                <div class="mgr-field">
-                    <label class="mgr-label">Order</label>
-                    {{ qform.sort_order }}
-                </div>
-                <div class="mgr-field">
-                    <label class="mgr-label">
-                        {{ qform.DELETE }} Delete
-                    </label>
+
+                    <button type="button" class="btn btn-sm btn-outline-danger mt-2 btn-delete-quote">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% empty %}
-        <p style="color:var(--muted);">No quotes yet. Save to add the formset, then add quotes.</p>
-        {% endfor %}
+
+        <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="btn-add-quote">
+            <i class="bi bi-plus"></i> Add Quote
+        </button>
     </div>
 
     {# ── Actions ───────────────────────────────────────────────── #}
@@ -182,8 +192,43 @@ About Us
         <a href="{% url 'manager:dashboard' %}" class="mgr-btn">Cancel</a>
     </div>
 </form>
+
+{# Template for new quote rows #}
+<template id="quote-template">
+    <div class="quote-row border rounded p-3 mb-2">
+        <div class="d-flex align-items-start gap-2">
+            <span class="quote-drag-handle mt-2" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+
+            <div class="flex-grow-1">
+                <input type="hidden" name="quotes-__prefix__-id" value="">
+                <input type="hidden" name="quotes-__prefix__-sort_order" value="0">
+
+                <div class="mgr-field">
+                    <label class="mgr-label">Quote Text</label>
+                    <textarea name="quotes-__prefix__-quote_text" class="mgr-textarea" rows="4"></textarea>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div class="mgr-field">
+                        <label class="mgr-label">Author</label>
+                        <input type="text" name="quotes-__prefix__-author_name" class="mgr-input">
+                    </div>
+                    <div class="mgr-field">
+                        <label class="mgr-label">Logo</label>
+                        <input type="file" name="quotes-__prefix__-logo" accept="image/*" class="form-control form-control-sm">
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-sm btn-outline-danger mt-2 btn-delete-quote">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    </div>
+</template>
 {% endblock %}
 
 {% block extra_js %}
 {{ form.media }}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script src="{% static 'js/about-us-manager.js' %}"></script>
 {% endblock %}

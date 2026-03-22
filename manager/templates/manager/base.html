@@ -30,6 +30,9 @@
         </a>
 
         <span class="mgr-nav-section">Content</span>
+        <a href="{% url 'cms_manager:about_us' %}" class="mgr-nav-link {% block nav_about_us %}{% endblock %}">
+            <i class="bi bi-info-circle"></i> About Us
+        </a>
         <a href="{% url 'cms_manager:contact_form' %}" class="mgr-nav-link {% block nav_contact_form %}{% endblock %}">
             <i class="bi bi-envelope"></i> Contact Us Form
         </a>
@@ -41,9 +44,6 @@
         </a>
         <a href="{% url 'cms_manager:landing_page' %}" class="mgr-nav-link {% block nav_landing_page %}{% endblock %}">
             <i class="bi bi-house-heart"></i> Landing Page
-        </a>
-        <a href="{% url 'cms_manager:about_us' %}" class="mgr-nav-link {% block nav_about_us %}{% endblock %}">
-            <i class="bi bi-info-circle"></i> About Us
         </a>
         <a href="{% url 'cms_manager:manifesto' %}" class="mgr-nav-link {% block nav_manifesto %}{% endblock %}">
             <i class="bi bi-megaphone"></i> Our Manifesto
