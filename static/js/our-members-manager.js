@@ -63,7 +63,7 @@
         list.querySelectorAll('textarea.quote-tinymce').forEach(function (ta) {
             // Only init visible rows (not deleted ones)
             var row = ta.closest('.quote-row');
-            if (row && row.style.display !== 'none') {
+            if (row && !isRowHidden(row)) {
                 initTinyMCE(ta);
             }
         });
@@ -168,6 +168,19 @@
 
     // -- Delete institution ---------------------------------------------------
 
+    function isRowHidden(row) {
+        return row.style.display === 'none' || row.classList.contains('d-none');
+    }
+
+    function hideRow(row) {
+        // Bootstrap utility classes like .d-flex use !important, so
+        // row.style.display='none' alone is overridden. Add d-none and
+        // remove d-flex to ensure the row is hidden.
+        row.classList.add('d-none');
+        row.classList.remove('d-flex');
+        row.style.display = 'none';
+    }
+
     function initDeleteInstitution(btn) {
         btn.addEventListener('click', function () {
             if (!confirm('Remove this institution?')) return;
@@ -176,7 +189,7 @@
             if (deleteCheckbox) {
                 // Existing row — mark for deletion
                 deleteCheckbox.checked = true;
-                row.style.display = 'none';
+                hideRow(row);
             } else {
                 // New row — remove from DOM
                 row.remove();
@@ -271,10 +284,10 @@
         var rows = Array.from(list.querySelectorAll('.institution-row'));
         // Only sort visible rows (not deleted)
         var visible = rows.filter(function (row) {
-            return row.style.display !== 'none';
+            return !isRowHidden(row);
         });
         var hidden = rows.filter(function (row) {
-            return row.style.display === 'none';
+            return isRowHidden(row);
         });
 
         visible.sort(function (a, b) {
@@ -298,7 +311,7 @@
         if (!list) return [];
         var names = [];
         list.querySelectorAll('.institution-row').forEach(function (row) {
-            if (row.style.display === 'none') return;
+            if (isRowHidden(row)) return;
             var input = row.querySelector('input[name$="-name"]');
             if (input && input.value.trim()) {
                 names.push(input.value.trim().toLowerCase());
