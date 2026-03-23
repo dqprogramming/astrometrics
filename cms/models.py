@@ -1571,18 +1571,19 @@ class OurMembersPageSettings(models.Model):
         help_text="Circle 3 body — rich text, sanitized",
     )
 
-    # CTA
-    cta_text = models.CharField(
+    # Who We Are CTA
+    who_we_are_cta_text = models.CharField(
         max_length=200,
         default="Join Us",
-        help_text="Call-to-action button text",
+        help_text="Who We Are call-to-action button text",
     )
-    cta_url = models.CharField(
+    who_we_are_cta_url = models.CharField(
         max_length=500,
         default="#",
         blank=True,
-        help_text="Call-to-action button URL",
+        help_text="Who We Are call-to-action button URL",
     )
+    show_who_we_are_cta = models.BooleanField(default=True)
 
     # Members section
     members_heading = models.CharField(
@@ -1591,10 +1592,23 @@ class OurMembersPageSettings(models.Model):
         help_text="Members list section heading",
     )
 
+    # Members Grid CTA
+    members_grid_cta_text = models.CharField(
+        max_length=200,
+        default="Join Us",
+        help_text="Members grid call-to-action button text",
+    )
+    members_grid_cta_url = models.CharField(
+        max_length=500,
+        default="#",
+        blank=True,
+        help_text="Members grid call-to-action button URL",
+    )
+    show_members_grid_cta = models.BooleanField(default=True)
+
     # Section visibility toggles
     show_header = models.BooleanField(default=True)
     show_who_we_are = models.BooleanField(default=True)
-    show_cta = models.BooleanField(default=True)
     show_top_carousel = models.BooleanField(default=True)
     show_members_grid = models.BooleanField(default=True)
     show_bottom_carousel = models.BooleanField(default=True)

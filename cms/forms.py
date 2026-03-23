@@ -804,12 +804,15 @@ class OurMembersPageSettingsForm(forms.ModelForm):
             "circle_2_body",
             "circle_3_title",
             "circle_3_body",
-            "cta_text",
-            "cta_url",
-            "show_cta",
+            "who_we_are_cta_text",
+            "who_we_are_cta_url",
+            "show_who_we_are_cta",
             "show_top_carousel",
             "members_heading",
             "show_members_grid",
+            "members_grid_cta_text",
+            "members_grid_cta_url",
+            "show_members_grid_cta",
             "show_bottom_carousel",
             "section_order",
         ]
@@ -822,14 +825,25 @@ class OurMembersPageSettingsForm(forms.ModelForm):
             "circle_2_body": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
             "circle_3_title": forms.TextInput(attrs={"class": "mgr-input"}),
             "circle_3_body": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
-            "cta_text": forms.TextInput(attrs={"class": "mgr-input"}),
-            "cta_url": forms.TextInput(
+            "who_we_are_cta_text": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "who_we_are_cta_url": forms.TextInput(
                 attrs={
                     "class": "mgr-input",
                     "placeholder": "e.g. /contact/ or https://...",
                 }
             ),
             "members_heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "members_grid_cta_text": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "members_grid_cta_url": forms.TextInput(
+                attrs={
+                    "class": "mgr-input",
+                    "placeholder": "e.g. /contact/ or https://...",
+                }
+            ),
             "section_order": forms.HiddenInput(),
         }
 

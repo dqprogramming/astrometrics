@@ -60,7 +60,8 @@ class OurMembersPageSettingsModelTests(TestCase):
         settings = OurMembersPageSettings.load()
         self.assertEqual(settings.hero_heading, "Our members.")
         self.assertEqual(settings.section_heading, "Who we are.")
-        self.assertEqual(settings.cta_text, "Join Us")
+        self.assertEqual(settings.who_we_are_cta_text, "Join Us")
+        self.assertEqual(settings.members_grid_cta_text, "Join Us")
 
 
 class OurMembersTopQuoteTests(TestCase):
@@ -283,12 +284,15 @@ class OurMembersManagerViewTests(TestCase):
                 "circle_2_body": "<p>Body 2</p>",
                 "circle_3_title": "Circle 3",
                 "circle_3_body": "<p>Body 3</p>",
-                "cta_text": "Sign Up",
-                "cta_url": "/signup/",
+                "who_we_are_cta_text": "Sign Up",
+                "who_we_are_cta_url": "/signup/",
+                "show_who_we_are_cta": "on",
                 "members_heading": "Members",
+                "members_grid_cta_text": "Join Now",
+                "members_grid_cta_url": "/join/",
+                "show_members_grid_cta": "on",
                 "show_header": "on",
                 "show_who_we_are": "on",
-                "show_cta": "on",
                 "show_top_carousel": "on",
                 "show_members_grid": "on",
                 "top_quotes-TOTAL_FORMS": "0",
@@ -308,7 +312,8 @@ class OurMembersManagerViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         settings.refresh_from_db()
         self.assertEqual(settings.hero_heading, "Updated heading")
-        self.assertEqual(settings.cta_text, "Sign Up")
+        self.assertEqual(settings.who_we_are_cta_text, "Sign Up")
+        self.assertEqual(settings.members_grid_cta_text, "Join Now")
 
     def test_manager_requires_staff(self):
         self.client.logout()

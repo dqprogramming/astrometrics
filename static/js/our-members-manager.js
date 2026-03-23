@@ -399,9 +399,10 @@
         var checkboxes = document.querySelectorAll(
             'input[name="show_header"],' +
             'input[name="show_who_we_are"],' +
-            'input[name="show_cta"],' +
+            'input[name="show_who_we_are_cta"],' +
             'input[name="show_top_carousel"],' +
             'input[name="show_members_grid"],' +
+            'input[name="show_members_grid_cta"],' +
             'input[name="show_bottom_carousel"]'
         );
         checkboxes.forEach(function (cb) {

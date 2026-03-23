@@ -56,28 +56,6 @@ Our Members
     {% csrf_token %}
     {{ form.section_order }}
 
-    {# ── CTA Button (not reorderable — applies within sections) ── #}
-    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
-        <div class="section-toggle-row">
-            <label><i class="bi bi-link-45deg"></i> Call to Action</label>
-            <span class="section-toggle-check">
-                Show {{ form.show_cta }}
-            </span>
-        </div>
-        <div data-section-content="show_cta">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                <div class="mgr-field">
-                    <label class="mgr-label" for="{{ form.cta_text.id_for_label }}">Button Text</label>
-                    {{ form.cta_text }}
-                </div>
-                <div class="mgr-field">
-                    <label class="mgr-label" for="{{ form.cta_url.id_for_label }}">Button URL</label>
-                    {{ form.cta_url }}
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div id="section-list">
 
     {# ── Header Section ───────────────────────────────────────── #}
@@ -144,6 +122,25 @@ Our Members
                         <label class="mgr-label" for="{{ form.circle_3_body.id_for_label }}">Circle 3 Body</label>
                         {{ form.circle_3_body }}
                         <div class="mgr-help">Bold, italic, underline, super/subscript</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border, #dee2e6);">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+                    <span style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;"><i class="bi bi-link-45deg"></i> Call to Action</span>
+                    <span class="section-toggle-check">Show {{ form.show_who_we_are_cta }}</span>
+                </div>
+                <div data-section-content="show_who_we_are_cta">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                        <div class="mgr-field">
+                            <label class="mgr-label" for="{{ form.who_we_are_cta_text.id_for_label }}">Button Text</label>
+                            {{ form.who_we_are_cta_text }}
+                        </div>
+                        <div class="mgr-field">
+                            <label class="mgr-label" for="{{ form.who_we_are_cta_url.id_for_label }}">Button URL</label>
+                            {{ form.who_we_are_cta_url }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -249,6 +246,25 @@ Our Members
                     <i class="bi bi-filetype-csv"></i> Import CSV
                 </button>
                 <input type="file" id="csv-file-input" accept=".csv,.txt" style="display:none;">
+            </div>
+
+            <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border, #dee2e6);">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+                    <span style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;"><i class="bi bi-link-45deg"></i> Call to Action</span>
+                    <span class="section-toggle-check">Show {{ form.show_members_grid_cta }}</span>
+                </div>
+                <div data-section-content="show_members_grid_cta">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                        <div class="mgr-field">
+                            <label class="mgr-label" for="{{ form.members_grid_cta_text.id_for_label }}">Button Text</label>
+                            {{ form.members_grid_cta_text }}
+                        </div>
+                        <div class="mgr-field">
+                            <label class="mgr-label" for="{{ form.members_grid_cta_url.id_for_label }}">Button URL</label>
+                            {{ form.members_grid_cta_url }}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
