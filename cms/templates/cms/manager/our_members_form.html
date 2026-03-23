@@ -10,7 +10,7 @@ Our Members
 {% block nav_our_members %}active{% endblock %}
 
 {% block content %}
-<form method="post" enctype="multipart/form-data" style="max-width:900px;" id="our-members-form">
+<form method="post" enctype="multipart/form-data" style="max-width:900px;" id="our-members-form" data-csv-parse-url="{% url 'cms_manager:our_members_csv_parse' %}">
     {% csrf_token %}
 
     {# ── Header Section ───────────────────────────────────────── #}

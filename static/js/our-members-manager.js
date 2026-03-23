@@ -2,6 +2,7 @@
     'use strict';
 
     var dirty = false;
+    var CSV_PARSE_URL = '';
 
     var TINYMCE_CONFIG = {
         height: 200,
@@ -306,66 +307,74 @@
         return names;
     }
 
+    function addInstitutionRow(name, existingNames) {
+        var listEl = document.getElementById('institution-list');
+        var template = document.getElementById('institution-template');
+        if (!listEl || !template) return;
+
+        var totalForms = document.querySelector('#id_institutions-TOTAL_FORMS');
+        var count = parseInt(totalForms.value, 10);
+
+        var newRow = template.content.firstElementChild.cloneNode(true);
+
+        var allInputs = newRow.querySelectorAll('input, textarea, select');
+        allInputs.forEach(function (el) {
+            if (el.name) el.name = el.name.replace(/__prefix__/g, count);
+            if (el.id) el.id = el.id.replace(/__prefix__/g, count);
+        });
+        var allLabels = newRow.querySelectorAll('label');
+        allLabels.forEach(function (el) {
+            if (el.htmlFor) el.htmlFor = el.htmlFor.replace(/__prefix__/g, count);
+        });
+
+        var sortInput = newRow.querySelector('input[name$="-sort_order"]');
+        if (sortInput) sortInput.value = count;
+
+        var nameInput = newRow.querySelector('input[name$="-name"]');
+        if (nameInput) nameInput.value = name;
+
+        listEl.appendChild(newRow);
+        totalForms.value = count + 1;
+
+        initDeleteInstitution(newRow.querySelector('.btn-delete-institution'));
+
+        existingNames.push(name.toLowerCase());
+    }
+
     function handleCSVImport(file) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            var text = e.target.result;
-            var lines = text.split(/\r?\n/);
+        var formData = new FormData();
+        formData.append('file', file);
+
+        var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        fetch(CSV_PARSE_URL, {
+            method: 'POST',
+            headers: {'X-CSRFToken': csrfToken ? csrfToken.value : ''},
+            body: formData
+        })
+        .then(function (resp) { return resp.json(); })
+        .then(function (data) {
+            if (data.error) {
+                alert('CSV import error: ' + data.error);
+                return;
+            }
             var existingNames = getExistingInstitutionNames();
-
-            lines.forEach(function (line) {
-                // Split by comma to handle CSV cells
-                var cells = line.split(',');
-                cells.forEach(function (cell) {
-                    var name = cell.trim();
-                    if (!name) return;
-                    if (existingNames.indexOf(name.toLowerCase()) !== -1) return;
-
-                    // Add new institution row
-                    var listEl = document.getElementById('institution-list');
-                    var template = document.getElementById('institution-template');
-                    if (!listEl || !template) return;
-
-                    var totalForms = document.querySelector('#id_institutions-TOTAL_FORMS');
-                    var count = parseInt(totalForms.value, 10);
-
-                    var newRow = template.content.firstElementChild.cloneNode(true);
-
-                    var allInputs = newRow.querySelectorAll('input, textarea, select');
-                    allInputs.forEach(function (el) {
-                        if (el.name) el.name = el.name.replace(/__prefix__/g, count);
-                        if (el.id) el.id = el.id.replace(/__prefix__/g, count);
-                    });
-                    var allLabels = newRow.querySelectorAll('label');
-                    allLabels.forEach(function (el) {
-                        if (el.htmlFor) el.htmlFor = el.htmlFor.replace(/__prefix__/g, count);
-                    });
-
-                    var sortInput = newRow.querySelector('input[name$="-sort_order"]');
-                    if (sortInput) sortInput.value = count;
-
-                    // Set the name value
-                    var nameInput = newRow.querySelector('input[name$="-name"]');
-                    if (nameInput) nameInput.value = name;
-
-                    listEl.appendChild(newRow);
-                    totalForms.value = count + 1;
-
-                    initDeleteInstitution(newRow.querySelector('.btn-delete-institution'));
-
-                    // Track the new name so duplicates within the CSV are skipped
-                    existingNames.push(name.toLowerCase());
-                });
+            (data.names || []).forEach(function (name) {
+                if (existingNames.indexOf(name.toLowerCase()) !== -1) return;
+                addInstitutionRow(name, existingNames);
             });
-
             markDirty();
-        };
-        reader.readAsText(file);
+        })
+        .catch(function () {
+            alert('CSV import failed. Please check the file format.');
+        });
     }
 
     // -- Init -----------------------------------------------------------------
 
     document.addEventListener('DOMContentLoaded', function () {
+        var formEl = document.getElementById('our-members-form');
+        if (formEl) CSV_PARSE_URL = formEl.dataset.csvParseUrl || '';
+
         // Sortables
         initTopQuoteSortable();
         initBottomQuoteSortable();

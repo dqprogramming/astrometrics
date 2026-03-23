@@ -1,3 +1,5 @@
+import csv
+import io
 import os
 import uuid
 
@@ -1274,3 +1276,37 @@ class OurMembersPageSettingsUpdateView(StaffRequiredMixin, View):
                 "inst_formset": inst_formset,
             },
         )
+
+
+@require_POST
+def our_members_csv_parse(request):
+    """Parse uploaded CSV and return unique institution names as JSON."""
+    if not (request.user.is_active and request.user.is_staff):
+        return JsonResponse({"error": "Forbidden"}, status=403)
+
+    uploaded = request.FILES.get("file")
+    if not uploaded:
+        return JsonResponse({"error": "No file received"}, status=400)
+
+    try:
+        text = uploaded.read().decode("utf-8-sig")
+    except UnicodeDecodeError:
+        try:
+            uploaded.seek(0)
+            text = uploaded.read().decode("latin-1")
+        except Exception:
+            return JsonResponse(
+                {"error": "Unable to read file encoding"}, status=400
+            )
+
+    reader = csv.reader(io.StringIO(text))
+    names = []
+    seen = set()
+    for row in reader:
+        for cell in row:
+            name = cell.strip()
+            if name and name.lower() not in seen:
+                names.append(name)
+                seen.add(name.lower())
+
+    return JsonResponse({"names": names})

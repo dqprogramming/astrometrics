@@ -88,6 +88,11 @@ urlpatterns = [
         views.OurMembersPageSettingsUpdateView.as_view(),
         name="our_members",
     ),
+    path(
+        "our-members/csv-parse/",
+        views.our_members_csv_parse,
+        name="our_members_csv_parse",
+    ),
     # Our Model
     path(
         "our-model/",

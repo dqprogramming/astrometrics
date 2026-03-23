@@ -263,3 +263,59 @@ class OurMembersManagerViewTests(TestCase):
         self.client.logout()
         response = self.client.get(reverse("cms_manager:our_members"))
         self.assertNotEqual(response.status_code, 200)
+
+
+@override_settings(
+    CACHES={
+        "default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}
+    }
+)
+class OurMembersCSVParseTests(TestCase):
+    def setUp(self):
+        cache.clear()
+        self.user = User.objects.create_user(
+            "admin", "admin@test.com", "pass", is_staff=True
+        )
+        self.client.login(username="admin", password="pass")
+        self.url = reverse("cms_manager:our_members_csv_parse")
+
+    def _upload(self, content, filename="test.csv"):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+
+        f = SimpleUploadedFile(filename, content.encode("utf-8"))
+        return self.client.post(self.url, {"file": f})
+
+    def test_simple_csv(self):
+        response = self._upload("Alpha\nBeta\nGamma\n")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["names"], ["Alpha", "Beta", "Gamma"])
+
+    def test_quoted_fields_with_commas(self):
+        response = self._upload(
+            '"University of Oxford, UK"\n"MIT, Cambridge, MA"\n"ETH Zurich"\n'
+        )
+        data = response.json()
+        self.assertIn("University of Oxford, UK", data["names"])
+        self.assertIn("MIT, Cambridge, MA", data["names"])
+        self.assertIn("ETH Zurich", data["names"])
+        self.assertEqual(len(data["names"]), 3)
+
+    def test_deduplicates_within_csv(self):
+        response = self._upload("Alpha\nalpha\nALPHA\nBeta\n")
+        data = response.json()
+        self.assertEqual(len(data["names"]), 2)
+
+    def test_skips_empty_lines(self):
+        response = self._upload("\n\nAlpha\n\nBeta\n\n")
+        data = response.json()
+        self.assertEqual(data["names"], ["Alpha", "Beta"])
+
+    def test_requires_staff(self):
+        self.client.logout()
+        response = self._upload("Test\n")
+        self.assertEqual(response.status_code, 403)
+
+    def test_no_file(self):
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, 400)
