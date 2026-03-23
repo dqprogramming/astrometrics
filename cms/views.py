@@ -190,6 +190,7 @@ def our_members_view(request):
             "top_quotes": top_quotes,
             "bottom_quotes": bottom_quotes,
             "institutions": institutions,
+            "section_order": settings.get_section_order(),
         },
     )
 

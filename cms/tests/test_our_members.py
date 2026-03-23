@@ -209,6 +209,38 @@ class OurMembersViewTests(TestCase):
         response = self.client.get(reverse("cms:our-members"))
         self.assertNotContains(response, "members-glide-bottom")
 
+    def test_section_order_respected(self):
+        settings = OurMembersPageSettings.load()
+        settings.section_order = [
+            "members_grid",
+            "header",
+            "bottom_carousel",
+            "who_we_are",
+            "top_carousel",
+        ]
+        settings.save()
+        response = self.client.get(reverse("cms:our-members"))
+        content = response.content.decode()
+        grid_pos = content.find("members-grid-section")
+        header_pos = content.find("members-header-bar")
+        self.assertGreater(grid_pos, -1)
+        self.assertGreater(header_pos, -1)
+        self.assertLess(grid_pos, header_pos)
+
+    def test_default_section_order(self):
+        settings = OurMembersPageSettings.load()
+        order = settings.get_section_order()
+        self.assertEqual(
+            order,
+            [
+                "header",
+                "who_we_are",
+                "top_carousel",
+                "members_grid",
+                "bottom_carousel",
+            ],
+        )
+
     def test_hidden_header_not_rendered(self):
         settings = OurMembersPageSettings.load()
         settings.show_header = False

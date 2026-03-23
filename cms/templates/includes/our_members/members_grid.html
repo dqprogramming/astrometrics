@@ -1,0 +1,23 @@
+{% if settings.show_members_grid %}
+<section class="members-grid-section" aria-labelledby="members-grid-heading">
+    <div class="container">
+        <h2 id="members-grid-heading" class="members-grid-heading spectral-bold">{{ settings.members_heading }}</h2>
+
+        {% if institutions %}
+        <div class="members-grid">
+            {% for institution in institutions %}
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold">{{ institution.name }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if settings.show_cta and settings.cta_text %}
+        <div class="members-cta-row">
+            <a href="{{ settings.cta_url }}" class="btn-members-join">{{ settings.cta_text }} &rarr;</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endif %}

@@ -1,0 +1,46 @@
+{% if settings.show_top_carousel and top_quotes %}
+<section class="members-quote-section members-quote-top" aria-label="Member quotes">
+    <div class="members-glide-top">
+        <div class="glide__track" data-glide-el="track">
+            <ul class="glide__slides">
+                {% for quote in top_quotes %}
+                <li class="glide__slide">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-3">
+                                {% if quote.image %}
+                                <img src="{{ quote.image.url }}"
+                                     alt="{{ quote.author_name }}"
+                                     class="members-quote-photo">
+                                {% else %}
+                                <img src="/static/img/member-placeholder.svg"
+                                     alt="{{ quote.author_name }}"
+                                     class="members-quote-photo">
+                                {% endif %}
+                            </div>
+                            <div class="col-9">
+                                <div class="quote-content">
+                                    <div class="quote-text spectral-bold">{{ quote.quote_text|safe }}</div>
+                                    <p class="quote-author">{{ quote.author_name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% if top_quotes|length > 1 %}
+        <div class="glide__bullets pagination" data-glide-el="controls[nav]">
+            {% for quote in top_quotes %}
+            <button class="glide__bullet" data-glide-dir="={{ forloop.counter0 }}" aria-label="Go to slide {{ forloop.counter }}"></button>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        new Glide('.members-glide-top', { type: 'slider' }).mount();
+    </script>
+</section>
+{% endif %}

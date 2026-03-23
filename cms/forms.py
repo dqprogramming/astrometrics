@@ -811,6 +811,7 @@ class OurMembersPageSettingsForm(forms.ModelForm):
             "members_heading",
             "show_members_grid",
             "show_bottom_carousel",
+            "section_order",
         ]
         widgets = {
             "hero_heading": forms.TextInput(attrs={"class": "mgr-input"}),
@@ -829,6 +830,7 @@ class OurMembersPageSettingsForm(forms.ModelForm):
                 }
             ),
             "members_heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "section_order": forms.HiddenInput(),
         }
 
 

@@ -36,17 +36,54 @@ Our Members
         font-size: 0.78rem;
         color: var(--muted);
     }
+    .section-drag-handle {
+        cursor: grab;
+        color: var(--muted);
+        padding: 4px 8px;
+        font-size: 1.1rem;
+    }
+    .section-drag-handle:active {
+        cursor: grabbing;
+    }
+    .section-card.sortable-ghost {
+        opacity: 0.4;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <form method="post" enctype="multipart/form-data" style="max-width:900px;" id="our-members-form" data-csv-parse-url="{% url 'cms_manager:our_members_csv_parse' %}">
     {% csrf_token %}
+    {{ form.section_order }}
 
-    {# ── Header Section ───────────────────────────────────────── #}
+    {# ── CTA Button (not reorderable — applies within sections) ── #}
     <div class="mgr-form-card" style="margin-bottom:1.25rem;">
         <div class="section-toggle-row">
-            <label><i class="bi bi-type-h1"></i> Header</label>
+            <label><i class="bi bi-link-45deg"></i> Call to Action</label>
+            <span class="section-toggle-check">
+                Show {{ form.show_cta }}
+            </span>
+        </div>
+        <div data-section-content="show_cta">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.cta_text.id_for_label }}">Button Text</label>
+                    {{ form.cta_text }}
+                </div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.cta_url.id_for_label }}">Button URL</label>
+                    {{ form.cta_url }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="section-list">
+
+    {# ── Header Section ───────────────────────────────────────── #}
+    <div class="mgr-form-card section-card" style="margin-bottom:1.25rem;" data-section-key="header">
+        <div class="section-toggle-row">
+            <label><span class="section-drag-handle" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span> <i class="bi bi-type-h1"></i> Header</label>
             <span class="section-toggle-check">
                 Show {{ form.show_header }}
             </span>
@@ -61,9 +98,9 @@ Our Members
     </div>
 
     {# ── Who We Are Section ───────────────────────────────────── #}
-    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+    <div class="mgr-form-card section-card" style="margin-bottom:1.25rem;" data-section-key="who_we_are">
         <div class="section-toggle-row">
-            <label><i class="bi bi-people-fill"></i> Who We Are</label>
+            <label><span class="section-drag-handle" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span> <i class="bi bi-people-fill"></i> Who We Are</label>
             <span class="section-toggle-check">
                 Show {{ form.show_who_we_are }}
             </span>
@@ -113,32 +150,10 @@ Our Members
         </div>
     </div>
 
-    {# ── CTA Button ───────────────────────────────────────────── #}
-    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
-        <div class="section-toggle-row">
-            <label><i class="bi bi-link-45deg"></i> Call to Action</label>
-            <span class="section-toggle-check">
-                Show {{ form.show_cta }}
-            </span>
-        </div>
-        <div data-section-content="show_cta">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                <div class="mgr-field">
-                    <label class="mgr-label" for="{{ form.cta_text.id_for_label }}">Button Text</label>
-                    {{ form.cta_text }}
-                </div>
-                <div class="mgr-field">
-                    <label class="mgr-label" for="{{ form.cta_url.id_for_label }}">Button URL</label>
-                    {{ form.cta_url }}
-                </div>
-            </div>
-        </div>
-    </div>
-
     {# ── Top Quotes Carousel ──────────────────────────────────── #}
-    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+    <div class="mgr-form-card section-card" style="margin-bottom:1.25rem;" data-section-key="top_carousel">
         <div class="section-toggle-row">
-            <label><i class="bi bi-chat-quote"></i> Top Quotes Carousel</label>
+            <label><span class="section-drag-handle" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span> <i class="bi bi-chat-quote"></i> Top Quotes Carousel</label>
             <span class="section-toggle-check">
                 Show {{ form.show_top_carousel }}
             </span>
@@ -192,9 +207,9 @@ Our Members
     </div>
 
     {# ── Members / Institutions Grid ──────────────────────────── #}
-    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+    <div class="mgr-form-card section-card" style="margin-bottom:1.25rem;" data-section-key="members_grid">
         <div class="section-toggle-row">
-            <label><i class="bi bi-building"></i> OJC Members (Institutions)</label>
+            <label><span class="section-drag-handle" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span> <i class="bi bi-building"></i> OJC Members (Institutions)</label>
             <span class="section-toggle-check">
                 Show {{ form.show_members_grid }}
             </span>
@@ -239,9 +254,9 @@ Our Members
     </div>
 
     {# ── Bottom Quotes Carousel ───────────────────────────────── #}
-    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+    <div class="mgr-form-card section-card" style="margin-bottom:1.25rem;" data-section-key="bottom_carousel">
         <div class="section-toggle-row">
-            <label><i class="bi bi-chat-quote-fill"></i> Bottom Quotes Carousel</label>
+            <label><span class="section-drag-handle" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span> <i class="bi bi-chat-quote-fill"></i> Bottom Quotes Carousel</label>
             <span class="section-toggle-check">
                 Show {{ form.show_bottom_carousel }}
             </span>
@@ -293,6 +308,8 @@ Our Members
             </button>
         </div>
     </div>
+
+    </div>{# /section-list #}
 
     {# ── Actions ───────────────────────────────────────────────── #}
     <div style="display:flex; gap:1rem; align-items:center; margin-top:1.5rem;">

@@ -415,6 +415,79 @@
         });
     }
 
+    // -- Section reordering ---------------------------------------------------
+
+    function destroyAllEditors() {
+        if (!window.tinyMCE) return;
+        document.querySelectorAll('#section-list textarea.quote-tinymce').forEach(function (ta) {
+            var editor = tinyMCE.get(ta.id);
+            if (editor) {
+                editor.save();
+                editor.remove();
+            }
+        });
+        // Also destroy the Who We Are TinyMCE editors (circle bodies)
+        document.querySelectorAll('#section-list .tox-tinymce').forEach(function (wrapper) {
+            var ta = wrapper.previousElementSibling;
+            if (ta && ta.tagName === 'TEXTAREA' && !ta.classList.contains('quote-tinymce')) {
+                var editor = tinyMCE.get(ta.id);
+                if (editor) {
+                    editor.save();
+                    editor.remove();
+                }
+            }
+        });
+    }
+
+    function reinitAllEditors() {
+        if (!window.tinyMCE) return;
+        // Reinit all TinyMCE instances that Django rendered (they have IDs)
+        document.querySelectorAll('#section-list textarea[id]').forEach(function (ta) {
+            // Skip textareas in hidden (deleted) rows
+            var row = ta.closest('.quote-row');
+            if (row && isRowHidden(row)) return;
+            // Skip if already initialized
+            if (tinyMCE.get(ta.id)) return;
+            // Only init textareas that had TinyMCE (they have mce-related classes or were TinyMCE targets)
+            if (ta.classList.contains('quote-tinymce') || ta.id.match(/id_circle_\d+_body/)) {
+                initTinyMCE(ta);
+            }
+        });
+        // Re-init quote editors in both lists
+        initQuoteEditors('top-quote-list');
+        initQuoteEditors('bottom-quote-list');
+    }
+
+    function updateSectionOrder() {
+        var list = document.getElementById('section-list');
+        var input = document.getElementById('id_section_order');
+        if (!list || !input) return;
+        var order = [];
+        list.querySelectorAll('.section-card[data-section-key]').forEach(function (card) {
+            order.push(card.dataset.sectionKey);
+        });
+        input.value = JSON.stringify(order);
+    }
+
+    function initSectionSortable() {
+        var list = document.getElementById('section-list');
+        if (!list) return;
+        Sortable.create(list, {
+            handle: '.section-drag-handle',
+            animation: 150,
+            draggable: '.section-card',
+            ghostClass: 'sortable-ghost',
+            onStart: function () {
+                destroyAllEditors();
+            },
+            onEnd: function () {
+                reinitAllEditors();
+                updateSectionOrder();
+                markDirty();
+            }
+        });
+    }
+
     // -- Init -----------------------------------------------------------------
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -423,6 +496,25 @@
 
         // Section visibility toggles
         initSectionToggles();
+
+        // Section reordering — restore saved order from hidden field
+        var sectionOrderInput = document.getElementById('id_section_order');
+        var sectionList = document.getElementById('section-list');
+        if (sectionOrderInput && sectionList && sectionOrderInput.value) {
+            try {
+                var savedOrder = JSON.parse(sectionOrderInput.value);
+                if (Array.isArray(savedOrder) && savedOrder.length) {
+                    savedOrder.forEach(function (key) {
+                        var card = sectionList.querySelector('.section-card[data-section-key="' + key + '"]');
+                        if (card) sectionList.appendChild(card);
+                    });
+                }
+            } catch (e) {
+                // ignore parse errors
+            }
+        }
+        initSectionSortable();
+        updateSectionOrder();
 
         // Sortables
         initTopQuoteSortable();
@@ -488,6 +580,7 @@
                 updateSortOrders('top-quote-list', '.quote-row');
                 updateSortOrders('bottom-quote-list', '.quote-row');
                 updateSortOrders('institution-list', '.institution-row');
+                updateSectionOrder();
             });
         }
 

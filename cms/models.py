@@ -1599,6 +1599,26 @@ class OurMembersPageSettings(models.Model):
     show_members_grid = models.BooleanField(default=True)
     show_bottom_carousel = models.BooleanField(default=True)
 
+    # Section display order
+    SECTION_ORDER_DEFAULT = [
+        "header",
+        "who_we_are",
+        "top_carousel",
+        "members_grid",
+        "bottom_carousel",
+    ]
+    section_order = models.JSONField(
+        default=list,
+        blank=True,
+        help_text="Ordered list of section keys",
+    )
+
+    def get_section_order(self):
+        """Return the section order, falling back to the default."""
+        if self.section_order:
+            return self.section_order
+        return self.SECTION_ORDER_DEFAULT
+
     # Metadata
     updated_at = models.DateTimeField(auto_now=True)
 
