@@ -1,7 +1,6 @@
-{% if settings.show_who_we_are %}
-<section class="members-who-we-are" style="background-color: {{ settings.who_we_are_bg_color }}; color: {{ settings.who_we_are_text_color }};" aria-labelledby="who-we-are-heading">
+<section class="members-who-we-are" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};" aria-labelledby="who-we-are-heading-{{ block.pk }}">
     <div class="container">
-        <h2 id="who-we-are-heading" class="members-section-heading spectral-bold" style="color: inherit;">{{ settings.section_heading }}</h2>
+        <h2 id="who-we-are-heading-{{ block.pk }}" class="members-section-heading spectral-bold" style="color: inherit;">{{ block.section_heading }}</h2>
 
         <div class="members-circles-row">
             <div class="members-circle-item">
@@ -13,8 +12,8 @@
                         <circle cx="8" cy="44" r="2" fill="currentColor"/>
                     </svg>
                 </div>
-                <h3 class="spectral-bold" style="color: inherit;">{{ settings.circle_1_title }}</h3>
-                <div class="members-circle-body">{{ settings.circle_1_body|safe }}</div>
+                <h3 class="spectral-bold" style="color: inherit;">{{ block.circle_1_title }}</h3>
+                <div class="members-circle-body">{{ block.circle_1_body|safe }}</div>
             </div>
 
             <div class="members-circle-item">
@@ -27,8 +26,8 @@
                         <line x1="28" y1="28" x2="44" y2="28" stroke="currentColor" stroke-width="1.5"/>
                     </svg>
                 </div>
-                <h3 class="spectral-bold" style="color: inherit;">{{ settings.circle_2_title }}</h3>
-                <div class="members-circle-body">{{ settings.circle_2_body|safe }}</div>
+                <h3 class="spectral-bold" style="color: inherit;">{{ block.circle_2_title }}</h3>
+                <div class="members-circle-body">{{ block.circle_2_body|safe }}</div>
             </div>
 
             <div class="members-circle-item">
@@ -44,16 +43,15 @@
                         <path d="M28 48l4 6 4-6" stroke="currentColor" stroke-width="2" fill="none"/>
                     </svg>
                 </div>
-                <h3 class="spectral-bold" style="color: inherit;">{{ settings.circle_3_title }}</h3>
-                <div class="members-circle-body">{{ settings.circle_3_body|safe }}</div>
+                <h3 class="spectral-bold" style="color: inherit;">{{ block.circle_3_title }}</h3>
+                <div class="members-circle-body">{{ block.circle_3_body|safe }}</div>
             </div>
         </div>
 
-        {% if settings.show_who_we_are_cta and settings.who_we_are_cta_text %}
+        {% if block.show_cta and block.cta_text %}
         <div class="members-cta-row">
-            <a href="{{ settings.who_we_are_cta_url }}" class="btn-members-join">{{ settings.who_we_are_cta_text }} &rarr;</a>
+            <a href="{{ block.cta_url }}" class="btn-members-join">{{ block.cta_text }} &rarr;</a>
         </div>
         {% endif %}
     </div>
 </section>
-{% endif %}

@@ -178,21 +178,22 @@ def about_us_view(request):
 
 
 def our_members_view(request):
-    settings = OurMembersPageSettings.load()
-    top_quotes = settings.top_quotes.all()
-    bottom_quotes = settings.bottom_quotes.all()
-    institutions = settings.institutions.all()
-    return render(
-        request,
-        "our_members.html",
-        {
-            "settings": settings,
-            "top_quotes": top_quotes,
-            "bottom_quotes": bottom_quotes,
-            "institutions": institutions,
-            "section_order": settings.get_section_order(),
-        },
-    )
+    page = OurMembersPageSettings.load()
+    placements = page.blocks.order_by("sort_order")
+    blocks = []
+    for p in placements:
+        if not p.is_visible:
+            continue
+        block = p.get_block()
+        if not block:
+            continue
+        bd = {"type": p.block_type, "block": block}
+        if p.block_type == "person_carousel":
+            bd["quotes"] = block.quotes.all()
+        elif p.block_type == "members_institutions":
+            bd["institutions"] = block.institutions.all()
+        blocks.append(bd)
+    return render(request, "our_members.html", {"blocks": blocks})
 
 
 def page_preview_view(request, token):

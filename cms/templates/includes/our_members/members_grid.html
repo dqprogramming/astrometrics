@@ -1,7 +1,6 @@
-{% if settings.show_members_grid %}
-<section class="members-grid-section" style="background-color: {{ settings.members_grid_bg_color }}; color: {{ settings.members_grid_text_color }};" aria-labelledby="members-grid-heading">
+<section class="members-grid-section" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};" aria-labelledby="members-grid-heading-{{ block.pk }}">
     <div class="container">
-        <h2 id="members-grid-heading" class="members-grid-heading spectral-bold" style="color: inherit;">{{ settings.members_heading }}</h2>
+        <h2 id="members-grid-heading-{{ block.pk }}" class="members-grid-heading spectral-bold" style="color: inherit;">{{ block.heading }}</h2>
 
         {% if institutions %}
         <div class="members-grid">
@@ -13,11 +12,10 @@
         </div>
         {% endif %}
 
-        {% if settings.show_members_grid_cta and settings.members_grid_cta_text %}
+        {% if block.show_cta and block.cta_text %}
         <div class="members-cta-row">
-            <a href="{{ settings.members_grid_cta_url }}" class="btn-members-join">{{ settings.members_grid_cta_text }} &rarr;</a>
+            <a href="{{ block.cta_url }}" class="btn-members-join">{{ block.cta_text }} &rarr;</a>
         </div>
         {% endif %}
     </div>
 </section>
-{% endif %}

@@ -1,7 +1,5 @@
-{% if settings.show_header %}
-<section class="members-header-bar" style="background-color: {{ settings.header_bg_color }}; color: {{ settings.header_text_color }};">
+<section class="members-header-bar" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};">
     <div class="container">
-        <h1 class="spectral-bold" style="color: inherit;">{{ settings.hero_heading }}</h1>
+        <h1 class="spectral-bold" style="color: inherit;">{{ block.heading }}</h1>
     </div>
 </section>
-{% endif %}
