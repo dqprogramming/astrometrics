@@ -29,7 +29,6 @@
         if (!textarea.id) {
             textarea.id = 'quote-mce-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
         }
-        // Don't double-init
         if (tinyMCE.get(textarea.id)) return;
         tinyMCE.init(Object.assign({}, TINYMCE_CONFIG, {
             target: textarea,
@@ -43,11 +42,10 @@
         if (window.tinyMCE) tinyMCE.triggerSave();
     }
 
-    function destroyQuoteEditors(listId) {
+    function destroyAllEditors() {
         if (!window.tinyMCE) return;
-        var list = document.getElementById(listId);
-        if (!list) return;
-        list.querySelectorAll('textarea.quote-tinymce').forEach(function (ta) {
+        document.querySelectorAll('#block-list textarea').forEach(function (ta) {
+            if (!ta.id) return;
             var editor = tinyMCE.get(ta.id);
             if (editor) {
                 editor.save();
@@ -56,82 +54,63 @@
         });
     }
 
-    function initQuoteEditors(listId) {
+    function reinitAllEditors() {
         if (!window.tinyMCE) return;
-        var list = document.getElementById(listId);
-        if (!list) return;
-        list.querySelectorAll('textarea.quote-tinymce').forEach(function (ta) {
-            // Only init visible rows (not deleted ones)
+        document.querySelectorAll('#block-list textarea[id]').forEach(function (ta) {
             var row = ta.closest('.quote-row');
-            if (row && !isRowHidden(row)) {
+            if (row && isRowHidden(row)) return;
+            if (tinyMCE.get(ta.id)) return;
+            if (ta.classList.contains('quote-tinymce') || ta.id.match(/circle_\d+_body/)) {
                 initTinyMCE(ta);
             }
         });
     }
 
-    // -- Sortable: top quotes -------------------------------------------------
-
-    function initTopQuoteSortable() {
-        var list = document.getElementById('top-quote-list');
-        if (!list) return;
-        Sortable.create(list, {
-            handle: '.quote-drag-handle',
-            animation: 150,
-            onStart: function () {
-                destroyQuoteEditors('top-quote-list');
-            },
-            onEnd: function () {
-                initQuoteEditors('top-quote-list');
-                updateSortOrders('top-quote-list', '.quote-row');
-                markDirty();
+    function destroyEditorsIn(container) {
+        if (!window.tinyMCE || !container) return;
+        container.querySelectorAll('textarea').forEach(function (ta) {
+            if (!ta.id) return;
+            var editor = tinyMCE.get(ta.id);
+            if (editor) {
+                editor.save();
+                editor.remove();
             }
         });
     }
 
-    // -- Sortable: bottom quotes ----------------------------------------------
-
-    function initBottomQuoteSortable() {
-        var list = document.getElementById('bottom-quote-list');
-        if (!list) return;
-        Sortable.create(list, {
-            handle: '.quote-drag-handle',
-            animation: 150,
-            onStart: function () {
-                destroyQuoteEditors('bottom-quote-list');
-            },
-            onEnd: function () {
-                initQuoteEditors('bottom-quote-list');
-                updateSortOrders('bottom-quote-list', '.quote-row');
-                markDirty();
-            }
-        });
-    }
-
-    // -- Sortable: institutions -----------------------------------------------
-
-    function initInstitutionSortable() {
-        var list = document.getElementById('institution-list');
-        if (!list) return;
-        Sortable.create(list, {
-            handle: '.institution-drag-handle',
-            animation: 150,
-            onEnd: function () {
-                updateSortOrders('institution-list', '.institution-row');
-                markDirty();
+    function initEditorsIn(container) {
+        if (!window.tinyMCE || !container) return;
+        container.querySelectorAll('textarea[id]').forEach(function (ta) {
+            var row = ta.closest('.quote-row');
+            if (row && isRowHidden(row)) return;
+            if (tinyMCE.get(ta.id)) return;
+            if (ta.classList.contains('quote-tinymce') || ta.id.match(/circle_\d+_body/)) {
+                initTinyMCE(ta);
             }
         });
     }
 
     // -- Sort order helpers ---------------------------------------------------
 
-    function updateSortOrders(listId, rowSelector) {
-        var list = document.getElementById(listId);
-        if (!list) return;
-        var rows = list.querySelectorAll(rowSelector);
+    function updateSortOrders(listEl, rowSelector) {
+        if (!listEl) return;
+        var rows = listEl.querySelectorAll(rowSelector);
         rows.forEach(function (row, idx) {
             var input = row.querySelector('input[name$="-sort_order"]');
             if (input) input.value = idx;
         });
+    }
+
+    // -- Row visibility helpers -----------------------------------------------
+
+    function isRowHidden(row) {
+        return row.style.display === 'none' || row.classList.contains('d-none');
+    }
+
+    function hideRow(row) {
+        row.classList.add('d-none');
+        row.classList.remove('d-flex');
+        row.style.display = 'none';
     }
 
     // -- Delete quote ---------------------------------------------------------
@@ -142,7 +121,6 @@
             var row = btn.closest('.quote-row');
             var deleteCheckbox = row.querySelector('input[name$="-DELETE"]');
             if (deleteCheckbox) {
-                // Existing row — sync content, destroy editor, mark for deletion
                 var ta = row.querySelector('textarea.quote-tinymce');
                 if (ta && window.tinyMCE) {
                     var editor = tinyMCE.get(ta.id);
@@ -154,7 +132,6 @@
                 deleteCheckbox.checked = true;
                 row.style.display = 'none';
             } else {
-                // New row — destroy editor and remove from DOM
                 var ta2 = row.querySelector('textarea.quote-tinymce');
                 if (ta2 && window.tinyMCE) {
                     var ed = tinyMCE.get(ta2.id);
@@ -168,60 +145,43 @@
 
     // -- Delete institution ---------------------------------------------------
 
-    function isRowHidden(row) {
-        return row.style.display === 'none' || row.classList.contains('d-none');
-    }
-
-    function hideRow(row) {
-        // Bootstrap utility classes like .d-flex use !important, so
-        // row.style.display='none' alone is overridden. Add d-none and
-        // remove d-flex to ensure the row is hidden.
-        row.classList.add('d-none');
-        row.classList.remove('d-flex');
-        row.style.display = 'none';
-    }
-
     function initDeleteInstitution(btn) {
         btn.addEventListener('click', function () {
             if (!confirm('Remove this institution?')) return;
             var row = btn.closest('.institution-row');
             var deleteCheckbox = row.querySelector('input[name$="-DELETE"]');
             if (deleteCheckbox) {
-                // Existing row — mark for deletion
                 deleteCheckbox.checked = true;
                 hideRow(row);
             } else {
-                // New row — remove from DOM
                 row.remove();
             }
             markDirty();
         });
     }
 
-    // -- Add quote ------------------------------------------------------------
+    // -- Add quote (scoped by block) ------------------------------------------
 
-    function addQuote(prefix, listId, templateId) {
-        var listEl = document.getElementById(listId);
-        var template = document.getElementById(templateId);
-        if (!listEl || !template) return;
+    function addQuoteToBlock(blockCard) {
+        var template = blockCard.querySelector('.quote-template');
+        var listEl = blockCard.querySelector('.quote-list');
+        if (!template || !listEl) return;
 
-        var totalForms = document.querySelector('#id_' + prefix + '-TOTAL_FORMS');
+        var prefix = template.dataset.prefix;
+        var totalForms = blockCard.querySelector('input[name="' + prefix + '-TOTAL_FORMS"]');
+        if (!totalForms) return;
         var count = parseInt(totalForms.value, 10);
 
         var newRow = template.content.firstElementChild.cloneNode(true);
 
-        // Replace __prefix__ with actual index
-        var allInputs = newRow.querySelectorAll('input, textarea, select');
-        allInputs.forEach(function (el) {
+        newRow.querySelectorAll('input, textarea, select').forEach(function (el) {
             if (el.name) el.name = el.name.replace(/__prefix__/g, count);
             if (el.id) el.id = el.id.replace(/__prefix__/g, count);
         });
-        var allLabels = newRow.querySelectorAll('label');
-        allLabels.forEach(function (el) {
+        newRow.querySelectorAll('label').forEach(function (el) {
             if (el.htmlFor) el.htmlFor = el.htmlFor.replace(/__prefix__/g, count);
         });
 
-        // Set sort order
         var sortInput = newRow.querySelector('input[name$="-sort_order"]');
         if (sortInput) sortInput.value = count;
 
@@ -230,7 +190,6 @@
 
         initDeleteQuote(newRow.querySelector('.btn-delete-quote'));
 
-        // Init TinyMCE on the new textarea
         var textarea = newRow.querySelector('textarea.quote-tinymce');
         if (textarea) {
             textarea.id = 'id_' + prefix + '-' + count + '-quote_text';
@@ -240,30 +199,28 @@
         markDirty();
     }
 
-    // -- Add institution ------------------------------------------------------
+    // -- Add institution (scoped by block) ------------------------------------
 
-    function addInstitution() {
-        var listEl = document.getElementById('institution-list');
-        var template = document.getElementById('institution-template');
-        if (!listEl || !template) return;
+    function addInstitutionToBlock(blockCard) {
+        var template = blockCard.querySelector('.institution-template');
+        var listEl = blockCard.querySelector('.institution-list');
+        if (!template || !listEl) return;
 
-        var totalForms = document.querySelector('#id_institutions-TOTAL_FORMS');
+        var prefix = template.dataset.prefix;
+        var totalForms = blockCard.querySelector('input[name="' + prefix + '-TOTAL_FORMS"]');
+        if (!totalForms) return;
         var count = parseInt(totalForms.value, 10);
 
         var newRow = template.content.firstElementChild.cloneNode(true);
 
-        // Replace __prefix__ with actual index
-        var allInputs = newRow.querySelectorAll('input, textarea, select');
-        allInputs.forEach(function (el) {
+        newRow.querySelectorAll('input, textarea, select').forEach(function (el) {
             if (el.name) el.name = el.name.replace(/__prefix__/g, count);
             if (el.id) el.id = el.id.replace(/__prefix__/g, count);
         });
-        var allLabels = newRow.querySelectorAll('label');
-        allLabels.forEach(function (el) {
+        newRow.querySelectorAll('label').forEach(function (el) {
             if (el.htmlFor) el.htmlFor = el.htmlFor.replace(/__prefix__/g, count);
         });
 
-        // Set sort order
         var sortInput = newRow.querySelector('input[name$="-sort_order"]');
         if (sortInput) sortInput.value = count;
 
@@ -275,20 +232,15 @@
         markDirty();
     }
 
-    // -- Alphabetize institutions ---------------------------------------------
+    // -- Alphabetize institutions (scoped by block) ---------------------------
 
-    function alphabetizeInstitutions() {
-        var list = document.getElementById('institution-list');
+    function alphabetizeInstitutions(blockCard) {
+        var list = blockCard.querySelector('.institution-list');
         if (!list) return;
 
         var rows = Array.from(list.querySelectorAll('.institution-row'));
-        // Only sort visible rows (not deleted)
-        var visible = rows.filter(function (row) {
-            return !isRowHidden(row);
-        });
-        var hidden = rows.filter(function (row) {
-            return isRowHidden(row);
-        });
+        var visible = rows.filter(function (row) { return !isRowHidden(row); });
+        var hidden = rows.filter(function (row) { return isRowHidden(row); });
 
         visible.sort(function (a, b) {
             var nameA = (a.querySelector('input[name$="-name"]') || {}).value || '';
@@ -296,18 +248,17 @@
             return nameA.toLowerCase().localeCompare(nameB.toLowerCase());
         });
 
-        // Re-append in sorted order (visible first, then hidden)
         visible.forEach(function (row) { list.appendChild(row); });
         hidden.forEach(function (row) { list.appendChild(row); });
 
-        updateSortOrders('institution-list', '.institution-row');
+        updateSortOrders(list, '.institution-row');
         markDirty();
     }
 
-    // -- CSV import -----------------------------------------------------------
+    // -- CSV import (scoped by block) -----------------------------------------
 
-    function getExistingInstitutionNames() {
-        var list = document.getElementById('institution-list');
+    function getExistingInstitutionNames(blockCard) {
+        var list = blockCard.querySelector('.institution-list');
         if (!list) return [];
         var names = [];
         list.querySelectorAll('.institution-row').forEach(function (row) {
@@ -320,23 +271,23 @@
         return names;
     }
 
-    function addInstitutionRow(name, existingNames) {
-        var listEl = document.getElementById('institution-list');
-        var template = document.getElementById('institution-template');
-        if (!listEl || !template) return;
+    function addInstitutionRow(blockCard, name, existingNames) {
+        var template = blockCard.querySelector('.institution-template');
+        var listEl = blockCard.querySelector('.institution-list');
+        if (!template || !listEl) return;
 
-        var totalForms = document.querySelector('#id_institutions-TOTAL_FORMS');
+        var prefix = template.dataset.prefix;
+        var totalForms = blockCard.querySelector('input[name="' + prefix + '-TOTAL_FORMS"]');
+        if (!totalForms) return;
         var count = parseInt(totalForms.value, 10);
 
         var newRow = template.content.firstElementChild.cloneNode(true);
 
-        var allInputs = newRow.querySelectorAll('input, textarea, select');
-        allInputs.forEach(function (el) {
+        newRow.querySelectorAll('input, textarea, select').forEach(function (el) {
             if (el.name) el.name = el.name.replace(/__prefix__/g, count);
             if (el.id) el.id = el.id.replace(/__prefix__/g, count);
         });
-        var allLabels = newRow.querySelectorAll('label');
-        allLabels.forEach(function (el) {
+        newRow.querySelectorAll('label').forEach(function (el) {
             if (el.htmlFor) el.htmlFor = el.htmlFor.replace(/__prefix__/g, count);
         });
 
@@ -354,7 +305,7 @@
         existingNames.push(name.toLowerCase());
     }
 
-    function handleCSVImport(file) {
+    function handleCSVImport(blockCard, file) {
         var formData = new FormData();
         formData.append('file', file);
 
@@ -370,10 +321,10 @@
                 alert('CSV import error: ' + data.error);
                 return;
             }
-            var existingNames = getExistingInstitutionNames();
+            var existingNames = getExistingInstitutionNames(blockCard);
             (data.names || []).forEach(function (name) {
                 if (existingNames.indexOf(name.toLowerCase()) !== -1) return;
-                addInstitutionRow(name, existingNames);
+                addInstitutionRow(blockCard, name, existingNames);
             });
             markDirty();
         })
@@ -382,12 +333,12 @@
         });
     }
 
-    // -- Section visibility toggles -------------------------------------------
+    // -- Block visibility toggle ----------------------------------------------
 
-    function applySectionToggle(checkbox) {
-        var fieldName = checkbox.name;
-        var content = document.querySelector('[data-section-content="' + fieldName + '"]');
-        if (!content) return;
+    function applyBlockVisibility(card) {
+        var checkbox = card.querySelector('.block-visible-check');
+        var content = card.querySelector('[data-block-content]');
+        if (!checkbox || !content) return;
         if (checkbox.checked) {
             content.classList.remove('section-disabled');
         } else {
@@ -395,109 +346,61 @@
         }
     }
 
-    function initSectionToggles() {
-        var checkboxes = document.querySelectorAll(
-            'input[name="show_header"],' +
-            'input[name="show_who_we_are"],' +
-            'input[name="show_who_we_are_cta"],' +
-            'input[name="show_top_carousel"],' +
-            'input[name="show_members_grid"],' +
-            'input[name="show_members_grid_cta"],' +
-            'input[name="show_bottom_carousel"]'
-        );
-        checkboxes.forEach(function (cb) {
-            // Apply initial state
-            applySectionToggle(cb);
-            // Listen for changes
-            cb.addEventListener('change', function () {
-                applySectionToggle(cb);
-                markDirty();
-            });
-        });
+    // -- CTA visibility toggle ------------------------------------------------
+
+    function applyCTAToggle(checkbox) {
+        var card = checkbox.closest('.section-card') || checkbox.closest('[data-block-content]');
+        if (!card) return;
+        var ctaContent = card.querySelector('[data-cta-content]');
+        if (!ctaContent) return;
+        if (checkbox.checked) {
+            ctaContent.classList.remove('section-disabled');
+        } else {
+            ctaContent.classList.add('section-disabled');
+        }
     }
 
     // -- Colour reset ---------------------------------------------------------
 
-    function initColorResetButtons() {
-        var defaultsEl = document.getElementById('color-defaults');
-        if (!defaultsEl) return;
-        var defaults;
-        try {
-            defaults = JSON.parse(defaultsEl.textContent);
-        } catch (e) {
-            return;
-        }
-
-        document.querySelectorAll('.btn-reset-colors').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                var section = btn.dataset.resetSection;
-                var bgKey = section + '_bg_color';
-                var textKey = section + '_text_color';
-                var bgInput = document.getElementById('id_' + bgKey);
-                var textInput = document.getElementById('id_' + textKey);
-                if (bgInput && defaults[bgKey]) bgInput.value = defaults[bgKey];
-                if (textInput && defaults[textKey]) textInput.value = defaults[textKey];
-                markDirty();
-            });
+    function initColorReset(btn) {
+        btn.addEventListener('click', function () {
+            var card = btn.closest('.section-card');
+            if (!card) return;
+            var defaults;
+            try {
+                defaults = JSON.parse(card.dataset.colorDefaults || '{}');
+            } catch (e) {
+                return;
+            }
+            var bgInput = card.querySelector('input[name$="-bg_color"]');
+            var textInput = card.querySelector('input[name$="-text_color"]');
+            if (bgInput && defaults.bg_color) bgInput.value = defaults.bg_color;
+            if (textInput && defaults.text_color) textInput.value = defaults.text_color;
+            markDirty();
         });
     }
 
-    // -- Section reordering ---------------------------------------------------
+    // -- Block order ----------------------------------------------------------
 
-    function destroyAllEditors() {
-        if (!window.tinyMCE) return;
-        document.querySelectorAll('#section-list textarea.quote-tinymce').forEach(function (ta) {
-            var editor = tinyMCE.get(ta.id);
-            if (editor) {
-                editor.save();
-                editor.remove();
-            }
-        });
-        // Also destroy the Who We Are TinyMCE editors (circle bodies)
-        document.querySelectorAll('#section-list .tox-tinymce').forEach(function (wrapper) {
-            var ta = wrapper.previousElementSibling;
-            if (ta && ta.tagName === 'TEXTAREA' && !ta.classList.contains('quote-tinymce')) {
-                var editor = tinyMCE.get(ta.id);
-                if (editor) {
-                    editor.save();
-                    editor.remove();
-                }
-            }
-        });
-    }
-
-    function reinitAllEditors() {
-        if (!window.tinyMCE) return;
-        // Reinit all TinyMCE instances that Django rendered (they have IDs)
-        document.querySelectorAll('#section-list textarea[id]').forEach(function (ta) {
-            // Skip textareas in hidden (deleted) rows
-            var row = ta.closest('.quote-row');
-            if (row && isRowHidden(row)) return;
-            // Skip if already initialized
-            if (tinyMCE.get(ta.id)) return;
-            // Only init textareas that had TinyMCE (they have mce-related classes or were TinyMCE targets)
-            if (ta.classList.contains('quote-tinymce') || ta.id.match(/id_circle_\d+_body/)) {
-                initTinyMCE(ta);
-            }
-        });
-        // Re-init quote editors in both lists
-        initQuoteEditors('top-quote-list');
-        initQuoteEditors('bottom-quote-list');
-    }
-
-    function updateSectionOrder() {
-        var list = document.getElementById('section-list');
-        var input = document.getElementById('id_section_order');
+    function updateBlockOrder() {
+        var list = document.getElementById('block-list');
+        var input = document.getElementById('block-order-field');
         if (!list || !input) return;
         var order = [];
-        list.querySelectorAll('.section-card[data-section-key]').forEach(function (card) {
-            order.push(card.dataset.sectionKey);
+        list.querySelectorAll('.section-card[data-block-pk]').forEach(function (card) {
+            var checkbox = card.querySelector('.block-visible-check');
+            order.push({
+                pk: parseInt(card.dataset.blockPk, 10),
+                visible: checkbox ? checkbox.checked : true
+            });
         });
         input.value = JSON.stringify(order);
     }
 
-    function initSectionSortable() {
-        var list = document.getElementById('section-list');
+    // -- Block-level Sortable -------------------------------------------------
+
+    function initBlockSortable() {
+        var list = document.getElementById('block-list');
         if (!list) return;
         Sortable.create(list, {
             handle: '.section-drag-handle',
@@ -509,8 +412,80 @@
             },
             onEnd: function () {
                 reinitAllEditors();
-                updateSectionOrder();
+                updateBlockOrder();
                 markDirty();
+            }
+        });
+    }
+
+    // -- Per-block child Sortables --------------------------------------------
+
+    function initChildSortables() {
+        // Quote lists
+        document.querySelectorAll('.quote-list').forEach(function (list) {
+            Sortable.create(list, {
+                handle: '.quote-drag-handle',
+                animation: 150,
+                onStart: function () {
+                    destroyEditorsIn(list);
+                },
+                onEnd: function () {
+                    initEditorsIn(list);
+                    updateSortOrders(list, '.quote-row');
+                    markDirty();
+                }
+            });
+        });
+
+        // Institution lists
+        document.querySelectorAll('.institution-list').forEach(function (list) {
+            Sortable.create(list, {
+                handle: '.institution-drag-handle',
+                animation: 150,
+                onEnd: function () {
+                    updateSortOrders(list, '.institution-row');
+                    markDirty();
+                }
+            });
+        });
+    }
+
+    // -- Delete block ---------------------------------------------------------
+
+    function initDeleteBlock() {
+        document.querySelectorAll('.delete-block-form').forEach(function (form) {
+            form.addEventListener('submit', function (e) {
+                if (!confirm('Delete this block? This cannot be undone.')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    }
+
+    // -- Add block ------------------------------------------------------------
+
+    function initAddBlock() {
+        document.querySelectorAll('.add-block-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var blockType = btn.dataset.blockType;
+                var typeInput = document.getElementById('add-block-type');
+                var form = document.getElementById('add-block-form');
+                if (typeInput && form) {
+                    typeInput.value = blockType;
+                    form.submit();
+                }
+            });
+        });
+    }
+
+    // -- Reset page defaults --------------------------------------------------
+
+    function initResetDefaults() {
+        var form = document.getElementById('reset-defaults-form');
+        if (!form) return;
+        form.addEventListener('submit', function (e) {
+            if (!confirm('Reset the entire page to defaults? All current blocks will be deleted.')) {
+                e.preventDefault();
             }
         });
     }
@@ -521,94 +496,109 @@
         var formEl = document.getElementById('our-members-form');
         if (formEl) CSV_PARSE_URL = formEl.dataset.csvParseUrl || '';
 
-        // Section visibility toggles and colour resets
-        initSectionToggles();
-        initColorResetButtons();
-
-        // Section reordering — restore saved order from hidden field
-        var sectionOrderInput = document.getElementById('id_section_order');
-        var sectionList = document.getElementById('section-list');
-        if (sectionOrderInput && sectionList && sectionOrderInput.value) {
-            try {
-                var savedOrder = JSON.parse(sectionOrderInput.value);
-                if (Array.isArray(savedOrder) && savedOrder.length) {
-                    savedOrder.forEach(function (key) {
-                        var card = sectionList.querySelector('.section-card[data-section-key="' + key + '"]');
-                        if (card) sectionList.appendChild(card);
-                    });
-                }
-            } catch (e) {
-                // ignore parse errors
+        // Block visibility toggles
+        document.querySelectorAll('.section-card').forEach(function (card) {
+            applyBlockVisibility(card);
+            var checkbox = card.querySelector('.block-visible-check');
+            if (checkbox) {
+                checkbox.addEventListener('change', function () {
+                    applyBlockVisibility(card);
+                    markDirty();
+                });
             }
-        }
-        initSectionSortable();
-        updateSectionOrder();
+        });
 
-        // Sortables
-        initTopQuoteSortable();
-        initBottomQuoteSortable();
-        initInstitutionSortable();
+        // CTA toggles (show_cta checkboxes within blocks)
+        document.querySelectorAll('input[name$="-show_cta"]').forEach(function (cb) {
+            applyCTAToggle(cb);
+            cb.addEventListener('change', function () {
+                applyCTAToggle(cb);
+                markDirty();
+            });
+        });
+
+        // Colour reset buttons
+        document.querySelectorAll('.btn-reset-colors').forEach(initColorReset);
+
+        // Block-level sortable
+        initBlockSortable();
+        updateBlockOrder();
+
+        // Per-block child sortables
+        initChildSortables();
 
         // Delete buttons for existing rows
         document.querySelectorAll('.btn-delete-quote').forEach(initDeleteQuote);
         document.querySelectorAll('.btn-delete-institution').forEach(initDeleteInstitution);
 
-        // Add quote buttons
-        var addTopQuoteBtn = document.getElementById('btn-add-top-quote');
-        if (addTopQuoteBtn) {
-            addTopQuoteBtn.addEventListener('click', function () {
-                addQuote('top_quotes', 'top-quote-list', 'top-quote-template');
+        // Add quote buttons (scoped per block)
+        document.querySelectorAll('.btn-add-quote').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var card = btn.closest('.section-card');
+                if (card) addQuoteToBlock(card);
             });
-        }
+        });
 
-        var addBottomQuoteBtn = document.getElementById('btn-add-bottom-quote');
-        if (addBottomQuoteBtn) {
-            addBottomQuoteBtn.addEventListener('click', function () {
-                addQuote('bottom_quotes', 'bottom-quote-list', 'bottom-quote-template');
+        // Add institution buttons (scoped per block)
+        document.querySelectorAll('.btn-add-institution').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var card = btn.closest('.section-card');
+                if (card) addInstitutionToBlock(card);
             });
-        }
+        });
 
-        // Add institution button
-        var addInstitutionBtn = document.getElementById('btn-add-institution');
-        if (addInstitutionBtn) {
-            addInstitutionBtn.addEventListener('click', addInstitution);
-        }
-
-        // Alphabetize button
-        var alphabetizeBtn = document.getElementById('btn-alphabetize-institutions');
-        if (alphabetizeBtn) {
-            alphabetizeBtn.addEventListener('click', alphabetizeInstitutions);
-        }
-
-        // CSV import
-        var csvBtn = document.getElementById('btn-csv-import');
-        var csvInput = document.getElementById('csv-file-input');
-        if (csvBtn && csvInput) {
-            csvBtn.addEventListener('click', function () {
-                csvInput.click();
+        // Alphabetize buttons (scoped per block)
+        document.querySelectorAll('.btn-alphabetize-institutions').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var card = btn.closest('.section-card');
+                if (card) alphabetizeInstitutions(card);
             });
+        });
+
+        // CSV import (scoped per block)
+        document.querySelectorAll('.btn-csv-import').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var card = btn.closest('.section-card');
+                if (!card) return;
+                var csvInput = card.querySelector('.csv-file-input');
+                if (csvInput) csvInput.click();
+            });
+        });
+        document.querySelectorAll('.csv-file-input').forEach(function (csvInput) {
             csvInput.addEventListener('change', function () {
                 if (csvInput.files && csvInput.files[0]) {
-                    handleCSVImport(csvInput.files[0]);
-                    // Reset so the same file can be imported again if needed
+                    var card = csvInput.closest('.section-card');
+                    if (card) handleCSVImport(card, csvInput.files[0]);
                     csvInput.value = '';
                 }
             });
-        }
+        });
+
+        // Delete block confirmation
+        initDeleteBlock();
+
+        // Add block dropdown
+        initAddBlock();
+
+        // Reset page defaults
+        initResetDefaults();
 
         // Track edits as dirty
         var form = document.getElementById('our-members-form');
         if (form) {
             form.addEventListener('input', markDirty);
 
-            // Sync TinyMCE and update sort orders on form submit
             form.addEventListener('submit', function () {
                 dirty = false;
                 syncAllTinyMCE();
-                updateSortOrders('top-quote-list', '.quote-row');
-                updateSortOrders('bottom-quote-list', '.quote-row');
-                updateSortOrders('institution-list', '.institution-row');
-                updateSectionOrder();
+                // Update sort orders for all child lists
+                document.querySelectorAll('.quote-list').forEach(function (list) {
+                    updateSortOrders(list, '.quote-row');
+                });
+                document.querySelectorAll('.institution-list').forEach(function (list) {
+                    updateSortOrders(list, '.institution-row');
+                });
+                updateBlockOrder();
             });
         }
 
