@@ -380,6 +380,31 @@
         });
     }
 
+    // -- Block deletion (client-side) -----------------------------------------
+
+    var deletedBlockPKs = [];
+
+    function updateDeletedBlocksField() {
+        var input = document.getElementById('deleted-blocks-field');
+        if (input) input.value = JSON.stringify(deletedBlockPKs);
+    }
+
+    function deleteBlock(btn) {
+        if (!confirm('Delete this block? It will be removed when you save.')) return;
+        var card = btn.closest('.section-card');
+        if (!card) return;
+        var pk = parseInt(card.dataset.blockPk, 10);
+        // Destroy any TinyMCE editors inside
+        destroyEditorsIn(card);
+        // Hide the card
+        card.classList.add('block-deleted');
+        // Track the PK for deletion on save
+        deletedBlockPKs.push(pk);
+        updateDeletedBlocksField();
+        updateBlockOrder();
+        markDirty();
+    }
+
     // -- Block order ----------------------------------------------------------
 
     function updateBlockOrder() {
@@ -388,6 +413,8 @@
         if (!list || !input) return;
         var order = [];
         list.querySelectorAll('.section-card[data-block-pk]').forEach(function (card) {
+            // Skip deleted blocks
+            if (card.classList.contains('block-deleted')) return;
             var checkbox = card.querySelector('.block-visible-check');
             order.push({
                 pk: parseInt(card.dataset.blockPk, 10),
@@ -405,7 +432,7 @@
         Sortable.create(list, {
             handle: '.section-drag-handle',
             animation: 150,
-            draggable: '.section-card',
+            draggable: '.section-card:not(.block-deleted)',
             ghostClass: 'sortable-ghost',
             onStart: function () {
                 destroyAllEditors();
@@ -453,11 +480,9 @@
     // -- Delete block ---------------------------------------------------------
 
     function initDeleteBlock() {
-        document.querySelectorAll('.delete-block-form').forEach(function (form) {
-            form.addEventListener('submit', function (e) {
-                if (!confirm('Delete this block? This cannot be undone.')) {
-                    e.preventDefault();
-                }
+        document.querySelectorAll('.block-delete-btn[data-delete-block-pk]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                deleteBlock(btn);
             });
         });
     }

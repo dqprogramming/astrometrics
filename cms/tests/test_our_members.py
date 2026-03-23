@@ -423,6 +423,77 @@ class OurMembersManagerViewTests(TestCase):
         header_block.refresh_from_db()
         self.assertEqual(header_block.heading, "Updated Heading")
 
+    def test_post_deletes_blocks_via_deleted_blocks_field(self):
+        page = OurMembersPageSettings.load()
+        placements = list(page.blocks.order_by("sort_order"))
+        header_placement = placements[0]
+        header_pk = header_placement.pk
+
+        # Build minimal POST data: delete the header block
+        remaining = [p for p in placements if p.pk != header_pk]
+        block_order = [{"pk": p.pk, "visible": True} for p in remaining]
+
+        data = {
+            "block_order": json.dumps(block_order),
+            "deleted_blocks": json.dumps([header_pk]),
+        }
+
+        # Add form data for remaining blocks only
+        for p in remaining:
+            block = p.get_block()
+            bp = f"block_{p.pk}"
+            cp = f"children_{p.pk}"
+
+            if p.block_type == "who_we_are":
+                data[f"{bp}-section_heading"] = block.section_heading
+                data[f"{bp}-circle_1_title"] = block.circle_1_title
+                data[f"{bp}-circle_1_body"] = block.circle_1_body
+                data[f"{bp}-circle_2_title"] = block.circle_2_title
+                data[f"{bp}-circle_2_body"] = block.circle_2_body
+                data[f"{bp}-circle_3_title"] = block.circle_3_title
+                data[f"{bp}-circle_3_body"] = block.circle_3_body
+                data[f"{bp}-bg_color"] = block.bg_color
+                data[f"{bp}-text_color"] = block.text_color
+                data[f"{bp}-show_cta"] = "on"
+                data[f"{bp}-cta_text"] = block.cta_text
+                data[f"{bp}-cta_url"] = block.cta_url
+            elif p.block_type == "person_carousel":
+                data[f"{bp}-bg_color"] = block.bg_color
+                data[f"{bp}-text_color"] = block.text_color
+                quotes = list(block.quotes.all())
+                data[f"{cp}-TOTAL_FORMS"] = str(len(quotes))
+                data[f"{cp}-INITIAL_FORMS"] = str(len(quotes))
+                data[f"{cp}-MIN_NUM_FORMS"] = "0"
+                data[f"{cp}-MAX_NUM_FORMS"] = "1000"
+                for i, q in enumerate(quotes):
+                    data[f"{cp}-{i}-id"] = str(q.pk)
+                    data[f"{cp}-{i}-quote_text"] = q.quote_text
+                    data[f"{cp}-{i}-author_name"] = q.author_name
+                    data[f"{cp}-{i}-sort_order"] = str(q.sort_order)
+            elif p.block_type == "members_institutions":
+                data[f"{bp}-heading"] = block.heading
+                data[f"{bp}-bg_color"] = block.bg_color
+                data[f"{bp}-text_color"] = block.text_color
+                data[f"{bp}-show_cta"] = "on"
+                data[f"{bp}-cta_text"] = block.cta_text
+                data[f"{bp}-cta_url"] = block.cta_url
+                insts = list(block.institutions.all())
+                data[f"{cp}-TOTAL_FORMS"] = str(len(insts))
+                data[f"{cp}-INITIAL_FORMS"] = str(len(insts))
+                data[f"{cp}-MIN_NUM_FORMS"] = "0"
+                data[f"{cp}-MAX_NUM_FORMS"] = "1000"
+                for i, inst in enumerate(insts):
+                    data[f"{cp}-{i}-id"] = str(inst.pk)
+                    data[f"{cp}-{i}-name"] = inst.name
+                    data[f"{cp}-{i}-sort_order"] = str(inst.sort_order)
+
+        response = self.client.post(reverse("cms_manager:our_members"), data)
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(
+            MembersPageBlock.objects.filter(pk=header_pk).exists()
+        )
+        self.assertEqual(page.blocks.count(), 4)
+
 
 @override_settings(
     CACHES=CACHE_OVERRIDE,

@@ -48,6 +48,9 @@ Our Members
     .section-card.sortable-ghost {
         opacity: 0.4;
     }
+    .section-card.block-deleted {
+        display: none !important;
+    }
     .mgr-color-input {
         width: 48px;
         height: 32px;
@@ -77,6 +80,15 @@ Our Members
     .block-delete-btn {
         font-size: 0.75rem;
     }
+    .form-errors-banner {
+        background: #f8d7da;
+        border: 1px solid #f5c2c7;
+        color: #842029;
+        padding: 0.75rem 1rem;
+        border-radius: 0.375rem;
+        margin-bottom: 1rem;
+        font-size: 0.875rem;
+    }
 </style>
 {% endblock %}
 
@@ -90,9 +102,21 @@ Our Members
     </form>
 </div>
 
+{% if form_errors %}
+<div class="form-errors-banner">
+    <strong><i class="bi bi-exclamation-triangle"></i> Please fix the errors below before saving.</strong>
+    <ul style="margin:0.5rem 0 0 0; padding-left:1.25rem;">
+        {% for error in form_errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
 <form method="post" enctype="multipart/form-data" style="max-width:900px;" id="our-members-form" data-csv-parse-url="{% url 'cms_manager:our_members_csv_parse' %}">
     {% csrf_token %}
     <input type="hidden" name="block_order" id="block-order-field">
+    <input type="hidden" name="deleted_blocks" id="deleted-blocks-field" value="">
 
     <div id="block-list">
 
@@ -115,12 +139,9 @@ Our Members
                 <span class="section-toggle-check">
                     Show <input type="checkbox" class="block-visible-check" {% if bd.placement.is_visible %}checked{% endif %}>
                 </span>
-                <form method="post" action="{% url 'cms_manager:our_members_delete_block' bd.placement.pk %}" class="delete-block-form" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-outline-danger block-delete-btn" title="Delete block">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </form>
+                <button type="button" class="btn btn-sm btn-outline-danger block-delete-btn" title="Delete block" data-delete-block-pk="{{ bd.placement.pk }}">
+                    <i class="bi bi-trash"></i>
+                </button>
             </span>
         </div>
         <div data-block-content {% if not bd.placement.is_visible %}class="section-disabled"{% endif %}>
@@ -145,7 +166,7 @@ Our Members
     </div>
 
     {# ── Actions ───────────────────────────────────────────────── #}
-    <div style="display:flex; gap:1rem; align-items:center; margin-top:1.5rem;">
+    <div id="form-actions" style="display:flex; gap:1rem; align-items:center; margin-top:1.5rem;">
         <button type="submit" class="mgr-btn mgr-btn-primary">
             <i class="bi bi-check2"></i> Save Changes
         </button>

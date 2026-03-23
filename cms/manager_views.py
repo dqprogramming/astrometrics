@@ -1310,7 +1310,21 @@ class OurMembersPageSettingsUpdateView(StaffRequiredMixin, View):
 
     def post(self, request):
         page = OurMembersPageSettings.load()
-        placements = page.blocks.order_by("sort_order")
+
+        # Parse deleted_blocks — these are handled client-side (hidden)
+        deleted_raw = request.POST.get("deleted_blocks", "")
+        try:
+            deleted_pks = json.loads(deleted_raw) if deleted_raw else []
+        except (json.JSONDecodeError, ValueError):
+            deleted_pks = []
+        deleted_pks = set(int(pk) for pk in deleted_pks if str(pk).isdigit())
+
+        # Only build forms for non-deleted blocks
+        placements = [
+            p
+            for p in page.blocks.order_by("sort_order")
+            if p.pk not in deleted_pks
+        ]
         block_data = _build_block_data(
             placements, data=request.POST, files=request.FILES
         )
@@ -1325,19 +1339,43 @@ class OurMembersPageSettingsUpdateView(StaffRequiredMixin, View):
             block_order = []
 
         all_valid = True
+        form_errors = []
         for bd in block_data:
             if not bd["form"].is_valid():
                 all_valid = False
+                for field, errors in bd["form"].errors.items():
+                    for error in errors:
+                        form_errors.append(
+                            f"{bd['block_type_label']} — {field}: {error}"
+                        )
             if bd["child_formset"] and not bd["child_formset"].is_valid():
                 all_valid = False
+                for form_idx, form_errs in enumerate(
+                    bd["child_formset"].errors
+                ):
+                    for field, errors in form_errs.items():
+                        for error in errors:
+                            form_errors.append(
+                                f"{bd['block_type_label']} item {form_idx + 1}"
+                                f" — {field}: {error}"
+                            )
 
         if all_valid:
             with transaction.atomic():
+                # Delete blocks marked for deletion
+                for pk in deleted_pks:
+                    placement = page.blocks.filter(pk=pk).first()
+                    if placement:
+                        block = placement.get_block()
+                        if block:
+                            block.delete()
+                        placement.delete()
+
                 # Update sort_order and is_visible from block_order
                 for idx, entry in enumerate(block_order):
-                    pk = entry.get("pk")
+                    epk = entry.get("pk")
                     visible = entry.get("visible", True)
-                    MembersPageBlock.objects.filter(pk=pk, page=page).update(
+                    MembersPageBlock.objects.filter(pk=epk, page=page).update(
                         sort_order=idx, is_visible=visible
                     )
 
@@ -1358,6 +1396,7 @@ class OurMembersPageSettingsUpdateView(StaffRequiredMixin, View):
             {
                 "block_data": block_data,
                 "default_page_config": json.dumps(DEFAULT_PAGE_CONFIG),
+                "form_errors": form_errors,
             },
         )
 
