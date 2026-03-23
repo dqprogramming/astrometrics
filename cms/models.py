@@ -1768,3 +1768,298 @@ class OurMemberInstitution(models.Model):
 
     def __str__(self):
         return self.name
+
+
+# ── Block System for Our Members ─────────────────────────────────────────────
+
+BLOCK_TYPE_CHOICES = [
+    ("members_header", "Members Header"),
+    ("who_we_are", "Who We Are"),
+    ("person_carousel", "Person Carousel"),
+    ("members_institutions", "Members Institutions"),
+]
+
+
+class MembersHeaderBlock(models.Model):
+    """Header block for the Our Members page."""
+
+    COLOR_DEFAULTS = {
+        "bg_color": "#b8f0ed",
+        "text_color": "#212129",
+    }
+
+    heading = models.CharField(
+        max_length=500,
+        default="Our members.",
+        help_text="Main hero heading",
+    )
+    bg_color = models.CharField(max_length=7, default="#b8f0ed")
+    text_color = models.CharField(max_length=7, default="#212129")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"MembersHeaderBlock #{self.pk}"
+
+
+class WhoWeAreBlock(models.Model):
+    """Who We Are block for the Our Members page."""
+
+    COLOR_DEFAULTS = {
+        "bg_color": "#ffffff",
+        "text_color": "#212129",
+    }
+
+    section_heading = models.CharField(
+        max_length=200,
+        default="Who we are.",
+        help_text="Content section heading",
+    )
+    circle_1_title = models.CharField(
+        max_length=200, default="We are Academics."
+    )
+    circle_1_body = models.TextField(blank=True)
+    circle_2_title = models.CharField(
+        max_length=200, default="We are Librarians."
+    )
+    circle_2_body = models.TextField(blank=True)
+    circle_3_title = models.CharField(
+        max_length=200, default="We are Publishers."
+    )
+    circle_3_body = models.TextField(blank=True)
+    bg_color = models.CharField(max_length=7, default="#ffffff")
+    text_color = models.CharField(max_length=7, default="#212129")
+    show_cta = models.BooleanField(default=True)
+    cta_text = models.CharField(max_length=200, default="Join Us")
+    cta_url = models.CharField(max_length=500, default="#", blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"WhoWeAreBlock #{self.pk}"
+
+    def save(self, *args, **kwargs):
+        self.circle_1_body = sanitize_html(self.circle_1_body)
+        self.circle_2_body = sanitize_html(self.circle_2_body)
+        self.circle_3_body = sanitize_html(self.circle_3_body)
+        super().save(*args, **kwargs)
+
+
+class PersonCarouselBlock(models.Model):
+    """Person carousel block for the Our Members page."""
+
+    COLOR_DEFAULTS = {
+        "bg_color": "#a5bfff",
+        "text_color": "#212129",
+    }
+
+    bg_color = models.CharField(max_length=7, default="#a5bfff")
+    text_color = models.CharField(max_length=7, default="#212129")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"PersonCarouselBlock #{self.pk}"
+
+
+class PersonCarouselQuote(models.Model):
+    """A quote in a person carousel block."""
+
+    block = models.ForeignKey(
+        PersonCarouselBlock,
+        on_delete=models.CASCADE,
+        related_name="quotes",
+    )
+    image = models.ImageField(
+        upload_to="our_members/carousel/",
+        blank=True,
+        help_text="Quote image",
+    )
+    quote_text = models.TextField()
+    author_name = models.CharField(max_length=255)
+    sort_order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return self.author_name
+
+    def save(self, *args, **kwargs):
+        self.quote_text = sanitize_html(self.quote_text)
+        super().save(*args, **kwargs)
+
+
+class MembersInstitutionsBlock(models.Model):
+    """Members institutions grid block for the Our Members page."""
+
+    COLOR_DEFAULTS = {
+        "bg_color": "#f0f0f1",
+        "text_color": "#212129",
+    }
+
+    heading = models.CharField(
+        max_length=200,
+        default="OJC Members.",
+        help_text="Members list section heading",
+    )
+    bg_color = models.CharField(max_length=7, default="#f0f0f1")
+    text_color = models.CharField(max_length=7, default="#212129")
+    show_cta = models.BooleanField(default=True)
+    cta_text = models.CharField(max_length=200, default="Join Us")
+    cta_url = models.CharField(max_length=500, default="#", blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"MembersInstitutionsBlock #{self.pk}"
+
+
+class InstitutionEntry(models.Model):
+    """An institution entry in a members institutions block."""
+
+    block = models.ForeignKey(
+        MembersInstitutionsBlock,
+        on_delete=models.CASCADE,
+        related_name="institutions",
+    )
+    name = models.CharField(max_length=255)
+    sort_order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return self.name
+
+
+BLOCK_TYPE_MODEL_MAP = {
+    "members_header": MembersHeaderBlock,
+    "who_we_are": WhoWeAreBlock,
+    "person_carousel": PersonCarouselBlock,
+    "members_institutions": MembersInstitutionsBlock,
+}
+
+
+class MembersPageBlock(models.Model):
+    """Junction model linking a concrete block to the Our Members page."""
+
+    page = models.ForeignKey(
+        OurMembersPageSettings,
+        on_delete=models.CASCADE,
+        related_name="blocks",
+    )
+    block_type = models.CharField(max_length=30, choices=BLOCK_TYPE_CHOICES)
+    object_id = models.PositiveIntegerField()
+    sort_order = models.IntegerField(default=0)
+    is_visible = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return f"{self.get_block_type_display()} (order={self.sort_order})"
+
+    def get_block(self):
+        """Resolve and return the concrete block instance."""
+        model_cls = BLOCK_TYPE_MODEL_MAP.get(self.block_type)
+        if model_cls is None:
+            return None
+        try:
+            return model_cls.objects.get(pk=self.object_id)
+        except model_cls.DoesNotExist:
+            return None
+
+
+LOREM_BODY = (
+    "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+    "sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna "
+    "aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud "
+    "exerci tation ullamcorper suscipit.</p>"
+)
+
+DEFAULT_PAGE_CONFIG = [
+    {
+        "block_type": "members_header",
+        "is_visible": True,
+        "defaults": {"heading": "Our members."},
+    },
+    {
+        "block_type": "who_we_are",
+        "is_visible": True,
+        "defaults": {
+            "section_heading": "Who we are.",
+            "circle_1_title": "We are Academics.",
+            "circle_1_body": LOREM_BODY,
+            "circle_2_title": "We are Librarians.",
+            "circle_2_body": LOREM_BODY,
+            "circle_3_title": "We are Publishers.",
+            "circle_3_body": LOREM_BODY,
+            "cta_text": "Join Us",
+            "cta_url": "#",
+            "show_cta": True,
+        },
+    },
+    {
+        "block_type": "person_carousel",
+        "is_visible": True,
+        "defaults": {
+            "bg_color": "#a5bfff",
+            "text_color": "#212129",
+        },
+        "children": [
+            {
+                "quote_text": (
+                    "<p>Quote from a member that's already onboard. Lorem "
+                    "ipsum dolor sit amet, consectetuer adipis cing elit, "
+                    "sed diam nonummy nibh euismod tincidunt ut laoreet.</p>"
+                ),
+                "author_name": "Name Here, Company",
+                "sort_order": 0,
+            },
+            {
+                "quote_text": (
+                    "<p>Another testimonial from a valued member of the "
+                    "collective. Their experience highlights the benefits "
+                    "of open access publishing.</p>"
+                ),
+                "author_name": "Jane Smith, University Press",
+                "sort_order": 1,
+            },
+        ],
+    },
+    {
+        "block_type": "members_institutions",
+        "is_visible": True,
+        "defaults": {
+            "heading": "OJC Members.",
+            "cta_text": "Join Us",
+            "cta_url": "#",
+            "show_cta": True,
+        },
+    },
+    {
+        "block_type": "person_carousel",
+        "is_visible": True,
+        "defaults": {
+            "bg_color": "#212129",
+            "text_color": "#ffffff",
+        },
+        "children": [
+            {
+                "quote_text": (
+                    "<p>Quote from a member that's already onboard. Lorem "
+                    "ipsum dolor sit amet, consectetuer adipis cing elit, "
+                    "sed diam nonummy nibh euismod tincidunt ut laoreet.</p>"
+                ),
+                "author_name": "Name Here, Company",
+                "sort_order": 0,
+            },
+            {
+                "quote_text": (
+                    "<p>Open access is the future of academic publishing "
+                    "and the collective model ensures sustainability for "
+                    "all participants.</p>"
+                ),
+                "author_name": "Dr. Sarah Williams, Oxford Press",
+                "sort_order": 1,
+            },
+        ],
+    },
+]
