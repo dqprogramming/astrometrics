@@ -1,0 +1,76 @@
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.heading.id_for_label }}">Section Heading</label>
+    {{ form.heading }}
+    {% if form.heading.errors %}<div class="mgr-error">{{ form.heading.errors.0 }}</div>{% endif %}
+</div>
+
+{{ child_formset.management_form }}
+
+<div class="institution-list" data-block-pk="{{ placement.pk }}">
+    {% for iform in child_formset %}
+    <div class="institution-row border rounded p-2 mb-1 d-flex align-items-center gap-2">
+        <span class="institution-drag-handle" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+        {% for hidden in iform.hidden_fields %}{{ hidden }}{% endfor %}
+        <span style="display:none;">{{ iform.DELETE }}</span>
+        <div class="flex-grow-1">
+            {{ iform.name }}
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-danger btn-delete-institution">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+    {% endfor %}
+</div>
+
+<div style="display:flex; gap:0.5rem; margin-top:0.5rem; flex-wrap:wrap;">
+    <button type="button" class="btn btn-sm btn-outline-primary btn-add-institution" data-block-pk="{{ placement.pk }}">
+        <i class="bi bi-plus"></i> Add Institution
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-alphabetize-institutions" data-block-pk="{{ placement.pk }}">
+        <i class="bi bi-sort-alpha-down"></i> Alphabetize
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-csv-import" data-block-pk="{{ placement.pk }}">
+        <i class="bi bi-filetype-csv"></i> Import CSV
+    </button>
+    <input type="file" class="csv-file-input" accept=".csv,.txt" style="display:none;" data-block-pk="{{ placement.pk }}">
+</div>
+
+<div class="color-picker-row" style="margin-top:1rem;">
+    <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.bg_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.text_color }}</span>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
+</div>
+
+<div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border, #dee2e6);">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+        <span style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;"><i class="bi bi-link-45deg"></i> Call to Action</span>
+        <span class="section-toggle-check">Show {{ form.show_cta }}</span>
+    </div>
+    <div data-cta-content>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.cta_text.id_for_label }}">Button Text</label>
+                {{ form.cta_text }}
+            </div>
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.cta_url.id_for_label }}">Button URL</label>
+                {{ form.cta_url }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Template for new institution rows #}
+<template class="institution-template" data-prefix="children_{{ placement.pk }}">
+    <div class="institution-row border rounded p-2 mb-1 d-flex align-items-center gap-2">
+        <span class="institution-drag-handle" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+        <input type="hidden" name="children_{{ placement.pk }}-__prefix__-id" value="">
+        <input type="hidden" name="children_{{ placement.pk }}-__prefix__-sort_order" value="0">
+        <div class="flex-grow-1">
+            <input type="text" name="children_{{ placement.pk }}-__prefix__-name" class="mgr-input" aria-label="Institution name">
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-danger btn-delete-institution">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+</template>
