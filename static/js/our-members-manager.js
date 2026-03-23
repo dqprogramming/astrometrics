@@ -416,6 +416,32 @@
         });
     }
 
+    // -- Colour reset ---------------------------------------------------------
+
+    function initColorResetButtons() {
+        var defaultsEl = document.getElementById('color-defaults');
+        if (!defaultsEl) return;
+        var defaults;
+        try {
+            defaults = JSON.parse(defaultsEl.textContent);
+        } catch (e) {
+            return;
+        }
+
+        document.querySelectorAll('.btn-reset-colors').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var section = btn.dataset.resetSection;
+                var bgKey = section + '_bg_color';
+                var textKey = section + '_text_color';
+                var bgInput = document.getElementById('id_' + bgKey);
+                var textInput = document.getElementById('id_' + textKey);
+                if (bgInput && defaults[bgKey]) bgInput.value = defaults[bgKey];
+                if (textInput && defaults[textKey]) textInput.value = defaults[textKey];
+                markDirty();
+            });
+        });
+    }
+
     // -- Section reordering ---------------------------------------------------
 
     function destroyAllEditors() {
@@ -495,8 +521,9 @@
         var formEl = document.getElementById('our-members-form');
         if (formEl) CSV_PARSE_URL = formEl.dataset.csvParseUrl || '';
 
-        // Section visibility toggles
+        // Section visibility toggles and colour resets
         initSectionToggles();
+        initColorResetButtons();
 
         // Section reordering — restore saved order from hidden field
         var sectionOrderInput = document.getElementById('id_section_order');

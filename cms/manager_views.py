@@ -1237,17 +1237,21 @@ class OurMembersPageSettingsUpdateView(StaffRequiredMixin, View):
         )
         return form, top_formset, bottom_formset, inst_formset, instance
 
+    def _ctx(self, form, top_formset, bottom_formset, inst_formset):
+        return {
+            "form": form,
+            "top_formset": top_formset,
+            "bottom_formset": bottom_formset,
+            "inst_formset": inst_formset,
+            "color_defaults": OurMembersPageSettings.COLOR_DEFAULTS,
+        }
+
     def get(self, request):
         form, top_formset, bottom_formset, inst_formset, _ = self._get_forms()
         return render(
             request,
             self.template_name,
-            {
-                "form": form,
-                "top_formset": top_formset,
-                "bottom_formset": bottom_formset,
-                "inst_formset": inst_formset,
-            },
+            self._ctx(form, top_formset, bottom_formset, inst_formset),
         )
 
     def post(self, request):
@@ -1269,12 +1273,7 @@ class OurMembersPageSettingsUpdateView(StaffRequiredMixin, View):
         return render(
             request,
             self.template_name,
-            {
-                "form": form,
-                "top_formset": top_formset,
-                "bottom_formset": bottom_formset,
-                "inst_formset": inst_formset,
-            },
+            self._ctx(form, top_formset, bottom_formset, inst_formset),
         )
 
 

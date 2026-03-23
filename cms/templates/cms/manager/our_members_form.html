@@ -78,6 +78,7 @@ Our Members
 {% endblock %}
 
 {% block content %}
+{{ color_defaults|json_script:"color-defaults" }}
 <form method="post" enctype="multipart/form-data" style="max-width:900px;" id="our-members-form" data-csv-parse-url="{% url 'cms_manager:our_members_csv_parse' %}">
     {% csrf_token %}
     {{ form.section_order }}
@@ -101,6 +102,7 @@ Our Members
             <div class="color-picker-row">
                 <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.header_bg_color }}</span>
                 <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.header_text_color }}</span>
+                <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors" data-reset-section="header"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
             </div>
         </div>
     </div>
@@ -159,6 +161,7 @@ Our Members
             <div class="color-picker-row" style="margin-top:1rem;">
                 <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.who_we_are_bg_color }}</span>
                 <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.who_we_are_text_color }}</span>
+                <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors" data-reset-section="who_we_are"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
             </div>
 
             <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border, #dee2e6);">
@@ -239,6 +242,7 @@ Our Members
             <div class="color-picker-row" style="margin-top:1rem;">
                 <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.top_carousel_bg_color }}</span>
                 <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.top_carousel_text_color }}</span>
+                <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors" data-reset-section="top_carousel"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
             </div>
         </div>
     </div>
@@ -291,6 +295,7 @@ Our Members
             <div class="color-picker-row" style="margin-top:1rem;">
                 <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.members_grid_bg_color }}</span>
                 <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.members_grid_text_color }}</span>
+                <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors" data-reset-section="members_grid"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
             </div>
 
             <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border, #dee2e6);">
@@ -371,6 +376,7 @@ Our Members
             <div class="color-picker-row" style="margin-top:1rem;">
                 <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.bottom_carousel_bg_color }}</span>
                 <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.bottom_carousel_text_color }}</span>
+                <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors" data-reset-section="bottom_carousel"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
             </div>
         </div>
     </div>

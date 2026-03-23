@@ -1606,7 +1606,20 @@ class OurMembersPageSettings(models.Model):
     )
     show_members_grid_cta = models.BooleanField(default=True)
 
-    # Section colours
+    # Section colours — defaults stored as a class constant for JS resets
+    COLOR_DEFAULTS = {
+        "header_bg_color": "#b8f0ed",
+        "header_text_color": "#212129",
+        "who_we_are_bg_color": "#ffffff",
+        "who_we_are_text_color": "#212129",
+        "top_carousel_bg_color": "#a5bfff",
+        "top_carousel_text_color": "#212129",
+        "members_grid_bg_color": "#f0f0f1",
+        "members_grid_text_color": "#212129",
+        "bottom_carousel_bg_color": "#212129",
+        "bottom_carousel_text_color": "#ffffff",
+    }
+
     header_bg_color = models.CharField(max_length=7, default="#b8f0ed")
     header_text_color = models.CharField(max_length=7, default="#212129")
     who_we_are_bg_color = models.CharField(max_length=7, default="#ffffff")
