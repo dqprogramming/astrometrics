@@ -1640,10 +1640,22 @@ class PersonCarouselBlock(models.Model):
     COLOR_DEFAULTS = {
         "bg_color": "#a5bfff",
         "text_color": "#212129",
+        "bullet_color": "#999999",
+        "bullet_active_color": "#000000",
     }
 
     bg_color = models.CharField(max_length=7, default="#a5bfff")
     text_color = models.CharField(max_length=7, default="#212129")
+    bullet_color = models.CharField(
+        max_length=7,
+        default="#999999",
+        help_text="Carousel dot colour (unselected)",
+    )
+    bullet_active_color = models.CharField(
+        max_length=7,
+        default="#000000",
+        help_text="Carousel dot colour (selected)",
+    )
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -1793,6 +1805,8 @@ DEFAULT_PAGE_CONFIG = [
         "defaults": {
             "bg_color": "#a5bfff",
             "text_color": "#212129",
+            "bullet_color": "#999999",
+            "bullet_active_color": "#000000",
         },
         "children": [
             {
@@ -1831,6 +1845,8 @@ DEFAULT_PAGE_CONFIG = [
         "defaults": {
             "bg_color": "#212129",
             "text_color": "#ffffff",
+            "bullet_color": "#ffffff",
+            "bullet_active_color": "#999999",
         },
         "children": [
             {

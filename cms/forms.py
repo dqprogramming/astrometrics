@@ -851,10 +851,17 @@ class WhoWeAreBlockForm(forms.ModelForm):
 class PersonCarouselBlockForm(forms.ModelForm):
     class Meta:
         model = PersonCarouselBlock
-        fields = ["bg_color", "text_color"]
+        fields = [
+            "bg_color",
+            "text_color",
+            "bullet_color",
+            "bullet_active_color",
+        ]
         widgets = {
             "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
             "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "bullet_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "bullet_active_color": forms.TextInput(attrs=_COLOR_ATTRS),
         }
 
 

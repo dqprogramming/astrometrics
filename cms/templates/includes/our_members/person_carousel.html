@@ -39,6 +39,15 @@
         {% endif %}
     </div>
 
+    <style>
+        .members-glide-{{ block.pk }} .glide__bullet {
+            background-color: {{ block.bullet_color }};
+            opacity: 1;
+        }
+        .members-glide-{{ block.pk }} .glide__bullet--active {
+            background-color: {{ block.bullet_active_color }};
+        }
+    </style>
     <script>
         new Glide('.members-glide-{{ block.pk }}', { type: 'slider' }).mount();
     </script>

@@ -94,6 +94,17 @@ class PersonCarouselBlockTests(TestCase):
         block = PersonCarouselBlock.objects.create()
         self.assertEqual(block.bg_color, "#a5bfff")
 
+    def test_bullet_color_defaults(self):
+        block = PersonCarouselBlock.objects.create()
+        self.assertEqual(block.bullet_color, "#999999")
+        self.assertEqual(block.bullet_active_color, "#000000")
+
+    def test_bullet_colors_in_color_defaults(self):
+        self.assertIn("bullet_color", PersonCarouselBlock.COLOR_DEFAULTS)
+        self.assertIn(
+            "bullet_active_color", PersonCarouselBlock.COLOR_DEFAULTS
+        )
+
     def test_quotes_ordering(self):
         block = PersonCarouselBlock.objects.create()
         PersonCarouselQuote.objects.create(
@@ -284,6 +295,39 @@ class OurMembersPublicViewTests(TestCase):
         # Should have two different glide selectors (based on block PK)
         self.assertIn("members-glide-", content)
 
+    def test_carousel_bullet_colors_rendered(self):
+        """Each carousel should render its bullet colors as inline styles."""
+        response = self.client.get(reverse("cms:our-members"))
+        content = response.content.decode()
+        # Top carousel defaults: black active, grey inactive
+        self.assertIn("background-color: #000000", content)
+        self.assertIn("background-color: #999999", content)
+        # Bottom carousel defaults: grey active, white inactive
+        self.assertIn("background-color: #ffffff", content)
+
+    def test_default_page_config_bullet_colors(self):
+        """DEFAULT_PAGE_CONFIG should set distinct bullet colors per carousel."""
+        carousel_configs = [
+            c
+            for c in DEFAULT_PAGE_CONFIG
+            if c["block_type"] == "person_carousel"
+        ]
+        self.assertEqual(len(carousel_configs), 2)
+        # First carousel: black active, grey inactive
+        self.assertEqual(
+            carousel_configs[0]["defaults"]["bullet_active_color"], "#000000"
+        )
+        self.assertEqual(
+            carousel_configs[0]["defaults"]["bullet_color"], "#999999"
+        )
+        # Second carousel: grey active, white inactive
+        self.assertEqual(
+            carousel_configs[1]["defaults"]["bullet_active_color"], "#999999"
+        )
+        self.assertEqual(
+            carousel_configs[1]["defaults"]["bullet_color"], "#ffffff"
+        )
+
 
 @override_settings(CACHES=CACHE_OVERRIDE)
 class OurMembersManagerViewTests(TestCase):
@@ -391,6 +435,8 @@ class OurMembersManagerViewTests(TestCase):
             elif p.block_type == "person_carousel":
                 data[f"{bp}-bg_color"] = block.bg_color
                 data[f"{bp}-text_color"] = block.text_color
+                data[f"{bp}-bullet_color"] = block.bullet_color
+                data[f"{bp}-bullet_active_color"] = block.bullet_active_color
                 quotes = list(block.quotes.all())
                 data[f"{cp}-TOTAL_FORMS"] = str(len(quotes))
                 data[f"{cp}-INITIAL_FORMS"] = str(len(quotes))
@@ -460,6 +506,8 @@ class OurMembersManagerViewTests(TestCase):
             elif p.block_type == "person_carousel":
                 data[f"{bp}-bg_color"] = block.bg_color
                 data[f"{bp}-text_color"] = block.text_color
+                data[f"{bp}-bullet_color"] = block.bullet_color
+                data[f"{bp}-bullet_active_color"] = block.bullet_active_color
                 quotes = list(block.quotes.all())
                 data[f"{cp}-TOTAL_FORMS"] = str(len(quotes))
                 data[f"{cp}-INITIAL_FORMS"] = str(len(quotes))

@@ -176,18 +176,12 @@
 }
 
 .members-quote-section .glide__bullet {
-    background-color: currentColor;
-    opacity: 0.3;
     width: 10px;
     height: 10px;
     border-radius: 50%;
     border: none;
     padding: 0;
     cursor: pointer;
-}
-
-.members-quote-section .glide__bullet--active {
-    opacity: 1;
 }
 
 /* --- Members Grid Section --- */
