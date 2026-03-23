@@ -15,6 +15,10 @@ from .models import (
     LandingPageSettings,
     ManifestoPageSettings,
     MenuItem,
+    OurMemberInstitution,
+    OurMembersBottomQuote,
+    OurMembersPageSettings,
+    OurMembersTopQuote,
     OurModelPackageTable,
     OurModelPageSettings,
     OurModelTableColumn,
@@ -781,6 +785,109 @@ AboutUsQuoteFormSet = forms.inlineformset_factory(
     AboutUsPageSettings,
     AboutUsQuote,
     form=AboutUsQuoteForm,
+    extra=0,
+    can_delete=True,
+)
+
+
+class OurMembersPageSettingsForm(forms.ModelForm):
+    class Meta:
+        model = OurMembersPageSettings
+        fields = [
+            "hero_heading",
+            "section_heading",
+            "circle_1_title",
+            "circle_1_body",
+            "circle_2_title",
+            "circle_2_body",
+            "circle_3_title",
+            "circle_3_body",
+            "cta_text",
+            "cta_url",
+            "members_heading",
+        ]
+        widgets = {
+            "hero_heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "section_heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "circle_1_title": forms.TextInput(attrs={"class": "mgr-input"}),
+            "circle_1_body": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+            "circle_2_title": forms.TextInput(attrs={"class": "mgr-input"}),
+            "circle_2_body": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+            "circle_3_title": forms.TextInput(attrs={"class": "mgr-input"}),
+            "circle_3_body": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+            "cta_text": forms.TextInput(attrs={"class": "mgr-input"}),
+            "cta_url": forms.TextInput(
+                attrs={
+                    "class": "mgr-input",
+                    "placeholder": "e.g. /contact/ or https://...",
+                }
+            ),
+            "members_heading": forms.TextInput(attrs={"class": "mgr-input"}),
+        }
+
+
+class OurMembersTopQuoteForm(forms.ModelForm):
+    class Meta:
+        model = OurMembersTopQuote
+        fields = ["image", "quote_text", "author_name", "sort_order"]
+        widgets = {
+            "quote_text": TinyMCE(
+                attrs={"class": "quote-tinymce"},
+                mce_attrs=_ABOUT_US_TINYMCE,
+            ),
+            "author_name": forms.TextInput(attrs={"class": "mgr-input"}),
+            "sort_order": forms.HiddenInput(),
+        }
+
+
+OurMembersTopQuoteFormSet = forms.inlineformset_factory(
+    OurMembersPageSettings,
+    OurMembersTopQuote,
+    form=OurMembersTopQuoteForm,
+    extra=0,
+    can_delete=True,
+)
+
+
+class OurMembersBottomQuoteForm(forms.ModelForm):
+    class Meta:
+        model = OurMembersBottomQuote
+        fields = ["image", "quote_text", "author_name", "sort_order"]
+        widgets = {
+            "quote_text": TinyMCE(
+                attrs={"class": "quote-tinymce"},
+                mce_attrs=_ABOUT_US_TINYMCE,
+            ),
+            "author_name": forms.TextInput(attrs={"class": "mgr-input"}),
+            "sort_order": forms.HiddenInput(),
+        }
+
+
+OurMembersBottomQuoteFormSet = forms.inlineformset_factory(
+    OurMembersPageSettings,
+    OurMembersBottomQuote,
+    form=OurMembersBottomQuoteForm,
+    extra=0,
+    can_delete=True,
+)
+
+
+class OurMemberInstitutionForm(forms.ModelForm):
+    class Meta:
+        model = OurMemberInstitution
+        fields = ["name", "sort_order"]
+        widgets = {
+            "name": forms.TextInput(
+                attrs={"class": "mgr-input", "aria-label": "Institution name"}
+            ),
+            "sort_order": forms.HiddenInput(),
+        }
+
+
+OurMemberInstitutionFormSet = forms.inlineformset_factory(
+    OurMembersPageSettings,
+    OurMemberInstitution,
+    form=OurMemberInstitutionForm,
     extra=0,
     can_delete=True,
 )

@@ -1521,3 +1521,179 @@ class AboutUsQuote(models.Model):
     def save(self, *args, **kwargs):
         self.quote_text = sanitize_html(self.quote_text)
         super().save(*args, **kwargs)
+
+
+class OurMembersPageSettings(models.Model):
+    """Singleton model for the Our Members page content.
+
+    Only one row should exist — use OurMembersPageSettings.load() to
+    fetch-or-create it.
+    """
+
+    # Hero section
+    hero_heading = models.CharField(
+        max_length=500,
+        default="Our members.",
+        help_text="Main hero heading",
+    )
+
+    # Content section
+    section_heading = models.CharField(
+        max_length=200,
+        default="Who we are.",
+        help_text="Content section heading",
+    )
+    circle_1_title = models.CharField(
+        max_length=200,
+        default="We are Academics.",
+        help_text="Circle 1 title",
+    )
+    circle_1_body = models.TextField(
+        blank=True,
+        help_text="Circle 1 body — rich text, sanitized",
+    )
+    circle_2_title = models.CharField(
+        max_length=200,
+        default="We are Librarians.",
+        help_text="Circle 2 title",
+    )
+    circle_2_body = models.TextField(
+        blank=True,
+        help_text="Circle 2 body — rich text, sanitized",
+    )
+    circle_3_title = models.CharField(
+        max_length=200,
+        default="We are Publishers.",
+        help_text="Circle 3 title",
+    )
+    circle_3_body = models.TextField(
+        blank=True,
+        help_text="Circle 3 body — rich text, sanitized",
+    )
+
+    # CTA
+    cta_text = models.CharField(
+        max_length=200,
+        default="Join Us",
+        help_text="Call-to-action button text",
+    )
+    cta_url = models.CharField(
+        max_length=500,
+        default="#",
+        blank=True,
+        help_text="Call-to-action button URL",
+    )
+
+    # Members section
+    members_heading = models.CharField(
+        max_length=200,
+        default="OJC Members.",
+        help_text="Members list section heading",
+    )
+
+    # Metadata
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Our Members Page Settings")
+        verbose_name_plural = _("Our Members Page Settings")
+
+    def __str__(self):
+        return "Our Members Page Settings"
+
+    CACHE_KEY = "our_members_page_settings"
+    CACHE_TTL = 60 * 60  # 1 hour
+
+    @classmethod
+    def load(cls):
+        """Return the singleton instance, serving from cache when possible."""
+        obj = cache.get(cls.CACHE_KEY)
+        if obj is None:
+            obj, _created = cls.objects.get_or_create(pk=1)
+            cache.set(cls.CACHE_KEY, obj, cls.CACHE_TTL)
+        return obj
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        self.circle_1_body = sanitize_html(self.circle_1_body)
+        self.circle_2_body = sanitize_html(self.circle_2_body)
+        self.circle_3_body = sanitize_html(self.circle_3_body)
+        super().save(*args, **kwargs)
+        cache.delete(self.CACHE_KEY)
+
+    def delete(self, *args, **kwargs):
+        pass
+
+
+class OurMembersTopQuote(models.Model):
+    """A quote displayed in the Our Members page top carousel."""
+
+    page = models.ForeignKey(
+        OurMembersPageSettings,
+        on_delete=models.CASCADE,
+        related_name="top_quotes",
+    )
+    image = models.ImageField(
+        upload_to="our_members/top/",
+        blank=True,
+        help_text="Quote image",
+    )
+    quote_text = models.TextField()
+    author_name = models.CharField(max_length=255)
+    sort_order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return self.author_name
+
+    def save(self, *args, **kwargs):
+        self.quote_text = sanitize_html(self.quote_text)
+        super().save(*args, **kwargs)
+
+
+class OurMembersBottomQuote(models.Model):
+    """A quote displayed in the Our Members page bottom carousel."""
+
+    page = models.ForeignKey(
+        OurMembersPageSettings,
+        on_delete=models.CASCADE,
+        related_name="bottom_quotes",
+    )
+    image = models.ImageField(
+        upload_to="our_members/bottom/",
+        blank=True,
+        help_text="Quote image",
+    )
+    quote_text = models.TextField()
+    author_name = models.CharField(max_length=255)
+    sort_order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return self.author_name
+
+    def save(self, *args, **kwargs):
+        self.quote_text = sanitize_html(self.quote_text)
+        super().save(*args, **kwargs)
+
+
+class OurMemberInstitution(models.Model):
+    """An institution displayed in the Our Members page members list."""
+
+    page = models.ForeignKey(
+        OurMembersPageSettings,
+        on_delete=models.CASCADE,
+        related_name="institutions",
+    )
+    name = models.CharField(max_length=255)
+    sort_order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return self.name
