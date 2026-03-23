@@ -120,8 +120,7 @@
 
 /* Bottom carousel colours are applied via inline styles from the CMS */
 
-.members-glide-top,
-.members-glide-bottom {
+.members-quote-section > [class^="members-glide-"] {
     position: relative;
     padding-bottom: 50px;
 }
