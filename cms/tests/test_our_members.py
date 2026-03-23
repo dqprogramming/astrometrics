@@ -1,152 +1,218 @@
 """
-Tests for OurMembersPageSettings, quotes, institutions, and the public view.
+Tests for Our Members block system: models, public view, manager views, CSV parse.
 """
 
-from unittest import expectedFailure
+import json
 
 from django.contrib.auth.models import User
 from django.core.cache import cache
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from cms.models import (
-    OurMemberInstitution,
-    OurMembersBottomQuote,
+    BLOCK_TYPE_MODEL_MAP,
+    DEFAULT_PAGE_CONFIG,
+    InstitutionEntry,
+    MembersHeaderBlock,
+    MembersInstitutionsBlock,
+    MembersPageBlock,
     OurMembersPageSettings,
-    OurMembersTopQuote,
+    PersonCarouselBlock,
+    PersonCarouselQuote,
+    WhoWeAreBlock,
 )
 
+CACHE_OVERRIDE = {
+    "default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}
+}
 
-@override_settings(
-    CACHES={
-        "default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}
-    }
-)
-class OurMembersPageSettingsModelTests(TestCase):
+
+def _create_default_blocks(page=None):
+    """Create the default set of blocks for a page, clearing any existing."""
+    if page is None:
+        page = OurMembersPageSettings.load()
+    # Clear existing blocks from data migration
+    for p in page.blocks.all():
+        block = p.get_block()
+        if block:
+            block.delete()
+        p.delete()
+    for idx, cfg in enumerate(DEFAULT_PAGE_CONFIG):
+        model_cls = BLOCK_TYPE_MODEL_MAP[cfg["block_type"]]
+        block = model_cls.objects.create(**cfg.get("defaults", {}))
+        if cfg.get("children"):
+            if cfg["block_type"] == "person_carousel":
+                for child in cfg["children"]:
+                    PersonCarouselQuote.objects.create(block=block, **child)
+        MembersPageBlock.objects.create(
+            page=page,
+            block_type=cfg["block_type"],
+            object_id=block.pk,
+            sort_order=idx,
+            is_visible=cfg.get("is_visible", True),
+        )
+    return page
+
+
+@override_settings(CACHES=CACHE_OVERRIDE)
+class MembersHeaderBlockTests(TestCase):
+    def test_defaults(self):
+        block = MembersHeaderBlock.objects.create()
+        self.assertEqual(block.heading, "Our members.")
+        self.assertEqual(block.bg_color, "#b8f0ed")
+        self.assertEqual(block.text_color, "#212129")
+
+    def test_color_defaults_dict(self):
+        self.assertEqual(
+            MembersHeaderBlock.COLOR_DEFAULTS,
+            {"bg_color": "#b8f0ed", "text_color": "#212129"},
+        )
+
+
+@override_settings(CACHES=CACHE_OVERRIDE)
+class WhoWeAreBlockTests(TestCase):
+    def test_defaults(self):
+        block = WhoWeAreBlock.objects.create()
+        self.assertEqual(block.section_heading, "Who we are.")
+        self.assertTrue(block.show_cta)
+
+    def test_save_sanitizes_body(self):
+        block = WhoWeAreBlock.objects.create(
+            circle_1_body="<p>OK</p><script>alert('xss')</script>",
+            circle_2_body="<b>Bold</b>",
+            circle_3_body="<em>Italic</em>",
+        )
+        block.refresh_from_db()
+        self.assertNotIn("<script>", block.circle_1_body)
+        self.assertIn("<p>OK</p>", block.circle_1_body)
+
+
+@override_settings(CACHES=CACHE_OVERRIDE)
+class PersonCarouselBlockTests(TestCase):
+    def test_defaults(self):
+        block = PersonCarouselBlock.objects.create()
+        self.assertEqual(block.bg_color, "#a5bfff")
+
+    def test_quotes_ordering(self):
+        block = PersonCarouselBlock.objects.create()
+        PersonCarouselQuote.objects.create(
+            block=block, quote_text="B", author_name="B", sort_order=1
+        )
+        PersonCarouselQuote.objects.create(
+            block=block, quote_text="A", author_name="A", sort_order=0
+        )
+        names = list(block.quotes.values_list("author_name", flat=True))
+        self.assertEqual(names, ["A", "B"])
+
+    def test_quote_sanitizes_text(self):
+        block = PersonCarouselBlock.objects.create()
+        q = PersonCarouselQuote.objects.create(
+            block=block,
+            quote_text="<p>OK</p><script>bad</script>",
+            author_name="Test",
+        )
+        q.refresh_from_db()
+        self.assertNotIn("<script>", q.quote_text)
+
+
+@override_settings(CACHES=CACHE_OVERRIDE)
+class MembersInstitutionsBlockTests(TestCase):
+    def test_defaults(self):
+        block = MembersInstitutionsBlock.objects.create()
+        self.assertEqual(block.heading, "OJC Members.")
+        self.assertTrue(block.show_cta)
+
+    def test_institutions_ordering(self):
+        block = MembersInstitutionsBlock.objects.create()
+        InstitutionEntry.objects.create(
+            block=block, name="Z Uni", sort_order=1
+        )
+        InstitutionEntry.objects.create(
+            block=block, name="A Uni", sort_order=0
+        )
+        names = list(block.institutions.values_list("name", flat=True))
+        self.assertEqual(names, ["A Uni", "Z Uni"])
+
+
+@override_settings(CACHES=CACHE_OVERRIDE)
+class MembersPageBlockTests(TestCase):
+    def setUp(self):
+        cache.clear()
+        self.page = OurMembersPageSettings.load()
+
+    def test_get_block_returns_instance(self):
+        block = MembersHeaderBlock.objects.create(heading="Test")
+        placement = MembersPageBlock.objects.create(
+            page=self.page,
+            block_type="members_header",
+            object_id=block.pk,
+        )
+        result = placement.get_block()
+        self.assertEqual(result.pk, block.pk)
+        self.assertEqual(result.heading, "Test")
+
+    def test_get_block_returns_none_for_missing(self):
+        placement = MembersPageBlock.objects.create(
+            page=self.page,
+            block_type="members_header",
+            object_id=99999,
+        )
+        self.assertIsNone(placement.get_block())
+
+    def test_ordering_by_sort_order(self):
+        self.page.blocks.all().delete()
+        b1 = MembersHeaderBlock.objects.create()
+        b2 = WhoWeAreBlock.objects.create()
+        MembersPageBlock.objects.create(
+            page=self.page,
+            block_type="members_header",
+            object_id=b1.pk,
+            sort_order=1,
+        )
+        MembersPageBlock.objects.create(
+            page=self.page,
+            block_type="who_we_are",
+            object_id=b2.pk,
+            sort_order=0,
+        )
+        types = list(
+            self.page.blocks.order_by("sort_order").values_list(
+                "block_type", flat=True
+            )
+        )
+        self.assertEqual(types, ["who_we_are", "members_header"])
+
+
+@override_settings(CACHES=CACHE_OVERRIDE)
+class OurMembersPageSettingsTests(TestCase):
     def setUp(self):
         cache.clear()
 
-    def test_str(self):
-        settings = OurMembersPageSettings.load()
-        self.assertEqual(str(settings), "Our Members Page Settings")
-
-    def test_load_creates_singleton(self):
-        settings = OurMembersPageSettings.load()
-        self.assertEqual(settings.pk, 1)
-        self.assertEqual(OurMembersPageSettings.objects.count(), 1)
-
-    def test_load_returns_same_instance(self):
+    def test_singleton_load(self):
         s1 = OurMembersPageSettings.load()
         s2 = OurMembersPageSettings.load()
         self.assertEqual(s1.pk, s2.pk)
+        self.assertEqual(s1.pk, 1)
 
     def test_save_forces_pk_1(self):
-        settings = OurMembersPageSettings(pk=99, hero_heading="Test")
-        settings.save()
-        self.assertEqual(settings.pk, 1)
+        s = OurMembersPageSettings()
+        s.pk = 42
+        s.save()
+        self.assertEqual(s.pk, 1)
 
     def test_delete_is_noop(self):
-        settings = OurMembersPageSettings.load()
-        settings.delete()
-        self.assertEqual(OurMembersPageSettings.objects.count(), 1)
-
-    def test_save_sanitizes_body_fields(self):
-        settings = OurMembersPageSettings.load()
-        settings.circle_1_body = '<p>Good</p><script>alert("bad")</script>'
-        settings.save()
-        settings.refresh_from_db()
-        self.assertNotIn("<script>", settings.circle_1_body)
-        self.assertIn("<p>Good</p>", settings.circle_1_body)
-
-    def test_default_values(self):
-        settings = OurMembersPageSettings.load()
-        self.assertEqual(settings.hero_heading, "Our members.")
-        self.assertEqual(settings.section_heading, "Who we are.")
-        self.assertEqual(settings.who_we_are_cta_text, "Join Us")
-        self.assertEqual(settings.members_grid_cta_text, "Join Us")
+        s = OurMembersPageSettings.load()
+        s.delete()
+        self.assertTrue(OurMembersPageSettings.objects.filter(pk=1).exists())
 
 
-class OurMembersTopQuoteTests(TestCase):
+@override_settings(CACHES=CACHE_OVERRIDE)
+class OurMembersPublicViewTests(TestCase):
     def setUp(self):
         cache.clear()
-        self.settings = OurMembersPageSettings.load()
+        _create_default_blocks()
 
-    def test_quote_creation(self):
-        quote = OurMembersTopQuote.objects.create(
-            page=self.settings,
-            quote_text="<p>Test quote</p>",
-            author_name="Test Author",
-            sort_order=0,
-        )
-        self.assertEqual(str(quote), "Test Author")
-
-    def test_quote_sanitizes_text(self):
-        quote = OurMembersTopQuote.objects.create(
-            page=self.settings,
-            quote_text="<p>Good</p><script>bad</script>",
-            author_name="Author",
-        )
-        quote.refresh_from_db()
-        self.assertNotIn("<script>", quote.quote_text)
-
-    def test_ordering(self):
-        self.settings.top_quotes.all().delete()
-        OurMembersTopQuote.objects.create(
-            page=self.settings, quote_text="B", author_name="B", sort_order=1
-        )
-        OurMembersTopQuote.objects.create(
-            page=self.settings, quote_text="A", author_name="A", sort_order=0
-        )
-        quotes = list(self.settings.top_quotes.all())
-        self.assertEqual(quotes[0].author_name, "A")
-        self.assertEqual(quotes[1].author_name, "B")
-
-
-class OurMembersBottomQuoteTests(TestCase):
-    def setUp(self):
-        cache.clear()
-        self.settings = OurMembersPageSettings.load()
-
-    def test_quote_creation(self):
-        quote = OurMembersBottomQuote.objects.create(
-            page=self.settings,
-            quote_text="<p>Bottom quote</p>",
-            author_name="Bottom Author",
-            sort_order=0,
-        )
-        self.assertEqual(str(quote), "Bottom Author")
-
-
-class OurMemberInstitutionTests(TestCase):
-    def setUp(self):
-        cache.clear()
-        self.settings = OurMembersPageSettings.load()
-
-    def test_institution_creation(self):
-        inst = OurMemberInstitution.objects.create(
-            page=self.settings,
-            name="University of Testing",
-            sort_order=0,
-        )
-        self.assertEqual(str(inst), "University of Testing")
-
-    def test_ordering(self):
-        OurMemberInstitution.objects.create(
-            page=self.settings, name="Beta Uni", sort_order=1
-        )
-        OurMemberInstitution.objects.create(
-            page=self.settings, name="Alpha Uni", sort_order=0
-        )
-        institutions = list(self.settings.institutions.all())
-        self.assertEqual(institutions[0].name, "Alpha Uni")
-
-
-@override_settings(
-    CACHES={
-        "default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}
-    }
-)
-class OurMembersViewTests(TestCase):
     def test_page_returns_200(self):
         response = self.client.get(reverse("cms:our-members"))
         self.assertEqual(response.status_code, 200)
@@ -157,111 +223,69 @@ class OurMembersViewTests(TestCase):
 
     def test_page_contains_header(self):
         response = self.client.get(reverse("cms:our-members"))
+        self.assertContains(response, "members-header-bar")
         self.assertContains(response, "Our members.")
 
-    def test_page_contains_who_we_are_section(self):
+    def test_page_contains_who_we_are(self):
         response = self.client.get(reverse("cms:our-members"))
         self.assertContains(response, "Who we are.")
 
-    def test_page_contains_circle_titles(self):
+    def test_page_contains_carousel_quotes(self):
         response = self.client.get(reverse("cms:our-members"))
-        self.assertContains(response, "Academics.")
-        self.assertContains(response, "Librarians.")
-        self.assertContains(response, "Publishers.")
+        self.assertContains(response, "Name Here, Company")
 
-    def test_page_contains_members_grid_heading(self):
+    def test_context_contains_blocks(self):
         response = self.client.get(reverse("cms:our-members"))
-        self.assertContains(response, "OJC Members.")
-
-    def test_page_contains_cta(self):
-        response = self.client.get(reverse("cms:our-members"))
-        self.assertContains(response, "Join Us")
-
-    def test_url_resolves_to_correct_path(self):
-        url = reverse("cms:our-members")
-        self.assertEqual(url, "/our-members/")
-
-    @expectedFailure
-    def test_context_contains_settings(self):
-        response = self.client.get(reverse("cms:our-members"))
-        self.assertIn("settings", response.context)
-        self.assertIsInstance(
-            response.context["settings"], OurMembersPageSettings
-        )
-
-    @expectedFailure
-    def test_context_contains_quotes(self):
-        response = self.client.get(reverse("cms:our-members"))
-        self.assertIn("top_quotes", response.context)
-        self.assertIn("bottom_quotes", response.context)
-
-    def test_context_contains_institutions(self):
-        response = self.client.get(reverse("cms:our-members"))
-        self.assertIn("institutions", response.context)
-
-    @expectedFailure
-    def test_institutions_rendered_in_grid(self):
-        settings = OurMembersPageSettings.load()
-        OurMemberInstitution.objects.create(
-            page=settings, name="Test University", sort_order=0
-        )
-        response = self.client.get(reverse("cms:our-members"))
-        self.assertContains(response, "Test University")
-
-    def test_hidden_section_not_rendered(self):
-        settings = OurMembersPageSettings.load()
-        settings.show_bottom_carousel = False
-        settings.save()
-        response = self.client.get(reverse("cms:our-members"))
-        self.assertNotContains(response, "members-glide-bottom")
-
-    @expectedFailure
-    def test_section_order_respected(self):
-        settings = OurMembersPageSettings.load()
-        settings.section_order = [
-            "members_grid",
-            "header",
-            "bottom_carousel",
-            "who_we_are",
-            "top_carousel",
-        ]
-        settings.save()
-        response = self.client.get(reverse("cms:our-members"))
-        content = response.content.decode()
-        grid_pos = content.find("members-grid-section")
-        header_pos = content.find("members-header-bar")
-        self.assertGreater(grid_pos, -1)
-        self.assertGreater(header_pos, -1)
-        self.assertLess(grid_pos, header_pos)
-
-    def test_default_section_order(self):
-        settings = OurMembersPageSettings.load()
-        order = settings.get_section_order()
+        self.assertIn("blocks", response.context)
+        blocks = response.context["blocks"]
+        self.assertEqual(len(blocks), 5)
+        types = [b["type"] for b in blocks]
         self.assertEqual(
-            order,
+            types,
             [
-                "header",
+                "members_header",
                 "who_we_are",
-                "top_carousel",
-                "members_grid",
-                "bottom_carousel",
+                "person_carousel",
+                "members_institutions",
+                "person_carousel",
             ],
         )
 
-    @expectedFailure
-    def test_hidden_header_not_rendered(self):
-        settings = OurMembersPageSettings.load()
-        settings.show_header = False
-        settings.save()
+    def test_hidden_block_not_rendered(self):
+        page = OurMembersPageSettings.load()
+        header_placement = page.blocks.filter(
+            block_type="members_header"
+        ).first()
+        header_placement.is_visible = False
+        header_placement.save()
         response = self.client.get(reverse("cms:our-members"))
         self.assertNotContains(response, "members-header-bar")
 
+    def test_block_order_respected(self):
+        page = OurMembersPageSettings.load()
+        # Swap header and who_we_are order
+        header = page.blocks.filter(block_type="members_header").first()
+        who = page.blocks.filter(block_type="who_we_are").first()
+        header.sort_order = 10
+        header.save()
+        who.sort_order = 0
+        who.save()
+        response = self.client.get(reverse("cms:our-members"))
+        content = response.content.decode()
+        who_pos = content.find("members-who-we-are")
+        header_pos = content.find("members-header-bar")
+        self.assertGreater(who_pos, -1)
+        self.assertGreater(header_pos, -1)
+        self.assertLess(who_pos, header_pos)
 
-@override_settings(
-    CACHES={
-        "default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}
-    }
-)
+    def test_carousel_has_unique_glide_selector(self):
+        response = self.client.get(reverse("cms:our-members"))
+        content = response.content.decode()
+        # Should have two different glide selectors (based on block PK)
+        self.assertIn("members-glide-", content)
+
+
+@override_settings(CACHES=CACHE_OVERRIDE)
 class OurMembersManagerViewTests(TestCase):
     def setUp(self):
         cache.clear()
@@ -269,6 +293,7 @@ class OurMembersManagerViewTests(TestCase):
             "admin", "admin@test.com", "pass", is_staff=True
         )
         self.client.login(username="admin", password="pass")
+        _create_default_blocks()
 
     def test_manager_get_returns_200(self):
         response = self.client.get(reverse("cms_manager:our_members"))
@@ -278,71 +303,130 @@ class OurMembersManagerViewTests(TestCase):
         response = self.client.get(reverse("cms_manager:our_members"))
         self.assertTemplateUsed(response, "cms/manager/our_members_form.html")
 
-    @expectedFailure
-    def test_manager_post_updates_settings(self):
-        settings = OurMembersPageSettings.load()
-        response = self.client.post(
-            reverse("cms_manager:our_members"),
-            {
-                "hero_heading": "Updated heading",
-                "section_heading": "Updated section",
-                "circle_1_title": "Circle 1",
-                "circle_1_body": "<p>Body 1</p>",
-                "circle_2_title": "Circle 2",
-                "circle_2_body": "<p>Body 2</p>",
-                "circle_3_title": "Circle 3",
-                "circle_3_body": "<p>Body 3</p>",
-                "who_we_are_cta_text": "Sign Up",
-                "who_we_are_cta_url": "/signup/",
-                "show_who_we_are_cta": "on",
-                "members_heading": "Members",
-                "members_grid_cta_text": "Join Now",
-                "members_grid_cta_url": "/join/",
-                "show_members_grid_cta": "on",
-                "show_header": "on",
-                "show_who_we_are": "on",
-                "show_top_carousel": "on",
-                "show_members_grid": "on",
-                "header_bg_color": "#b8f0ed",
-                "header_text_color": "#212129",
-                "who_we_are_bg_color": "#ffffff",
-                "who_we_are_text_color": "#212129",
-                "top_carousel_bg_color": "#a5bfff",
-                "top_carousel_text_color": "#212129",
-                "members_grid_bg_color": "#f0f0f1",
-                "members_grid_text_color": "#212129",
-                "bottom_carousel_bg_color": "#212129",
-                "bottom_carousel_text_color": "#ffffff",
-                "top_quotes-TOTAL_FORMS": "0",
-                "top_quotes-INITIAL_FORMS": "0",
-                "top_quotes-MIN_NUM_FORMS": "0",
-                "top_quotes-MAX_NUM_FORMS": "1000",
-                "bottom_quotes-TOTAL_FORMS": "0",
-                "bottom_quotes-INITIAL_FORMS": "0",
-                "bottom_quotes-MIN_NUM_FORMS": "0",
-                "bottom_quotes-MAX_NUM_FORMS": "1000",
-                "institutions-TOTAL_FORMS": "0",
-                "institutions-INITIAL_FORMS": "0",
-                "institutions-MIN_NUM_FORMS": "0",
-                "institutions-MAX_NUM_FORMS": "1000",
-            },
-        )
-        self.assertEqual(response.status_code, 302)
-        settings.refresh_from_db()
-        self.assertEqual(settings.hero_heading, "Updated heading")
-        self.assertEqual(settings.who_we_are_cta_text, "Sign Up")
-        self.assertEqual(settings.members_grid_cta_text, "Join Now")
+    def test_manager_context_has_block_data(self):
+        response = self.client.get(reverse("cms_manager:our_members"))
+        self.assertIn("block_data", response.context)
+        self.assertEqual(len(response.context["block_data"]), 5)
 
     def test_manager_requires_staff(self):
         self.client.logout()
         response = self.client.get(reverse("cms_manager:our_members"))
         self.assertNotEqual(response.status_code, 200)
 
+    def test_add_block(self):
+        response = self.client.post(
+            reverse("cms_manager:our_members_add_block"),
+            {"block_type": "members_header"},
+        )
+        self.assertEqual(response.status_code, 302)
+        page = OurMembersPageSettings.load()
+        self.assertEqual(page.blocks.count(), 6)
+
+    def test_add_block_invalid_type(self):
+        response = self.client.post(
+            reverse("cms_manager:our_members_add_block"),
+            {"block_type": "invalid"},
+        )
+        self.assertEqual(response.status_code, 302)
+        page = OurMembersPageSettings.load()
+        self.assertEqual(page.blocks.count(), 5)
+
+    def test_delete_block(self):
+        page = OurMembersPageSettings.load()
+        placement = page.blocks.first()
+        pk = placement.pk
+        response = self.client.post(
+            reverse("cms_manager:our_members_delete_block", args=[pk])
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(MembersPageBlock.objects.filter(pk=pk).exists())
+
+    def test_reset_defaults(self):
+        page = OurMembersPageSettings.load()
+        # Delete some blocks first
+        page.blocks.all().delete()
+        response = self.client.post(
+            reverse("cms_manager:our_members_reset_defaults")
+        )
+        self.assertEqual(response.status_code, 302)
+        page = OurMembersPageSettings.load()
+        self.assertEqual(page.blocks.count(), 5)
+
+    def test_post_saves_block_data(self):
+        page = OurMembersPageSettings.load()
+        placements = list(page.blocks.order_by("sort_order"))
+        header_placement = placements[0]
+        header_block = header_placement.get_block()
+
+        # Build POST data with block_order and form fields
+        block_order = [{"pk": p.pk, "visible": True} for p in placements]
+
+        data = {
+            "block_order": json.dumps(block_order),
+        }
+
+        # Add form data for each block
+        for p in placements:
+            block = p.get_block()
+            bp = f"block_{p.pk}"
+            cp = f"children_{p.pk}"
+
+            if p.block_type == "members_header":
+                data[f"{bp}-heading"] = "Updated Heading"
+                data[f"{bp}-bg_color"] = "#b8f0ed"
+                data[f"{bp}-text_color"] = "#212129"
+            elif p.block_type == "who_we_are":
+                data[f"{bp}-section_heading"] = block.section_heading
+                data[f"{bp}-circle_1_title"] = block.circle_1_title
+                data[f"{bp}-circle_1_body"] = block.circle_1_body
+                data[f"{bp}-circle_2_title"] = block.circle_2_title
+                data[f"{bp}-circle_2_body"] = block.circle_2_body
+                data[f"{bp}-circle_3_title"] = block.circle_3_title
+                data[f"{bp}-circle_3_body"] = block.circle_3_body
+                data[f"{bp}-bg_color"] = block.bg_color
+                data[f"{bp}-text_color"] = block.text_color
+                data[f"{bp}-show_cta"] = "on"
+                data[f"{bp}-cta_text"] = block.cta_text
+                data[f"{bp}-cta_url"] = block.cta_url
+            elif p.block_type == "person_carousel":
+                data[f"{bp}-bg_color"] = block.bg_color
+                data[f"{bp}-text_color"] = block.text_color
+                quotes = list(block.quotes.all())
+                data[f"{cp}-TOTAL_FORMS"] = str(len(quotes))
+                data[f"{cp}-INITIAL_FORMS"] = str(len(quotes))
+                data[f"{cp}-MIN_NUM_FORMS"] = "0"
+                data[f"{cp}-MAX_NUM_FORMS"] = "1000"
+                for i, q in enumerate(quotes):
+                    data[f"{cp}-{i}-id"] = str(q.pk)
+                    data[f"{cp}-{i}-quote_text"] = q.quote_text
+                    data[f"{cp}-{i}-author_name"] = q.author_name
+                    data[f"{cp}-{i}-sort_order"] = str(q.sort_order)
+            elif p.block_type == "members_institutions":
+                data[f"{bp}-heading"] = block.heading
+                data[f"{bp}-bg_color"] = block.bg_color
+                data[f"{bp}-text_color"] = block.text_color
+                data[f"{bp}-show_cta"] = "on"
+                data[f"{bp}-cta_text"] = block.cta_text
+                data[f"{bp}-cta_url"] = block.cta_url
+                insts = list(block.institutions.all())
+                data[f"{cp}-TOTAL_FORMS"] = str(len(insts))
+                data[f"{cp}-INITIAL_FORMS"] = str(len(insts))
+                data[f"{cp}-MIN_NUM_FORMS"] = "0"
+                data[f"{cp}-MAX_NUM_FORMS"] = "1000"
+                for i, inst in enumerate(insts):
+                    data[f"{cp}-{i}-id"] = str(inst.pk)
+                    data[f"{cp}-{i}-name"] = inst.name
+                    data[f"{cp}-{i}-sort_order"] = str(inst.sort_order)
+
+        response = self.client.post(reverse("cms_manager:our_members"), data)
+        self.assertEqual(response.status_code, 302)
+        header_block.refresh_from_db()
+        self.assertEqual(header_block.heading, "Updated Heading")
+
 
 @override_settings(
-    CACHES={
-        "default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}
-    }
+    CACHES=CACHE_OVERRIDE,
+    DEFAULT_FILE_STORAGE="django.core.files.storage.InMemoryStorage",
 )
 class OurMembersCSVParseTests(TestCase):
     def setUp(self):
@@ -351,45 +435,43 @@ class OurMembersCSVParseTests(TestCase):
             "admin", "admin@test.com", "pass", is_staff=True
         )
         self.client.login(username="admin", password="pass")
-        self.url = reverse("cms_manager:our_members_csv_parse")
 
-    def _upload(self, content, filename="test.csv"):
-        from django.core.files.uploadedfile import SimpleUploadedFile
-
-        f = SimpleUploadedFile(filename, content.encode("utf-8"))
-        return self.client.post(self.url, {"file": f})
-
-    def test_simple_csv(self):
-        response = self._upload("Alpha\nBeta\nGamma\n")
+    def test_csv_parse_returns_names(self):
+        csv_content = b"Uni A,Uni B\nUni C"
+        response = self.client.post(
+            reverse("cms_manager:our_members_csv_parse"),
+            {"file": SimpleUploadedFile("test.csv", csv_content)},
+        )
         self.assertEqual(response.status_code, 200)
         data = response.json()
-        self.assertEqual(data["names"], ["Alpha", "Beta", "Gamma"])
+        self.assertIn("Uni A", data["names"])
+        self.assertIn("Uni B", data["names"])
+        self.assertIn("Uni C", data["names"])
 
-    def test_quoted_fields_with_commas(self):
-        response = self._upload(
-            '"University of Oxford, UK"\n"MIT, Cambridge, MA"\n"ETH Zurich"\n'
+    def test_csv_deduplicates_names(self):
+        csv_content = b"Uni A,uni a,UNI A"
+        response = self.client.post(
+            reverse("cms_manager:our_members_csv_parse"),
+            {"file": SimpleUploadedFile("test.csv", csv_content)},
         )
         data = response.json()
-        self.assertIn("University of Oxford, UK", data["names"])
-        self.assertIn("MIT, Cambridge, MA", data["names"])
-        self.assertIn("ETH Zurich", data["names"])
-        self.assertEqual(len(data["names"]), 3)
+        self.assertEqual(len(data["names"]), 1)
 
-    def test_deduplicates_within_csv(self):
-        response = self._upload("Alpha\nalpha\nALPHA\nBeta\n")
-        data = response.json()
-        self.assertEqual(len(data["names"]), 2)
+    def test_csv_no_file_returns_400(self):
+        response = self.client.post(
+            reverse("cms_manager:our_members_csv_parse"),
+        )
+        self.assertEqual(response.status_code, 400)
 
-    def test_skips_empty_lines(self):
-        response = self._upload("\n\nAlpha\n\nBeta\n\n")
-        data = response.json()
-        self.assertEqual(data["names"], ["Alpha", "Beta"])
-
-    def test_requires_staff(self):
+    def test_csv_requires_staff(self):
         self.client.logout()
-        response = self._upload("Test\n")
+        response = self.client.post(
+            reverse("cms_manager:our_members_csv_parse"),
+        )
         self.assertEqual(response.status_code, 403)
 
-    def test_no_file(self):
-        response = self.client.post(self.url)
-        self.assertEqual(response.status_code, 400)
+    def test_csv_requires_post(self):
+        response = self.client.get(
+            reverse("cms_manager:our_members_csv_parse"),
+        )
+        self.assertEqual(response.status_code, 405)

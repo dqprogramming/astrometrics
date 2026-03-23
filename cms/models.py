@@ -1524,145 +1524,13 @@ class AboutUsQuote(models.Model):
 
 
 class OurMembersPageSettings(models.Model):
-    """Singleton model for the Our Members page content.
+    """Singleton shell for the Our Members page.
 
+    All content now lives in block models linked via MembersPageBlock.
     Only one row should exist — use OurMembersPageSettings.load() to
     fetch-or-create it.
     """
 
-    # Hero section
-    hero_heading = models.CharField(
-        max_length=500,
-        default="Our members.",
-        help_text="Main hero heading",
-    )
-
-    # Content section
-    section_heading = models.CharField(
-        max_length=200,
-        default="Who we are.",
-        help_text="Content section heading",
-    )
-    circle_1_title = models.CharField(
-        max_length=200,
-        default="We are Academics.",
-        help_text="Circle 1 title",
-    )
-    circle_1_body = models.TextField(
-        blank=True,
-        help_text="Circle 1 body — rich text, sanitized",
-    )
-    circle_2_title = models.CharField(
-        max_length=200,
-        default="We are Librarians.",
-        help_text="Circle 2 title",
-    )
-    circle_2_body = models.TextField(
-        blank=True,
-        help_text="Circle 2 body — rich text, sanitized",
-    )
-    circle_3_title = models.CharField(
-        max_length=200,
-        default="We are Publishers.",
-        help_text="Circle 3 title",
-    )
-    circle_3_body = models.TextField(
-        blank=True,
-        help_text="Circle 3 body — rich text, sanitized",
-    )
-
-    # Who We Are CTA
-    who_we_are_cta_text = models.CharField(
-        max_length=200,
-        default="Join Us",
-        help_text="Who We Are call-to-action button text",
-    )
-    who_we_are_cta_url = models.CharField(
-        max_length=500,
-        default="#",
-        blank=True,
-        help_text="Who We Are call-to-action button URL",
-    )
-    show_who_we_are_cta = models.BooleanField(default=True)
-
-    # Members section
-    members_heading = models.CharField(
-        max_length=200,
-        default="OJC Members.",
-        help_text="Members list section heading",
-    )
-
-    # Members Grid CTA
-    members_grid_cta_text = models.CharField(
-        max_length=200,
-        default="Join Us",
-        help_text="Members grid call-to-action button text",
-    )
-    members_grid_cta_url = models.CharField(
-        max_length=500,
-        default="#",
-        blank=True,
-        help_text="Members grid call-to-action button URL",
-    )
-    show_members_grid_cta = models.BooleanField(default=True)
-
-    # Section colours — defaults stored as a class constant for JS resets
-    COLOR_DEFAULTS = {
-        "header_bg_color": "#b8f0ed",
-        "header_text_color": "#212129",
-        "who_we_are_bg_color": "#ffffff",
-        "who_we_are_text_color": "#212129",
-        "top_carousel_bg_color": "#a5bfff",
-        "top_carousel_text_color": "#212129",
-        "members_grid_bg_color": "#f0f0f1",
-        "members_grid_text_color": "#212129",
-        "bottom_carousel_bg_color": "#212129",
-        "bottom_carousel_text_color": "#ffffff",
-    }
-
-    header_bg_color = models.CharField(max_length=7, default="#b8f0ed")
-    header_text_color = models.CharField(max_length=7, default="#212129")
-    who_we_are_bg_color = models.CharField(max_length=7, default="#ffffff")
-    who_we_are_text_color = models.CharField(max_length=7, default="#212129")
-    top_carousel_bg_color = models.CharField(max_length=7, default="#a5bfff")
-    top_carousel_text_color = models.CharField(max_length=7, default="#212129")
-    members_grid_bg_color = models.CharField(max_length=7, default="#f0f0f1")
-    members_grid_text_color = models.CharField(max_length=7, default="#212129")
-    bottom_carousel_bg_color = models.CharField(
-        max_length=7, default="#212129"
-    )
-    bottom_carousel_text_color = models.CharField(
-        max_length=7, default="#ffffff"
-    )
-
-    # Section visibility toggles
-    show_header = models.BooleanField(default=True)
-    show_who_we_are = models.BooleanField(default=True)
-    show_top_carousel = models.BooleanField(default=True)
-    show_members_grid = models.BooleanField(default=True)
-    show_bottom_carousel = models.BooleanField(default=True)
-
-    # Section display order
-    SECTION_ORDER_DEFAULT = [
-        "header",
-        "who_we_are",
-        "top_carousel",
-        "members_grid",
-        "bottom_carousel",
-    ]
-    section_order = models.JSONField(
-        default=list,
-        blank=True,
-        help_text="Ordered list of section keys",
-    )
-
-    def get_section_order(self):
-        """Return the section order, falling back to the default."""
-        if self.section_order:
-            return self.section_order
-        return self.SECTION_ORDER_DEFAULT
-
-    # Metadata
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -1686,88 +1554,11 @@ class OurMembersPageSettings(models.Model):
 
     def save(self, *args, **kwargs):
         self.pk = 1
-        self.circle_1_body = sanitize_html(self.circle_1_body)
-        self.circle_2_body = sanitize_html(self.circle_2_body)
-        self.circle_3_body = sanitize_html(self.circle_3_body)
         super().save(*args, **kwargs)
         cache.delete(self.CACHE_KEY)
 
     def delete(self, *args, **kwargs):
         pass
-
-
-class OurMembersTopQuote(models.Model):
-    """A quote displayed in the Our Members page top carousel."""
-
-    page = models.ForeignKey(
-        OurMembersPageSettings,
-        on_delete=models.CASCADE,
-        related_name="top_quotes",
-    )
-    image = models.ImageField(
-        upload_to="our_members/top/",
-        blank=True,
-        help_text="Quote image",
-    )
-    quote_text = models.TextField()
-    author_name = models.CharField(max_length=255)
-    sort_order = models.IntegerField(default=0)
-
-    class Meta:
-        ordering = ["sort_order"]
-
-    def __str__(self):
-        return self.author_name
-
-    def save(self, *args, **kwargs):
-        self.quote_text = sanitize_html(self.quote_text)
-        super().save(*args, **kwargs)
-
-
-class OurMembersBottomQuote(models.Model):
-    """A quote displayed in the Our Members page bottom carousel."""
-
-    page = models.ForeignKey(
-        OurMembersPageSettings,
-        on_delete=models.CASCADE,
-        related_name="bottom_quotes",
-    )
-    image = models.ImageField(
-        upload_to="our_members/bottom/",
-        blank=True,
-        help_text="Quote image",
-    )
-    quote_text = models.TextField()
-    author_name = models.CharField(max_length=255)
-    sort_order = models.IntegerField(default=0)
-
-    class Meta:
-        ordering = ["sort_order"]
-
-    def __str__(self):
-        return self.author_name
-
-    def save(self, *args, **kwargs):
-        self.quote_text = sanitize_html(self.quote_text)
-        super().save(*args, **kwargs)
-
-
-class OurMemberInstitution(models.Model):
-    """An institution displayed in the Our Members page members list."""
-
-    page = models.ForeignKey(
-        OurMembersPageSettings,
-        on_delete=models.CASCADE,
-        related_name="institutions",
-    )
-    name = models.CharField(max_length=255)
-    sort_order = models.IntegerField(default=0)
-
-    class Meta:
-        ordering = ["sort_order"]
-
-    def __str__(self):
-        return self.name
 
 
 # ── Block System for Our Members ─────────────────────────────────────────────
