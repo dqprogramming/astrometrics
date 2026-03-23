@@ -82,6 +82,12 @@ urlpatterns = [
         views.AboutUsPageSettingsUpdateView.as_view(),
         name="about_us",
     ),
+    # Our Members
+    path(
+        "our-members/",
+        views.OurMembersPageSettingsUpdateView.as_view(),
+        name="our_members",
+    ),
     # Our Model
     path(
         "our-model/",

@@ -1,0 +1,336 @@
+{% extends "manager/base.html" %}
+{% load static %}
+
+{% block title %}Our Members{% endblock %}
+{% block page_title %}Our Members{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> /
+Our Members
+{% endblock %}
+{% block nav_our_members %}active{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" style="max-width:900px;" id="our-members-form">
+    {% csrf_token %}
+
+    {# ── Header Section ───────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-type-h1"></i> Header
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.hero_heading.id_for_label }}">Page Heading</label>
+            {{ form.hero_heading }}
+            {% if form.hero_heading.errors %}<div class="mgr-error">{{ form.hero_heading.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    {# ── Who We Are Section ───────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-people-fill"></i> Who We Are
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.section_heading.id_for_label }}">Section Heading</label>
+            {{ form.section_heading }}
+            {% if form.section_heading.errors %}<div class="mgr-error">{{ form.section_heading.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+            <div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.circle_1_title.id_for_label }}">Circle 1 Title</label>
+                    {{ form.circle_1_title }}
+                </div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.circle_1_body.id_for_label }}">Circle 1 Body</label>
+                    {{ form.circle_1_body }}
+                    <div class="mgr-help">Bold, italic, underline, super/subscript</div>
+                </div>
+            </div>
+            <div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.circle_2_title.id_for_label }}">Circle 2 Title</label>
+                    {{ form.circle_2_title }}
+                </div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.circle_2_body.id_for_label }}">Circle 2 Body</label>
+                    {{ form.circle_2_body }}
+                    <div class="mgr-help">Bold, italic, underline, super/subscript</div>
+                </div>
+            </div>
+            <div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.circle_3_title.id_for_label }}">Circle 3 Title</label>
+                    {{ form.circle_3_title }}
+                </div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.circle_3_body.id_for_label }}">Circle 3 Body</label>
+                    {{ form.circle_3_body }}
+                    <div class="mgr-help">Bold, italic, underline, super/subscript</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ── CTA Button ───────────────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-link-45deg"></i> Call to Action
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.cta_text.id_for_label }}">Button Text</label>
+                {{ form.cta_text }}
+            </div>
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.cta_url.id_for_label }}">Button URL</label>
+                {{ form.cta_url }}
+            </div>
+        </div>
+    </div>
+
+    {# ── Top Quotes Carousel ──────────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-chat-quote"></i> Top Quotes Carousel
+        </div>
+
+        {{ top_formset.management_form }}
+
+        <div id="top-quote-list">
+            {% for qform in top_formset %}
+            <div class="quote-row border rounded p-3 mb-2">
+                <div class="d-flex align-items-start gap-2">
+                    <span class="quote-drag-handle mt-2" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+
+                    <div class="flex-grow-1">
+                        {% for hidden in qform.hidden_fields %}{{ hidden }}{% endfor %}
+                        <span style="display:none;">{{ qform.DELETE }}</span>
+
+                        <div class="mgr-field">
+                            <label class="mgr-label">Quote Text</label>
+                            {{ qform.quote_text }}
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                            <div class="mgr-field">
+                                <label class="mgr-label">Author</label>
+                                {{ qform.author_name }}
+                            </div>
+                            <div class="mgr-field">
+                                <label class="mgr-label">Photo</label>
+                                {% if qform.instance.image %}
+                                <div style="margin-bottom:0.5rem;">
+                                    <img src="{{ qform.instance.image.url }}" alt="Photo preview" style="max-height:60px; border-radius:50%;">
+                                </div>
+                                {% endif %}
+                                {{ qform.image }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-sm btn-outline-danger mt-2 btn-delete-quote">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="btn-add-top-quote">
+            <i class="bi bi-plus"></i> Add Quote
+        </button>
+    </div>
+
+    {# ── Members / Institutions Grid ──────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-building"></i> OJC Members (Institutions)
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.members_heading.id_for_label }}">Section Heading</label>
+            {{ form.members_heading }}
+        </div>
+
+        {{ inst_formset.management_form }}
+
+        <div id="institution-list">
+            {% for iform in inst_formset %}
+            <div class="institution-row border rounded p-2 mb-1 d-flex align-items-center gap-2">
+                <span class="institution-drag-handle" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+                {% for hidden in iform.hidden_fields %}{{ hidden }}{% endfor %}
+                <span style="display:none;">{{ iform.DELETE }}</span>
+                <div class="flex-grow-1">
+                    {{ iform.name }}
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-danger btn-delete-institution">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div style="display:flex; gap:0.5rem; margin-top:0.5rem; flex-wrap:wrap;">
+            <button type="button" class="btn btn-sm btn-outline-primary" id="btn-add-institution">
+                <i class="bi bi-plus"></i> Add Institution
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-alphabetize-institutions">
+                <i class="bi bi-sort-alpha-down"></i> Alphabetize
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-csv-import">
+                <i class="bi bi-filetype-csv"></i> Import CSV
+            </button>
+            <input type="file" id="csv-file-input" accept=".csv,.txt" style="display:none;">
+        </div>
+    </div>
+
+    {# ── Bottom Quotes Carousel ───────────────────────────────── #}
+    <div class="mgr-form-card" style="margin-bottom:1.25rem;">
+        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+            <i class="bi bi-chat-quote-fill"></i> Bottom Quotes Carousel
+        </div>
+
+        {{ bottom_formset.management_form }}
+
+        <div id="bottom-quote-list">
+            {% for qform in bottom_formset %}
+            <div class="quote-row border rounded p-3 mb-2">
+                <div class="d-flex align-items-start gap-2">
+                    <span class="quote-drag-handle mt-2" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+
+                    <div class="flex-grow-1">
+                        {% for hidden in qform.hidden_fields %}{{ hidden }}{% endfor %}
+                        <span style="display:none;">{{ qform.DELETE }}</span>
+
+                        <div class="mgr-field">
+                            <label class="mgr-label">Quote Text</label>
+                            {{ qform.quote_text }}
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                            <div class="mgr-field">
+                                <label class="mgr-label">Author</label>
+                                {{ qform.author_name }}
+                            </div>
+                            <div class="mgr-field">
+                                <label class="mgr-label">Photo</label>
+                                {% if qform.instance.image %}
+                                <div style="margin-bottom:0.5rem;">
+                                    <img src="{{ qform.instance.image.url }}" alt="Photo preview" style="max-height:60px; border-radius:50%;">
+                                </div>
+                                {% endif %}
+                                {{ qform.image }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-sm btn-outline-danger mt-2 btn-delete-quote">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="btn-add-bottom-quote">
+            <i class="bi bi-plus"></i> Add Quote
+        </button>
+    </div>
+
+    {# ── Actions ───────────────────────────────────────────────── #}
+    <div style="display:flex; gap:1rem; align-items:center; margin-top:1.5rem;">
+        <button type="submit" class="mgr-btn mgr-btn-primary">
+            <i class="bi bi-check2"></i> Save Changes
+        </button>
+        <a href="{% url 'manager:dashboard' %}" class="mgr-btn">Cancel</a>
+    </div>
+</form>
+
+{# Template for new top quote rows #}
+<template id="top-quote-template">
+    <div class="quote-row border rounded p-3 mb-2">
+        <div class="d-flex align-items-start gap-2">
+            <span class="quote-drag-handle mt-2" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+
+            <div class="flex-grow-1">
+                <input type="hidden" name="top_quotes-__prefix__-id" value="">
+                <input type="hidden" name="top_quotes-__prefix__-sort_order" value="0">
+
+                <div class="mgr-field">
+                    <label class="mgr-label">Quote Text</label>
+                    <textarea name="top_quotes-__prefix__-quote_text" class="mgr-textarea quote-tinymce" rows="4"></textarea>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div class="mgr-field">
+                        <label class="mgr-label">Author</label>
+                        <input type="text" name="top_quotes-__prefix__-author_name" class="mgr-input">
+                    </div>
+                    <div class="mgr-field">
+                        <label class="mgr-label">Photo</label>
+                        <input type="file" name="top_quotes-__prefix__-image" accept="image/*" class="form-control form-control-sm">
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-sm btn-outline-danger mt-2 btn-delete-quote">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    </div>
+</template>
+
+{# Template for new bottom quote rows #}
+<template id="bottom-quote-template">
+    <div class="quote-row border rounded p-3 mb-2">
+        <div class="d-flex align-items-start gap-2">
+            <span class="quote-drag-handle mt-2" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+
+            <div class="flex-grow-1">
+                <input type="hidden" name="bottom_quotes-__prefix__-id" value="">
+                <input type="hidden" name="bottom_quotes-__prefix__-sort_order" value="0">
+
+                <div class="mgr-field">
+                    <label class="mgr-label">Quote Text</label>
+                    <textarea name="bottom_quotes-__prefix__-quote_text" class="mgr-textarea quote-tinymce" rows="4"></textarea>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div class="mgr-field">
+                        <label class="mgr-label">Author</label>
+                        <input type="text" name="bottom_quotes-__prefix__-author_name" class="mgr-input">
+                    </div>
+                    <div class="mgr-field">
+                        <label class="mgr-label">Photo</label>
+                        <input type="file" name="bottom_quotes-__prefix__-image" accept="image/*" class="form-control form-control-sm">
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-sm btn-outline-danger mt-2 btn-delete-quote">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    </div>
+</template>
+
+{# Template for new institution rows #}
+<template id="institution-template">
+    <div class="institution-row border rounded p-2 mb-1 d-flex align-items-center gap-2">
+        <span class="institution-drag-handle" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+        <input type="hidden" name="institutions-__prefix__-id" value="">
+        <input type="hidden" name="institutions-__prefix__-sort_order" value="0">
+        <div class="flex-grow-1">
+            <input type="text" name="institutions-__prefix__-name" class="mgr-input" aria-label="Institution name">
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-danger btn-delete-institution">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+</template>
+{% endblock %}
+
+{% block extra_js %}
+{{ form.media }}
+{{ top_formset.media }}
+{{ bottom_formset.media }}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script src="{% static 'js/our-members-manager.js' %}"></script>
+{% endblock %}

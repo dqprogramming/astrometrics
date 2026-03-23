@@ -16,6 +16,7 @@ from .models import (
     ContactFormSettings,
     LandingPageSettings,
     ManifestoPageSettings,
+    OurMembersPageSettings,
     OurModelPageSettings,
     Page,
     Post,
@@ -177,7 +178,20 @@ def about_us_view(request):
 
 
 def our_members_view(request):
-    return render(request, "our_members.html")
+    settings = OurMembersPageSettings.load()
+    top_quotes = settings.top_quotes.all()
+    bottom_quotes = settings.bottom_quotes.all()
+    institutions = settings.institutions.all()
+    return render(
+        request,
+        "our_members.html",
+        {
+            "settings": settings,
+            "top_quotes": top_quotes,
+            "bottom_quotes": bottom_quotes,
+            "institutions": institutions,
+        },
+    )
 
 
 def page_preview_view(request, token):

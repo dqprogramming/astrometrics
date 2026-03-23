@@ -28,6 +28,10 @@ from .forms import (
     LandingPageSettingsForm,
     ManifestoPageSettingsForm,
     MenuItemFormSet,
+    OurMemberInstitutionFormSet,
+    OurMembersBottomQuoteFormSet,
+    OurMembersPageSettingsForm,
+    OurMembersTopQuoteFormSet,
     OurModelPackageTableFormSet,
     OurModelPageSettingsForm,
     OurModelTableColumnFormSet,
@@ -46,6 +50,7 @@ from .models import (
     HeaderSettings,
     LandingPageSettings,
     ManifestoPageSettings,
+    OurMembersPageSettings,
     OurModelPackageCell,
     OurModelPackageRow,
     OurModelPageSettings,
@@ -1206,3 +1211,66 @@ def board_member_image_upload(request):
     saved_path = default_storage.save(filename, ContentFile(buf.read()))
     url = default_storage.url(saved_path)
     return JsonResponse({"url": url})
+
+
+# ── Our Members ──────────────────────────────────────────────────────────────
+
+
+class OurMembersPageSettingsUpdateView(StaffRequiredMixin, View):
+    template_name = "cms/manager/our_members_form.html"
+
+    def _get_forms(self, data=None, files=None):
+        instance = OurMembersPageSettings.load()
+        form = OurMembersPageSettingsForm(
+            data=data, files=files, instance=instance
+        )
+        top_formset = OurMembersTopQuoteFormSet(
+            data=data, files=files, instance=instance, prefix="top_quotes"
+        )
+        bottom_formset = OurMembersBottomQuoteFormSet(
+            data=data, files=files, instance=instance, prefix="bottom_quotes"
+        )
+        inst_formset = OurMemberInstitutionFormSet(
+            data=data, files=files, instance=instance, prefix="institutions"
+        )
+        return form, top_formset, bottom_formset, inst_formset, instance
+
+    def get(self, request):
+        form, top_formset, bottom_formset, inst_formset, _ = self._get_forms()
+        return render(
+            request,
+            self.template_name,
+            {
+                "form": form,
+                "top_formset": top_formset,
+                "bottom_formset": bottom_formset,
+                "inst_formset": inst_formset,
+            },
+        )
+
+    def post(self, request):
+        form, top_formset, bottom_formset, inst_formset, _ = self._get_forms(
+            data=request.POST, files=request.FILES
+        )
+        if (
+            form.is_valid()
+            and top_formset.is_valid()
+            and bottom_formset.is_valid()
+            and inst_formset.is_valid()
+        ):
+            form.save()
+            top_formset.save()
+            bottom_formset.save()
+            inst_formset.save()
+            messages.success(request, "Our Members page settings updated.")
+            return redirect(reverse_lazy("cms_manager:our_members"))
+        return render(
+            request,
+            self.template_name,
+            {
+                "form": form,
+                "top_formset": top_formset,
+                "bottom_formset": bottom_formset,
+                "inst_formset": inst_formset,
+            },
+        )
