@@ -1,12 +1,13 @@
 import csv
 import io
+import json
 import os
 import uuid
 
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.files.storage import default_storage
-from django.db import models
+from django.db import models, transaction
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -27,22 +28,26 @@ from .forms import (
     ContactRecipientFormSet,
     FooterSettingsForm,
     HeaderSettingsForm,
+    InstitutionEntryFormSet,
     LandingPageSettingsForm,
     ManifestoPageSettingsForm,
+    MembersHeaderBlockForm,
+    MembersInstitutionsBlockForm,
     MenuItemFormSet,
-    OurMemberInstitutionFormSet,
-    OurMembersBottomQuoteFormSet,
-    OurMembersPageSettingsForm,
-    OurMembersTopQuoteFormSet,
     OurModelPackageTableFormSet,
     OurModelPageSettingsForm,
     OurModelTableColumnFormSet,
     PageForm,
+    PersonCarouselBlockForm,
+    PersonCarouselQuoteFormSet,
     PostForm,
     SnippetForm,
     TeamMemberFormSet,
+    WhoWeAreBlockForm,
 )
 from .models import (
+    BLOCK_TYPE_MODEL_MAP,
+    DEFAULT_PAGE_CONFIG,
     AboutUsPageSettings,
     BoardMember,
     BoardSection,
@@ -52,11 +57,13 @@ from .models import (
     HeaderSettings,
     LandingPageSettings,
     ManifestoPageSettings,
+    MembersPageBlock,
     OurMembersPageSettings,
     OurModelPackageCell,
     OurModelPackageRow,
     OurModelPageSettings,
     Page,
+    PersonCarouselQuote,
     Post,
     Snippet,
     TeamMember,
@@ -1217,64 +1224,213 @@ def board_member_image_upload(request):
 
 # ── Our Members ──────────────────────────────────────────────────────────────
 
+BLOCK_FORM_MAP = {
+    "members_header": MembersHeaderBlockForm,
+    "who_we_are": WhoWeAreBlockForm,
+    "person_carousel": PersonCarouselBlockForm,
+    "members_institutions": MembersInstitutionsBlockForm,
+}
+
+BLOCK_FORMSET_MAP = {
+    "person_carousel": PersonCarouselQuoteFormSet,
+    "members_institutions": InstitutionEntryFormSet,
+}
+
+BLOCK_TEMPLATE_MAP = {
+    "members_header": "cms/manager/blocks/_members_header.html",
+    "who_we_are": "cms/manager/blocks/_who_we_are.html",
+    "person_carousel": "cms/manager/blocks/_person_carousel.html",
+    "members_institutions": "cms/manager/blocks/_members_institutions.html",
+}
+
+BLOCK_TYPE_LABELS = {
+    "members_header": "Members Header",
+    "who_we_are": "Who We Are",
+    "person_carousel": "Person Carousel",
+    "members_institutions": "Members Institutions",
+}
+
+
+def _build_block_data(placements, data=None, files=None):
+    """Build a list of dicts with form, formset, placement, etc. for each block."""
+    block_data = []
+    for p in placements:
+        block = p.get_block()
+        if block is None:
+            continue
+        prefix = f"block_{p.pk}"
+        form_cls = BLOCK_FORM_MAP.get(p.block_type)
+        if form_cls is None:
+            continue
+        form = form_cls(data=data, files=files, instance=block, prefix=prefix)
+        child_formset = None
+        formset_cls = BLOCK_FORMSET_MAP.get(p.block_type)
+        if formset_cls:
+            child_formset = formset_cls(
+                data=data,
+                files=files,
+                instance=block,
+                prefix=f"children_{p.pk}",
+            )
+        color_defaults = json.dumps(
+            getattr(block.__class__, "COLOR_DEFAULTS", {})
+        )
+        block_data.append(
+            {
+                "placement": p,
+                "block": block,
+                "block_type": p.block_type,
+                "block_type_label": BLOCK_TYPE_LABELS.get(
+                    p.block_type, p.block_type
+                ),
+                "form": form,
+                "child_formset": child_formset,
+                "form_template": BLOCK_TEMPLATE_MAP.get(p.block_type, ""),
+                "color_defaults": color_defaults,
+            }
+        )
+    return block_data
+
 
 class OurMembersPageSettingsUpdateView(StaffRequiredMixin, View):
     template_name = "cms/manager/our_members_form.html"
 
-    def _get_forms(self, data=None, files=None):
-        instance = OurMembersPageSettings.load()
-        form = OurMembersPageSettingsForm(
-            data=data, files=files, instance=instance
-        )
-        top_formset = OurMembersTopQuoteFormSet(
-            data=data, files=files, instance=instance, prefix="top_quotes"
-        )
-        bottom_formset = OurMembersBottomQuoteFormSet(
-            data=data, files=files, instance=instance, prefix="bottom_quotes"
-        )
-        inst_formset = OurMemberInstitutionFormSet(
-            data=data, files=files, instance=instance, prefix="institutions"
-        )
-        return form, top_formset, bottom_formset, inst_formset, instance
-
-    def _ctx(self, form, top_formset, bottom_formset, inst_formset):
-        return {
-            "form": form,
-            "top_formset": top_formset,
-            "bottom_formset": bottom_formset,
-            "inst_formset": inst_formset,
-            "color_defaults": OurMembersPageSettings.COLOR_DEFAULTS,
-        }
-
     def get(self, request):
-        form, top_formset, bottom_formset, inst_formset, _ = self._get_forms()
+        page = OurMembersPageSettings.load()
+        placements = page.blocks.order_by("sort_order")
+        block_data = _build_block_data(placements)
         return render(
             request,
             self.template_name,
-            self._ctx(form, top_formset, bottom_formset, inst_formset),
+            {
+                "block_data": block_data,
+                "default_page_config": json.dumps(DEFAULT_PAGE_CONFIG),
+            },
         )
 
     def post(self, request):
-        form, top_formset, bottom_formset, inst_formset, _ = self._get_forms(
-            data=request.POST, files=request.FILES
+        page = OurMembersPageSettings.load()
+        placements = page.blocks.order_by("sort_order")
+        block_data = _build_block_data(
+            placements, data=request.POST, files=request.FILES
         )
-        if (
-            form.is_valid()
-            and top_formset.is_valid()
-            and bottom_formset.is_valid()
-            and inst_formset.is_valid()
-        ):
-            form.save()
-            top_formset.save()
-            bottom_formset.save()
-            inst_formset.save()
+
+        # Parse block_order from hidden field
+        block_order_raw = request.POST.get("block_order", "")
+        try:
+            block_order = (
+                json.loads(block_order_raw) if block_order_raw else []
+            )
+        except (json.JSONDecodeError, ValueError):
+            block_order = []
+
+        all_valid = True
+        for bd in block_data:
+            if not bd["form"].is_valid():
+                all_valid = False
+            if bd["child_formset"] and not bd["child_formset"].is_valid():
+                all_valid = False
+
+        if all_valid:
+            with transaction.atomic():
+                # Update sort_order and is_visible from block_order
+                for idx, entry in enumerate(block_order):
+                    pk = entry.get("pk")
+                    visible = entry.get("visible", True)
+                    MembersPageBlock.objects.filter(pk=pk, page=page).update(
+                        sort_order=idx, is_visible=visible
+                    )
+
+                # Save all forms and formsets
+                for bd in block_data:
+                    bd["form"].save()
+                    if bd["child_formset"]:
+                        bd["child_formset"].save()
+
+                page.save()
+
             messages.success(request, "Our Members page settings updated.")
             return redirect(reverse_lazy("cms_manager:our_members"))
+
         return render(
             request,
             self.template_name,
-            self._ctx(form, top_formset, bottom_formset, inst_formset),
+            {
+                "block_data": block_data,
+                "default_page_config": json.dumps(DEFAULT_PAGE_CONFIG),
+            },
         )
+
+
+class OurMembersAddBlockView(StaffRequiredMixin, View):
+    def post(self, request):
+        block_type = request.POST.get("block_type", "")
+        model_cls = BLOCK_TYPE_MODEL_MAP.get(block_type)
+        if model_cls is None:
+            messages.error(request, "Invalid block type.")
+            return redirect(reverse_lazy("cms_manager:our_members"))
+
+        page = OurMembersPageSettings.load()
+        block = model_cls.objects.create()
+        max_order = page.blocks.aggregate(m=models.Max("sort_order"))["m"] or 0
+        MembersPageBlock.objects.create(
+            page=page,
+            block_type=block_type,
+            object_id=block.pk,
+            sort_order=max_order + 1,
+        )
+        messages.success(
+            request,
+            f"{BLOCK_TYPE_LABELS.get(block_type, block_type)} block added.",
+        )
+        return redirect(reverse_lazy("cms_manager:our_members"))
+
+
+class OurMembersDeleteBlockView(StaffRequiredMixin, View):
+    def post(self, request, pk):
+        page = OurMembersPageSettings.load()
+        placement = get_object_or_404(MembersPageBlock, pk=pk, page=page)
+        block = placement.get_block()
+        if block:
+            block.delete()
+        placement.delete()
+        messages.success(request, "Block deleted.")
+        return redirect(reverse_lazy("cms_manager:our_members"))
+
+
+class OurMembersResetDefaultsView(StaffRequiredMixin, View):
+    def post(self, request):
+        page = OurMembersPageSettings.load()
+        with transaction.atomic():
+            # Delete all existing blocks and their concrete instances
+            for placement in page.blocks.all():
+                block = placement.get_block()
+                if block:
+                    block.delete()
+                placement.delete()
+
+            # Recreate from DEFAULT_PAGE_CONFIG
+            for idx, cfg in enumerate(DEFAULT_PAGE_CONFIG):
+                model_cls = BLOCK_TYPE_MODEL_MAP[cfg["block_type"]]
+                block = model_cls.objects.create(**cfg.get("defaults", {}))
+                # Create children if any
+                if cfg.get("children"):
+                    if cfg["block_type"] == "person_carousel":
+                        for child in cfg["children"]:
+                            PersonCarouselQuote.objects.create(
+                                block=block, **child
+                            )
+                MembersPageBlock.objects.create(
+                    page=page,
+                    block_type=cfg["block_type"],
+                    object_id=block.pk,
+                    sort_order=idx,
+                    is_visible=cfg.get("is_visible", True),
+                )
+            page.save()
+
+        messages.success(request, "Page reset to defaults.")
+        return redirect(reverse_lazy("cms_manager:our_members"))
 
 
 @require_POST

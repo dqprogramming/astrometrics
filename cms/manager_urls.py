@@ -93,6 +93,21 @@ urlpatterns = [
         views.our_members_csv_parse,
         name="our_members_csv_parse",
     ),
+    path(
+        "our-members/add-block/",
+        views.OurMembersAddBlockView.as_view(),
+        name="our_members_add_block",
+    ),
+    path(
+        "our-members/delete-block/<int:pk>/",
+        views.OurMembersDeleteBlockView.as_view(),
+        name="our_members_delete_block",
+    ),
+    path(
+        "our-members/reset-defaults/",
+        views.OurMembersResetDefaultsView.as_view(),
+        name="our_members_reset_defaults",
+    ),
     # Our Model
     path(
         "our-model/",
