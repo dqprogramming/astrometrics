@@ -7,13 +7,16 @@
 {% endblock %}
 
 {% block content %}
+{% if settings.show_header %}
 <!-- Header Bar -->
 <section class="members-header-bar">
     <div class="container">
         <h1 class="spectral-bold">{{ settings.hero_heading }}</h1>
     </div>
 </section>
+{% endif %}
 
+{% if settings.show_who_we_are %}
 <!-- Who We Are Section -->
 <section class="members-who-we-are" aria-labelledby="who-we-are-heading">
     <div class="container">
@@ -65,15 +68,16 @@
             </div>
         </div>
 
-        {% if settings.cta_text %}
+        {% if settings.show_cta and settings.cta_text %}
         <div class="members-cta-row">
             <a href="{{ settings.cta_url }}" class="btn-members-join">{{ settings.cta_text }} &rarr;</a>
         </div>
         {% endif %}
     </div>
 </section>
+{% endif %}
 
-{% if top_quotes %}
+{% if settings.show_top_carousel and top_quotes %}
 <!-- First Quote Carousel -->
 <section class="members-quote-section members-quote-top" aria-label="Member quotes">
     <div class="members-glide-top">
@@ -121,6 +125,7 @@
 </section>
 {% endif %}
 
+{% if settings.show_members_grid %}
 <!-- OJC Members Grid Section -->
 <section class="members-grid-section" aria-labelledby="members-grid-heading">
     <div class="container">
@@ -136,15 +141,16 @@
         </div>
         {% endif %}
 
-        {% if settings.cta_text %}
+        {% if settings.show_cta and settings.cta_text %}
         <div class="members-cta-row">
             <a href="{{ settings.cta_url }}" class="btn-members-join">{{ settings.cta_text }} &rarr;</a>
         </div>
         {% endif %}
     </div>
 </section>
+{% endif %}
 
-{% if bottom_quotes %}
+{% if settings.show_bottom_carousel and bottom_quotes %}
 <!-- Second Quote Carousel -->
 <section class="members-quote-section members-quote-bottom" aria-label="More member quotes">
     <div class="members-glide-bottom">

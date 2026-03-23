@@ -795,7 +795,9 @@ class OurMembersPageSettingsForm(forms.ModelForm):
         model = OurMembersPageSettings
         fields = [
             "hero_heading",
+            "show_header",
             "section_heading",
+            "show_who_we_are",
             "circle_1_title",
             "circle_1_body",
             "circle_2_title",
@@ -804,7 +806,11 @@ class OurMembersPageSettingsForm(forms.ModelForm):
             "circle_3_body",
             "cta_text",
             "cta_url",
+            "show_cta",
+            "show_top_carousel",
             "members_heading",
+            "show_members_grid",
+            "show_bottom_carousel",
         ]
         widgets = {
             "hero_heading": forms.TextInput(attrs={"class": "mgr-input"}),

@@ -9,65 +9,105 @@ Our Members
 {% endblock %}
 {% block nav_our_members %}active{% endblock %}
 
+{% block extra_css %}
+<style>
+    .section-disabled {
+        opacity: 0.4;
+        pointer-events: none;
+    }
+    .section-toggle-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+    .section-toggle-row label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        margin: 0;
+    }
+    .section-toggle-check {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.78rem;
+        color: var(--muted);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <form method="post" enctype="multipart/form-data" style="max-width:900px;" id="our-members-form" data-csv-parse-url="{% url 'cms_manager:our_members_csv_parse' %}">
     {% csrf_token %}
 
     {# ── Header Section ───────────────────────────────────────── #}
     <div class="mgr-form-card" style="margin-bottom:1.25rem;">
-        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
-            <i class="bi bi-type-h1"></i> Header
+        <div class="section-toggle-row">
+            <label><i class="bi bi-type-h1"></i> Header</label>
+            <span class="section-toggle-check">
+                Show {{ form.show_header }}
+            </span>
         </div>
-        <div class="mgr-field">
-            <label class="mgr-label" for="{{ form.hero_heading.id_for_label }}">Page Heading</label>
-            {{ form.hero_heading }}
-            {% if form.hero_heading.errors %}<div class="mgr-error">{{ form.hero_heading.errors.0 }}</div>{% endif %}
+        <div data-section-content="show_header">
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.hero_heading.id_for_label }}">Page Heading</label>
+                {{ form.hero_heading }}
+                {% if form.hero_heading.errors %}<div class="mgr-error">{{ form.hero_heading.errors.0 }}</div>{% endif %}
+            </div>
         </div>
     </div>
 
     {# ── Who We Are Section ───────────────────────────────────── #}
     <div class="mgr-form-card" style="margin-bottom:1.25rem;">
-        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
-            <i class="bi bi-people-fill"></i> Who We Are
+        <div class="section-toggle-row">
+            <label><i class="bi bi-people-fill"></i> Who We Are</label>
+            <span class="section-toggle-check">
+                Show {{ form.show_who_we_are }}
+            </span>
         </div>
-        <div class="mgr-field">
-            <label class="mgr-label" for="{{ form.section_heading.id_for_label }}">Section Heading</label>
-            {{ form.section_heading }}
-            {% if form.section_heading.errors %}<div class="mgr-error">{{ form.section_heading.errors.0 }}</div>{% endif %}
-        </div>
+        <div data-section-content="show_who_we_are">
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.section_heading.id_for_label }}">Section Heading</label>
+                {{ form.section_heading }}
+                {% if form.section_heading.errors %}<div class="mgr-error">{{ form.section_heading.errors.0 }}</div>{% endif %}
+            </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
-            <div>
-                <div class="mgr-field">
-                    <label class="mgr-label" for="{{ form.circle_1_title.id_for_label }}">Circle 1 Title</label>
-                    {{ form.circle_1_title }}
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+                <div>
+                    <div class="mgr-field">
+                        <label class="mgr-label" for="{{ form.circle_1_title.id_for_label }}">Circle 1 Title</label>
+                        {{ form.circle_1_title }}
+                    </div>
+                    <div class="mgr-field">
+                        <label class="mgr-label" for="{{ form.circle_1_body.id_for_label }}">Circle 1 Body</label>
+                        {{ form.circle_1_body }}
+                        <div class="mgr-help">Bold, italic, underline, super/subscript</div>
+                    </div>
                 </div>
-                <div class="mgr-field">
-                    <label class="mgr-label" for="{{ form.circle_1_body.id_for_label }}">Circle 1 Body</label>
-                    {{ form.circle_1_body }}
-                    <div class="mgr-help">Bold, italic, underline, super/subscript</div>
+                <div>
+                    <div class="mgr-field">
+                        <label class="mgr-label" for="{{ form.circle_2_title.id_for_label }}">Circle 2 Title</label>
+                        {{ form.circle_2_title }}
+                    </div>
+                    <div class="mgr-field">
+                        <label class="mgr-label" for="{{ form.circle_2_body.id_for_label }}">Circle 2 Body</label>
+                        {{ form.circle_2_body }}
+                        <div class="mgr-help">Bold, italic, underline, super/subscript</div>
+                    </div>
                 </div>
-            </div>
-            <div>
-                <div class="mgr-field">
-                    <label class="mgr-label" for="{{ form.circle_2_title.id_for_label }}">Circle 2 Title</label>
-                    {{ form.circle_2_title }}
-                </div>
-                <div class="mgr-field">
-                    <label class="mgr-label" for="{{ form.circle_2_body.id_for_label }}">Circle 2 Body</label>
-                    {{ form.circle_2_body }}
-                    <div class="mgr-help">Bold, italic, underline, super/subscript</div>
-                </div>
-            </div>
-            <div>
-                <div class="mgr-field">
-                    <label class="mgr-label" for="{{ form.circle_3_title.id_for_label }}">Circle 3 Title</label>
-                    {{ form.circle_3_title }}
-                </div>
-                <div class="mgr-field">
-                    <label class="mgr-label" for="{{ form.circle_3_body.id_for_label }}">Circle 3 Body</label>
-                    {{ form.circle_3_body }}
-                    <div class="mgr-help">Bold, italic, underline, super/subscript</div>
+                <div>
+                    <div class="mgr-field">
+                        <label class="mgr-label" for="{{ form.circle_3_title.id_for_label }}">Circle 3 Title</label>
+                        {{ form.circle_3_title }}
+                    </div>
+                    <div class="mgr-field">
+                        <label class="mgr-label" for="{{ form.circle_3_body.id_for_label }}">Circle 3 Body</label>
+                        {{ form.circle_3_body }}
+                        <div class="mgr-help">Bold, italic, underline, super/subscript</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -75,165 +115,183 @@ Our Members
 
     {# ── CTA Button ───────────────────────────────────────────── #}
     <div class="mgr-form-card" style="margin-bottom:1.25rem;">
-        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
-            <i class="bi bi-link-45deg"></i> Call to Action
+        <div class="section-toggle-row">
+            <label><i class="bi bi-link-45deg"></i> Call to Action</label>
+            <span class="section-toggle-check">
+                Show {{ form.show_cta }}
+            </span>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-            <div class="mgr-field">
-                <label class="mgr-label" for="{{ form.cta_text.id_for_label }}">Button Text</label>
-                {{ form.cta_text }}
-            </div>
-            <div class="mgr-field">
-                <label class="mgr-label" for="{{ form.cta_url.id_for_label }}">Button URL</label>
-                {{ form.cta_url }}
+        <div data-section-content="show_cta">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.cta_text.id_for_label }}">Button Text</label>
+                    {{ form.cta_text }}
+                </div>
+                <div class="mgr-field">
+                    <label class="mgr-label" for="{{ form.cta_url.id_for_label }}">Button URL</label>
+                    {{ form.cta_url }}
+                </div>
             </div>
         </div>
     </div>
 
     {# ── Top Quotes Carousel ──────────────────────────────────── #}
     <div class="mgr-form-card" style="margin-bottom:1.25rem;">
-        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
-            <i class="bi bi-chat-quote"></i> Top Quotes Carousel
+        <div class="section-toggle-row">
+            <label><i class="bi bi-chat-quote"></i> Top Quotes Carousel</label>
+            <span class="section-toggle-check">
+                Show {{ form.show_top_carousel }}
+            </span>
         </div>
+        <div data-section-content="show_top_carousel">
+            {{ top_formset.management_form }}
 
-        {{ top_formset.management_form }}
+            <div id="top-quote-list">
+                {% for qform in top_formset %}
+                <div class="quote-row border rounded p-3 mb-2">
+                    <div class="d-flex align-items-start gap-2">
+                        <span class="quote-drag-handle mt-2" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
 
-        <div id="top-quote-list">
-            {% for qform in top_formset %}
-            <div class="quote-row border rounded p-3 mb-2">
-                <div class="d-flex align-items-start gap-2">
-                    <span class="quote-drag-handle mt-2" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+                        <div class="flex-grow-1">
+                            {% for hidden in qform.hidden_fields %}{{ hidden }}{% endfor %}
+                            <span style="display:none;">{{ qform.DELETE }}</span>
 
-                    <div class="flex-grow-1">
-                        {% for hidden in qform.hidden_fields %}{{ hidden }}{% endfor %}
-                        <span style="display:none;">{{ qform.DELETE }}</span>
-
-                        <div class="mgr-field">
-                            <label class="mgr-label">Quote Text</label>
-                            {{ qform.quote_text }}
-                        </div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
                             <div class="mgr-field">
-                                <label class="mgr-label">Author</label>
-                                {{ qform.author_name }}
+                                <label class="mgr-label">Quote Text</label>
+                                {{ qform.quote_text }}
                             </div>
-                            <div class="mgr-field">
-                                <label class="mgr-label">Photo</label>
-                                {% if qform.instance.image %}
-                                <div style="margin-bottom:0.5rem;">
-                                    <img src="{{ qform.instance.image.url }}" alt="Photo preview" style="max-height:60px; border-radius:50%;">
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                                <div class="mgr-field">
+                                    <label class="mgr-label">Author</label>
+                                    {{ qform.author_name }}
                                 </div>
-                                {% endif %}
-                                {{ qform.image }}
+                                <div class="mgr-field">
+                                    <label class="mgr-label">Photo</label>
+                                    {% if qform.instance.image %}
+                                    <div style="margin-bottom:0.5rem;">
+                                        <img src="{{ qform.instance.image.url }}" alt="Photo preview" style="max-height:60px; border-radius:50%;">
+                                    </div>
+                                    {% endif %}
+                                    {{ qform.image }}
+                                </div>
                             </div>
                         </div>
+
+                        <button type="button" class="btn btn-sm btn-outline-danger mt-2 btn-delete-quote">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
                     </div>
-
-                    <button type="button" class="btn btn-sm btn-outline-danger mt-2 btn-delete-quote">
-                        <i class="bi bi-x-lg"></i>
-                    </button>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
 
-        <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="btn-add-top-quote">
-            <i class="bi bi-plus"></i> Add Quote
-        </button>
+            <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="btn-add-top-quote">
+                <i class="bi bi-plus"></i> Add Quote
+            </button>
+        </div>
     </div>
 
     {# ── Members / Institutions Grid ──────────────────────────── #}
     <div class="mgr-form-card" style="margin-bottom:1.25rem;">
-        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
-            <i class="bi bi-building"></i> OJC Members (Institutions)
+        <div class="section-toggle-row">
+            <label><i class="bi bi-building"></i> OJC Members (Institutions)</label>
+            <span class="section-toggle-check">
+                Show {{ form.show_members_grid }}
+            </span>
         </div>
-        <div class="mgr-field">
-            <label class="mgr-label" for="{{ form.members_heading.id_for_label }}">Section Heading</label>
-            {{ form.members_heading }}
-        </div>
-
-        {{ inst_formset.management_form }}
-
-        <div id="institution-list">
-            {% for iform in inst_formset %}
-            <div class="institution-row border rounded p-2 mb-1 d-flex align-items-center gap-2">
-                <span class="institution-drag-handle" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
-                {% for hidden in iform.hidden_fields %}{{ hidden }}{% endfor %}
-                <span style="display:none;">{{ iform.DELETE }}</span>
-                <div class="flex-grow-1">
-                    {{ iform.name }}
-                </div>
-                <button type="button" class="btn btn-sm btn-outline-danger btn-delete-institution">
-                    <i class="bi bi-x-lg"></i>
-                </button>
+        <div data-section-content="show_members_grid">
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.members_heading.id_for_label }}">Section Heading</label>
+                {{ form.members_heading }}
             </div>
-            {% endfor %}
-        </div>
 
-        <div style="display:flex; gap:0.5rem; margin-top:0.5rem; flex-wrap:wrap;">
-            <button type="button" class="btn btn-sm btn-outline-primary" id="btn-add-institution">
-                <i class="bi bi-plus"></i> Add Institution
-            </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-alphabetize-institutions">
-                <i class="bi bi-sort-alpha-down"></i> Alphabetize
-            </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-csv-import">
-                <i class="bi bi-filetype-csv"></i> Import CSV
-            </button>
-            <input type="file" id="csv-file-input" accept=".csv,.txt" style="display:none;">
+            {{ inst_formset.management_form }}
+
+            <div id="institution-list">
+                {% for iform in inst_formset %}
+                <div class="institution-row border rounded p-2 mb-1 d-flex align-items-center gap-2">
+                    <span class="institution-drag-handle" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+                    {% for hidden in iform.hidden_fields %}{{ hidden }}{% endfor %}
+                    <span style="display:none;">{{ iform.DELETE }}</span>
+                    <div class="flex-grow-1">
+                        {{ iform.name }}
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-danger btn-delete-institution">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div style="display:flex; gap:0.5rem; margin-top:0.5rem; flex-wrap:wrap;">
+                <button type="button" class="btn btn-sm btn-outline-primary" id="btn-add-institution">
+                    <i class="bi bi-plus"></i> Add Institution
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-alphabetize-institutions">
+                    <i class="bi bi-sort-alpha-down"></i> Alphabetize
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-csv-import">
+                    <i class="bi bi-filetype-csv"></i> Import CSV
+                </button>
+                <input type="file" id="csv-file-input" accept=".csv,.txt" style="display:none;">
+            </div>
         </div>
     </div>
 
     {# ── Bottom Quotes Carousel ───────────────────────────────── #}
     <div class="mgr-form-card" style="margin-bottom:1.25rem;">
-        <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
-            <i class="bi bi-chat-quote-fill"></i> Bottom Quotes Carousel
+        <div class="section-toggle-row">
+            <label><i class="bi bi-chat-quote-fill"></i> Bottom Quotes Carousel</label>
+            <span class="section-toggle-check">
+                Show {{ form.show_bottom_carousel }}
+            </span>
         </div>
+        <div data-section-content="show_bottom_carousel">
+            {{ bottom_formset.management_form }}
 
-        {{ bottom_formset.management_form }}
+            <div id="bottom-quote-list">
+                {% for qform in bottom_formset %}
+                <div class="quote-row border rounded p-3 mb-2">
+                    <div class="d-flex align-items-start gap-2">
+                        <span class="quote-drag-handle mt-2" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
 
-        <div id="bottom-quote-list">
-            {% for qform in bottom_formset %}
-            <div class="quote-row border rounded p-3 mb-2">
-                <div class="d-flex align-items-start gap-2">
-                    <span class="quote-drag-handle mt-2" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+                        <div class="flex-grow-1">
+                            {% for hidden in qform.hidden_fields %}{{ hidden }}{% endfor %}
+                            <span style="display:none;">{{ qform.DELETE }}</span>
 
-                    <div class="flex-grow-1">
-                        {% for hidden in qform.hidden_fields %}{{ hidden }}{% endfor %}
-                        <span style="display:none;">{{ qform.DELETE }}</span>
-
-                        <div class="mgr-field">
-                            <label class="mgr-label">Quote Text</label>
-                            {{ qform.quote_text }}
-                        </div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
                             <div class="mgr-field">
-                                <label class="mgr-label">Author</label>
-                                {{ qform.author_name }}
+                                <label class="mgr-label">Quote Text</label>
+                                {{ qform.quote_text }}
                             </div>
-                            <div class="mgr-field">
-                                <label class="mgr-label">Photo</label>
-                                {% if qform.instance.image %}
-                                <div style="margin-bottom:0.5rem;">
-                                    <img src="{{ qform.instance.image.url }}" alt="Photo preview" style="max-height:60px; border-radius:50%;">
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                                <div class="mgr-field">
+                                    <label class="mgr-label">Author</label>
+                                    {{ qform.author_name }}
                                 </div>
-                                {% endif %}
-                                {{ qform.image }}
+                                <div class="mgr-field">
+                                    <label class="mgr-label">Photo</label>
+                                    {% if qform.instance.image %}
+                                    <div style="margin-bottom:0.5rem;">
+                                        <img src="{{ qform.instance.image.url }}" alt="Photo preview" style="max-height:60px; border-radius:50%;">
+                                    </div>
+                                    {% endif %}
+                                    {{ qform.image }}
+                                </div>
                             </div>
                         </div>
+
+                        <button type="button" class="btn btn-sm btn-outline-danger mt-2 btn-delete-quote">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
                     </div>
-
-                    <button type="button" class="btn btn-sm btn-outline-danger mt-2 btn-delete-quote">
-                        <i class="bi bi-x-lg"></i>
-                    </button>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
 
-        <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="btn-add-bottom-quote">
-            <i class="bi bi-plus"></i> Add Quote
-        </button>
+            <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="btn-add-bottom-quote">
+                <i class="bi bi-plus"></i> Add Quote
+            </button>
+        </div>
     </div>
 
     {# ── Actions ───────────────────────────────────────────────── #}

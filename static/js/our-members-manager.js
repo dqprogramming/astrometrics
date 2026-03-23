@@ -382,11 +382,47 @@
         });
     }
 
+    // -- Section visibility toggles -------------------------------------------
+
+    function applySectionToggle(checkbox) {
+        var fieldName = checkbox.name;
+        var content = document.querySelector('[data-section-content="' + fieldName + '"]');
+        if (!content) return;
+        if (checkbox.checked) {
+            content.classList.remove('section-disabled');
+        } else {
+            content.classList.add('section-disabled');
+        }
+    }
+
+    function initSectionToggles() {
+        var checkboxes = document.querySelectorAll(
+            'input[name="show_header"],' +
+            'input[name="show_who_we_are"],' +
+            'input[name="show_cta"],' +
+            'input[name="show_top_carousel"],' +
+            'input[name="show_members_grid"],' +
+            'input[name="show_bottom_carousel"]'
+        );
+        checkboxes.forEach(function (cb) {
+            // Apply initial state
+            applySectionToggle(cb);
+            // Listen for changes
+            cb.addEventListener('change', function () {
+                applySectionToggle(cb);
+                markDirty();
+            });
+        });
+    }
+
     // -- Init -----------------------------------------------------------------
 
     document.addEventListener('DOMContentLoaded', function () {
         var formEl = document.getElementById('our-members-form');
         if (formEl) CSV_PARSE_URL = formEl.dataset.csvParseUrl || '';
+
+        // Section visibility toggles
+        initSectionToggles();
 
         // Sortables
         initTopQuoteSortable();

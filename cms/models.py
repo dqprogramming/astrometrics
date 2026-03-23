@@ -1591,6 +1591,14 @@ class OurMembersPageSettings(models.Model):
         help_text="Members list section heading",
     )
 
+    # Section visibility toggles
+    show_header = models.BooleanField(default=True)
+    show_who_we_are = models.BooleanField(default=True)
+    show_cta = models.BooleanField(default=True)
+    show_top_carousel = models.BooleanField(default=True)
+    show_members_grid = models.BooleanField(default=True)
+    show_bottom_carousel = models.BooleanField(default=True)
+
     # Metadata
     updated_at = models.DateTimeField(auto_now=True)
 

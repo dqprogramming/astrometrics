@@ -202,6 +202,20 @@ class OurMembersViewTests(TestCase):
         response = self.client.get(reverse("cms:our-members"))
         self.assertContains(response, "Test University")
 
+    def test_hidden_section_not_rendered(self):
+        settings = OurMembersPageSettings.load()
+        settings.show_bottom_carousel = False
+        settings.save()
+        response = self.client.get(reverse("cms:our-members"))
+        self.assertNotContains(response, "members-glide-bottom")
+
+    def test_hidden_header_not_rendered(self):
+        settings = OurMembersPageSettings.load()
+        settings.show_header = False
+        settings.save()
+        response = self.client.get(reverse("cms:our-members"))
+        self.assertNotContains(response, "members-header-bar")
+
 
 @override_settings(
     CACHES={
@@ -240,6 +254,11 @@ class OurMembersManagerViewTests(TestCase):
                 "cta_text": "Sign Up",
                 "cta_url": "/signup/",
                 "members_heading": "Members",
+                "show_header": "on",
+                "show_who_we_are": "on",
+                "show_cta": "on",
+                "show_top_carousel": "on",
+                "show_members_grid": "on",
                 "top_quotes-TOTAL_FORMS": "0",
                 "top_quotes-INITIAL_FORMS": "0",
                 "top_quotes-MIN_NUM_FORMS": "0",
