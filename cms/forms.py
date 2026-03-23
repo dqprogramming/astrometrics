@@ -12,8 +12,11 @@ from .models import (
     FooterLink,
     FooterSettings,
     HeaderSettings,
+    InstitutionEntry,
     LandingPageSettings,
     ManifestoPageSettings,
+    MembersHeaderBlock,
+    MembersInstitutionsBlock,
     MenuItem,
     OurMemberInstitution,
     OurMembersBottomQuote,
@@ -23,10 +26,13 @@ from .models import (
     OurModelPageSettings,
     OurModelTableColumn,
     Page,
+    PersonCarouselBlock,
+    PersonCarouselQuote,
     Post,
     Snippet,
     TeamMember,
     TeamSection,
+    WhoWeAreBlock,
 )
 
 
@@ -934,6 +940,141 @@ OurMemberInstitutionFormSet = forms.inlineformset_factory(
     OurMembersPageSettings,
     OurMemberInstitution,
     form=OurMemberInstitutionForm,
+    extra=0,
+    can_delete=True,
+)
+
+
+# ── Block System Forms ───────────────────────────────────────────────────────
+
+_COLOR_ATTRS = {
+    "type": "color",
+    "class": "mgr-color-input",
+}
+
+
+class MembersHeaderBlockForm(forms.ModelForm):
+    class Meta:
+        model = MembersHeaderBlock
+        fields = ["heading", "bg_color", "text_color"]
+        widgets = {
+            "heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+        }
+
+
+class WhoWeAreBlockForm(forms.ModelForm):
+    class Meta:
+        model = WhoWeAreBlock
+        fields = [
+            "section_heading",
+            "circle_1_title",
+            "circle_1_body",
+            "circle_2_title",
+            "circle_2_body",
+            "circle_3_title",
+            "circle_3_body",
+            "bg_color",
+            "text_color",
+            "show_cta",
+            "cta_text",
+            "cta_url",
+        ]
+        widgets = {
+            "section_heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "circle_1_title": forms.TextInput(attrs={"class": "mgr-input"}),
+            "circle_1_body": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+            "circle_2_title": forms.TextInput(attrs={"class": "mgr-input"}),
+            "circle_2_body": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+            "circle_3_title": forms.TextInput(attrs={"class": "mgr-input"}),
+            "circle_3_body": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_text": forms.TextInput(attrs={"class": "mgr-input"}),
+            "cta_url": forms.TextInput(
+                attrs={
+                    "class": "mgr-input",
+                    "placeholder": "e.g. /contact/ or https://...",
+                }
+            ),
+        }
+
+
+class PersonCarouselBlockForm(forms.ModelForm):
+    class Meta:
+        model = PersonCarouselBlock
+        fields = ["bg_color", "text_color"]
+        widgets = {
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+        }
+
+
+class PersonCarouselQuoteForm(forms.ModelForm):
+    class Meta:
+        model = PersonCarouselQuote
+        fields = ["image", "quote_text", "author_name", "sort_order"]
+        widgets = {
+            "quote_text": TinyMCE(
+                attrs={"class": "quote-tinymce"},
+                mce_attrs=_ABOUT_US_TINYMCE,
+            ),
+            "author_name": forms.TextInput(attrs={"class": "mgr-input"}),
+            "sort_order": forms.HiddenInput(),
+        }
+
+
+PersonCarouselQuoteFormSet = forms.inlineformset_factory(
+    PersonCarouselBlock,
+    PersonCarouselQuote,
+    form=PersonCarouselQuoteForm,
+    extra=0,
+    can_delete=True,
+)
+
+
+class MembersInstitutionsBlockForm(forms.ModelForm):
+    class Meta:
+        model = MembersInstitutionsBlock
+        fields = [
+            "heading",
+            "bg_color",
+            "text_color",
+            "show_cta",
+            "cta_text",
+            "cta_url",
+        ]
+        widgets = {
+            "heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_text": forms.TextInput(attrs={"class": "mgr-input"}),
+            "cta_url": forms.TextInput(
+                attrs={
+                    "class": "mgr-input",
+                    "placeholder": "e.g. /contact/ or https://...",
+                }
+            ),
+        }
+
+
+class InstitutionEntryForm(forms.ModelForm):
+    class Meta:
+        model = InstitutionEntry
+        fields = ["name", "sort_order"]
+        widgets = {
+            "name": forms.TextInput(
+                attrs={"class": "mgr-input", "aria-label": "Institution name"}
+            ),
+            "sort_order": forms.HiddenInput(),
+        }
+
+
+InstitutionEntryFormSet = forms.inlineformset_factory(
+    MembersInstitutionsBlock,
+    InstitutionEntry,
+    form=InstitutionEntryForm,
     extra=0,
     can_delete=True,
 )
