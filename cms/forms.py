@@ -828,8 +828,7 @@ class OurMembersPageSettingsForm(forms.ModelForm):
         ]
         _color_attrs = {
             "type": "color",
-            "class": "mgr-input",
-            "style": "max-width:60px; padding:2px;",
+            "class": "mgr-color-input",
         }
         widgets = {
             "hero_heading": forms.TextInput(attrs={"class": "mgr-input"}),
