@@ -1,13 +1,13 @@
 {% if settings.show_members_grid %}
-<section class="members-grid-section" aria-labelledby="members-grid-heading">
+<section class="members-grid-section" style="background-color: {{ settings.members_grid_bg_color }}; color: {{ settings.members_grid_text_color }};" aria-labelledby="members-grid-heading">
     <div class="container">
-        <h2 id="members-grid-heading" class="members-grid-heading spectral-bold">{{ settings.members_heading }}</h2>
+        <h2 id="members-grid-heading" class="members-grid-heading spectral-bold" style="color: inherit;">{{ settings.members_heading }}</h2>
 
         {% if institutions %}
         <div class="members-grid">
             {% for institution in institutions %}
             <div class="members-grid-item">
-                <p class="members-grid-name spectral-bold">{{ institution.name }}</p>
+                <p class="members-grid-name spectral-bold" style="color: inherit;">{{ institution.name }}</p>
             </div>
             {% endfor %}
         </div>

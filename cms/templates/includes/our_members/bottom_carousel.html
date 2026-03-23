@@ -1,5 +1,5 @@
 {% if settings.show_bottom_carousel and bottom_quotes %}
-<section class="members-quote-section members-quote-bottom" aria-label="More member quotes">
+<section class="members-quote-section members-quote-bottom" style="background-color: {{ settings.bottom_carousel_bg_color }}; color: {{ settings.bottom_carousel_text_color }};" aria-label="More member quotes">
     <div class="members-glide-bottom">
         <div class="glide__track" data-glide-el="track">
             <ul class="glide__slides">
@@ -19,9 +19,9 @@
                                 {% endif %}
                             </div>
                             <div class="col-9">
-                                <div class="quote-content">
-                                    <div class="quote-text spectral-bold">{{ quote.quote_text|safe }}</div>
-                                    <p class="quote-author">{{ quote.author_name }}</p>
+                                <div class="quote-content" style="border-left-color: {{ settings.bottom_carousel_text_color }};">
+                                    <div class="quote-text spectral-bold" style="color: inherit;">{{ quote.quote_text|safe }}</div>
+                                    <p class="quote-author" style="color: inherit;">{{ quote.author_name }}</p>
                                 </div>
                             </div>
                         </div>

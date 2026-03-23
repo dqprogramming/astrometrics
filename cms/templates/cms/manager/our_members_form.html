@@ -48,6 +48,22 @@ Our Members
     .section-card.sortable-ghost {
         opacity: 0.4;
     }
+    .color-picker-row {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .color-picker-pair {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .color-picker-pair .mgr-label {
+        margin: 0;
+        font-size: 0.75rem;
+        white-space: nowrap;
+    }
 </style>
 {% endblock %}
 
@@ -71,6 +87,10 @@ Our Members
                 <label class="mgr-label" for="{{ form.hero_heading.id_for_label }}">Page Heading</label>
                 {{ form.hero_heading }}
                 {% if form.hero_heading.errors %}<div class="mgr-error">{{ form.hero_heading.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="color-picker-row">
+                <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.header_bg_color }}</span>
+                <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.header_text_color }}</span>
             </div>
         </div>
     </div>
@@ -124,6 +144,11 @@ Our Members
                         <div class="mgr-help">Bold, italic, underline, super/subscript</div>
                     </div>
                 </div>
+            </div>
+
+            <div class="color-picker-row" style="margin-top:1rem;">
+                <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.who_we_are_bg_color }}</span>
+                <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.who_we_are_text_color }}</span>
             </div>
 
             <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border, #dee2e6);">
@@ -200,6 +225,11 @@ Our Members
             <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="btn-add-top-quote">
                 <i class="bi bi-plus"></i> Add Quote
             </button>
+
+            <div class="color-picker-row" style="margin-top:1rem;">
+                <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.top_carousel_bg_color }}</span>
+                <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.top_carousel_text_color }}</span>
+            </div>
         </div>
     </div>
 
@@ -246,6 +276,11 @@ Our Members
                     <i class="bi bi-filetype-csv"></i> Import CSV
                 </button>
                 <input type="file" id="csv-file-input" accept=".csv,.txt" style="display:none;">
+            </div>
+
+            <div class="color-picker-row" style="margin-top:1rem;">
+                <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.members_grid_bg_color }}</span>
+                <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.members_grid_text_color }}</span>
             </div>
 
             <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border, #dee2e6);">
@@ -322,6 +357,11 @@ Our Members
             <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="btn-add-bottom-quote">
                 <i class="bi bi-plus"></i> Add Quote
             </button>
+
+            <div class="color-picker-row" style="margin-top:1rem;">
+                <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.bottom_carousel_bg_color }}</span>
+                <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.bottom_carousel_text_color }}</span>
+            </div>
         </div>
     </div>
 

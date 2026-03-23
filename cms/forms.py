@@ -814,8 +814,23 @@ class OurMembersPageSettingsForm(forms.ModelForm):
             "members_grid_cta_url",
             "show_members_grid_cta",
             "show_bottom_carousel",
+            "header_bg_color",
+            "header_text_color",
+            "who_we_are_bg_color",
+            "who_we_are_text_color",
+            "top_carousel_bg_color",
+            "top_carousel_text_color",
+            "members_grid_bg_color",
+            "members_grid_text_color",
+            "bottom_carousel_bg_color",
+            "bottom_carousel_text_color",
             "section_order",
         ]
+        _color_attrs = {
+            "type": "color",
+            "class": "mgr-input",
+            "style": "max-width:60px; padding:2px;",
+        }
         widgets = {
             "hero_heading": forms.TextInput(attrs={"class": "mgr-input"}),
             "section_heading": forms.TextInput(attrs={"class": "mgr-input"}),
@@ -844,6 +859,16 @@ class OurMembersPageSettingsForm(forms.ModelForm):
                     "placeholder": "e.g. /contact/ or https://...",
                 }
             ),
+            "header_bg_color": forms.TextInput(attrs=_color_attrs),
+            "header_text_color": forms.TextInput(attrs=_color_attrs),
+            "who_we_are_bg_color": forms.TextInput(attrs=_color_attrs),
+            "who_we_are_text_color": forms.TextInput(attrs=_color_attrs),
+            "top_carousel_bg_color": forms.TextInput(attrs=_color_attrs),
+            "top_carousel_text_color": forms.TextInput(attrs=_color_attrs),
+            "members_grid_bg_color": forms.TextInput(attrs=_color_attrs),
+            "members_grid_text_color": forms.TextInput(attrs=_color_attrs),
+            "bottom_carousel_bg_color": forms.TextInput(attrs=_color_attrs),
+            "bottom_carousel_text_color": forms.TextInput(attrs=_color_attrs),
             "section_order": forms.HiddenInput(),
         }
 

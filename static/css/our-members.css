@@ -76,7 +76,7 @@
 .members-circle-body p {
     font-size: 13px;
     line-height: 1.7;
-    color: #212129;
+    color: inherit;
     margin: 0;
 }
 
@@ -118,14 +118,7 @@
     background-color: #212129;
 }
 
-.members-quote-section.members-quote-bottom .quote-text,
-.members-quote-section.members-quote-bottom .quote-author {
-    color: #ffffff;
-}
-
-.members-quote-section.members-quote-bottom .quote-content {
-    border-left-color: #ffffff;
-}
+/* Bottom carousel colours are applied via inline styles from the CMS */
 
 .members-glide-top,
 .members-glide-bottom {
@@ -149,7 +142,7 @@
 
 .members-quote-section .quote-content {
     max-width: 600px;
-    border-left: 2px solid #212129;
+    border-left: 2px solid currentColor;
     padding-left: 20px;
 }
 
@@ -158,7 +151,7 @@
     line-height: 1.3;
     margin-bottom: 20px;
     font-weight: 600;
-    color: #212129;
+    color: inherit;
 }
 
 .members-quote-section .quote-text p {
@@ -170,7 +163,7 @@
 
 .members-quote-section .quote-author {
     font-style: italic;
-    color: #212129;
+    color: inherit;
 }
 
 .members-quote-section .glide__bullets {
@@ -184,7 +177,8 @@
 }
 
 .members-quote-section .glide__bullet {
-    background-color: rgba(33, 33, 41, 0.3);
+    background-color: currentColor;
+    opacity: 0.3;
     width: 10px;
     height: 10px;
     border-radius: 50%;
@@ -194,15 +188,7 @@
 }
 
 .members-quote-section .glide__bullet--active {
-    background-color: #212129;
-}
-
-.members-quote-bottom .glide__bullet {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-.members-quote-bottom .glide__bullet--active {
-    background-color: #ffffff;
+    opacity: 1;
 }
 
 /* --- Members Grid Section --- */
@@ -235,7 +221,7 @@
     font-family: 'Spectral', serif;
     font-weight: 700;
     font-size: 0.95rem;
-    color: #212129;
+    color: inherit;
     margin-bottom: 6px;
     line-height: 1.3;
 }

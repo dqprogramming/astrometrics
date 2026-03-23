@@ -1606,6 +1606,22 @@ class OurMembersPageSettings(models.Model):
     )
     show_members_grid_cta = models.BooleanField(default=True)
 
+    # Section colours
+    header_bg_color = models.CharField(max_length=7, default="#b8f0ed")
+    header_text_color = models.CharField(max_length=7, default="#212129")
+    who_we_are_bg_color = models.CharField(max_length=7, default="#ffffff")
+    who_we_are_text_color = models.CharField(max_length=7, default="#212129")
+    top_carousel_bg_color = models.CharField(max_length=7, default="#a5bfff")
+    top_carousel_text_color = models.CharField(max_length=7, default="#212129")
+    members_grid_bg_color = models.CharField(max_length=7, default="#f0f0f1")
+    members_grid_text_color = models.CharField(max_length=7, default="#212129")
+    bottom_carousel_bg_color = models.CharField(
+        max_length=7, default="#212129"
+    )
+    bottom_carousel_text_color = models.CharField(
+        max_length=7, default="#ffffff"
+    )
+
     # Section visibility toggles
     show_header = models.BooleanField(default=True)
     show_who_we_are = models.BooleanField(default=True)
