@@ -158,10 +158,9 @@ Our Members
             <i class="bi bi-plus"></i> Add Block
         </button>
         <ul class="dropdown-menu">
-            <li><button type="button" class="dropdown-item add-block-btn" data-block-type="members_header"><i class="bi bi-type-h1"></i> Members Header</button></li>
-            <li><button type="button" class="dropdown-item add-block-btn" data-block-type="who_we_are"><i class="bi bi-people-fill"></i> Who We Are</button></li>
-            <li><button type="button" class="dropdown-item add-block-btn" data-block-type="person_carousel"><i class="bi bi-chat-quote"></i> Person Carousel</button></li>
-            <li><button type="button" class="dropdown-item add-block-btn" data-block-type="members_institutions"><i class="bi bi-building"></i> Members Institutions</button></li>
+            {% for bt in available_block_types %}
+            <li><button type="button" class="dropdown-item add-block-btn" data-block-type="{{ bt.type }}"><i class="bi {{ bt.icon }}"></i> {{ bt.label }}</button></li>
+            {% endfor %}
         </ul>
     </div>
 

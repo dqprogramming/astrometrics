@@ -1250,6 +1250,28 @@ BLOCK_TYPE_LABELS = {
     "members_institutions": "Members Institutions",
 }
 
+BLOCK_TYPE_ICONS = {
+    "members_header": "bi-type-h1",
+    "who_we_are": "bi-people-fill",
+    "person_carousel": "bi-chat-quote",
+    "members_institutions": "bi-building",
+}
+
+
+def _available_block_types():
+    """Return block types sorted alphabetically by label."""
+    return sorted(
+        [
+            {
+                "type": key,
+                "label": BLOCK_TYPE_LABELS[key],
+                "icon": BLOCK_TYPE_ICONS.get(key, "bi-plus"),
+            }
+            for key in BLOCK_TYPE_LABELS
+        ],
+        key=lambda b: b["label"],
+    )
+
 
 def _build_block_data(placements, data=None, files=None):
     """Build a list of dicts with form, formset, placement, etc. for each block."""
@@ -1305,6 +1327,7 @@ class OurMembersPageSettingsUpdateView(StaffRequiredMixin, View):
             {
                 "block_data": block_data,
                 "default_page_config": json.dumps(DEFAULT_PAGE_CONFIG),
+                "available_block_types": _available_block_types(),
             },
         )
 
@@ -1396,6 +1419,7 @@ class OurMembersPageSettingsUpdateView(StaffRequiredMixin, View):
             {
                 "block_data": block_data,
                 "default_page_config": json.dumps(DEFAULT_PAGE_CONFIG),
+                "available_block_types": _available_block_types(),
                 "form_errors": form_errors,
             },
         )
