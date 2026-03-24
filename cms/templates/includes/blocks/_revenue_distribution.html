@@ -1,0 +1,54 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/our-model.css' %}">
+<section class="model-revenue" aria-labelledby="model-revenue-heading-{{ block.pk }}" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};">
+    <div class="container">
+        <div class="model-revenue-layout">
+            <div class="model-revenue-header">
+                <h2 id="model-revenue-heading-{{ block.pk }}" class="spectral-bold">{{ block.heading }}</h2>
+                <p>{{ block.description }}</p>
+            </div>
+
+            <div class="model-revenue-tables">
+                <!-- Column headers -->
+                <table class="model-packages-table model-packages-header-table">
+                    <caption class="sr-only">Revenue distribution package column headers</caption>
+                    <thead>
+                        <tr>
+                            {% for col in columns %}
+                            <th scope="col" style="width: {{ col_width_pct }}%">{{ col.heading }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                </table>
+
+                {% for table in tables %}
+                <!-- {{ table.title }} -->
+                <table class="model-packages-table" aria-labelledby="table-heading-{{ table.pk }}">
+                    <caption class="sr-only">{{ table.title }} — {{ table.description }}</caption>
+                    <thead>
+                        <tr class="package-header" style="background-color: {{ table.header_bg_colour }}; color: {{ table.text_colour }};">
+                            <th scope="colgroup" colspan="{{ num_columns }}" id="table-heading-{{ table.pk }}">
+                                <strong>{{ table.title }}</strong><br>
+                                {{ table.description }}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in table.rows.all %}
+                        <tr class="package-row" style="background-color: {{ table.row_bg_colour }}; color: {{ table.text_colour }};">
+                            {% for cell_value in row.ordered_cells %}
+                            <td style="width: {{ col_width_pct }}%">{{ cell_value }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endfor %}
+            </div>
+
+            <div class="model-revenue-callout">
+                <p class="spectral-bold">{{ block.callout }}</p>
+            </div>
+        </div>
+    </div>
+</section>

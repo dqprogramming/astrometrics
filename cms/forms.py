@@ -16,6 +16,7 @@ from .models import (
     FreeAccessJournalsBlock,
     HeaderSettings,
     InstitutionEntry,
+    JournalFundingBlock,
     LandingPageSettings,
     ManifestoHeroBlock,
     ManifestoOrganiseBlock,
@@ -23,6 +24,8 @@ from .models import (
     MembersHeaderBlock,
     MembersInstitutionsBlock,
     MenuItem,
+    OJCModelBlock,
+    OurModelHeroBlock,
     OurModelPackageTable,
     OurModelPageSettings,
     OurModelTableColumn,
@@ -30,9 +33,13 @@ from .models import (
     PersonCarouselBlock,
     PersonCarouselQuote,
     Post,
+    RevenueDistributionBlock,
+    RevenuePackageTable,
+    RevenueTableColumn,
     Snippet,
     TeamMember,
     TeamSection,
+    TextImageCTABlock,
     WhoWeAreBlock,
 )
 
@@ -1017,6 +1024,267 @@ class FreeAccessJournalsBlockForm(forms.ModelForm):
         ]
         widgets = {
             "heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_hover_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_hover_text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_text": forms.TextInput(attrs={"class": "mgr-input"}),
+            "cta_url": forms.TextInput(
+                attrs={
+                    "class": "mgr-input",
+                    "placeholder": "e.g. /contact/ or https://...",
+                }
+            ),
+        }
+
+
+class OurModelHeroBlockForm(forms.ModelForm):
+    class Meta:
+        model = OurModelHeroBlock
+        fields = [
+            "heading",
+            "hero_image",
+            "hero_image_alt",
+            "circle_color",
+            "bg_color",
+            "text_color",
+        ]
+        widgets = {
+            "heading": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 3}
+            ),
+            "hero_image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
+            "circle_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+        }
+
+
+class OJCModelBlockForm(forms.ModelForm):
+    class Meta:
+        model = OJCModelBlock
+        fields = [
+            "heading",
+            "body",
+            "collections_label",
+            "collection_1_number",
+            "collection_1_title",
+            "collection_1_link_text",
+            "collection_1_link_url",
+            "collection_2_number",
+            "collection_2_title",
+            "collection_2_link_text",
+            "collection_2_link_url",
+            "collection_3_number",
+            "collection_3_title",
+            "collection_3_link_text",
+            "collection_3_link_url",
+            "circle_bg_color",
+            "circle_text_color",
+            "bg_color",
+            "text_color",
+        ]
+        widgets = {
+            "heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "body": TinyMCE(
+                attrs={"aria-label": "OJC Model body"},
+                mce_attrs=_RESTRICTED_TINYMCE,
+            ),
+            "collections_label": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 2}
+            ),
+            "collection_1_number": forms.TextInput(
+                attrs={"class": "mgr-input", "style": "max-width:80px;"}
+            ),
+            "collection_1_title": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "collection_1_link_text": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "collection_1_link_url": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "collection_2_number": forms.TextInput(
+                attrs={"class": "mgr-input", "style": "max-width:80px;"}
+            ),
+            "collection_2_title": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "collection_2_link_text": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "collection_2_link_url": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "collection_3_number": forms.TextInput(
+                attrs={"class": "mgr-input", "style": "max-width:80px;"}
+            ),
+            "collection_3_title": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "collection_3_link_text": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "collection_3_link_url": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "circle_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "circle_text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+        }
+
+
+class JournalFundingBlockForm(forms.ModelForm):
+    class Meta:
+        model = JournalFundingBlock
+        fields = [
+            "heading",
+            "body",
+            "upper_image",
+            "upper_image_alt",
+            "lower_image",
+            "lower_image_alt",
+            "bg_color",
+            "text_color",
+        ]
+        widgets = {
+            "heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "body": TinyMCE(
+                attrs={"aria-label": "Funding body"},
+                mce_attrs=_RESTRICTED_TINYMCE,
+            ),
+            "upper_image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
+            "lower_image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+        }
+
+
+class RevenueDistributionBlockForm(forms.ModelForm):
+    class Meta:
+        model = RevenueDistributionBlock
+        fields = [
+            "heading",
+            "description",
+            "callout",
+            "bg_color",
+            "text_color",
+        ]
+        widgets = {
+            "heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "description": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 3}
+            ),
+            "callout": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 3}
+            ),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+        }
+
+
+class RevenueTableColumnForm(forms.ModelForm):
+    class Meta:
+        model = RevenueTableColumn
+        fields = ["heading", "sort_order"]
+        widgets = {
+            "heading": forms.TextInput(
+                attrs={"class": "mgr-input", "aria-label": "Column heading"}
+            ),
+            "sort_order": forms.HiddenInput(),
+        }
+
+
+RevenueTableColumnFormSet = forms.inlineformset_factory(
+    RevenueDistributionBlock,
+    RevenueTableColumn,
+    form=RevenueTableColumnForm,
+    extra=0,
+    can_delete=True,
+)
+
+
+class RevenuePackageTableForm(forms.ModelForm):
+    class Meta:
+        model = RevenuePackageTable
+        fields = [
+            "title",
+            "description",
+            "colour_preset",
+            "custom_header_bg",
+            "custom_row_bg",
+            "custom_text_colour",
+            "sort_order",
+        ]
+        widgets = {
+            "title": forms.TextInput(attrs={"class": "mgr-input"}),
+            "description": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 2}
+            ),
+            "colour_preset": forms.Select(attrs={"class": "mgr-input"}),
+            "custom_header_bg": forms.TextInput(
+                attrs={
+                    "type": "color",
+                    "class": "mgr-input",
+                    "style": "max-width:80px;",
+                }
+            ),
+            "custom_row_bg": forms.TextInput(
+                attrs={
+                    "type": "color",
+                    "class": "mgr-input",
+                    "style": "max-width:80px;",
+                }
+            ),
+            "custom_text_colour": forms.TextInput(
+                attrs={
+                    "type": "color",
+                    "class": "mgr-input",
+                    "style": "max-width:80px;",
+                }
+            ),
+            "sort_order": forms.HiddenInput(),
+        }
+
+
+RevenuePackageTableFormSet = forms.inlineformset_factory(
+    RevenueDistributionBlock,
+    RevenuePackageTable,
+    form=RevenuePackageTableForm,
+    extra=0,
+    can_delete=True,
+)
+
+
+class TextImageCTABlockForm(forms.ModelForm):
+    class Meta:
+        model = TextImageCTABlock
+        fields = [
+            "heading",
+            "body",
+            "image",
+            "image_alt",
+            "show_cta",
+            "cta_text",
+            "cta_url",
+            "cta_bg_color",
+            "cta_text_color",
+            "cta_hover_bg_color",
+            "cta_hover_text_color",
+            "bg_color",
+            "text_color",
+        ]
+        widgets = {
+            "heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "body": TinyMCE(
+                attrs={"aria-label": "CTA description"},
+                mce_attrs=_RESTRICTED_TINYMCE,
+            ),
             "image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
             "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
             "text_color": forms.TextInput(attrs=_COLOR_ATTRS),

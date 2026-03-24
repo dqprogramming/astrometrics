@@ -2037,6 +2037,471 @@ class InstitutionEntry(models.Model):
         return self.name
 
 
+@register
+class OurModelHeroBlock(BaseBlock):
+    """Hero block with full width image and concentric circles."""
+
+    BLOCK_TYPE = "our_model_hero"
+    LABEL = "Hero: Full Width Image and Concentric Circles"
+    ICON = "bi-type-h1"
+    FORM_CLASS = "cms.forms.OurModelHeroBlockForm"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_our_model_hero.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_our_model_hero.html"
+    COLOR_DEFAULTS = {
+        "circle_color": "#71f7f2",
+        "bg_color": "#ffffff",
+        "text_color": "#212129",
+    }
+
+    heading = models.TextField(
+        default=(
+            "By joining OJC, libraries support the long-term"
+            " sustainability of non-profit, university-based"
+            ' <span class="highlight">journals.</span>'
+        ),
+        help_text="Hero heading — may contain <span> for highlights",
+    )
+    hero_image = models.ImageField(
+        upload_to="blocks/our_model_hero/",
+        blank=True,
+        help_text="Hero image (970x400). Will be resized/cropped if needed.",
+    )
+    hero_image_alt = models.CharField(
+        max_length=255,
+        default="A researcher browsing books in a library",
+        help_text="Alt text for the hero image",
+    )
+    circle_color = models.CharField(max_length=7, default="#71f7f2")
+    bg_color = models.CharField(max_length=7, default="#ffffff")
+    text_color = models.CharField(max_length=7, default="#212129")
+
+    HERO_IMAGE_WIDTH = 970
+    HERO_IMAGE_HEIGHT = 400
+
+    def __str__(self):
+        return f"OurModelHeroBlock #{self.pk}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.hero_image:
+            self._resize_hero_image()
+
+    def _resize_hero_image(self):
+        from io import BytesIO
+
+        from django.core.files.base import ContentFile
+        from PIL import Image
+
+        try:
+            img = Image.open(self.hero_image)
+        except Exception:
+            return
+
+        w, h = img.size
+        tw, th = self.HERO_IMAGE_WIDTH, self.HERO_IMAGE_HEIGHT
+
+        if w == tw and h == th:
+            return
+
+        target_ratio = tw / th
+        current_ratio = w / h
+
+        if abs(current_ratio - target_ratio) < 0.01:
+            img = img.resize((tw, th), Image.LANCZOS)
+        elif current_ratio > target_ratio:
+            new_h = th
+            new_w = int(w * (th / h))
+            img = img.resize((new_w, new_h), Image.LANCZOS)
+            left = (new_w - tw) // 2
+            img = img.crop((left, 0, left + tw, th))
+        else:
+            new_w = tw
+            new_h = int(h * (tw / w))
+            img = img.resize((new_w, new_h), Image.LANCZOS)
+            top = (new_h - th) // 3
+            img = img.crop((0, top, tw, top + th))
+
+        buf = BytesIO()
+        fmt = (
+            "PNG" if self.hero_image.name.lower().endswith(".png") else "JPEG"
+        )
+        save_kwargs = {"format": fmt}
+        if fmt == "JPEG":
+            save_kwargs["quality"] = 90
+        img.save(buf, **save_kwargs)
+
+        name = self.hero_image.name
+        self.hero_image.save(name, ContentFile(buf.getvalue()), save=False)
+        type(self).objects.filter(pk=self.pk).update(
+            hero_image=self.hero_image
+        )
+
+
+@register
+class OJCModelBlock(BaseBlock):
+    """OJC Model section block with collection cards."""
+
+    BLOCK_TYPE = "ojc_model"
+    LABEL = "OJC Model"
+    ICON = "bi-diagram-3"
+    FORM_CLASS = "cms.forms.OJCModelBlockForm"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_ojc_model.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_ojc_model.html"
+    COLOR_DEFAULTS = {
+        "circle_bg_color": "#71f7f2",
+        "circle_text_color": "#212129",
+        "bg_color": "#e8e8e8",
+        "text_color": "#212129",
+    }
+
+    heading = models.CharField(max_length=255, default="The OJC Model.")
+    body = models.TextField(blank=True)
+    collections_label = models.TextField(blank=True)
+    collection_1_number = models.CharField(max_length=10, default="01")
+    collection_1_title = models.CharField(
+        max_length=255, default="The Multidisciplinary Collection"
+    )
+    collection_1_link_text = models.CharField(
+        max_length=100, default="BROWSE JOURNALS"
+    )
+    collection_1_link_url = models.CharField(max_length=500, blank=True)
+    collection_2_number = models.CharField(max_length=10, default="02")
+    collection_2_title = models.CharField(
+        max_length=255,
+        default="The Arts, Humanities & Social Sciences Collection.",
+    )
+    collection_2_link_text = models.CharField(
+        max_length=100, default="BROWSE JOURNALS"
+    )
+    collection_2_link_url = models.CharField(max_length=500, blank=True)
+    collection_3_number = models.CharField(max_length=10, default="03")
+    collection_3_title = models.CharField(
+        max_length=255,
+        default="The Science, Engineering, Technology & Maths Collection.",
+    )
+    collection_3_link_text = models.CharField(
+        max_length=100, default="BROWSE JOURNALS"
+    )
+    collection_3_link_url = models.CharField(max_length=500, blank=True)
+    circle_bg_color = models.CharField(max_length=7, default="#71f7f2")
+    circle_text_color = models.CharField(max_length=7, default="#212129")
+    bg_color = models.CharField(max_length=7, default="#e8e8e8")
+    text_color = models.CharField(max_length=7, default="#212129")
+
+    def __str__(self):
+        return f"OJCModelBlock #{self.pk}"
+
+    def save(self, *args, **kwargs):
+        self.body = sanitize_html(self.body)
+        super().save(*args, **kwargs)
+
+
+@register
+class JournalFundingBlock(BaseBlock):
+    """Journal Funding section block."""
+
+    BLOCK_TYPE = "journal_funding"
+    LABEL = "Journal Funding"
+    ICON = "bi-currency-pound"
+    FORM_CLASS = "cms.forms.JournalFundingBlockForm"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_journal_funding.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_journal_funding.html"
+    COLOR_DEFAULTS = {
+        "bg_color": "#ffffff",
+        "text_color": "#212129",
+    }
+
+    heading = models.CharField(max_length=255, default="Journal Funding.")
+    body = models.TextField(blank=True)
+    upper_image = models.ImageField(
+        upload_to="blocks/journal_funding/",
+        blank=True,
+    )
+    upper_image_alt = models.CharField(
+        max_length=255,
+        default="Academic collaboration in a meeting room",
+    )
+    lower_image = models.ImageField(
+        upload_to="blocks/journal_funding/",
+        blank=True,
+    )
+    lower_image_alt = models.CharField(
+        max_length=255,
+        default="Open access academic journals supported by OJC",
+    )
+    bg_color = models.CharField(max_length=7, default="#ffffff")
+    text_color = models.CharField(max_length=7, default="#212129")
+
+    def __str__(self):
+        return f"JournalFundingBlock #{self.pk}"
+
+    def save(self, *args, **kwargs):
+        self.body = sanitize_html(self.body)
+        super().save(*args, **kwargs)
+
+
+@register
+class RevenueDistributionBlock(BaseBlock):
+    """Revenue distribution section with dynamic tables."""
+
+    BLOCK_TYPE = "revenue_distribution"
+    LABEL = "Journal Funding and Revenue Distribution"
+    ICON = "bi-table"
+    FORM_CLASS = "cms.forms.RevenueDistributionBlockForm"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_revenue_distribution.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_revenue_distribution.html"
+    FORMSET_CLASS = "cms.forms.RevenuePackageTableFormSet"
+    COLOR_DEFAULTS = {
+        "bg_color": "#e8e8e8",
+        "text_color": "#212129",
+    }
+
+    heading = models.CharField(
+        max_length=255,
+        default="Journal Funding &\nRevenue Distribution.",
+    )
+    description = models.TextField(blank=True)
+    callout = models.TextField(blank=True)
+    bg_color = models.CharField(max_length=7, default="#e8e8e8")
+    text_color = models.CharField(max_length=7, default="#212129")
+
+    def __str__(self):
+        return f"RevenueDistributionBlock #{self.pk}"
+
+    def get_public_context(self):
+        columns = list(self.table_columns.order_by("sort_order"))
+        tables = list(
+            self.package_tables.prefetch_related("rows__cells").order_by(
+                "sort_order"
+            )
+        )
+        num_columns = len(columns)
+        col_width_pct = (100 // num_columns) if num_columns else 25
+
+        for table in tables:
+            for row in table.rows.all():
+                cells_by_col = {
+                    cell.column_id: cell.value for cell in row.cells.all()
+                }
+                row.ordered_cells = [
+                    cells_by_col.get(col.pk, "") for col in columns
+                ]
+
+        return {
+            "columns": columns,
+            "tables": tables,
+            "num_columns": num_columns,
+            "col_width_pct": col_width_pct,
+        }
+
+    def create_children_from_config(self, children_config):
+        # Create columns
+        column_headings = children_config.get("columns", [])
+        columns = []
+        for i, heading in enumerate(column_headings):
+            col = RevenueTableColumn.objects.create(
+                block=self, heading=heading, sort_order=i
+            )
+            columns.append(col)
+
+        # Create tables with rows and cells
+        for table_data in children_config.get("tables", []):
+            rows_data = table_data.get("rows", [])
+            table = RevenuePackageTable.objects.create(
+                block=self,
+                title=table_data.get("title", ""),
+                description=table_data.get("description", ""),
+                colour_preset=table_data.get("colour_preset", "pink"),
+                sort_order=table_data.get("sort_order", 0),
+            )
+            for row_idx, row_values in enumerate(rows_data):
+                row = RevenuePackageRow.objects.create(
+                    table=table, sort_order=row_idx
+                )
+                for col_idx, cell_value in enumerate(row_values):
+                    if col_idx < len(columns):
+                        RevenuePackageCell.objects.create(
+                            row=row,
+                            column=columns[col_idx],
+                            value=cell_value,
+                        )
+
+
+class RevenueTableColumn(models.Model):
+    """Column header for revenue distribution tables."""
+
+    block = models.ForeignKey(
+        RevenueDistributionBlock,
+        on_delete=models.CASCADE,
+        related_name="table_columns",
+    )
+    heading = models.CharField(max_length=100)
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return self.heading
+
+
+class RevenuePackageTable(models.Model):
+    """A colour-coded package table in a revenue distribution block."""
+
+    COLOUR_PINK = "pink"
+    COLOUR_GREEN = "green"
+    COLOUR_BLUE = "blue"
+    COLOUR_CUSTOM = "custom"
+    COLOUR_CHOICES = [
+        (COLOUR_PINK, "Pink"),
+        (COLOUR_GREEN, "Green"),
+        (COLOUR_BLUE, "Blue"),
+        (COLOUR_CUSTOM, "Custom"),
+    ]
+    _COLOUR_MAP = {
+        COLOUR_PINK: {"header": "#ffd8fd", "rows": "#ffecfe"},
+        COLOUR_GREEN: {"header": "#8ee8c8", "rows": "#d4f5e8"},
+        COLOUR_BLUE: {"header": "#a5bfff", "rows": "#dce6ff"},
+    }
+
+    block = models.ForeignKey(
+        RevenueDistributionBlock,
+        on_delete=models.CASCADE,
+        related_name="package_tables",
+    )
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    colour_preset = models.CharField(
+        max_length=10, choices=COLOUR_CHOICES, default=COLOUR_PINK
+    )
+    custom_header_bg = models.CharField(max_length=7, blank=True)
+    custom_row_bg = models.CharField(max_length=7, blank=True)
+    custom_text_colour = models.CharField(max_length=7, blank=True)
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def header_bg_colour(self):
+        if self.colour_preset == self.COLOUR_CUSTOM:
+            return self.custom_header_bg
+        return self._COLOUR_MAP.get(self.colour_preset, {}).get(
+            "header", "#ffd8fd"
+        )
+
+    @property
+    def row_bg_colour(self):
+        if self.colour_preset == self.COLOUR_CUSTOM:
+            return self.custom_row_bg
+        return self._COLOUR_MAP.get(self.colour_preset, {}).get(
+            "rows", "#ffecfe"
+        )
+
+    @property
+    def text_colour(self):
+        if self.colour_preset == self.COLOUR_CUSTOM:
+            return self.custom_text_colour or "#212129"
+        return "#212129"
+
+
+class RevenuePackageRow(models.Model):
+    """A row in a revenue distribution package table."""
+
+    table = models.ForeignKey(
+        RevenuePackageTable,
+        on_delete=models.CASCADE,
+        related_name="rows",
+    )
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return f"Row {self.sort_order} of {self.table}"
+
+    def get_cells_by_column(self):
+        """Return a dict of {column_id: cell_value}."""
+        return {cell.column_id: cell.value for cell in self.cells.all()}
+
+
+class RevenuePackageCell(models.Model):
+    """A single cell in a revenue distribution table."""
+
+    row = models.ForeignKey(
+        RevenuePackageRow,
+        on_delete=models.CASCADE,
+        related_name="cells",
+    )
+    column = models.ForeignKey(
+        RevenueTableColumn,
+        on_delete=models.CASCADE,
+    )
+    value = models.CharField(max_length=255, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["row", "column"],
+                name="unique_revenue_cell_per_row_column",
+            )
+        ]
+
+    def __str__(self):
+        return self.value
+
+
+@register
+class TextImageCTABlock(BaseBlock):
+    """Text, image and call to action block."""
+
+    BLOCK_TYPE = "text_image_cta"
+    LABEL = "Text, Image and Call to Action"
+    ICON = "bi-layout-text-window"
+    FORM_CLASS = "cms.forms.TextImageCTABlockForm"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_text_image_cta.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_text_image_cta.html"
+    COLOR_DEFAULTS = {
+        "cta_bg_color": "#000000",
+        "cta_text_color": "#ffffff",
+        "cta_hover_bg_color": "#000000",
+        "cta_hover_text_color": "#ffffff",
+        "bg_color": "#ffffff",
+        "text_color": "#212129",
+    }
+
+    heading = models.CharField(max_length=255, default="Title here.")
+    body = models.TextField(blank=True)
+    image = models.ImageField(
+        upload_to="blocks/text_image_cta/",
+        blank=True,
+    )
+    image_alt = models.CharField(
+        max_length=255,
+        default="A collection of academic journal covers from OJC publishers",
+    )
+    show_cta = models.BooleanField(default=True)
+    cta_text = models.CharField(max_length=100, default="Join the movement")
+    cta_url = models.CharField(max_length=500, blank=True)
+    cta_bg_color = models.CharField(max_length=7, default="#000000")
+    cta_text_color = models.CharField(max_length=7, default="#ffffff")
+    cta_hover_bg_color = models.CharField(max_length=7, default="#000000")
+    cta_hover_text_color = models.CharField(max_length=7, default="#ffffff")
+    bg_color = models.CharField(max_length=7, default="#ffffff")
+    text_color = models.CharField(max_length=7, default="#212129")
+
+    def __str__(self):
+        return f"TextImageCTABlock #{self.pk}"
+
+    def save(self, *args, **kwargs):
+        self.body = sanitize_html(self.body)
+        super().save(*args, **kwargs)
+
+
 class PageBlock(models.Model):
     """Junction model linking a concrete block to any singleton page."""
 

@@ -82,5 +82,10 @@ class BlockRegistryTests(TestCase):
                 "manifesto_text",
                 "manifesto_organise",
                 "free_access_journals",
+                "our_model_hero",
+                "ojc_model",
+                "journal_funding",
+                "revenue_distribution",
+                "text_image_cta",
             },
         )

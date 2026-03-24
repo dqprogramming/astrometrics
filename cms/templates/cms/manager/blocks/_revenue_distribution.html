@@ -1,0 +1,47 @@
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.heading.id_for_label }}">Heading</label>
+    {{ form.heading }}
+    {% if form.heading.errors %}<div class="mgr-error">{{ form.heading.errors.0 }}</div>{% endif %}
+</div>
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.description.id_for_label }}">Description</label>
+    {{ form.description }}
+    {% if form.description.errors %}<div class="mgr-error">{{ form.description.errors.0 }}</div>{% endif %}
+</div>
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.callout.id_for_label }}">Callout</label>
+    {{ form.callout }}
+    {% if form.callout.errors %}<div class="mgr-error">{{ form.callout.errors.0 }}</div>{% endif %}
+</div>
+<div class="color-picker-row" style="margin-top:1rem;">
+    <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.bg_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.text_color }}</span>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
+</div>
+
+{% if child_formset %}
+<div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border, #dee2e6);">
+    <span style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;"><i class="bi bi-table"></i> Package Tables</span>
+    <p style="font-size:0.8rem; color:var(--muted); margin-top:0.25rem;">Table columns and row data are managed via the dedicated Our Model page editor.</p>
+    {{ child_formset.management_form }}
+    {% for tform in child_formset %}
+    <div class="mgr-child-item" style="margin-top:0.75rem; padding:0.75rem; border:1px solid var(--border, #dee2e6); border-radius:4px;">
+        {% for hidden in tform.hidden_fields %}{{ hidden }}{% endfor %}
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+            <div class="mgr-field">
+                <label class="mgr-label">Title</label>
+                {{ tform.title }}
+            </div>
+            <div class="mgr-field">
+                <label class="mgr-label">Colour</label>
+                {{ tform.colour_preset }}
+            </div>
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label">Description</label>
+            {{ tform.description }}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}

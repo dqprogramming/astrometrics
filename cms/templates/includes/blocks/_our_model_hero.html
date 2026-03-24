@@ -1,0 +1,18 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/our-model.css' %}">
+<section class="model-hero" aria-labelledby="model-hero-heading-{{ block.pk }}" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};">
+    <svg class="model-hero-circles" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" overflow="visible">
+        <circle cx="500" cy="500" r="200" fill="none" stroke="{{ block.circle_color }}" stroke-width="90"/>
+        <circle cx="500" cy="500" r="370" fill="none" stroke="{{ block.circle_color }}" stroke-width="90"/>
+    </svg>
+    <div class="container">
+        <h1 id="model-hero-heading-{{ block.pk }}" class="model-hero-heading spectral-bold">
+            {{ block.heading|safe }}
+        </h1>
+        <div class="model-hero-image-wrapper">
+            <img src="{% if block.hero_image %}{{ block.hero_image.url }}{% else %}{% static 'img/our-model-hero.jpg' %}{% endif %}"
+                 alt="{{ block.hero_image_alt }}"
+                 class="model-hero-image">
+        </div>
+    </div>
+</section>
