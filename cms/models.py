@@ -5,11 +5,18 @@ CMS models for translatable rich-text content pages and snippets.
 import uuid
 
 import bleach
+from django.contrib.contenttypes.fields import (
+    GenericForeignKey,
+    GenericRelation,
+)
+from django.contrib.contenttypes.models import ContentType
 from django.core.cache import cache
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
+
+from cms.block_registry import get_block_class, get_label, register
 
 ALLOWED_TAGS = [
     "a",
@@ -1526,12 +1533,17 @@ class AboutUsQuote(models.Model):
 class OurMembersPageSettings(models.Model):
     """Singleton shell for the Our Members page.
 
-    All content now lives in block models linked via MembersPageBlock.
+    All content now lives in block models linked via PageBlock.
     Only one row should exist — use OurMembersPageSettings.load() to
     fetch-or-create it.
     """
 
     updated_at = models.DateTimeField(auto_now=True)
+    blocks = GenericRelation(
+        "PageBlock",
+        content_type_field="content_type",
+        object_id_field="page_id",
+    )
 
     class Meta:
         verbose_name = _("Our Members Page Settings")
@@ -1560,20 +1572,150 @@ class OurMembersPageSettings(models.Model):
     def delete(self, *args, **kwargs):
         pass
 
+    LOREM_BODY = (
+        "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+        "sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna "
+        "aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud "
+        "exerci tation ullamcorper suscipit.</p>"
+    )
 
-# ── Block System for Our Members ─────────────────────────────────────────────
+    DEFAULT_PAGE_CONFIG = [
+        {
+            "block_type": "members_header",
+            "is_visible": True,
+            "defaults": {"heading": "Our members."},
+        },
+        {
+            "block_type": "who_we_are",
+            "is_visible": True,
+            "defaults": {
+                "section_heading": "Who we are.",
+                "circle_1_title": "We are Academics.",
+                "circle_1_body": LOREM_BODY,
+                "circle_2_title": "We are Librarians.",
+                "circle_2_body": LOREM_BODY,
+                "circle_3_title": "We are Publishers.",
+                "circle_3_body": LOREM_BODY,
+                "cta_text": "Join Us",
+                "cta_url": "#",
+                "show_cta": True,
+            },
+        },
+        {
+            "block_type": "person_carousel",
+            "is_visible": True,
+            "defaults": {
+                "bg_color": "#a5bfff",
+                "text_color": "#212129",
+                "bullet_color": "#999999",
+                "bullet_active_color": "#000000",
+            },
+            "children": [
+                {
+                    "quote_text": (
+                        "<p>Quote from a member that's already onboard. Lorem "
+                        "ipsum dolor sit amet, consectetuer adipis cing elit, "
+                        "sed diam nonummy nibh euismod tincidunt ut laoreet.</p>"
+                    ),
+                    "author_name": "Name Here, Company",
+                    "sort_order": 0,
+                },
+                {
+                    "quote_text": (
+                        "<p>Another testimonial from a valued member of the "
+                        "collective. Their experience highlights the benefits "
+                        "of open access publishing.</p>"
+                    ),
+                    "author_name": "Jane Smith, University Press",
+                    "sort_order": 1,
+                },
+            ],
+        },
+        {
+            "block_type": "members_institutions",
+            "is_visible": True,
+            "defaults": {
+                "heading": "OJC Members.",
+                "cta_text": "Join Us",
+                "cta_url": "#",
+                "show_cta": True,
+            },
+        },
+        {
+            "block_type": "person_carousel",
+            "is_visible": True,
+            "defaults": {
+                "bg_color": "#212129",
+                "text_color": "#ffffff",
+                "bullet_color": "#ffffff",
+                "bullet_active_color": "#999999",
+            },
+            "children": [
+                {
+                    "quote_text": (
+                        "<p>Quote from a member that's already onboard. Lorem "
+                        "ipsum dolor sit amet, consectetuer adipis cing elit, "
+                        "sed diam nonummy nibh euismod tincidunt ut laoreet.</p>"
+                    ),
+                    "author_name": "Name Here, Company",
+                    "sort_order": 0,
+                },
+                {
+                    "quote_text": (
+                        "<p>Open access is the future of academic publishing "
+                        "and the collective model ensures sustainability for "
+                        "all participants.</p>"
+                    ),
+                    "author_name": "Dr. Sarah Williams, Oxford Press",
+                    "sort_order": 1,
+                },
+            ],
+        },
+    ]
 
-BLOCK_TYPE_CHOICES = [
-    ("members_header", "Members Header"),
-    ("who_we_are", "Who We Are"),
-    ("person_carousel", "Person Carousel"),
-    ("members_institutions", "Members Institutions"),
-]
+
+# Module-level aliases for backward compatibility (old migrations reference these)
+LOREM_BODY = OurMembersPageSettings.LOREM_BODY
+DEFAULT_PAGE_CONFIG = OurMembersPageSettings.DEFAULT_PAGE_CONFIG
 
 
-class MembersHeaderBlock(models.Model):
+# ── Block System ─────────────────────────────────────────────────────────────
+
+
+class BaseBlock(models.Model):
+    """Abstract base for all CMS blocks."""
+
+    BLOCK_TYPE = ""
+    LABEL = ""
+    ICON = ""
+    FORM_CLASS = ""
+    MANAGER_TEMPLATE = ""
+    PUBLIC_TEMPLATE = ""
+    FORMSET_CLASS = ""
+    COLOR_DEFAULTS = {}
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+    def get_public_context(self):
+        return {}
+
+    def create_children_from_config(self, children_config):
+        pass
+
+
+@register
+class MembersHeaderBlock(BaseBlock):
     """Header block for the Our Members page."""
 
+    BLOCK_TYPE = "members_header"
+    LABEL = "Members Header"
+    ICON = "bi-type-h1"
+    FORM_CLASS = "cms.forms.MembersHeaderBlockForm"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_members_header.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_members_header.html"
     COLOR_DEFAULTS = {
         "bg_color": "#b8f0ed",
         "text_color": "#212129",
@@ -1586,15 +1728,21 @@ class MembersHeaderBlock(models.Model):
     )
     bg_color = models.CharField(max_length=7, default="#b8f0ed")
     text_color = models.CharField(max_length=7, default="#212129")
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"MembersHeaderBlock #{self.pk}"
 
 
-class WhoWeAreBlock(models.Model):
+@register
+class WhoWeAreBlock(BaseBlock):
     """Who We Are block for the Our Members page."""
 
+    BLOCK_TYPE = "who_we_are"
+    LABEL = "Who We Are"
+    ICON = "bi-people-fill"
+    FORM_CLASS = "cms.forms.WhoWeAreBlockForm"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_who_we_are.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_who_we_are.html"
     COLOR_DEFAULTS = {
         "bg_color": "#ffffff",
         "text_color": "#212129",
@@ -1622,7 +1770,6 @@ class WhoWeAreBlock(models.Model):
     show_cta = models.BooleanField(default=True)
     cta_text = models.CharField(max_length=200, default="Join Us")
     cta_url = models.CharField(max_length=500, default="#", blank=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"WhoWeAreBlock #{self.pk}"
@@ -1634,9 +1781,17 @@ class WhoWeAreBlock(models.Model):
         super().save(*args, **kwargs)
 
 
-class PersonCarouselBlock(models.Model):
+@register
+class PersonCarouselBlock(BaseBlock):
     """Person carousel block for the Our Members page."""
 
+    BLOCK_TYPE = "person_carousel"
+    LABEL = "Person Carousel"
+    ICON = "bi-chat-quote"
+    FORM_CLASS = "cms.forms.PersonCarouselBlockForm"
+    FORMSET_CLASS = "cms.forms.PersonCarouselQuoteFormSet"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_person_carousel.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_person_carousel.html"
     COLOR_DEFAULTS = {
         "bg_color": "#a5bfff",
         "text_color": "#212129",
@@ -1656,10 +1811,16 @@ class PersonCarouselBlock(models.Model):
         default="#000000",
         help_text="Carousel dot colour (selected)",
     )
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"PersonCarouselBlock #{self.pk}"
+
+    def get_public_context(self):
+        return {"quotes": self.quotes.all()}
+
+    def create_children_from_config(self, children_config):
+        for child in children_config:
+            PersonCarouselQuote.objects.create(block=self, **child)
 
 
 class PersonCarouselQuote(models.Model):
@@ -1690,9 +1851,17 @@ class PersonCarouselQuote(models.Model):
         super().save(*args, **kwargs)
 
 
-class MembersInstitutionsBlock(models.Model):
+@register
+class MembersInstitutionsBlock(BaseBlock):
     """Members institutions grid block for the Our Members page."""
 
+    BLOCK_TYPE = "members_institutions"
+    LABEL = "Members Institutions"
+    ICON = "bi-building"
+    FORM_CLASS = "cms.forms.MembersInstitutionsBlockForm"
+    FORMSET_CLASS = "cms.forms.InstitutionEntryFormSet"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_members_institutions.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_members_institutions.html"
     COLOR_DEFAULTS = {
         "bg_color": "#f0f0f1",
         "text_color": "#212129",
@@ -1708,10 +1877,16 @@ class MembersInstitutionsBlock(models.Model):
     show_cta = models.BooleanField(default=True)
     cta_text = models.CharField(max_length=200, default="Join Us")
     cta_url = models.CharField(max_length=500, default="#", blank=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"MembersInstitutionsBlock #{self.pk}"
+
+    def get_public_context(self):
+        return {"institutions": self.institutions.all()}
+
+    def create_children_from_config(self, children_config):
+        for child in children_config:
+            InstitutionEntry.objects.create(block=self, **child)
 
 
 class InstitutionEntry(models.Model):
@@ -1732,37 +1907,34 @@ class InstitutionEntry(models.Model):
         return self.name
 
 
-BLOCK_TYPE_MODEL_MAP = {
-    "members_header": MembersHeaderBlock,
-    "who_we_are": WhoWeAreBlock,
-    "person_carousel": PersonCarouselBlock,
-    "members_institutions": MembersInstitutionsBlock,
-}
+class PageBlock(models.Model):
+    """Junction model linking a concrete block to any singleton page."""
 
-
-class MembersPageBlock(models.Model):
-    """Junction model linking a concrete block to the Our Members page."""
-
-    page = models.ForeignKey(
-        OurMembersPageSettings,
-        on_delete=models.CASCADE,
-        related_name="blocks",
+    content_type = models.ForeignKey(
+        ContentType, on_delete=models.CASCADE, null=True
     )
-    block_type = models.CharField(max_length=30, choices=BLOCK_TYPE_CHOICES)
+    page_id = models.PositiveIntegerField()
+    page = GenericForeignKey("content_type", "page_id")
+    block_type = models.CharField(max_length=30)
     object_id = models.PositiveIntegerField()
     sort_order = models.IntegerField(default=0)
     is_visible = models.BooleanField(default=True)
 
     class Meta:
         ordering = ["sort_order"]
+        indexes = [models.Index(fields=["content_type", "page_id"])]
 
     def __str__(self):
-        return f"{self.get_block_type_display()} (order={self.sort_order})"
+        try:
+            label = get_label(self.block_type)
+        except KeyError:
+            label = self.block_type
+        return f"{label} (order={self.sort_order})"
 
     def get_block(self):
-        """Resolve and return the concrete block instance."""
-        model_cls = BLOCK_TYPE_MODEL_MAP.get(self.block_type)
-        if model_cls is None:
+        try:
+            model_cls = get_block_class(self.block_type)
+        except KeyError:
             return None
         try:
             return model_cls.objects.get(pk=self.object_id)
@@ -1770,103 +1942,5 @@ class MembersPageBlock(models.Model):
             return None
 
 
-LOREM_BODY = (
-    "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-    "sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna "
-    "aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud "
-    "exerci tation ullamcorper suscipit.</p>"
-)
-
-DEFAULT_PAGE_CONFIG = [
-    {
-        "block_type": "members_header",
-        "is_visible": True,
-        "defaults": {"heading": "Our members."},
-    },
-    {
-        "block_type": "who_we_are",
-        "is_visible": True,
-        "defaults": {
-            "section_heading": "Who we are.",
-            "circle_1_title": "We are Academics.",
-            "circle_1_body": LOREM_BODY,
-            "circle_2_title": "We are Librarians.",
-            "circle_2_body": LOREM_BODY,
-            "circle_3_title": "We are Publishers.",
-            "circle_3_body": LOREM_BODY,
-            "cta_text": "Join Us",
-            "cta_url": "#",
-            "show_cta": True,
-        },
-    },
-    {
-        "block_type": "person_carousel",
-        "is_visible": True,
-        "defaults": {
-            "bg_color": "#a5bfff",
-            "text_color": "#212129",
-            "bullet_color": "#999999",
-            "bullet_active_color": "#000000",
-        },
-        "children": [
-            {
-                "quote_text": (
-                    "<p>Quote from a member that's already onboard. Lorem "
-                    "ipsum dolor sit amet, consectetuer adipis cing elit, "
-                    "sed diam nonummy nibh euismod tincidunt ut laoreet.</p>"
-                ),
-                "author_name": "Name Here, Company",
-                "sort_order": 0,
-            },
-            {
-                "quote_text": (
-                    "<p>Another testimonial from a valued member of the "
-                    "collective. Their experience highlights the benefits "
-                    "of open access publishing.</p>"
-                ),
-                "author_name": "Jane Smith, University Press",
-                "sort_order": 1,
-            },
-        ],
-    },
-    {
-        "block_type": "members_institutions",
-        "is_visible": True,
-        "defaults": {
-            "heading": "OJC Members.",
-            "cta_text": "Join Us",
-            "cta_url": "#",
-            "show_cta": True,
-        },
-    },
-    {
-        "block_type": "person_carousel",
-        "is_visible": True,
-        "defaults": {
-            "bg_color": "#212129",
-            "text_color": "#ffffff",
-            "bullet_color": "#ffffff",
-            "bullet_active_color": "#999999",
-        },
-        "children": [
-            {
-                "quote_text": (
-                    "<p>Quote from a member that's already onboard. Lorem "
-                    "ipsum dolor sit amet, consectetuer adipis cing elit, "
-                    "sed diam nonummy nibh euismod tincidunt ut laoreet.</p>"
-                ),
-                "author_name": "Name Here, Company",
-                "sort_order": 0,
-            },
-            {
-                "quote_text": (
-                    "<p>Open access is the future of academic publishing "
-                    "and the collective model ensures sustainability for "
-                    "all participants.</p>"
-                ),
-                "author_name": "Dr. Sarah Williams, Oxford Press",
-                "sort_order": 1,
-            },
-        ],
-    },
-]
+# Backward-compatible alias (old migrations reference MembersPageBlock)
+MembersPageBlock = PageBlock

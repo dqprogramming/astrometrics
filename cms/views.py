@@ -177,22 +177,27 @@ def about_us_view(request):
     )
 
 
-def our_members_view(request):
-    page = OurMembersPageSettings.load()
-    placements = page.blocks.order_by("sort_order")
+def _build_public_blocks(page):
     blocks = []
-    for p in placements:
+    for p in page.blocks.order_by("sort_order"):
         if not p.is_visible:
             continue
         block = p.get_block()
         if not block:
             continue
-        bd = {"type": p.block_type, "block": block}
-        if p.block_type == "person_carousel":
-            bd["quotes"] = block.quotes.all()
-        elif p.block_type == "members_institutions":
-            bd["institutions"] = block.institutions.all()
+        bd = {
+            "type": p.block_type,
+            "block": block,
+            "template": block.PUBLIC_TEMPLATE,
+        }
+        bd.update(block.get_public_context())
         blocks.append(bd)
+    return blocks
+
+
+def our_members_view(request):
+    page = OurMembersPageSettings.load()
+    blocks = _build_public_blocks(page)
     return render(request, "our_members.html", {"blocks": blocks})
 
 

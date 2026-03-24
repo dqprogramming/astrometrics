@@ -5,19 +5,19 @@ Tests for Our Members block system: models, public view, manager views, CSV pars
 import json
 
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
+from cms.block_registry import get_block_class
 from cms.models import (
-    BLOCK_TYPE_MODEL_MAP,
-    DEFAULT_PAGE_CONFIG,
     InstitutionEntry,
     MembersHeaderBlock,
     MembersInstitutionsBlock,
-    MembersPageBlock,
     OurMembersPageSettings,
+    PageBlock,
     PersonCarouselBlock,
     PersonCarouselQuote,
     WhoWeAreBlock,
@@ -32,21 +32,21 @@ def _create_default_blocks(page=None):
     """Create the default set of blocks for a page, clearing any existing."""
     if page is None:
         page = OurMembersPageSettings.load()
+    ct = ContentType.objects.get_for_model(page)
     # Clear existing blocks from data migration
     for p in page.blocks.all():
         block = p.get_block()
         if block:
             block.delete()
         p.delete()
-    for idx, cfg in enumerate(DEFAULT_PAGE_CONFIG):
-        model_cls = BLOCK_TYPE_MODEL_MAP[cfg["block_type"]]
+    for idx, cfg in enumerate(OurMembersPageSettings.DEFAULT_PAGE_CONFIG):
+        model_cls = get_block_class(cfg["block_type"])
         block = model_cls.objects.create(**cfg.get("defaults", {}))
         if cfg.get("children"):
-            if cfg["block_type"] == "person_carousel":
-                for child in cfg["children"]:
-                    PersonCarouselQuote.objects.create(block=block, **child)
-        MembersPageBlock.objects.create(
-            page=page,
+            block.create_children_from_config(cfg["children"])
+        PageBlock.objects.create(
+            content_type=ct,
+            page_id=page.pk,
             block_type=cfg["block_type"],
             object_id=block.pk,
             sort_order=idx,
@@ -147,15 +147,17 @@ class MembersInstitutionsBlockTests(TestCase):
 
 
 @override_settings(CACHES=CACHE_OVERRIDE)
-class MembersPageBlockTests(TestCase):
+class PageBlockTests(TestCase):
     def setUp(self):
         cache.clear()
         self.page = OurMembersPageSettings.load()
+        self.ct = ContentType.objects.get_for_model(self.page)
 
     def test_get_block_returns_instance(self):
         block = MembersHeaderBlock.objects.create(heading="Test")
-        placement = MembersPageBlock.objects.create(
-            page=self.page,
+        placement = PageBlock.objects.create(
+            content_type=self.ct,
+            page_id=self.page.pk,
             block_type="members_header",
             object_id=block.pk,
         )
@@ -164,8 +166,9 @@ class MembersPageBlockTests(TestCase):
         self.assertEqual(result.heading, "Test")
 
     def test_get_block_returns_none_for_missing(self):
-        placement = MembersPageBlock.objects.create(
-            page=self.page,
+        placement = PageBlock.objects.create(
+            content_type=self.ct,
+            page_id=self.page.pk,
             block_type="members_header",
             object_id=99999,
         )
@@ -175,14 +178,16 @@ class MembersPageBlockTests(TestCase):
         self.page.blocks.all().delete()
         b1 = MembersHeaderBlock.objects.create()
         b2 = WhoWeAreBlock.objects.create()
-        MembersPageBlock.objects.create(
-            page=self.page,
+        PageBlock.objects.create(
+            content_type=self.ct,
+            page_id=self.page.pk,
             block_type="members_header",
             object_id=b1.pk,
             sort_order=1,
         )
-        MembersPageBlock.objects.create(
-            page=self.page,
+        PageBlock.objects.create(
+            content_type=self.ct,
+            page_id=self.page.pk,
             block_type="who_we_are",
             object_id=b2.pk,
             sort_order=0,
@@ -306,10 +311,10 @@ class OurMembersPublicViewTests(TestCase):
         self.assertIn("background-color: #ffffff", content)
 
     def test_default_page_config_bullet_colors(self):
-        """DEFAULT_PAGE_CONFIG should set distinct bullet colors per carousel."""
+        """OurMembersPageSettings.DEFAULT_PAGE_CONFIG should set distinct bullet colors per carousel."""
         carousel_configs = [
             c
-            for c in DEFAULT_PAGE_CONFIG
+            for c in OurMembersPageSettings.DEFAULT_PAGE_CONFIG
             if c["block_type"] == "person_carousel"
         ]
         self.assertEqual(len(carousel_configs), 2)
@@ -383,7 +388,7 @@ class OurMembersManagerViewTests(TestCase):
             reverse("cms_manager:our_members_delete_block", args=[pk])
         )
         self.assertEqual(response.status_code, 302)
-        self.assertFalse(MembersPageBlock.objects.filter(pk=pk).exists())
+        self.assertFalse(PageBlock.objects.filter(pk=pk).exists())
 
     def test_reset_defaults(self):
         page = OurMembersPageSettings.load()
@@ -537,9 +542,7 @@ class OurMembersManagerViewTests(TestCase):
 
         response = self.client.post(reverse("cms_manager:our_members"), data)
         self.assertEqual(response.status_code, 302)
-        self.assertFalse(
-            MembersPageBlock.objects.filter(pk=header_pk).exists()
-        )
+        self.assertFalse(PageBlock.objects.filter(pk=header_pk).exists())
         self.assertEqual(page.blocks.count(), 4)
 
 

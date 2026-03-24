@@ -1,4 +1,4 @@
-{% if quotes %}
+{% with quotes=block.quotes.all %}{% if quotes %}
 <section class="members-quote-section" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};" aria-label="Member quotes">
     <div class="members-glide-{{ block.pk }}">
         <div class="glide__track" data-glide-el="track">
@@ -52,4 +52,4 @@
         new Glide('.members-glide-{{ block.pk }}', { type: 'slider' }).mount();
     </script>
 </section>
-{% endif %}
+{% endif %}{% endwith %}

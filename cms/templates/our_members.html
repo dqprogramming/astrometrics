@@ -7,5 +7,5 @@
 {% endblock %}
 
 {% block content %}
-{% for bd in blocks %}{% if bd.type == "members_header" %}{% include "includes/our_members/header.html" with block=bd.block %}{% elif bd.type == "who_we_are" %}{% include "includes/our_members/who_we_are.html" with block=bd.block %}{% elif bd.type == "person_carousel" %}{% include "includes/our_members/person_carousel.html" with block=bd.block quotes=bd.quotes %}{% elif bd.type == "members_institutions" %}{% include "includes/our_members/members_grid.html" with block=bd.block institutions=bd.institutions %}{% endif %}{% endfor %}
+{% for bd in blocks %}{% include bd.template with block=bd.block %}{% endfor %}
 {% endblock %}
