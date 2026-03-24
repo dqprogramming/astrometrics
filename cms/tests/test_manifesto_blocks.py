@@ -34,10 +34,12 @@ class ManifestoHeroBlockModelTests(TestCase):
         self.assertEqual(ManifestoHeroBlock.BLOCK_TYPE, "manifesto_hero")
 
     def test_label(self):
-        self.assertEqual(ManifestoHeroBlock.LABEL, "Our Manifesto Hero")
+        self.assertEqual(
+            ManifestoHeroBlock.LABEL, "Hero: Quarter Circle on Left with Image"
+        )
 
     def test_icon(self):
-        self.assertEqual(ManifestoHeroBlock.ICON, "bi-stars")
+        self.assertEqual(ManifestoHeroBlock.ICON, "bi-type-h1")
 
     def test_str(self):
         block = ManifestoHeroBlock.objects.create()
@@ -147,10 +149,13 @@ class ManifestoBlockRegistryTests(TestCase):
         )
 
     def test_registry_labels(self):
-        self.assertEqual(get_label("manifesto_hero"), "Our Manifesto Hero")
-        self.assertEqual(get_label("manifesto_text"), "Our Manifesto Text")
         self.assertEqual(
-            get_label("manifesto_organise"), "Our Manifesto Organise"
+            get_label("manifesto_hero"),
+            "Hero: Quarter Circle on Left with Image",
+        )
+        self.assertEqual(get_label("manifesto_text"), "Standalone Text Block")
+        self.assertEqual(
+            get_label("manifesto_organise"), "Importance of Organisation"
         )
         self.assertEqual(
             get_label("free_access_journals"),

@@ -1699,7 +1699,7 @@ class MembersHeaderBlock(BaseBlock):
     """Header block for the Our Members page."""
 
     BLOCK_TYPE = "members_header"
-    LABEL = "Members Header"
+    LABEL = "Hero: Thin Band Style"
     ICON = "bi-type-h1"
     FORM_CLASS = "cms.forms.MembersHeaderBlockForm"
     MANAGER_TEMPLATE = "cms/manager/blocks/_members_header.html"
@@ -1844,8 +1844,8 @@ class ManifestoHeroBlock(BaseBlock):
     """Hero block for the Our Manifesto page."""
 
     BLOCK_TYPE = "manifesto_hero"
-    LABEL = "Our Manifesto Hero"
-    ICON = "bi-stars"
+    LABEL = "Hero: Quarter Circle on Left with Image"
+    ICON = "bi-type-h1"
     FORM_CLASS = "cms.forms.ManifestoHeroBlockForm"
     MANAGER_TEMPLATE = "cms/manager/blocks/_manifesto_hero.html"
     PUBLIC_TEMPLATE = "includes/blocks/_manifesto_hero.html"
@@ -1885,7 +1885,7 @@ class ManifestoTextBlock(BaseBlock):
     """Text body block for the Our Manifesto page."""
 
     BLOCK_TYPE = "manifesto_text"
-    LABEL = "Our Manifesto Text"
+    LABEL = "Standalone Text Block"
     ICON = "bi-text-paragraph"
     FORM_CLASS = "cms.forms.ManifestoTextBlockForm"
     MANAGER_TEMPLATE = "cms/manager/blocks/_manifesto_text.html"
@@ -1912,7 +1912,7 @@ class ManifestoOrganiseBlock(BaseBlock):
     """Organise + achievable block for the Our Manifesto page."""
 
     BLOCK_TYPE = "manifesto_organise"
-    LABEL = "Our Manifesto Organise"
+    LABEL = "Importance of Organisation"
     ICON = "bi-chat-square-text"
     FORM_CLASS = "cms.forms.ManifestoOrganiseBlockForm"
     MANAGER_TEMPLATE = "cms/manager/blocks/_manifesto_organise.html"
@@ -2046,7 +2046,7 @@ class MembersInstitutionsBlock(BaseBlock):
     """Members institutions grid block for the Our Members page."""
 
     BLOCK_TYPE = "members_institutions"
-    LABEL = "Members Institutions"
+    LABEL = "Supporting Institutions List"
     ICON = "bi-building"
     FORM_CLASS = "cms.forms.MembersInstitutionsBlockForm"
     FORMSET_CLASS = "cms.forms.InstitutionEntryFormSet"
