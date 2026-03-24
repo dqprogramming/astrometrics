@@ -1530,6 +1530,14 @@ class AboutUsQuote(models.Model):
         super().save(*args, **kwargs)
 
 
+LOREM_BODY = (
+    "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+    "sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna "
+    "aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud "
+    "exerci tation ullamcorper suscipit.</p>"
+)
+
+
 class OurMembersPageSettings(models.Model):
     """Singleton shell for the Our Members page.
 
@@ -1571,13 +1579,6 @@ class OurMembersPageSettings(models.Model):
 
     def delete(self, *args, **kwargs):
         pass
-
-    LOREM_BODY = (
-        "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-        "sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna "
-        "aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud "
-        "exerci tation ullamcorper suscipit.</p>"
-    )
 
     DEFAULT_PAGE_CONFIG = [
         {
@@ -1674,8 +1675,7 @@ class OurMembersPageSettings(models.Model):
     ]
 
 
-# Module-level aliases for backward compatibility (old migrations reference these)
-LOREM_BODY = OurMembersPageSettings.LOREM_BODY
+# Module-level alias for backward compatibility (old migrations reference this)
 DEFAULT_PAGE_CONFIG = OurMembersPageSettings.DEFAULT_PAGE_CONFIG
 
 
@@ -1910,9 +1910,7 @@ class InstitutionEntry(models.Model):
 class PageBlock(models.Model):
     """Junction model linking a concrete block to any singleton page."""
 
-    content_type = models.ForeignKey(
-        ContentType, on_delete=models.CASCADE, null=True
-    )
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     page_id = models.PositiveIntegerField()
     page = GenericForeignKey("content_type", "page_id")
     block_type = models.CharField(max_length=30)
