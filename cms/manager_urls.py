@@ -82,31 +82,41 @@ urlpatterns = [
         views.AboutUsPageSettingsUpdateView.as_view(),
         name="about_us",
     ),
-    # Our Members
+    # Block Pages
     path(
-        "our-members/",
-        views.OurMembersPageSettingsUpdateView.as_view(),
-        name="our_members",
+        "block-pages/create/",
+        views.BlockPageCreateView.as_view(),
+        name="block_page_create",
     ),
     path(
-        "our-members/csv-parse/",
-        views.our_members_csv_parse,
-        name="our_members_csv_parse",
+        "block-pages/<int:pk>/",
+        views.BlockPageUpdateView.as_view(),
+        name="block_page_edit",
     ),
     path(
-        "our-members/add-block/",
-        views.OurMembersAddBlockView.as_view(),
-        name="our_members_add_block",
+        "block-pages/<int:pk>/delete/",
+        views.BlockPageDeleteView.as_view(),
+        name="block_page_delete",
     ),
     path(
-        "our-members/delete-block/<int:pk>/",
-        views.OurMembersDeleteBlockView.as_view(),
-        name="our_members_delete_block",
+        "block-pages/<int:pk>/add-block/",
+        views.BlockAddBlockView.as_view(),
+        name="block_page_add_block",
     ),
     path(
-        "our-members/reset-defaults/",
-        views.OurMembersResetDefaultsView.as_view(),
-        name="our_members_reset_defaults",
+        "block-pages/<int:pk>/delete-block/<int:block_pk>/",
+        views.BlockDeleteBlockView.as_view(),
+        name="block_page_delete_block",
+    ),
+    path(
+        "block-pages/<int:pk>/reset-defaults/",
+        views.BlockPageResetDefaultsView.as_view(),
+        name="block_page_reset_defaults",
+    ),
+    path(
+        "block-pages/<int:pk>/csv-parse/",
+        views.block_page_csv_parse,
+        name="block_page_csv_parse",
     ),
     # Our Model
     path(

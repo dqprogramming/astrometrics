@@ -11,12 +11,12 @@ from django.shortcuts import get_object_or_404, render
 from .forms import ContactSubmissionForm
 from .models import (
     AboutUsPageSettings,
+    BlockPage,
     BoardSection,
     Category,
     ContactFormSettings,
     LandingPageSettings,
     ManifestoPageSettings,
-    OurMembersPageSettings,
     OurModelPageSettings,
     Page,
     Post,
@@ -195,10 +195,22 @@ def _build_public_blocks(page):
     return blocks
 
 
-def our_members_view(request):
-    page = OurMembersPageSettings.load()
+def block_page_view(request, slug):
+    page = get_object_or_404(BlockPage, slug=slug)
     blocks = _build_public_blocks(page)
-    return render(request, "our_members.html", {"blocks": blocks})
+    return render(request, "block_page.html", {"page": page, "blocks": blocks})
+
+
+def slug_page_view(request, slug):
+    """Try block page first, then fall back to our-model page."""
+    try:
+        page = BlockPage.objects.get(slug=slug)
+        blocks = _build_public_blocks(page)
+        return render(
+            request, "block_page.html", {"page": page, "blocks": blocks}
+        )
+    except BlockPage.DoesNotExist:
+        return our_model_view(request, slug)
 
 
 def page_preview_view(request, token):

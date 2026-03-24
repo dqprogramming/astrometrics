@@ -426,7 +426,7 @@ class OurModelManagerViewTests(TestCase):
 class OurModelFrontendViewTests(TestCase):
     def _our_model_url(self):
         settings = OurModelPageSettings.load()
-        return reverse("cms:our-model", kwargs={"slug": settings.slug})
+        return reverse("cms:slug-page", kwargs={"slug": settings.slug})
 
     def test_renders_with_settings(self):
         settings = OurModelPageSettings.load()

@@ -30,8 +30,13 @@
         </a>
 
         <span class="mgr-nav-section">Block Pages</span>
-        <a href="{% url 'cms_manager:our_members' %}" class="mgr-nav-link {% block nav_our_members %}{% endblock %}">
-            <i class="bi bi-person-badge"></i> Our Members
+        {% for bp in block_pages %}
+        <a href="{% url 'cms_manager:block_page_edit' bp.pk %}" class="mgr-nav-link {% if active_block_page_pk == bp.pk %}active{% endif %}">
+            <i class="bi bi-file-earmark-richtext"></i> {{ bp.name }}
+        </a>
+        {% endfor %}
+        <a href="{% url 'cms_manager:block_page_create' %}" class="mgr-nav-link {% block nav_block_page_create %}{% endblock %}">
+            <i class="bi bi-plus-circle"></i> Add Block Page
         </a>
 
         <span class="mgr-nav-section">Content</span>

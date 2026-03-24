@@ -1538,14 +1538,13 @@ LOREM_BODY = (
 )
 
 
-class OurMembersPageSettings(models.Model):
-    """Singleton shell for the Our Members page.
+class BlockPage(models.Model):
+    """A dynamic block page with ordered content blocks."""
 
-    All content now lives in block models linked via PageBlock.
-    Only one row should exist — use OurMembersPageSettings.load() to
-    fetch-or-create it.
-    """
-
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True)
+    template_key = models.CharField(max_length=50, blank=True, default="")
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     blocks = GenericRelation(
         "PageBlock",
@@ -1554,129 +1553,118 @@ class OurMembersPageSettings(models.Model):
     )
 
     class Meta:
-        verbose_name = _("Our Members Page Settings")
-        verbose_name_plural = _("Our Members Page Settings")
+        ordering = ["name"]
 
     def __str__(self):
-        return "Our Members Page Settings"
+        return self.name
 
-    CACHE_KEY = "our_members_page_settings"
-    CACHE_TTL = 60 * 60  # 1 hour
 
-    @classmethod
-    def load(cls):
-        """Return the singleton instance, serving from cache when possible."""
-        obj = cache.get(cls.CACHE_KEY)
-        if obj is None:
-            obj, _created = cls.objects.get_or_create(pk=1)
-            cache.set(cls.CACHE_KEY, obj, cls.CACHE_TTL)
-        return obj
+class BlockPageTemplate(models.Model):
+    """Stores predefined page templates (default block configurations)."""
 
-    def save(self, *args, **kwargs):
-        self.pk = 1
-        super().save(*args, **kwargs)
-        cache.delete(self.CACHE_KEY)
+    key = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=255)
+    config = models.JSONField()
 
-    def delete(self, *args, **kwargs):
-        pass
+    def __str__(self):
+        return self.name
 
-    DEFAULT_PAGE_CONFIG = [
-        {
-            "block_type": "members_header",
-            "is_visible": True,
-            "defaults": {"heading": "Our members."},
+
+# Keep DEFAULT_PAGE_CONFIG at module level for backward compatibility
+# (old migrations and data seeding reference this).
+DEFAULT_PAGE_CONFIG = [
+    {
+        "block_type": "members_header",
+        "is_visible": True,
+        "defaults": {"heading": "Our members."},
+    },
+    {
+        "block_type": "who_we_are",
+        "is_visible": True,
+        "defaults": {
+            "section_heading": "Who we are.",
+            "circle_1_title": "We are Academics.",
+            "circle_1_body": LOREM_BODY,
+            "circle_2_title": "We are Librarians.",
+            "circle_2_body": LOREM_BODY,
+            "circle_3_title": "We are Publishers.",
+            "circle_3_body": LOREM_BODY,
+            "cta_text": "Join Us",
+            "cta_url": "#",
+            "show_cta": True,
         },
-        {
-            "block_type": "who_we_are",
-            "is_visible": True,
-            "defaults": {
-                "section_heading": "Who we are.",
-                "circle_1_title": "We are Academics.",
-                "circle_1_body": LOREM_BODY,
-                "circle_2_title": "We are Librarians.",
-                "circle_2_body": LOREM_BODY,
-                "circle_3_title": "We are Publishers.",
-                "circle_3_body": LOREM_BODY,
-                "cta_text": "Join Us",
-                "cta_url": "#",
-                "show_cta": True,
+    },
+    {
+        "block_type": "person_carousel",
+        "is_visible": True,
+        "defaults": {
+            "bg_color": "#a5bfff",
+            "text_color": "#212129",
+            "bullet_color": "#999999",
+            "bullet_active_color": "#000000",
+        },
+        "children": [
+            {
+                "quote_text": (
+                    "<p>Quote from a member that's already onboard. Lorem "
+                    "ipsum dolor sit amet, consectetuer adipis cing elit, "
+                    "sed diam nonummy nibh euismod tincidunt ut laoreet.</p>"
+                ),
+                "author_name": "Name Here, Company",
+                "sort_order": 0,
             },
-        },
-        {
-            "block_type": "person_carousel",
-            "is_visible": True,
-            "defaults": {
-                "bg_color": "#a5bfff",
-                "text_color": "#212129",
-                "bullet_color": "#999999",
-                "bullet_active_color": "#000000",
+            {
+                "quote_text": (
+                    "<p>Another testimonial from a valued member of the "
+                    "collective. Their experience highlights the benefits "
+                    "of open access publishing.</p>"
+                ),
+                "author_name": "Jane Smith, University Press",
+                "sort_order": 1,
             },
-            "children": [
-                {
-                    "quote_text": (
-                        "<p>Quote from a member that's already onboard. Lorem "
-                        "ipsum dolor sit amet, consectetuer adipis cing elit, "
-                        "sed diam nonummy nibh euismod tincidunt ut laoreet.</p>"
-                    ),
-                    "author_name": "Name Here, Company",
-                    "sort_order": 0,
-                },
-                {
-                    "quote_text": (
-                        "<p>Another testimonial from a valued member of the "
-                        "collective. Their experience highlights the benefits "
-                        "of open access publishing.</p>"
-                    ),
-                    "author_name": "Jane Smith, University Press",
-                    "sort_order": 1,
-                },
-            ],
+        ],
+    },
+    {
+        "block_type": "members_institutions",
+        "is_visible": True,
+        "defaults": {
+            "heading": "OJC Members.",
+            "cta_text": "Join Us",
+            "cta_url": "#",
+            "show_cta": True,
         },
-        {
-            "block_type": "members_institutions",
-            "is_visible": True,
-            "defaults": {
-                "heading": "OJC Members.",
-                "cta_text": "Join Us",
-                "cta_url": "#",
-                "show_cta": True,
+    },
+    {
+        "block_type": "person_carousel",
+        "is_visible": True,
+        "defaults": {
+            "bg_color": "#212129",
+            "text_color": "#ffffff",
+            "bullet_color": "#ffffff",
+            "bullet_active_color": "#999999",
+        },
+        "children": [
+            {
+                "quote_text": (
+                    "<p>Quote from a member that's already onboard. Lorem "
+                    "ipsum dolor sit amet, consectetuer adipis cing elit, "
+                    "sed diam nonummy nibh euismod tincidunt ut laoreet.</p>"
+                ),
+                "author_name": "Name Here, Company",
+                "sort_order": 0,
             },
-        },
-        {
-            "block_type": "person_carousel",
-            "is_visible": True,
-            "defaults": {
-                "bg_color": "#212129",
-                "text_color": "#ffffff",
-                "bullet_color": "#ffffff",
-                "bullet_active_color": "#999999",
+            {
+                "quote_text": (
+                    "<p>Open access is the future of academic publishing "
+                    "and the collective model ensures sustainability for "
+                    "all participants.</p>"
+                ),
+                "author_name": "Dr. Sarah Williams, Oxford Press",
+                "sort_order": 1,
             },
-            "children": [
-                {
-                    "quote_text": (
-                        "<p>Quote from a member that's already onboard. Lorem "
-                        "ipsum dolor sit amet, consectetuer adipis cing elit, "
-                        "sed diam nonummy nibh euismod tincidunt ut laoreet.</p>"
-                    ),
-                    "author_name": "Name Here, Company",
-                    "sort_order": 0,
-                },
-                {
-                    "quote_text": (
-                        "<p>Open access is the future of academic publishing "
-                        "and the collective model ensures sustainability for "
-                        "all participants.</p>"
-                    ),
-                    "author_name": "Dr. Sarah Williams, Oxford Press",
-                    "sort_order": 1,
-                },
-            ],
-        },
-    ]
-
-
-# Module-level alias for backward compatibility (old migrations reference this)
-DEFAULT_PAGE_CONFIG = OurMembersPageSettings.DEFAULT_PAGE_CONFIG
+        ],
+    },
+]
 
 
 # ── Block System ─────────────────────────────────────────────────────────────

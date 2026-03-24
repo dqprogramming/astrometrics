@@ -1,0 +1,31 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Add Block Page{% endblock %}
+{% block page_title %}Add Block Page{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> /
+Block Pages / Add
+{% endblock %}
+{% block nav_block_page_create %}active{% endblock %}
+
+{% block content %}
+<form method="post" style="max-width:500px;">
+    {% csrf_token %}
+    <div class="mgr-form-card">
+        <div class="mgr-field" style="margin-bottom:1rem;">
+            <label class="mgr-label">Page Name</label>
+            {{ form.name }}
+        </div>
+        <div class="mgr-field" style="margin-bottom:1rem;">
+            <label class="mgr-label">Template</label>
+            {{ form.template }}
+        </div>
+        <div style="display:flex; gap:1rem; align-items:center; margin-top:1.5rem;">
+            <button type="submit" class="mgr-btn mgr-btn-primary">
+                <i class="bi bi-plus-circle"></i> Create Page
+            </button>
+            <a href="{% url 'manager:dashboard' %}" class="mgr-btn">Cancel</a>
+        </div>
+    </div>
+</form>
+{% endblock %}

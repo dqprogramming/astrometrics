@@ -31,6 +31,7 @@ from cms.block_registry import (
 from .forms import (
     AboutUsPageSettingsForm,
     AboutUsQuoteFormSet,
+    BlockPageCreateForm,
     BoardMemberFormSet,
     CategoryForm,
     Column1LinkFormSet,
@@ -52,6 +53,8 @@ from .forms import (
 )
 from .models import (
     AboutUsPageSettings,
+    BlockPage,
+    BlockPageTemplate,
     BoardMember,
     BoardSection,
     Category,
@@ -60,7 +63,6 @@ from .models import (
     HeaderSettings,
     LandingPageSettings,
     ManifestoPageSettings,
-    OurMembersPageSettings,
     OurModelPackageCell,
     OurModelPackageRow,
     OurModelPageSettings,
@@ -1224,7 +1226,7 @@ def board_member_image_upload(request):
     return JsonResponse({"url": url})
 
 
-# ── Our Members ──────────────────────────────────────────────────────────────
+# ── Block Pages ──────────────────────────────────────────────────────────────
 
 
 def _build_block_data(placements, data=None, files=None):
@@ -1264,27 +1266,41 @@ def _build_block_data(placements, data=None, files=None):
     return block_data
 
 
-class OurMembersPageSettingsUpdateView(StaffRequiredMixin, View):
-    template_name = "cms/manager/our_members_form.html"
+class BlockPageUpdateView(StaffRequiredMixin, View):
+    template_name = "cms/manager/block_page_form.html"
 
-    def get(self, request):
-        page = OurMembersPageSettings.load()
+    def get(self, request, pk):
+        page = get_object_or_404(BlockPage, pk=pk)
         placements = page.blocks.order_by("sort_order")
         block_data = _build_block_data(placements)
+        template = None
+        if page.template_key:
+            template = BlockPageTemplate.objects.filter(
+                key=page.template_key
+            ).first()
+        default_config = json.dumps(template.config if template else [])
         return render(
             request,
             self.template_name,
             {
+                "page": page,
                 "block_data": block_data,
-                "default_page_config": json.dumps(
-                    OurMembersPageSettings.DEFAULT_PAGE_CONFIG
-                ),
+                "default_page_config": default_config,
                 "available_block_types": get_all_block_types(),
+                "active_block_page_pk": page.pk,
             },
         )
 
-    def post(self, request):
-        page = OurMembersPageSettings.load()
+    def post(self, request, pk):
+        page = get_object_or_404(BlockPage, pk=pk)
+
+        # Update page name and slug from POST
+        page_name = request.POST.get("page_name", "").strip()
+        page_slug = request.POST.get("page_slug", "").strip()
+        if page_name:
+            page.name = page_name
+        if page_slug:
+            page.slug = slugify(page_slug)
 
         # Parse deleted_blocks — these are handled client-side (hidden)
         deleted_raw = request.POST.get("deleted_blocks", "")
@@ -1292,7 +1308,9 @@ class OurMembersPageSettingsUpdateView(StaffRequiredMixin, View):
             deleted_pks = json.loads(deleted_raw) if deleted_raw else []
         except (json.JSONDecodeError, ValueError):
             deleted_pks = []
-        deleted_pks = set(int(pk) for pk in deleted_pks if str(pk).isdigit())
+        deleted_pks = set(
+            int(dpk) for dpk in deleted_pks if str(dpk).isdigit()
+        )
 
         # Only build forms for non-deleted blocks
         placements = [
@@ -1338,8 +1356,8 @@ class OurMembersPageSettingsUpdateView(StaffRequiredMixin, View):
         if all_valid:
             with transaction.atomic():
                 # Delete blocks marked for deletion
-                for pk in deleted_pks:
-                    placement = page.blocks.filter(pk=pk).first()
+                for dpk in deleted_pks:
+                    placement = page.blocks.filter(pk=dpk).first()
                     if placement:
                         block = placement.get_block()
                         if block:
@@ -1364,33 +1382,108 @@ class OurMembersPageSettingsUpdateView(StaffRequiredMixin, View):
 
                 page.save()
 
-            messages.success(request, "Our Members page settings updated.")
-            return redirect(reverse_lazy("cms_manager:our_members"))
+            messages.success(request, f'"{page.name}" page updated.')
+            return redirect("cms_manager:block_page_edit", pk=page.pk)
 
+        template = None
+        if page.template_key:
+            template = BlockPageTemplate.objects.filter(
+                key=page.template_key
+            ).first()
+        default_config = json.dumps(template.config if template else [])
         return render(
             request,
             self.template_name,
             {
+                "page": page,
                 "block_data": block_data,
-                "default_page_config": json.dumps(
-                    OurMembersPageSettings.DEFAULT_PAGE_CONFIG
-                ),
+                "default_page_config": default_config,
                 "available_block_types": get_all_block_types(),
                 "form_errors": form_errors,
+                "active_block_page_pk": page.pk,
             },
         )
 
 
-class OurMembersAddBlockView(StaffRequiredMixin, View):
+class BlockPageCreateView(StaffRequiredMixin, View):
+    template_name = "cms/manager/block_page_create.html"
+
+    def get(self, request):
+        form = BlockPageCreateForm()
+        return render(request, self.template_name, {"form": form})
+
     def post(self, request):
+        form = BlockPageCreateForm(request.POST)
+        if not form.is_valid():
+            return render(request, self.template_name, {"form": form})
+
+        name = form.cleaned_data["name"]
+        template_key = form.cleaned_data.get("template", "")
+        slug = slugify(name)
+
+        # Ensure unique slug
+        base_slug = slug
+        counter = 1
+        while BlockPage.objects.filter(slug=slug).exists():
+            slug = f"{base_slug}-{counter}"
+            counter += 1
+
+        page = BlockPage.objects.create(
+            name=name,
+            slug=slug,
+            template_key=template_key,
+        )
+
+        # Populate from template if selected
+        if template_key:
+            template = BlockPageTemplate.objects.filter(
+                key=template_key
+            ).first()
+            if template:
+                ct = ContentType.objects.get_for_model(page)
+                for idx, cfg in enumerate(template.config):
+                    model_cls = get_block_class(cfg["block_type"])
+                    block = model_cls.objects.create(**cfg.get("defaults", {}))
+                    if cfg.get("children"):
+                        block.create_children_from_config(cfg["children"])
+                    PageBlock.objects.create(
+                        content_type=ct,
+                        page_id=page.pk,
+                        block_type=cfg["block_type"],
+                        object_id=block.pk,
+                        sort_order=idx,
+                        is_visible=cfg.get("is_visible", True),
+                    )
+
+        messages.success(request, f'Block page "{page.name}" created.')
+        return redirect("cms_manager:block_page_edit", pk=page.pk)
+
+
+class BlockPageDeleteView(StaffRequiredMixin, View):
+    def post(self, request, pk):
+        page = get_object_or_404(BlockPage, pk=pk)
+        with transaction.atomic():
+            for placement in page.blocks.all():
+                block = placement.get_block()
+                if block:
+                    block.delete()
+                placement.delete()
+            page_name = page.name
+            page.delete()
+        messages.success(request, f'Block page "{page_name}" deleted.')
+        return redirect("manager:dashboard")
+
+
+class BlockAddBlockView(StaffRequiredMixin, View):
+    def post(self, request, pk):
+        page = get_object_or_404(BlockPage, pk=pk)
         block_type = request.POST.get("block_type", "")
         try:
             model_cls = get_block_class(block_type)
         except KeyError:
             messages.error(request, "Invalid block type.")
-            return redirect(reverse_lazy("cms_manager:our_members"))
+            return redirect("cms_manager:block_page_edit", pk=page.pk)
 
-        page = OurMembersPageSettings.load()
         block = model_cls.objects.create()
         ct = ContentType.objects.get_for_model(page)
         max_order = page.blocks.aggregate(m=models.Max("sort_order"))["m"] or 0
@@ -1405,38 +1498,47 @@ class OurMembersAddBlockView(StaffRequiredMixin, View):
             request,
             f"{get_label(block_type)} block added.",
         )
-        return redirect(reverse_lazy("cms_manager:our_members"))
+        return redirect("cms_manager:block_page_edit", pk=page.pk)
 
 
-class OurMembersDeleteBlockView(StaffRequiredMixin, View):
-    def post(self, request, pk):
-        page = OurMembersPageSettings.load()
+class BlockDeleteBlockView(StaffRequiredMixin, View):
+    def post(self, request, pk, block_pk):
+        page = get_object_or_404(BlockPage, pk=pk)
         ct = ContentType.objects.get_for_model(page)
         placement = get_object_or_404(
-            PageBlock, pk=pk, content_type=ct, page_id=page.pk
+            PageBlock, pk=block_pk, content_type=ct, page_id=page.pk
         )
         block = placement.get_block()
         if block:
             block.delete()
         placement.delete()
         messages.success(request, "Block deleted.")
-        return redirect(reverse_lazy("cms_manager:our_members"))
+        return redirect("cms_manager:block_page_edit", pk=page.pk)
 
 
-class OurMembersResetDefaultsView(StaffRequiredMixin, View):
-    def post(self, request):
-        page = OurMembersPageSettings.load()
+class BlockPageResetDefaultsView(StaffRequiredMixin, View):
+    def post(self, request, pk):
+        page = get_object_or_404(BlockPage, pk=pk)
+        config = None
+        if page.template_key:
+            template = BlockPageTemplate.objects.filter(
+                key=page.template_key
+            ).first()
+            if template:
+                config = template.config
+        if not config:
+            messages.warning(request, "No template found for this page.")
+            return redirect("cms_manager:block_page_edit", pk=page.pk)
+
         ct = ContentType.objects.get_for_model(page)
         with transaction.atomic():
-            # Delete all existing blocks and their concrete instances
             for placement in page.blocks.all():
                 block = placement.get_block()
                 if block:
                     block.delete()
                 placement.delete()
 
-            # Recreate from DEFAULT_PAGE_CONFIG
-            for idx, cfg in enumerate(page.DEFAULT_PAGE_CONFIG):
+            for idx, cfg in enumerate(config):
                 model_cls = get_block_class(cfg["block_type"])
                 block = model_cls.objects.create(**cfg.get("defaults", {}))
                 if cfg.get("children"):
@@ -1452,14 +1554,16 @@ class OurMembersResetDefaultsView(StaffRequiredMixin, View):
             page.save()
 
         messages.success(request, "Page reset to defaults.")
-        return redirect(reverse_lazy("cms_manager:our_members"))
+        return redirect("cms_manager:block_page_edit", pk=page.pk)
 
 
 @require_POST
-def our_members_csv_parse(request):
+def block_page_csv_parse(request, pk):
     """Parse uploaded CSV and return unique institution names as JSON."""
     if not (request.user.is_active and request.user.is_staff):
         return JsonResponse({"error": "Forbidden"}, status=403)
+
+    get_object_or_404(BlockPage, pk=pk)
 
     uploaded = request.FILES.get("file")
     if not uploaded:

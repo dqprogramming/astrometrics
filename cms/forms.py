@@ -4,6 +4,8 @@ from tinymce.widgets import TinyMCE
 from .models import (
     AboutUsPageSettings,
     AboutUsQuote,
+    BlockPage,
+    BlockPageTemplate,
     BoardMember,
     BoardSection,
     Category,
@@ -932,6 +934,36 @@ InstitutionEntryFormSet = forms.inlineformset_factory(
     extra=0,
     can_delete=True,
 )
+
+
+# ── Block Page Forms ──────────────────────────────────────────────────────
+
+
+class BlockPageForm(forms.ModelForm):
+    class Meta:
+        model = BlockPage
+        fields = ["name", "slug"]
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "mgr-input"}),
+            "slug": forms.TextInput(attrs={"class": "mgr-input"}),
+        }
+
+
+class BlockPageCreateForm(forms.Form):
+    name = forms.CharField(
+        max_length=255,
+        widget=forms.TextInput(attrs={"class": "mgr-input"}),
+    )
+    template = forms.CharField(
+        required=False,
+        widget=forms.Select(attrs={"class": "mgr-input"}),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        choices = [("", "Empty block page")]
+        choices += [(t.key, t.name) for t in BlockPageTemplate.objects.all()]
+        self.fields["template"].widget.choices = choices
 
 
 class ContactSubmissionForm(forms.Form):
