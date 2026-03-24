@@ -1868,6 +1868,11 @@ class ManifestoHeroBlock(BaseBlock):
         ),
         help_text="Hero sub-heading text",
     )
+    hero_image = models.ImageField(
+        upload_to="blocks/hero/",
+        blank=True,
+        help_text="Hero image (550×526). Will be resized/cropped if needed.",
+    )
     hero_image_alt = models.CharField(
         max_length=255,
         default="A person contemplating the future of academic publishing",
@@ -1876,8 +1881,69 @@ class ManifestoHeroBlock(BaseBlock):
     bg_color = models.CharField(max_length=7, default="#71f7f2")
     text_color = models.CharField(max_length=7, default="#212129")
 
+    HERO_IMAGE_WIDTH = 550
+    HERO_IMAGE_HEIGHT = 526
+
     def __str__(self):
         return f"ManifestoHeroBlock #{self.pk}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.hero_image:
+            self._resize_hero_image()
+
+    def _resize_hero_image(self):
+        from io import BytesIO
+
+        from django.core.files.base import ContentFile
+        from PIL import Image
+
+        try:
+            img = Image.open(self.hero_image)
+        except Exception:
+            return
+
+        w, h = img.size
+        tw, th = self.HERO_IMAGE_WIDTH, self.HERO_IMAGE_HEIGHT
+
+        if w == tw and h == th:
+            return
+
+        target_ratio = tw / th
+        current_ratio = w / h
+
+        if abs(current_ratio - target_ratio) < 0.01:
+            # Close enough — just resize
+            img = img.resize((tw, th), Image.LANCZOS)
+        elif current_ratio > target_ratio:
+            # Too wide — resize by height, crop width
+            new_h = th
+            new_w = int(w * (th / h))
+            img = img.resize((new_w, new_h), Image.LANCZOS)
+            left = (new_w - tw) // 2
+            img = img.crop((left, 0, left + tw, th))
+        else:
+            # Too tall — resize by width, crop height
+            new_w = tw
+            new_h = int(h * (tw / w))
+            img = img.resize((new_w, new_h), Image.LANCZOS)
+            top = (new_h - th) // 3  # bias toward top third
+            img = img.crop((0, top, tw, top + th))
+
+        buf = BytesIO()
+        fmt = (
+            "PNG" if self.hero_image.name.lower().endswith(".png") else "JPEG"
+        )
+        save_kwargs = {"format": fmt}
+        if fmt == "JPEG":
+            save_kwargs["quality"] = 90
+        img.save(buf, **save_kwargs)
+
+        name = self.hero_image.name
+        self.hero_image.save(name, ContentFile(buf.getvalue()), save=False)
+        type(self).objects.filter(pk=self.pk).update(
+            hero_image=self.hero_image
+        )
 
 
 @register

@@ -9,6 +9,16 @@
     {% if form.sub_heading.errors %}<div class="mgr-error">{{ form.sub_heading.errors.0 }}</div>{% endif %}
 </div>
 <div class="mgr-field">
+    <label class="mgr-label">Hero Image <span style="font-weight:normal; color:var(--muted);">(550×526, will be resized/cropped)</span></label>
+    {% if form.instance.hero_image %}
+    <div style="margin-bottom:0.5rem;">
+        <img src="{{ form.instance.hero_image.url }}" alt="Current hero image" style="max-height:100px; border-radius:4px;">
+    </div>
+    {% endif %}
+    {{ form.hero_image }}
+    {% if form.hero_image.errors %}<div class="mgr-error">{{ form.hero_image.errors.0 }}</div>{% endif %}
+</div>
+<div class="mgr-field">
     <label class="mgr-label" for="{{ form.hero_image_alt.id_for_label }}">Hero Image Alt Text</label>
     {{ form.hero_image_alt }}
     {% if form.hero_image_alt.errors %}<div class="mgr-error">{{ form.hero_image_alt.errors.0 }}</div>{% endif %}

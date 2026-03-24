@@ -27,7 +27,7 @@
                 </p>
             </div>
             <div class="manifesto-hero-image-wrapper">
-                <img src="{% static 'img/manifesto-hero.png' %}"
+                <img src="{% if block.hero_image %}{{ block.hero_image.url }}{% else %}{% static 'img/manifesto-hero.png' %}{% endif %}"
                      alt="{{ block.hero_image_alt }}"
                      class="manifesto-hero-image">
             </div>

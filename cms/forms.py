@@ -976,6 +976,7 @@ class ManifestoHeroBlockForm(forms.ModelForm):
         fields = [
             "heading",
             "sub_heading",
+            "hero_image",
             "hero_image_alt",
             "bg_color",
             "text_color",
