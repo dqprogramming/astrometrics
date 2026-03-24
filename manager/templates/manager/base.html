@@ -29,6 +29,11 @@
             <i class="bi bi-house"></i> Dashboard
         </a>
 
+        <span class="mgr-nav-section">Block Pages</span>
+        <a href="{% url 'cms_manager:our_members' %}" class="mgr-nav-link {% block nav_our_members %}{% endblock %}">
+            <i class="bi bi-person-badge"></i> Our Members
+        </a>
+
         <span class="mgr-nav-section">Content</span>
         <a href="{% url 'cms_manager:about_us' %}" class="mgr-nav-link {% block nav_about_us %}{% endblock %}">
             <i class="bi bi-info-circle"></i> About Us
@@ -47,9 +52,6 @@
         </a>
         <a href="{% url 'cms_manager:manifesto' %}" class="mgr-nav-link {% block nav_manifesto %}{% endblock %}">
             <i class="bi bi-megaphone"></i> Our Manifesto
-        </a>
-        <a href="{% url 'cms_manager:our_members' %}" class="mgr-nav-link {% block nav_our_members %}{% endblock %}">
-            <i class="bi bi-person-badge"></i> Our Members
         </a>
         <a href="{% url 'cms_manager:our_model' %}" class="mgr-nav-link {% block nav_our_model %}{% endblock %}">
             <i class="bi bi-diagram-3"></i> Our Model
