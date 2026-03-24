@@ -1744,15 +1744,15 @@ class WhoWeAreBlock(BaseBlock):
     circle_1_title = models.CharField(
         max_length=200, default="We are Academics."
     )
-    circle_1_body = models.TextField(blank=True)
+    circle_1_body = models.TextField(blank=True, default=LOREM_BODY)
     circle_2_title = models.CharField(
         max_length=200, default="We are Librarians."
     )
-    circle_2_body = models.TextField(blank=True)
+    circle_2_body = models.TextField(blank=True, default=LOREM_BODY)
     circle_3_title = models.CharField(
         max_length=200, default="We are Publishers."
     )
-    circle_3_body = models.TextField(blank=True)
+    circle_3_body = models.TextField(blank=True, default=LOREM_BODY)
     bg_color = models.CharField(max_length=7, default="#ffffff")
     text_color = models.CharField(max_length=7, default="#212129")
     show_cta = models.BooleanField(default=True)
