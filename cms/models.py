@@ -1840,6 +1840,154 @@ class PersonCarouselQuote(models.Model):
 
 
 @register
+class ManifestoHeroBlock(BaseBlock):
+    """Hero block for the Our Manifesto page."""
+
+    BLOCK_TYPE = "manifesto_hero"
+    LABEL = "Our Manifesto Hero"
+    ICON = "bi-stars"
+    FORM_CLASS = "cms.forms.ManifestoHeroBlockForm"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_manifesto_hero.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_manifesto_hero.html"
+    COLOR_DEFAULTS = {
+        "bg_color": "#71f7f2",
+        "text_color": "#212129",
+    }
+
+    heading = models.CharField(
+        max_length=500,
+        default="OJC is leading a growing academic movement.",
+        help_text="Main hero heading",
+    )
+    sub_heading = models.TextField(
+        blank=True,
+        default=(
+            "Our mission is to build a sustainable future for academic "
+            "journals by challenging the profit-making models of global "
+            "corporate publishing and data systems."
+        ),
+        help_text="Hero sub-heading text",
+    )
+    hero_image_alt = models.CharField(
+        max_length=255,
+        default="A person contemplating the future of academic publishing",
+        help_text="Alt text for the hero image",
+    )
+    bg_color = models.CharField(max_length=7, default="#71f7f2")
+    text_color = models.CharField(max_length=7, default="#212129")
+
+    def __str__(self):
+        return f"ManifestoHeroBlock #{self.pk}"
+
+
+@register
+class ManifestoTextBlock(BaseBlock):
+    """Text body block for the Our Manifesto page."""
+
+    BLOCK_TYPE = "manifesto_text"
+    LABEL = "Our Manifesto Text"
+    ICON = "bi-text-paragraph"
+    FORM_CLASS = "cms.forms.ManifestoTextBlockForm"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_manifesto_text.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_manifesto_text.html"
+    COLOR_DEFAULTS = {
+        "bg_color": "#ffffff",
+        "text_color": "#212129",
+    }
+
+    body = models.TextField(blank=True)
+    bg_color = models.CharField(max_length=7, default="#ffffff")
+    text_color = models.CharField(max_length=7, default="#212129")
+
+    def __str__(self):
+        return f"ManifestoTextBlock #{self.pk}"
+
+    def save(self, *args, **kwargs):
+        self.body = sanitize_html(self.body)
+        super().save(*args, **kwargs)
+
+
+@register
+class ManifestoOrganiseBlock(BaseBlock):
+    """Organise + achievable block for the Our Manifesto page."""
+
+    BLOCK_TYPE = "manifesto_organise"
+    LABEL = "Our Manifesto Organise"
+    ICON = "bi-chat-square-text"
+    FORM_CLASS = "cms.forms.ManifestoOrganiseBlockForm"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_manifesto_organise.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_manifesto_organise.html"
+    COLOR_DEFAULTS = {
+        "bg_color": "#a5bfff",
+        "text_color": "#ffffff",
+    }
+
+    organise_heading = models.CharField(
+        max_length=500,
+        default="To do this, we must organise.",
+    )
+    organise_body = models.TextField(blank=True)
+    achievable_heading = models.CharField(
+        max_length=500,
+        default="Our task is ambitious, yet achievable.",
+    )
+    achievable_body = models.TextField(blank=True)
+    show_cta = models.BooleanField(default=True)
+    cta_text = models.CharField(max_length=100, default="It starts here")
+    cta_url = models.CharField(max_length=500, default="/our-team/")
+    bg_color = models.CharField(max_length=7, default="#a5bfff")
+    text_color = models.CharField(max_length=7, default="#ffffff")
+
+    def __str__(self):
+        return f"ManifestoOrganiseBlock #{self.pk}"
+
+    def save(self, *args, **kwargs):
+        self.organise_body = sanitize_html(self.organise_body)
+        self.achievable_body = sanitize_html(self.achievable_body)
+        super().save(*args, **kwargs)
+
+
+@register
+class FreeAccessJournalsBlock(BaseBlock):
+    """Free access to journals CTA block."""
+
+    BLOCK_TYPE = "free_access_journals"
+    LABEL = "Free Access To Leading Journals"
+    ICON = "bi-megaphone"
+    FORM_CLASS = "cms.forms.FreeAccessJournalsBlockForm"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_free_access_journals.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_free_access_journals.html"
+    COLOR_DEFAULTS = {
+        "bg_color": "#ffffff",
+        "text_color": "#212129",
+    }
+
+    heading = models.CharField(
+        max_length=500,
+        default=(
+            "Free access to hundreds of the world\u2019s leading "
+            "academic journals."
+        ),
+    )
+    image = models.ImageField(
+        upload_to="blocks/free_access/",
+        blank=True,
+    )
+    image_alt = models.CharField(
+        max_length=255,
+        default="A modern library representing free access to academic journals",
+    )
+    show_cta = models.BooleanField(default=True)
+    cta_text = models.CharField(max_length=100, default="Speak to us")
+    cta_url = models.CharField(max_length=500, default="/our-team/")
+    bg_color = models.CharField(max_length=7, default="#ffffff")
+    text_color = models.CharField(max_length=7, default="#212129")
+
+    def __str__(self):
+        return f"FreeAccessJournalsBlock #{self.pk}"
+
+
+@register
 class MembersInstitutionsBlock(BaseBlock):
     """Members institutions grid block for the Our Members page."""
 

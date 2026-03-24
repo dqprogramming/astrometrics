@@ -1,0 +1,20 @@
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.heading.id_for_label }}">Hero Heading</label>
+    {{ form.heading }}
+    {% if form.heading.errors %}<div class="mgr-error">{{ form.heading.errors.0 }}</div>{% endif %}
+</div>
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.sub_heading.id_for_label }}">Sub Heading</label>
+    {{ form.sub_heading }}
+    {% if form.sub_heading.errors %}<div class="mgr-error">{{ form.sub_heading.errors.0 }}</div>{% endif %}
+</div>
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.hero_image_alt.id_for_label }}">Hero Image Alt Text</label>
+    {{ form.hero_image_alt }}
+    {% if form.hero_image_alt.errors %}<div class="mgr-error">{{ form.hero_image_alt.errors.0 }}</div>{% endif %}
+</div>
+<div class="color-picker-row">
+    <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.bg_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.text_color }}</span>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
+</div>

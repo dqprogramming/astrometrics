@@ -13,10 +13,14 @@ from .models import (
     ContactRecipient,
     FooterLink,
     FooterSettings,
+    FreeAccessJournalsBlock,
     HeaderSettings,
     InstitutionEntry,
     LandingPageSettings,
+    ManifestoHeroBlock,
+    ManifestoOrganiseBlock,
     ManifestoPageSettings,
+    ManifestoTextBlock,
     MembersHeaderBlock,
     MembersInstitutionsBlock,
     MenuItem,
@@ -964,6 +968,99 @@ class BlockPageCreateForm(forms.Form):
         choices = [("", "Empty block page")]
         choices += [(t.key, t.name) for t in BlockPageTemplate.objects.all()]
         self.fields["template"].widget.choices = choices
+
+
+class ManifestoHeroBlockForm(forms.ModelForm):
+    class Meta:
+        model = ManifestoHeroBlock
+        fields = [
+            "heading",
+            "sub_heading",
+            "hero_image_alt",
+            "bg_color",
+            "text_color",
+        ]
+        widgets = {
+            "heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "sub_heading": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 3}
+            ),
+            "hero_image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+        }
+
+
+class ManifestoTextBlockForm(forms.ModelForm):
+    class Meta:
+        model = ManifestoTextBlock
+        fields = ["body", "bg_color", "text_color"]
+        widgets = {
+            "body": TinyMCE(mce_attrs=_MANIFESTO_TINYMCE),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+        }
+
+
+class ManifestoOrganiseBlockForm(forms.ModelForm):
+    class Meta:
+        model = ManifestoOrganiseBlock
+        fields = [
+            "organise_heading",
+            "organise_body",
+            "achievable_heading",
+            "achievable_body",
+            "show_cta",
+            "cta_text",
+            "cta_url",
+            "bg_color",
+            "text_color",
+        ]
+        widgets = {
+            "organise_heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "organise_body": TinyMCE(mce_attrs=_MANIFESTO_TINYMCE),
+            "achievable_heading": forms.TextInput(
+                attrs={"class": "mgr-input"}
+            ),
+            "achievable_body": TinyMCE(mce_attrs=_MANIFESTO_TINYMCE),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_text": forms.TextInput(attrs={"class": "mgr-input"}),
+            "cta_url": forms.TextInput(
+                attrs={
+                    "class": "mgr-input",
+                    "placeholder": "e.g. /contact/ or https://...",
+                }
+            ),
+        }
+
+
+class FreeAccessJournalsBlockForm(forms.ModelForm):
+    class Meta:
+        model = FreeAccessJournalsBlock
+        fields = [
+            "heading",
+            "image",
+            "image_alt",
+            "show_cta",
+            "cta_text",
+            "cta_url",
+            "bg_color",
+            "text_color",
+        ]
+        widgets = {
+            "heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_text": forms.TextInput(attrs={"class": "mgr-input"}),
+            "cta_url": forms.TextInput(
+                attrs={
+                    "class": "mgr-input",
+                    "placeholder": "e.g. /contact/ or https://...",
+                }
+            ),
+        }
 
 
 class ContactSubmissionForm(forms.Form):

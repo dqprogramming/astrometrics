@@ -68,7 +68,7 @@ class BlockRegistryTests(TestCase):
     def test_get_label(self):
         self.assertEqual(get_label("who_we_are"), "Who We Are")
 
-    def test_all_four_block_types_registered(self):
+    def test_all_block_types_registered(self):
         all_types = get_all_block_types()
         type_keys = {t["type"] for t in all_types}
         self.assertEqual(
@@ -78,5 +78,9 @@ class BlockRegistryTests(TestCase):
                 "who_we_are",
                 "person_carousel",
                 "members_institutions",
+                "manifesto_hero",
+                "manifesto_text",
+                "manifesto_organise",
+                "free_access_journals",
             },
         )
