@@ -372,10 +372,10 @@
             } catch (e) {
                 return;
             }
-            var bgInput = card.querySelector('input[name$="-bg_color"]');
-            var textInput = card.querySelector('input[name$="-text_color"]');
-            if (bgInput && defaults.bg_color) bgInput.value = defaults.bg_color;
-            if (textInput && defaults.text_color) textInput.value = defaults.text_color;
+            Object.keys(defaults).forEach(function (key) {
+                var input = card.querySelector('input[name$="-' + key + '"]');
+                if (input) input.value = defaults[key];
+            });
             markDirty();
         });
     }

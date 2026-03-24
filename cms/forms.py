@@ -1013,6 +1013,10 @@ class ManifestoOrganiseBlockForm(forms.ModelForm):
             "show_cta",
             "cta_text",
             "cta_url",
+            "cta_bg_color",
+            "cta_text_color",
+            "cta_hover_bg_color",
+            "cta_hover_text_color",
             "bg_color",
             "text_color",
         ]
@@ -1025,6 +1029,10 @@ class ManifestoOrganiseBlockForm(forms.ModelForm):
             "achievable_body": TinyMCE(mce_attrs=_MANIFESTO_TINYMCE),
             "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
             "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_hover_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_hover_text_color": forms.TextInput(attrs=_COLOR_ATTRS),
             "cta_text": forms.TextInput(attrs={"class": "mgr-input"}),
             "cta_url": forms.TextInput(
                 attrs={
@@ -1045,6 +1053,10 @@ class FreeAccessJournalsBlockForm(forms.ModelForm):
             "show_cta",
             "cta_text",
             "cta_url",
+            "cta_bg_color",
+            "cta_text_color",
+            "cta_hover_bg_color",
+            "cta_hover_text_color",
             "bg_color",
             "text_color",
         ]
@@ -1053,6 +1065,10 @@ class FreeAccessJournalsBlockForm(forms.ModelForm):
             "image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
             "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
             "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_hover_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_hover_text_color": forms.TextInput(attrs=_COLOR_ATTRS),
             "cta_text": forms.TextInput(attrs={"class": "mgr-input"}),
             "cta_url": forms.TextInput(
                 attrs={

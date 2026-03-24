@@ -1920,6 +1920,10 @@ class ManifestoOrganiseBlock(BaseBlock):
     COLOR_DEFAULTS = {
         "bg_color": "#a5bfff",
         "text_color": "#ffffff",
+        "cta_bg_color": "#000000",
+        "cta_text_color": "#ffffff",
+        "cta_hover_bg_color": "#000000",
+        "cta_hover_text_color": "#ffffff",
     }
 
     organise_heading = models.CharField(
@@ -1935,6 +1939,10 @@ class ManifestoOrganiseBlock(BaseBlock):
     show_cta = models.BooleanField(default=True)
     cta_text = models.CharField(max_length=100, default="It starts here")
     cta_url = models.CharField(max_length=500, default="/our-team/")
+    cta_bg_color = models.CharField(max_length=7, default="#000000")
+    cta_text_color = models.CharField(max_length=7, default="#ffffff")
+    cta_hover_bg_color = models.CharField(max_length=7, default="#000000")
+    cta_hover_text_color = models.CharField(max_length=7, default="#ffffff")
     bg_color = models.CharField(max_length=7, default="#a5bfff")
     text_color = models.CharField(max_length=7, default="#ffffff")
 
@@ -1960,6 +1968,10 @@ class FreeAccessJournalsBlock(BaseBlock):
     COLOR_DEFAULTS = {
         "bg_color": "#ffffff",
         "text_color": "#212129",
+        "cta_bg_color": "#000000",
+        "cta_text_color": "#ffffff",
+        "cta_hover_bg_color": "#000000",
+        "cta_hover_text_color": "#ffffff",
     }
 
     heading = models.CharField(
@@ -1980,6 +1992,10 @@ class FreeAccessJournalsBlock(BaseBlock):
     show_cta = models.BooleanField(default=True)
     cta_text = models.CharField(max_length=100, default="Speak to us")
     cta_url = models.CharField(max_length=500, default="/our-team/")
+    cta_bg_color = models.CharField(max_length=7, default="#000000")
+    cta_text_color = models.CharField(max_length=7, default="#ffffff")
+    cta_hover_bg_color = models.CharField(max_length=7, default="#000000")
+    cta_hover_text_color = models.CharField(max_length=7, default="#ffffff")
     bg_color = models.CharField(max_length=7, default="#ffffff")
     text_color = models.CharField(max_length=7, default="#212129")
 

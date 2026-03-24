@@ -19,7 +19,14 @@
                     {{ block.heading }}
                 </h2>
                 {% if block.show_cta %}
-                <a href="{{ block.cta_url }}" class="btn btn-dark spectral-bold manifesto-cta-btn">{{ block.cta_text }}</a>
+                <a href="{{ block.cta_url }}" class="btn spectral-bold manifesto-cta-btn manifesto-cta-btn-{{ block.pk }}" style="background-color: {{ block.cta_bg_color }}; color: {{ block.cta_text_color }}; border-color: {{ block.cta_bg_color }};">{{ block.cta_text }}</a>
+                <style>
+                    .manifesto-cta-btn-{{ block.pk }}:hover {
+                        background-color: {{ block.cta_hover_bg_color }} !important;
+                        color: {{ block.cta_hover_text_color }} !important;
+                        border-color: {{ block.cta_hover_bg_color }} !important;
+                    }
+                </style>
                 {% endif %}
             </div>
         </div>
