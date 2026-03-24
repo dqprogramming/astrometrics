@@ -203,6 +203,12 @@ Block Pages / {{ page.name }}
     <input type="hidden" name="block_type" id="add-block-type">
 </form>
 
+{# Hidden form for delete-block POST #}
+<form method="post" id="delete-block-form" style="display:none;"
+      data-base-url="{% url 'cms_manager:block_page_delete_block' page.pk 0 %}">
+    {% csrf_token %}
+</form>
+
 {% if page.template_key %}
 {# Hidden form for reset-defaults POST #}
 <form method="post" action="{% url 'cms_manager:block_page_reset_defaults' page.pk %}" id="reset-defaults-form" style="display:none;">

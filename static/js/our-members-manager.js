@@ -380,29 +380,20 @@
         });
     }
 
-    // -- Block deletion (client-side) -----------------------------------------
-
-    var deletedBlockPKs = [];
-
-    function updateDeletedBlocksField() {
-        var input = document.getElementById('deleted-blocks-field');
-        if (input) input.value = JSON.stringify(deletedBlockPKs);
-    }
+    // -- Block deletion (server-side) -----------------------------------------
 
     function deleteBlock(btn) {
-        if (!confirm('Delete this block? It will be removed when you save.')) return;
+        if (!confirm('Delete this block? Any unsaved changes on this page will also be saved.')) return;
         var card = btn.closest('.section-card');
         if (!card) return;
         var pk = parseInt(card.dataset.blockPk, 10);
-        // Destroy any TinyMCE editors inside
-        destroyEditorsIn(card);
-        // Hide the card
-        card.classList.add('block-deleted');
-        // Track the PK for deletion on save
-        deletedBlockPKs.push(pk);
-        updateDeletedBlocksField();
-        updateBlockOrder();
-        markDirty();
+        var form = document.getElementById('delete-block-form');
+        if (!form) return;
+        // Build the URL by replacing the placeholder "0" at the end
+        var baseUrl = form.dataset.baseUrl;
+        form.action = baseUrl.replace(/\/0\/$/, '/' + pk + '/');
+        dirty = false; // suppress beforeunload warning
+        form.submit();
     }
 
     // -- Block order ----------------------------------------------------------
