@@ -136,12 +136,9 @@ Block Pages / {{ page.name }}
 
     <div style="display:flex; gap:0.5rem; margin-bottom:1.5rem; flex-wrap:wrap; align-items:center;">
         {% if page.template_key %}
-        <form method="post" action="{% url 'cms_manager:block_page_reset_defaults' page.pk %}" id="reset-defaults-form" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-sm btn-outline-warning" id="btn-reset-page-defaults">
-                <i class="bi bi-arrow-repeat"></i> Reset page to defaults
-            </button>
-        </form>
+        <button type="button" class="btn btn-sm btn-outline-warning" id="btn-reset-page-defaults">
+            <i class="bi bi-arrow-repeat"></i> Reset page to defaults
+        </button>
         {% endif %}
     </div>
 
@@ -205,6 +202,13 @@ Block Pages / {{ page.name }}
     {% csrf_token %}
     <input type="hidden" name="block_type" id="add-block-type">
 </form>
+
+{% if page.template_key %}
+{# Hidden form for reset-defaults POST #}
+<form method="post" action="{% url 'cms_manager:block_page_reset_defaults' page.pk %}" id="reset-defaults-form" style="display:none;">
+    {% csrf_token %}
+</form>
+{% endif %}
 
 {# ── Advanced / Delete Section ──────────────────────────────── #}
 <details style="margin-top:2rem;">

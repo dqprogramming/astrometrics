@@ -506,11 +506,12 @@
     // -- Reset page defaults --------------------------------------------------
 
     function initResetDefaults() {
+        var btn = document.getElementById('btn-reset-page-defaults');
         var form = document.getElementById('reset-defaults-form');
-        if (!form) return;
-        form.addEventListener('submit', function (e) {
-            if (!confirm('Reset the entire page to defaults? All current blocks will be deleted.')) {
-                e.preventDefault();
+        if (!btn || !form) return;
+        btn.addEventListener('click', function () {
+            if (confirm('Reset the entire page to defaults? All current blocks will be deleted.')) {
+                form.submit();
             }
         });
     }
