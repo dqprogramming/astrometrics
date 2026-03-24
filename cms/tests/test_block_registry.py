@@ -62,7 +62,7 @@ class BlockRegistryTests(TestCase):
     def test_get_color_defaults(self):
         defaults = get_color_defaults("members_header")
         self.assertEqual(
-            defaults, {"bg_color": "#b8f0ed", "text_color": "#212129"}
+            defaults, {"bg_color": "#71f7f2", "text_color": "#212129"}
         )
 
     def test_get_label(self):

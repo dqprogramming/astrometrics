@@ -1705,7 +1705,7 @@ class MembersHeaderBlock(BaseBlock):
     MANAGER_TEMPLATE = "cms/manager/blocks/_members_header.html"
     PUBLIC_TEMPLATE = "includes/blocks/_members_header.html"
     COLOR_DEFAULTS = {
-        "bg_color": "#b8f0ed",
+        "bg_color": "#71f7f2",
         "text_color": "#212129",
     }
 
@@ -1714,7 +1714,7 @@ class MembersHeaderBlock(BaseBlock):
         default="Our members.",
         help_text="Main hero heading",
     )
-    bg_color = models.CharField(max_length=7, default="#b8f0ed")
+    bg_color = models.CharField(max_length=7, default="#71f7f2")
     text_color = models.CharField(max_length=7, default="#212129")
 
     def __str__(self):

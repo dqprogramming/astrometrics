@@ -65,13 +65,13 @@ class MembersHeaderBlockTests(TestCase):
     def test_defaults(self):
         block = MembersHeaderBlock.objects.create()
         self.assertEqual(block.heading, "Our members.")
-        self.assertEqual(block.bg_color, "#b8f0ed")
+        self.assertEqual(block.bg_color, "#71f7f2")
         self.assertEqual(block.text_color, "#212129")
 
     def test_color_defaults_dict(self):
         self.assertEqual(
             MembersHeaderBlock.COLOR_DEFAULTS,
-            {"bg_color": "#b8f0ed", "text_color": "#212129"},
+            {"bg_color": "#71f7f2", "text_color": "#212129"},
         )
 
 
@@ -457,7 +457,7 @@ class BlockPageManagerViewTests(TestCase):
 
             if p.block_type == "members_header":
                 data[f"{bp}-heading"] = "Updated Heading"
-                data[f"{bp}-bg_color"] = "#b8f0ed"
+                data[f"{bp}-bg_color"] = "#71f7f2"
                 data[f"{bp}-text_color"] = "#212129"
             elif p.block_type == "who_we_are":
                 data[f"{bp}-section_heading"] = block.section_heading
