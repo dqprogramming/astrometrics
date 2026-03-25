@@ -1463,10 +1463,42 @@ class BlockPageUpdateView(StaffRequiredMixin, View):
                     # Revenue distribution: save columns + grid
                     col_fs = bd.get("column_formset")
                     if col_fs:
+                        # Build JS col ID → real PK mapping for new columns
+                        new_col_id_map = {}
                         for col in col_fs.save(commit=False):
                             col.save()
                         for col in col_fs.deleted_objects:
                             col.delete()
+
+                        # Map new_X JS IDs to saved PKs by scanning formset
+                        for i, col_form in enumerate(col_fs.forms):
+                            if (
+                                col_form not in col_fs.deleted_forms
+                                and not col_form.instance.pk
+                            ):
+                                continue
+                            id_val = col_form.data.get(
+                                f"{col_form.prefix}-id", ""
+                            )
+                            if not id_val:
+                                # This was a new column — JS used new_{index}
+                                new_col_id_map[f"new_{i}"] = str(
+                                    col_form.instance.pk
+                                )
+
+                        # Rewrite POST keys that used new_X col IDs
+                        mutable_post = request.POST.copy()
+                        if new_col_id_map:
+                            keys_to_update = {}
+                            for key in list(mutable_post.keys()):
+                                for js_id, real_pk in new_col_id_map.items():
+                                    if key.endswith(f"_{js_id}"):
+                                        new_key = key[: -len(js_id)] + real_pk
+                                        keys_to_update[key] = new_key
+                                        break
+                            for old_key, new_key in keys_to_update.items():
+                                mutable_post[new_key] = mutable_post[old_key]
+                                del mutable_post[old_key]
 
                         block_inst = bd["block"]
                         surviving_columns = list(
@@ -1474,7 +1506,7 @@ class BlockPageUpdateView(StaffRequiredMixin, View):
                         )
                         for table in block_inst.package_tables.all():
                             _process_revenue_table_grid(
-                                request.POST, table, surviving_columns
+                                mutable_post, table, surviving_columns
                             )
 
                 page.save()
