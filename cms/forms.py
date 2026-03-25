@@ -27,6 +27,8 @@ from .models import (
     OJCModelBlock,
     OurModelHeroBlock,
     Page,
+    PeopleListBlock,
+    PeopleListPerson,
     PersonCarouselBlock,
     PersonCarouselQuote,
     Post,
@@ -659,6 +661,46 @@ PersonCarouselQuoteFormSet = forms.inlineformset_factory(
     PersonCarouselBlock,
     PersonCarouselQuote,
     form=PersonCarouselQuoteForm,
+    extra=0,
+    can_delete=True,
+)
+
+
+class PeopleListBlockForm(forms.ModelForm):
+    class Meta:
+        model = PeopleListBlock
+        fields = ["name", "bg_color", "text_color", "card_bg_color"]
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "mgr-input"}),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "card_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+        }
+
+
+class PeopleListPersonForm(forms.ModelForm):
+    class Meta:
+        model = PeopleListPerson
+        fields = ["name", "description", "linkedin_url", "image", "sort_order"]
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "mgr-input"}),
+            "description": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 3}
+            ),
+            "linkedin_url": forms.TextInput(
+                attrs={
+                    "class": "mgr-input",
+                    "placeholder": "https://linkedin.com/in/...",
+                }
+            ),
+            "sort_order": forms.HiddenInput(),
+        }
+
+
+PeopleListPersonFormSet = forms.inlineformset_factory(
+    PeopleListBlock,
+    PeopleListPerson,
+    form=PeopleListPersonForm,
     extra=0,
     can_delete=True,
 )

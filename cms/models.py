@@ -1357,6 +1357,68 @@ class PersonCarouselQuote(models.Model):
 
 
 @register
+class PeopleListBlock(BaseBlock):
+    """A list of people with photos, names, descriptions, and LinkedIn links."""
+
+    BLOCK_TYPE = "people_list"
+    LABEL = "People List"
+    ICON = "bi-people"
+    FORM_CLASS = "cms.forms.PeopleListBlockForm"
+    FORMSET_CLASS = "cms.forms.PeopleListPersonFormSet"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_people_list.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_people_list.html"
+    COLOR_DEFAULTS = {
+        "bg_color": "#ffffff",
+        "text_color": "#212129",
+        "card_bg_color": "#71f7f2",
+    }
+
+    name = models.CharField(max_length=255, default="Board Members.")
+    bg_color = models.CharField(max_length=7, default="#ffffff")
+    text_color = models.CharField(max_length=7, default="#212129")
+    card_bg_color = models.CharField(max_length=7, default="#71f7f2")
+
+    def __str__(self):
+        return f"PeopleListBlock #{self.pk}"
+
+    def get_public_context(self):
+        return {"people": self.people.all()}
+
+    def create_children_from_config(self, children_config):
+        for child in children_config:
+            PeopleListPerson.objects.create(block=self, **child)
+
+
+class PeopleListPerson(models.Model):
+    """A person in a people list block."""
+
+    block = models.ForeignKey(
+        PeopleListBlock,
+        on_delete=models.CASCADE,
+        related_name="people",
+    )
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    linkedin_url = models.CharField(max_length=500, blank=True)
+    image = models.ImageField(
+        upload_to="blocks/people_list/",
+        blank=True,
+        help_text="Person photo (will be cropped to 600x400)",
+    )
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        self.description = sanitize_html(self.description)
+        super().save(*args, **kwargs)
+
+
+@register
 class ManifestoHeroBlock(BaseBlock):
     """Hero block for the Our Manifesto page."""
 

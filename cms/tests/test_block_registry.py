@@ -85,6 +85,7 @@ class BlockRegistryTests(TestCase):
                 "our_model_hero",
                 "ojc_model",
                 "journal_funding",
+                "people_list",
                 "revenue_distribution",
                 "text_image_cta",
             },
