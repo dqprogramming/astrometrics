@@ -596,6 +596,10 @@
         // Reset page defaults
         initResetDefaults();
 
+        // Initialize TinyMCE for all textareas (handles cases where
+        // django-tinymce inline scripts ran before the library loaded)
+        reinitAllEditors();
+
         // Track edits as dirty
         var form = document.getElementById('our-members-form');
         if (form) {
