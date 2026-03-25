@@ -1458,7 +1458,26 @@ class BlockPageUpdateView(StaffRequiredMixin, View):
                 for bd in block_data:
                     bd["form"].save()
                     if bd["child_formset"]:
+                        # Track new table IDs before save
+                        new_table_id_map = {}
+                        if bd.get("column_formset"):
+                            child_fs = bd["child_formset"]
+                            for i, tform in enumerate(child_fs.forms):
+                                id_val = tform.data.get(
+                                    f"{tform.prefix}-id", ""
+                                )
+                                if not id_val:
+                                    new_table_id_map[f"new_{i}"] = tform
                         bd["child_formset"].save()
+                        # Resolve new table PKs after save
+                        for js_id, tform in new_table_id_map.items():
+                            if tform.instance.pk:
+                                new_table_id_map[js_id] = str(
+                                    tform.instance.pk
+                                )
+                            else:
+                                new_table_id_map[js_id] = None
+                        bd["_new_table_id_map"] = new_table_id_map
 
                     # Revenue distribution: save columns + grid
                     col_fs = bd.get("column_formset")
@@ -1486,14 +1505,37 @@ class BlockPageUpdateView(StaffRequiredMixin, View):
                                     col_form.instance.pk
                                 )
 
-                        # Rewrite POST keys that used new_X col IDs
+                        # Rewrite POST keys that used new_X IDs
                         mutable_post = request.POST.copy()
+
+                        # Map new column IDs
                         if new_col_id_map:
                             keys_to_update = {}
                             for key in list(mutable_post.keys()):
                                 for js_id, real_pk in new_col_id_map.items():
                                     if key.endswith(f"_{js_id}"):
                                         new_key = key[: -len(js_id)] + real_pk
+                                        keys_to_update[key] = new_key
+                                        break
+                            for old_key, new_key in keys_to_update.items():
+                                mutable_post[new_key] = mutable_post[old_key]
+                                del mutable_post[old_key]
+
+                        # Map new table IDs
+                        new_tbl_map = {
+                            k: v
+                            for k, v in bd.get("_new_table_id_map", {}).items()
+                            if isinstance(v, str)
+                        }
+                        if new_tbl_map:
+                            keys_to_update = {}
+                            for key in list(mutable_post.keys()):
+                                for js_id, real_pk in new_tbl_map.items():
+                                    marker = f"_{js_id}_"
+                                    if marker in key:
+                                        new_key = key.replace(
+                                            marker, f"_{real_pk}_", 1
+                                        )
                                         keys_to_update[key] = new_key
                                         break
                             for old_key, new_key in keys_to_update.items():
