@@ -1,0 +1,97 @@
+<div class="mgr-field">
+    <label class="mgr-label">Section Name</label>
+    {{ form.name }}
+</div>
+
+{{ child_formset.management_form }}
+
+<div class="person-list" data-block-pk="{{ placement.pk }}">
+    {% for pform in child_formset %}
+    <div class="person-row border rounded p-3 mb-2">
+        <div class="d-flex align-items-start gap-2">
+            <span class="person-drag-handle mt-2" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+
+            <div class="flex-grow-1">
+                {% for hidden in pform.hidden_fields %}{{ hidden }}{% endfor %}
+                <span style="display:none;">{{ pform.DELETE }}</span>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div class="mgr-field">
+                        <label class="mgr-label">Name</label>
+                        {{ pform.name }}
+                    </div>
+                    <div class="mgr-field">
+                        <label class="mgr-label">LinkedIn URL</label>
+                        {{ pform.linkedin_url }}
+                    </div>
+                </div>
+                <div class="mgr-field">
+                    <label class="mgr-label">Description</label>
+                    {{ pform.description }}
+                </div>
+                <div class="mgr-field">
+                    <label class="mgr-label">Photo</label>
+                    {% if pform.instance.image %}
+                    <div style="margin-bottom:0.5rem;">
+                        <img src="{{ pform.instance.image.url }}" alt="Photo preview" style="max-height:60px; border-radius:4px;">
+                    </div>
+                    {% endif %}
+                    {{ pform.image }}
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-sm btn-outline-danger mt-2 btn-delete-person">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<button type="button" class="btn btn-sm btn-outline-primary mt-2 btn-add-person" data-block-pk="{{ placement.pk }}">
+    <i class="bi bi-plus"></i> Add Person
+</button>
+
+<div class="color-picker-row" style="margin-top:1rem;">
+    <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.bg_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.text_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Card BG</label> {{ form.card_bg_color }}</span>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
+</div>
+
+{# Template for new person rows #}
+<template class="person-template" data-prefix="children_{{ placement.pk }}">
+    <div class="person-row border rounded p-3 mb-2">
+        <div class="d-flex align-items-start gap-2">
+            <span class="person-drag-handle mt-2" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+
+            <div class="flex-grow-1">
+                <input type="hidden" name="children_{{ placement.pk }}-__prefix__-id" value="">
+                <input type="hidden" name="children_{{ placement.pk }}-__prefix__-sort_order" value="0">
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div class="mgr-field">
+                        <label class="mgr-label">Name</label>
+                        <input type="text" name="children_{{ placement.pk }}-__prefix__-name" class="mgr-input">
+                    </div>
+                    <div class="mgr-field">
+                        <label class="mgr-label">LinkedIn URL</label>
+                        <input type="text" name="children_{{ placement.pk }}-__prefix__-linkedin_url" class="mgr-input" placeholder="https://linkedin.com/in/...">
+                    </div>
+                </div>
+                <div class="mgr-field">
+                    <label class="mgr-label">Description</label>
+                    <textarea name="children_{{ placement.pk }}-__prefix__-description" class="mgr-textarea" rows="3"></textarea>
+                </div>
+                <div class="mgr-field">
+                    <label class="mgr-label">Photo</label>
+                    <input type="file" name="children_{{ placement.pk }}-__prefix__-image" accept="image/*" class="form-control form-control-sm">
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-sm btn-outline-danger mt-2 btn-delete-person">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    </div>
+</template>
