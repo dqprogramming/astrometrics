@@ -34,14 +34,6 @@ _ALL_CARDS = [
         "tags": ["content", "cms"],
     },
     {
-        "title": "Our Model",
-        "description": "Edit the Our Model page — collections, funding, revenue tables, and CTA.",
-        "icon": "diagram-3",
-        "color": "#6366f1",
-        "url": reverse_lazy("cms_manager:our_model"),
-        "tags": ["content", "cms"],
-    },
-    {
         "title": "Pages",
         "description": "Manage static CMS pages — about, contact, and other site pages.",
         "icon": "file-text",
