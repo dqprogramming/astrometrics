@@ -156,6 +156,23 @@
         });
     }
 
+    // -- Delete person --------------------------------------------------------
+
+    function initDeletePerson(btn) {
+        btn.addEventListener('click', function () {
+            if (!confirm('Remove this person?')) return;
+            var row = btn.closest('.person-row');
+            var deleteCheckbox = row.querySelector('input[name$="-DELETE"]');
+            if (deleteCheckbox) {
+                deleteCheckbox.checked = true;
+                hideRow(row);
+            } else {
+                row.remove();
+            }
+            markDirty();
+        });
+    }
+
     // -- Add quote (scoped by block) ------------------------------------------
 
     function addQuoteToBlock(blockCard) {
@@ -224,6 +241,39 @@
         totalForms.value = count + 1;
 
         initDeleteInstitution(newRow.querySelector('.btn-delete-institution'));
+
+        markDirty();
+    }
+
+    // -- Add person (scoped by block) -----------------------------------------
+
+    function addPersonToBlock(blockCard) {
+        var template = blockCard.querySelector('.person-template');
+        var listEl = blockCard.querySelector('.person-list');
+        if (!template || !listEl) return;
+
+        var prefix = template.dataset.prefix;
+        var totalForms = blockCard.querySelector('input[name="' + prefix + '-TOTAL_FORMS"]');
+        if (!totalForms) return;
+        var count = parseInt(totalForms.value, 10);
+
+        var newRow = template.content.firstElementChild.cloneNode(true);
+
+        newRow.querySelectorAll('input, textarea, select').forEach(function (el) {
+            if (el.name) el.name = el.name.replace(/__prefix__/g, count);
+            if (el.id) el.id = el.id.replace(/__prefix__/g, count);
+        });
+        newRow.querySelectorAll('label').forEach(function (el) {
+            if (el.htmlFor) el.htmlFor = el.htmlFor.replace(/__prefix__/g, count);
+        });
+
+        var sortInput = newRow.querySelector('input[name$="-sort_order"]');
+        if (sortInput) sortInput.value = count;
+
+        listEl.appendChild(newRow);
+        totalForms.value = count + 1;
+
+        initDeletePerson(newRow.querySelector('.btn-delete-person'));
 
         markDirty();
     }
@@ -462,6 +512,18 @@
                 }
             });
         });
+
+        // Person lists
+        document.querySelectorAll('.person-list').forEach(function (list) {
+            Sortable.create(list, {
+                handle: '.person-drag-handle',
+                animation: 150,
+                onEnd: function () {
+                    updateSortOrders(list, '.person-row');
+                    markDirty();
+                }
+            });
+        });
     }
 
     // -- Delete block ---------------------------------------------------------
@@ -543,12 +605,21 @@
         // Delete buttons for existing rows
         document.querySelectorAll('.btn-delete-quote').forEach(initDeleteQuote);
         document.querySelectorAll('.btn-delete-institution').forEach(initDeleteInstitution);
+        document.querySelectorAll('.btn-delete-person').forEach(initDeletePerson);
 
         // Add quote buttons (scoped per block)
         document.querySelectorAll('.btn-add-quote').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 var card = btn.closest('.section-card');
                 if (card) addQuoteToBlock(card);
+            });
+        });
+
+        // Add person buttons (scoped per block)
+        document.querySelectorAll('.btn-add-person').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var card = btn.closest('.section-card');
+                if (card) addPersonToBlock(card);
             });
         });
 
@@ -614,6 +685,9 @@
                 });
                 document.querySelectorAll('.institution-list').forEach(function (list) {
                     updateSortOrders(list, '.institution-row');
+                });
+                document.querySelectorAll('.person-list').forEach(function (list) {
+                    updateSortOrders(list, '.person-row');
                 });
                 updateBlockOrder();
             });
