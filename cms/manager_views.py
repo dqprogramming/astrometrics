@@ -42,9 +42,6 @@ from .forms import (
     HeaderSettingsForm,
     LandingPageSettingsForm,
     MenuItemFormSet,
-    OurModelPackageTableFormSet,
-    OurModelPageSettingsForm,
-    OurModelTableColumnFormSet,
     PageForm,
     PostForm,
     RevenueTableColumnFormSet,
@@ -62,9 +59,6 @@ from .models import (
     FooterSettings,
     HeaderSettings,
     LandingPageSettings,
-    OurModelPackageCell,
-    OurModelPackageRow,
-    OurModelPageSettings,
     Page,
     PageBlock,
     Post,
@@ -355,160 +349,6 @@ class AboutUsPageSettingsUpdateView(StaffRequiredMixin, View):
         return render(
             request, self.template_name, {"form": form, "formset": formset}
         )
-
-
-# ── Our Model Page Settings ─────────────────────────────────────────────────
-
-
-class OurModelPageSettingsUpdateView(StaffRequiredMixin, View):
-    template_name = "cms/manager/our_model_form.html"
-
-    def _build_context(self, form, column_formset, table_formset, settings):
-        columns = list(settings.table_columns.order_by("sort_order"))
-
-        # Build grid data and attach to each table form's instance
-        for table_form in table_formset:
-            inst = table_form.instance
-            if inst.pk:
-                rows_data = []
-                for row in inst.rows.order_by("sort_order"):
-                    cells_by_col = row.get_cells_by_column()
-                    cell_values = []
-                    for col in columns:
-                        cell_values.append(
-                            {
-                                "column_pk": col.pk,
-                                "value": cells_by_col.get(col.pk, ""),
-                            }
-                        )
-                    rows_data.append(
-                        {
-                            "pk": row.pk,
-                            "sort_order": row.sort_order,
-                            "cells": cell_values,
-                        }
-                    )
-                inst.grid_rows = rows_data
-            else:
-                inst.grid_rows = []
-
-        return {
-            "form": form,
-            "column_formset": column_formset,
-            "table_formset": table_formset,
-            "columns": columns,
-        }
-
-    def get(self, request):
-        settings = OurModelPageSettings.load()
-        form = OurModelPageSettingsForm(instance=settings)
-        column_formset = OurModelTableColumnFormSet(
-            instance=settings, prefix="columns"
-        )
-        table_formset = OurModelPackageTableFormSet(
-            instance=settings, prefix="tables"
-        )
-        return render(
-            request,
-            self.template_name,
-            self._build_context(form, column_formset, table_formset, settings),
-        )
-
-    def post(self, request):
-        settings = OurModelPageSettings.load()
-        form = OurModelPageSettingsForm(request.POST, instance=settings)
-        column_formset = OurModelTableColumnFormSet(
-            request.POST, instance=settings, prefix="columns"
-        )
-        table_formset = OurModelPackageTableFormSet(
-            request.POST, instance=settings, prefix="tables"
-        )
-
-        if (
-            form.is_valid()
-            and column_formset.is_valid()
-            and table_formset.is_valid()
-        ):
-            form.save()
-
-            # Save columns
-            for col in column_formset.save(commit=False):
-                col.save()
-            for col in column_formset.deleted_objects:
-                col.delete()
-
-            # Save tables
-            for table in table_formset.save(commit=False):
-                table.save()
-            for table in table_formset.deleted_objects:
-                table.delete()
-
-            # Process row/cell grid from POST data
-            surviving_columns = list(
-                settings.table_columns.order_by("sort_order")
-            )
-            for table in settings.package_tables.all():
-                self._process_table_grid(
-                    request.POST, table, surviving_columns
-                )
-
-            messages.success(request, "Our Model page settings updated.")
-            return redirect(reverse_lazy("cms_manager:our_model"))
-
-        return render(
-            request,
-            self.template_name,
-            self._build_context(form, column_formset, table_formset, settings),
-        )
-
-    def _process_table_grid(self, post_data, table, columns):
-        """Process row/cell data from POST for a single table."""
-        existing_rows = {
-            row.pk: row for row in table.rows.order_by("sort_order")
-        }
-
-        # Handle deletions
-        for key in post_data:
-            if key.startswith(f"delete_row_{table.pk}_"):
-                row_pk = int(key.split("_")[-1])
-                if row_pk in existing_rows:
-                    existing_rows[row_pk].delete()
-                    del existing_rows[row_pk]
-
-        # Update existing rows
-        for row_pk, row in existing_rows.items():
-            for col in columns:
-                field_name = f"cell_{table.pk}_{row_pk}_{col.pk}"
-                if field_name in post_data:
-                    value = post_data[field_name]
-                    OurModelPackageCell.objects.update_or_create(
-                        row=row,
-                        column=col,
-                        defaults={"value": value},
-                    )
-
-        # New rows: cell values keyed by new_cell_{table_pk}_{row_idx}_{col_pk}
-        new_row_indices = set()
-        for key in post_data:
-            if key.startswith(f"new_cell_{table.pk}_"):
-                parts = key.split("_")
-                # new_cell_{table_pk}_{row_idx}_{col_pk}
-                new_row_indices.add(int(parts[3]))
-
-        max_sort = max(
-            (r.sort_order for r in existing_rows.values()), default=-1
-        )
-        for idx in sorted(new_row_indices):
-            max_sort += 1
-            row = OurModelPackageRow.objects.create(
-                table=table, sort_order=max_sort
-            )
-            for col in columns:
-                field_name = f"new_cell_{table.pk}_{idx}_{col.pk}"
-                value = post_data.get(field_name, "")
-                OurModelPackageCell.objects.create(
-                    row=row, column=col, value=value
-                )
 
 
 # ── Header Settings ─────────────────────────────────────────────────────────

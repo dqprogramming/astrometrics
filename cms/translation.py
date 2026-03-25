@@ -17,10 +17,6 @@ from cms.models import (
     HeaderSettings,
     LandingPageSettings,
     MenuItem,
-    OurModelPackageCell,
-    OurModelPackageTable,
-    OurModelPageSettings,
-    OurModelTableColumn,
     Page,
     Post,
     Snippet,
@@ -90,49 +86,6 @@ class MenuItemTranslationOptions(TranslationOptions):
 @register(Snippet)
 class SnippetTranslationOptions(TranslationOptions):
     fields = ("name", "body")
-
-
-@register(OurModelPageSettings)
-class OurModelPageSettingsTranslationOptions(TranslationOptions):
-    fields = (
-        "hero_heading",
-        "hero_image_alt",
-        "model_heading",
-        "model_body",
-        "collections_label",
-        "collection_1_title",
-        "collection_1_link_text",
-        "collection_2_title",
-        "collection_2_link_text",
-        "collection_3_title",
-        "collection_3_link_text",
-        "funding_heading",
-        "funding_upper_image_alt",
-        "funding_lower_image_alt",
-        "funding_body",
-        "revenue_heading",
-        "revenue_description",
-        "revenue_callout",
-        "cta_heading",
-        "cta_description",
-        "cta_button_text",
-        "cta_image_alt",
-    )
-
-
-@register(OurModelTableColumn)
-class OurModelTableColumnTranslationOptions(TranslationOptions):
-    fields = ("heading",)
-
-
-@register(OurModelPackageTable)
-class OurModelPackageTableTranslationOptions(TranslationOptions):
-    fields = ("title", "description")
-
-
-@register(OurModelPackageCell)
-class OurModelPackageCellTranslationOptions(TranslationOptions):
-    fields = ("value",)
 
 
 @register(BoardSection)

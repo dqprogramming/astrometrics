@@ -112,12 +112,6 @@ urlpatterns = [
         views.block_page_csv_parse,
         name="block_page_csv_parse",
     ),
-    # Our Model
-    path(
-        "our-model/",
-        views.OurModelPageSettingsUpdateView.as_view(),
-        name="our_model",
-    ),
     # Our Team
     path(
         "our-team/",

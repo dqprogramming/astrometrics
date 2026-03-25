@@ -33,6 +33,6 @@ urlpatterns = [
     path("news/<slug:slug>/", news_detail_view, name="news-detail"),
     path("preview/post/<uuid:token>/", post_preview_view, name="post-preview"),
     path("preview/page/<uuid:token>/", page_preview_view, name="page-preview"),
-    # Slug catch-all — tries block page first, then Our Manifesto / Our Model
+    # Slug catch-all — serves block pages by slug
     path("<slug:slug>/", slug_page_view, name="slug-page"),
 ]

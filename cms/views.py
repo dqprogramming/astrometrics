@@ -5,7 +5,6 @@ CMS views for static content pages.
 import structlog
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
-from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 
 from .forms import ContactSubmissionForm
@@ -16,7 +15,6 @@ from .models import (
     Category,
     ContactFormSettings,
     LandingPageSettings,
-    OurModelPageSettings,
     Page,
     Post,
     TeamSection,
@@ -28,39 +26,6 @@ logger = structlog.get_logger(__name__)
 def index_view(request):
     landing = LandingPageSettings.load()
     return render(request, "landing.html", {"landing": landing})
-
-
-def our_model_view(request, slug=None):
-    settings = OurModelPageSettings.load()
-    if slug and slug != settings.slug:
-        raise Http404
-
-    columns = settings.get_table_columns()
-    tables = settings.get_package_tables()
-    num_columns = len(columns)
-    col_width_pct = (100 // num_columns) if num_columns else 25
-
-    # Pre-build ordered cell lists for template rendering
-    for table in tables:
-        for row in table.rows.all():
-            cells_by_col = {
-                cell.column_id: cell.value for cell in row.cells.all()
-            }
-            row.ordered_cells = [
-                cells_by_col.get(col.pk, "") for col in columns
-            ]
-
-    return render(
-        request,
-        "our_model.html",
-        {
-            "settings": settings,
-            "columns": columns,
-            "tables": tables,
-            "num_columns": num_columns,
-            "col_width_pct": col_width_pct,
-        },
-    )
 
 
 def board_view(request):
@@ -188,15 +153,10 @@ def block_page_view(request, slug):
 
 
 def slug_page_view(request, slug):
-    """Try block page first, then fall back to our-model page."""
-    try:
-        page = BlockPage.objects.get(slug=slug)
-        blocks = _build_public_blocks(page)
-        return render(
-            request, "block_page.html", {"page": page, "blocks": blocks}
-        )
-    except BlockPage.DoesNotExist:
-        return our_model_view(request, slug)
+    """Serve block pages by slug."""
+    page = get_object_or_404(BlockPage, slug=slug)
+    blocks = _build_public_blocks(page)
+    return render(request, "block_page.html", {"page": page, "blocks": blocks})
 
 
 def page_preview_view(request, token):
