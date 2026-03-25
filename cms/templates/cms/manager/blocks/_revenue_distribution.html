@@ -450,9 +450,57 @@ names (staff-only admin UI), matching the existing our-model-manager.js pattern.
             });
             div.appendChild(colourGrid);
 
+            // Build data grid immediately for new tables
+            var gridLabel = document.createElement('div');
+            gridLabel.className = 'mgr-help';
+            gridLabel.style.cssText = 'margin-bottom:0.5rem;';
+            gridLabel.textContent = 'Data Grid';
+            div.appendChild(gridLabel);
+
+            var gridWrap = document.createElement('div');
+            gridWrap.style.cssText = 'overflow-x:auto;';
+            var gridTable = document.createElement('table');
+            gridTable.className = 'rev-data-grid-table data-grid-table';
+            gridTable.dataset.tablePk = 'new_' + total;
+            gridTable.dataset.placementPk = PLACEMENT_PK;
+            gridTable.style.cssText = 'width:100%; border-collapse:collapse; font-size:0.85rem;';
+
+            var thead = document.createElement('thead');
+            var headTr = document.createElement('tr');
+            var cols = getLiveColumns();
+            cols.forEach(function (col) {
+                var th = document.createElement('th');
+                th.className = 'grid-col-header';
+                th.dataset.colId = col.id;
+                th.style.cssText = TH_STYLE;
+                th.textContent = col.heading;
+                headTr.appendChild(th);
+            });
+            var actTh = document.createElement('th');
+            actTh.style.cssText = TH_STYLE + ' width:60px;';
+            headTr.appendChild(actTh);
+            thead.appendChild(headTr);
+            gridTable.appendChild(thead);
+
+            var tbody = document.createElement('tbody');
+            tbody.id = 'rev-grid-new_' + total;
+            gridTable.appendChild(tbody);
+            gridWrap.appendChild(gridTable);
+            div.appendChild(gridWrap);
+
+            var addRowBtn = document.createElement('button');
+            addRowBtn.type = 'button';
+            addRowBtn.className = 'btn-mgr-secondary rev-add-row-btn';
+            addRowBtn.dataset.tablePk = 'new_' + total;
+            addRowBtn.dataset.placementPk = PLACEMENT_PK;
+            addRowBtn.style.cssText = 'margin-top:0.5rem; font-size:0.8rem;';
+            addRowBtn.innerHTML = '<i class="bi bi-plus"></i> Add Row';
+            div.appendChild(addRowBtn);
+
             var helpDiv = document.createElement('div');
             helpDiv.className = 'mgr-help';
-            helpDiv.textContent = 'Save the form first to add rows to this table.';
+            helpDiv.style.cssText = 'margin-top:0.5rem;';
+            helpDiv.textContent = 'Note: save to persist new table data.';
             div.appendChild(helpDiv);
 
             tblListContainer.appendChild(div);
