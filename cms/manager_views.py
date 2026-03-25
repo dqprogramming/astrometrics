@@ -1656,6 +1656,9 @@ class BlockAddBlockView(StaffRequiredMixin, View):
             return redirect("cms_manager:block_page_edit", pk=page.pk)
 
         block = model_cls.objects.create()
+        # Seed default children for blocks that have them
+        if hasattr(block, "_DEFAULT_CHILDREN"):
+            block.create_children_from_config(block._DEFAULT_CHILDREN)
         ct = ContentType.objects.get_for_model(page)
         max_order = page.blocks.aggregate(m=models.Max("sort_order"))["m"] or 0
         PageBlock.objects.create(

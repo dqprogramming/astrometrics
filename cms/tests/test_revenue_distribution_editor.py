@@ -32,9 +32,6 @@ class BuildBlockDataRevenueDistributionTests(TestCase):
 
     def setUp(self):
         self.block = RevenueDistributionBlock.objects.create()
-        # Clear auto-seeded defaults
-        self.block.package_tables.all().delete()
-        self.block.table_columns.all().delete()
 
         self.page = BlockPage.objects.create(name="Test", slug="test")
         ct = ContentType.objects.get_for_model(self.page)
@@ -120,9 +117,6 @@ class ProcessRevenueTableGridTests(TestCase):
 
     def setUp(self):
         self.block = RevenueDistributionBlock.objects.create()
-        # Clear auto-seeded defaults
-        self.block.package_tables.all().delete()
-        self.block.table_columns.all().delete()
 
         self.col1 = RevenueTableColumn.objects.create(
             block=self.block, heading="Size", sort_order=0
@@ -205,9 +199,6 @@ class BlockPageUpdateViewRevenueDistributionPostTests(TestCase):
             "staff", "staff@example.com", "pass", is_staff=True
         )
         self.block = RevenueDistributionBlock.objects.create()
-        # Clear auto-seeded defaults
-        self.block.package_tables.all().delete()
-        self.block.table_columns.all().delete()
 
         self.page = BlockPage.objects.create(
             name="Test Page", slug="test-page"

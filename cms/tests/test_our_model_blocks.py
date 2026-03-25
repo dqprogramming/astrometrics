@@ -211,9 +211,6 @@ class RevenueDistributionBlockTests(TestCase):
 
     def test_get_public_context(self):
         block = RevenueDistributionBlock.objects.create()
-        # Clear auto-seeded defaults
-        block.package_tables.all().delete()
-        block.table_columns.all().delete()
 
         col1 = RevenueTableColumn.objects.create(
             block=block, heading="Col1", sort_order=0
@@ -236,9 +233,6 @@ class RevenueDistributionBlockTests(TestCase):
 
     def test_create_children_from_config(self):
         block = RevenueDistributionBlock.objects.create()
-        # Clear auto-seeded defaults
-        block.package_tables.all().delete()
-        block.table_columns.all().delete()
 
         config = {
             "columns": ["Col A", "Col B"],
@@ -263,8 +257,9 @@ class RevenueDistributionBlockTests(TestCase):
             4,
         )
 
-    def test_save_creates_default_children(self):
+    def test_default_children_config(self):
         block = RevenueDistributionBlock.objects.create()
+        block.create_children_from_config(block._DEFAULT_CHILDREN)
         self.assertEqual(block.table_columns.count(), 4)
         self.assertEqual(block.package_tables.count(), 3)
         total_rows = sum(t.rows.count() for t in block.package_tables.all())

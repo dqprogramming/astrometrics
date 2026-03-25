@@ -2333,10 +2333,7 @@ class RevenueDistributionBlock(BaseBlock):
         return f"RevenueDistributionBlock #{self.pk}"
 
     def save(self, *args, **kwargs):
-        is_new = self._state.adding
         super().save(*args, **kwargs)
-        if is_new and not self.table_columns.exists():
-            self.create_children_from_config(self._DEFAULT_CHILDREN)
 
     def get_public_context(self):
         columns = list(self.table_columns.order_by("sort_order"))
