@@ -46,8 +46,8 @@
                 {% endfor %}
             </div>
 
-            <div class="model-revenue-callout">
-                <p class="spectral-bold">{{ block.callout }}</p>
+            <div class="model-revenue-callout spectral-bold">
+                {{ block.callout|safe }}
             </div>
         </div>
     </div>
