@@ -2260,13 +2260,83 @@ class RevenueDistributionBlock(BaseBlock):
         max_length=255,
         default="Journal Funding &\nRevenue Distribution.",
     )
-    description = models.TextField(blank=True)
-    callout = models.TextField(blank=True)
+    description = models.TextField(
+        blank=True,
+        default=(
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
+            " sed do eiusmod tempor incididunt ut labore et dolore"
+            " magna aliqua. Ut enim ad minim veniam, quis nostrud"
+            " exercitation ullamco."
+        ),
+    )
+    callout = models.TextField(
+        blank=True,
+        default=(
+            "We will provide documentation, training events, and"
+            " regular community meet-ups for OJC members."
+        ),
+    )
     bg_color = models.CharField(max_length=7, default="#e8e8e8")
     text_color = models.CharField(max_length=7, default="#212129")
 
+    _DEFAULT_CHILDREN = {
+        "columns": [
+            "Package & Band",
+            "Journal Size",
+            "No. of articles p/year",
+            "Annual Funding",
+        ],
+        "tables": [
+            {
+                "title": "Package A (full fat)",
+                "description": "Full support for journals with no funding or income.",
+                "colour_preset": "pink",
+                "sort_order": 0,
+                "rows": [
+                    ["1", "Tiny", "10", "\u00a310,500"],
+                    ["2", "Small", "25", ""],
+                    ["3", "Medium", "50", "\u00a319,200"],
+                    ["4", "Large", "100", "\u00a325,500"],
+                    ["5", "Very Large", "500", ""],
+                ],
+            },
+            {
+                "title": "Package B (semi-skimmed)",
+                "description": "Partial support for journals with minimal funding or income.",
+                "colour_preset": "green",
+                "sort_order": 1,
+                "rows": [
+                    ["1", "Tiny", "10", ""],
+                    ["2", "Small", "25", "\u00a39,000"],
+                    ["3", "Medium", "50", "\u00a317,700"],
+                    ["4", "Large", "100", "\u00a324,000"],
+                    ["5", "Very Large", "500", ""],
+                ],
+            },
+            {
+                "title": "Package C (skimmed)",
+                "description": "Top-up support for journals with established funding or income.",
+                "colour_preset": "blue",
+                "sort_order": 2,
+                "rows": [
+                    ["1", "Tiny", "10", "\u00a35,000"],
+                    ["2", "Small", "25", "\u00a37,000"],
+                    ["3", "Medium", "50", "\u00a39,350"],
+                    ["4", "Large", "100", "\u00a312,500"],
+                    ["5", "Very Large", "500", "\u00a324,500"],
+                ],
+            },
+        ],
+    }
+
     def __str__(self):
         return f"RevenueDistributionBlock #{self.pk}"
+
+    def save(self, *args, **kwargs):
+        is_new = self._state.adding
+        super().save(*args, **kwargs)
+        if is_new and not self.table_columns.exists():
+            self.create_children_from_config(self._DEFAULT_CHILDREN)
 
     def get_public_context(self):
         columns = list(self.table_columns.order_by("sort_order"))

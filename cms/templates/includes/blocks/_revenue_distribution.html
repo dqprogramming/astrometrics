@@ -14,20 +14,20 @@
                     <caption class="sr-only">Revenue distribution package column headers</caption>
                     <thead>
                         <tr>
-                            {% for col in columns %}
-                            <th scope="col" style="width: {{ col_width_pct }}%">{{ col.heading }}</th>
+                            {% for col in block.columns %}
+                            <th scope="col" style="width: {{ block.col_width_pct }}%">{{ col.heading }}</th>
                             {% endfor %}
                         </tr>
                     </thead>
                 </table>
 
-                {% for table in tables %}
+                {% for table in block.tables %}
                 <!-- {{ table.title }} -->
                 <table class="model-packages-table" aria-labelledby="table-heading-{{ table.pk }}">
                     <caption class="sr-only">{{ table.title }} — {{ table.description }}</caption>
                     <thead>
                         <tr class="package-header" style="background-color: {{ table.header_bg_colour }}; color: {{ table.text_colour }};">
-                            <th scope="colgroup" colspan="{{ num_columns }}" id="table-heading-{{ table.pk }}">
+                            <th scope="colgroup" colspan="{{ block.num_columns }}" id="table-heading-{{ table.pk }}">
                                 <strong>{{ table.title }}</strong><br>
                                 {{ table.description }}
                             </th>
@@ -37,7 +37,7 @@
                         {% for row in table.rows.all %}
                         <tr class="package-row" style="background-color: {{ table.row_bg_colour }}; color: {{ table.text_colour }};">
                             {% for cell_value in row.ordered_cells %}
-                            <td style="width: {{ col_width_pct }}%">{{ cell_value }}</td>
+                            <td style="width: {{ block.col_width_pct }}%">{{ cell_value }}</td>
                             {% endfor %}
                         </tr>
                         {% endfor %}
