@@ -169,7 +169,7 @@ Block Pages / {{ page.name }}
             </span>
         </div>
         <div data-block-content {% if not bd.placement.is_visible %}class="section-disabled"{% endif %}>
-            {% include bd.form_template with form=bd.form child_formset=bd.child_formset placement=bd.placement %}
+            {% include bd.form_template with form=bd.form child_formset=bd.child_formset placement=bd.placement column_formset=bd.column_formset columns=bd.columns %}
         </div>
     </div>
     {% endfor %}

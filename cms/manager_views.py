@@ -47,6 +47,7 @@ from .forms import (
     OurModelTableColumnFormSet,
     PageForm,
     PostForm,
+    RevenueTableColumnFormSet,
     SnippetForm,
     TeamMemberFormSet,
 )
@@ -67,6 +68,8 @@ from .models import (
     Page,
     PageBlock,
     Post,
+    RevenuePackageCell,
+    RevenuePackageRow,
     Snippet,
     TeamMember,
     TeamSection,
@@ -1210,6 +1213,50 @@ def board_member_image_upload(request):
 # ── Block Pages ──────────────────────────────────────────────────────────────
 
 
+def _process_revenue_table_grid(post_data, table, columns):
+    """Process row/cell data from POST for a single revenue distribution table."""
+    existing_rows = {row.pk: row for row in table.rows.order_by("sort_order")}
+
+    # Handle deletions
+    for key in post_data:
+        if key.startswith(f"delete_row_{table.pk}_"):
+            row_pk = int(key.split("_")[-1])
+            if row_pk in existing_rows:
+                existing_rows[row_pk].delete()
+                del existing_rows[row_pk]
+
+    # Update existing rows
+    for row_pk, row in existing_rows.items():
+        for col in columns:
+            field_name = f"cell_{table.pk}_{row_pk}_{col.pk}"
+            if field_name in post_data:
+                value = post_data[field_name]
+                RevenuePackageCell.objects.update_or_create(
+                    row=row,
+                    column=col,
+                    defaults={"value": value},
+                )
+
+    # New rows: cell values keyed by new_cell_{table_pk}_{row_idx}_{col_pk}
+    new_row_indices = set()
+    for key in post_data:
+        if key.startswith(f"new_cell_{table.pk}_"):
+            parts = key.split("_")
+            # new_cell_{table_pk}_{row_idx}_{col_pk}
+            new_row_indices.add(int(parts[3]))
+
+    max_sort = max((r.sort_order for r in existing_rows.values()), default=-1)
+    for idx in sorted(new_row_indices):
+        max_sort += 1
+        row = RevenuePackageRow.objects.create(
+            table=table, sort_order=max_sort
+        )
+        for col in columns:
+            field_name = f"new_cell_{table.pk}_{idx}_{col.pk}"
+            value = post_data.get(field_name, "")
+            RevenuePackageCell.objects.create(row=row, column=col, value=value)
+
+
 def _build_block_data(placements, data=None, files=None):
     """Build a list of dicts with form, formset, placement, etc. for each block."""
     block_data = []
@@ -1232,18 +1279,59 @@ def _build_block_data(placements, data=None, files=None):
                 prefix=f"children_{p.pk}",
             )
         color_defaults = json.dumps(get_color_defaults(p.block_type))
-        block_data.append(
-            {
-                "placement": p,
-                "block": block,
-                "block_type": p.block_type,
-                "block_type_label": get_label(p.block_type),
-                "form": form,
-                "child_formset": child_formset,
-                "form_template": get_manager_template(p.block_type),
-                "color_defaults": color_defaults,
-            }
-        )
+        bd = {
+            "placement": p,
+            "block": block,
+            "block_type": p.block_type,
+            "block_type_label": get_label(p.block_type),
+            "form": form,
+            "child_formset": child_formset,
+            "form_template": get_manager_template(p.block_type),
+            "color_defaults": color_defaults,
+        }
+
+        # Revenue distribution blocks need column formset + grid data
+        if p.block_type == "revenue_distribution":
+            col_prefix = f"revenue_columns_{p.pk}"
+            column_formset = RevenueTableColumnFormSet(
+                data=data,
+                files=files,
+                instance=block,
+                prefix=col_prefix,
+            )
+            columns = list(block.table_columns.order_by("sort_order"))
+
+            # Build grid_rows for each table form instance
+            if child_formset:
+                for table_form in child_formset:
+                    inst = table_form.instance
+                    if inst.pk:
+                        rows_data = []
+                        for row in inst.rows.order_by("sort_order"):
+                            cells_by_col = row.get_cells_by_column()
+                            cell_values = []
+                            for col in columns:
+                                cell_values.append(
+                                    {
+                                        "column_pk": col.pk,
+                                        "value": cells_by_col.get(col.pk, ""),
+                                    }
+                                )
+                            rows_data.append(
+                                {
+                                    "pk": row.pk,
+                                    "sort_order": row.sort_order,
+                                    "cells": cell_values,
+                                }
+                            )
+                        inst.grid_rows = rows_data
+                    else:
+                        inst.grid_rows = []
+
+            bd["column_formset"] = column_formset
+            bd["columns"] = columns
+
+        block_data.append(bd)
     return block_data
 
 
@@ -1333,6 +1421,17 @@ class BlockPageUpdateView(StaffRequiredMixin, View):
                                 f"{bd['block_type_label']} item {form_idx + 1}"
                                 f" — {field}: {error}"
                             )
+            # Validate revenue_distribution column formset
+            col_fs = bd.get("column_formset")
+            if col_fs and not col_fs.is_valid():
+                all_valid = False
+                for form_idx, form_errs in enumerate(col_fs.errors):
+                    for field, errors in form_errs.items():
+                        for error in errors:
+                            form_errors.append(
+                                f"{bd['block_type_label']} column {form_idx + 1}"
+                                f" — {field}: {error}"
+                            )
 
         if all_valid:
             with transaction.atomic():
@@ -1360,6 +1459,23 @@ class BlockPageUpdateView(StaffRequiredMixin, View):
                     bd["form"].save()
                     if bd["child_formset"]:
                         bd["child_formset"].save()
+
+                    # Revenue distribution: save columns + grid
+                    col_fs = bd.get("column_formset")
+                    if col_fs:
+                        for col in col_fs.save(commit=False):
+                            col.save()
+                        for col in col_fs.deleted_objects:
+                            col.delete()
+
+                        block_inst = bd["block"]
+                        surviving_columns = list(
+                            block_inst.table_columns.order_by("sort_order")
+                        )
+                        for table in block_inst.package_tables.all():
+                            _process_revenue_table_grid(
+                                request.POST, table, surviving_columns
+                            )
 
                 page.save()
 
