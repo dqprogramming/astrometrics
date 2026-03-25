@@ -116,7 +116,7 @@ OUR_MODEL_CONFIG = [
         "block_type": "revenue_distribution",
         "is_visible": True,
         "defaults": {
-            "heading": "Journal Funding &\nRevenue Distribution.",
+            "heading": "Journal Funding & \nRevenue Distribution.",
             "description": (
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
                 " sed do eiusmod tempor incididunt ut labore et dolore"

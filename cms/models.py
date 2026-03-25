@@ -2258,7 +2258,7 @@ class RevenueDistributionBlock(BaseBlock):
 
     heading = models.CharField(
         max_length=255,
-        default="Journal Funding &\nRevenue Distribution.",
+        default="Journal Funding & \nRevenue Distribution.",
     )
     description = models.TextField(
         blank=True,
