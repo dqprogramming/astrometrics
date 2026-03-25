@@ -37,9 +37,8 @@
             {{ col_form.id }}
             {{ col_form.sort_order }}
             <div style="flex:1;">{{ col_form.heading }}</div>
-            <label style="display:flex; align-items:center; gap:0.25rem; font-size:0.8rem; color:var(--muted);">
-                {{ col_form.DELETE }} Delete
-            </label>
+            <span style="display:none;">{{ col_form.DELETE }}</span>
+            <button type="button" class="btn btn-sm btn-outline-danger rev-delete-column-btn" title="Delete column"><i class="bi bi-x-lg"></i></button>
         </div>
         {% endfor %}
     </div>
@@ -67,9 +66,8 @@
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
             <strong>{{ table_form.instance.title|default:"New Table" }}</strong>
-            <label style="display:flex; align-items:center; gap:0.25rem; font-size:0.8rem; color:var(--muted);">
-                {{ table_form.DELETE }} Delete Table
-            </label>
+            <span style="display:none;">{{ table_form.DELETE }}</span>
+            <button type="button" class="btn btn-sm btn-outline-danger rev-delete-table-btn" title="Delete table"><i class="bi bi-trash"></i> Delete Table</button>
         </div>
 
         <div class="mgr-field">
@@ -122,9 +120,8 @@
                         </td>
                         {% endfor %}
                         <td style="padding:0.25rem 0.5rem;">
-                            <label style="font-size:0.75rem; color:var(--muted); display:flex; align-items:center; gap:0.25rem;">
-                                <input type="checkbox" name="delete_row_{{ table_form.instance.pk }}_{{ row_data.pk }}"> Del
-                            </label>
+                            <input type="checkbox" name="delete_row_{{ table_form.instance.pk }}_{{ row_data.pk }}" style="display:none;" class="rev-delete-row-cb">
+                            <button type="button" class="btn btn-sm btn-outline-danger rev-delete-row-btn" title="Delete row" style="font-size:0.7rem; padding:2px 6px;"><i class="bi bi-x-lg"></i></button>
                         </td>
                     </tr>
                     {% endfor %}
@@ -329,14 +326,19 @@ names (staff-only admin UI), matching the existing our-model-manager.js pattern.
             headingWrap.appendChild(headingInput);
             div.appendChild(headingWrap);
 
-            var delLabel = document.createElement('label');
-            delLabel.style.cssText = 'display:flex; align-items:center; gap:0.25rem; font-size:0.8rem; color:var(--muted);';
+            var delCbSpan = document.createElement('span');
+            delCbSpan.style.cssText = 'display:none;';
             var delCb = document.createElement('input');
             delCb.type = 'checkbox';
             delCb.name = COL_PREFIX + '-' + total + '-DELETE';
-            delLabel.appendChild(delCb);
-            delLabel.appendChild(document.createTextNode(' Delete'));
-            div.appendChild(delLabel);
+            delCbSpan.appendChild(delCb);
+            div.appendChild(delCbSpan);
+            var delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.className = 'btn btn-sm btn-outline-danger rev-delete-column-btn';
+            delBtn.title = 'Delete column';
+            delBtn.innerHTML = '<i class="bi bi-x-lg"></i>';
+            div.appendChild(delBtn);
 
             colContainer.appendChild(div);
             totalInput.value = total + 1;
@@ -384,6 +386,26 @@ names (staff-only admin UI), matching the existing our-model-manager.js pattern.
                 parent.appendChild(fieldDiv);
                 return el;
             }
+
+            var headerRow = document.createElement('div');
+            headerRow.style.cssText = 'display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;';
+            var headerTitle = document.createElement('strong');
+            headerTitle.textContent = 'New Table';
+            headerRow.appendChild(headerTitle);
+            var delCbSpan = document.createElement('span');
+            delCbSpan.style.cssText = 'display:none;';
+            var delCb = document.createElement('input');
+            delCb.type = 'checkbox';
+            delCb.name = TBL_PREFIX + '-' + total + '-DELETE';
+            delCbSpan.appendChild(delCb);
+            headerRow.appendChild(delCbSpan);
+            var delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.className = 'btn btn-sm btn-outline-danger rev-delete-table-btn';
+            delBtn.title = 'Delete table';
+            delBtn.innerHTML = '<i class="bi bi-trash"></i> Delete Table';
+            headerRow.appendChild(delBtn);
+            div.appendChild(headerRow);
 
             addField(div, 'Title', 'input', TBL_PREFIX + '-' + total + '-title', {});
             addField(div, 'Description', 'textarea', TBL_PREFIX + '-' + total + '-description', { className: 'mgr-textarea', rows: 2 });
@@ -481,6 +503,47 @@ names (staff-only admin UI), matching the existing our-model-manager.js pattern.
         delTd.appendChild(newSpan);
         tr.appendChild(delTd);
         tbody.appendChild(tr);
+    });
+
+    // -- Delete column button -------------------------------------------------
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.rev-delete-column-btn');
+        if (!btn) return;
+        var row = btn.closest('.rev-column-form-row');
+        if (!row || !row.closest('#rev-column-formset-' + PLACEMENT_PK)) return;
+        if (!confirm('Delete this column? This will save all changes.')) return;
+        var cb = row.querySelector('input[type="checkbox"][name$="-DELETE"]');
+        if (cb) cb.checked = true;
+        var mainForm = document.getElementById('our-members-form');
+        if (mainForm) { dirty = false; mainForm.submit(); }
+    });
+
+    // -- Delete table button --------------------------------------------------
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.rev-delete-table-btn');
+        if (!btn) return;
+        var card = btn.closest('.rev-table-form-card');
+        if (!card || !card.closest('#rev-table-list-' + PLACEMENT_PK)) return;
+        if (!confirm('Delete this table and all its rows? This will save all changes.')) return;
+        var cb = card.querySelector('input[type="checkbox"][name$="-DELETE"]');
+        if (cb) cb.checked = true;
+        var mainForm = document.getElementById('our-members-form');
+        if (mainForm) { dirty = false; mainForm.submit(); }
+    });
+
+    // -- Delete row button ----------------------------------------------------
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.rev-delete-row-btn');
+        if (!btn) return;
+        var td = btn.closest('td');
+        if (!td) return;
+        var table = td.closest('.rev-data-grid-table[data-placement-pk="' + PLACEMENT_PK + '"]');
+        if (!table) return;
+        if (!confirm('Delete this row? This will save all changes.')) return;
+        var cb = td.querySelector('.rev-delete-row-cb');
+        if (cb) cb.checked = true;
+        var mainForm = document.getElementById('our-members-form');
+        if (mainForm) { dirty = false; mainForm.submit(); }
     });
 })();
 </script>
