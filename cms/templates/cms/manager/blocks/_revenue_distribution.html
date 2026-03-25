@@ -515,7 +515,7 @@ names (staff-only admin UI), matching the existing our-model-manager.js pattern.
         var cb = row.querySelector('input[type="checkbox"][name$="-DELETE"]');
         if (cb) cb.checked = true;
         var mainForm = document.getElementById('our-members-form');
-        if (mainForm) { dirty = false; mainForm.submit(); }
+        if (mainForm) { window._suppressBeforeUnload = true; mainForm.requestSubmit(); }
     });
 
     // -- Delete table button --------------------------------------------------
@@ -528,7 +528,7 @@ names (staff-only admin UI), matching the existing our-model-manager.js pattern.
         var cb = card.querySelector('input[type="checkbox"][name$="-DELETE"]');
         if (cb) cb.checked = true;
         var mainForm = document.getElementById('our-members-form');
-        if (mainForm) { dirty = false; mainForm.submit(); }
+        if (mainForm) { window._suppressBeforeUnload = true; mainForm.requestSubmit(); }
     });
 
     // -- Delete row button ----------------------------------------------------
@@ -543,7 +543,7 @@ names (staff-only admin UI), matching the existing our-model-manager.js pattern.
         var cb = td.querySelector('.rev-delete-row-cb');
         if (cb) cb.checked = true;
         var mainForm = document.getElementById('our-members-form');
-        if (mainForm) { dirty = false; mainForm.submit(); }
+        if (mainForm) { window._suppressBeforeUnload = true; mainForm.requestSubmit(); }
     });
 })();
 </script>

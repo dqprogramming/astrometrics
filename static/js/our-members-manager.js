@@ -621,7 +621,7 @@
 
         // Warn on navigation with unsaved changes
         window.addEventListener('beforeunload', function (e) {
-            if (dirty) {
+            if (dirty && !window._suppressBeforeUnload) {
                 e.preventDefault();
                 e.returnValue = '';
             }
