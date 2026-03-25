@@ -60,9 +60,7 @@
             var row = ta.closest('.quote-row');
             if (row && isRowHidden(row)) return;
             if (tinyMCE.get(ta.id)) return;
-            if (ta.classList.contains('quote-tinymce') || ta.id.match(/circle_\d+_body/)) {
-                initTinyMCE(ta);
-            }
+            initTinyMCE(ta);
         });
     }
 
@@ -84,9 +82,7 @@
             var row = ta.closest('.quote-row');
             if (row && isRowHidden(row)) return;
             if (tinyMCE.get(ta.id)) return;
-            if (ta.classList.contains('quote-tinymce') || ta.id.match(/circle_\d+_body/)) {
-                initTinyMCE(ta);
-            }
+            initTinyMCE(ta);
         });
     }
 
