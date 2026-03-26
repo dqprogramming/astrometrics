@@ -1385,8 +1385,26 @@ class PeopleListBlock(BaseBlock):
         return {"people": self.people.all()}
 
     def create_children_from_config(self, children_config):
+        import os
+
+        from django.conf import settings as django_settings
+        from django.core.files.base import ContentFile
+
         for child in children_config:
-            PeopleListPerson.objects.create(block=self, **child)
+            static_image = child.pop("static_image", None)
+            person = PeopleListPerson.objects.create(block=self, **child)
+            if static_image:
+                # Copy static file to media storage
+                static_path = os.path.join(
+                    django_settings.BASE_DIR, static_image.lstrip("/")
+                )
+                if os.path.isfile(static_path):
+                    ext = os.path.splitext(static_path)[1]
+                    dest_name = f"blocks/people_list/{person.pk}{ext}"
+                    with open(static_path, "rb") as f:
+                        person.image.save(
+                            dest_name, ContentFile(f.read()), save=True
+                        )
 
 
 class PeopleListPerson(models.Model):
