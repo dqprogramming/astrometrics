@@ -18,8 +18,6 @@ from cms.models import (
     Page,
     Post,
     Snippet,
-    TeamMember,
-    TeamSection,
 )
 
 
@@ -84,16 +82,6 @@ class MenuItemTranslationOptions(TranslationOptions):
 @register(Snippet)
 class SnippetTranslationOptions(TranslationOptions):
     fields = ("name", "body")
-
-
-@register(TeamSection)
-class TeamSectionTranslationOptions(TranslationOptions):
-    fields = ("name",)
-
-
-@register(TeamMember)
-class TeamMemberTranslationOptions(TranslationOptions):
-    fields = ("name", "description")
 
 
 @register(AboutUsPageSettings)

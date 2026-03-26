@@ -763,46 +763,6 @@ class Snippet(models.Model):
         super().save(*args, **kwargs)
 
 
-class TeamSection(models.Model):
-    """A section grouping team members (e.g. Directors, Executive, Staff)."""
-
-    name = models.CharField(max_length=255)
-    sort_order = models.PositiveIntegerField(default=0)
-
-    class Meta:
-        ordering = ["sort_order"]
-        verbose_name = _("Team Section")
-        verbose_name_plural = _("Team Sections")
-
-    def __str__(self):
-        return self.name
-
-
-class TeamMember(models.Model):
-    """A team member belonging to a section."""
-
-    section = models.ForeignKey(
-        TeamSection,
-        related_name="members",
-        on_delete=models.CASCADE,
-    )
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
-    linkedin_url = models.CharField(max_length=500, blank=True)
-    image = models.CharField(max_length=500, blank=True)
-    sort_order = models.PositiveIntegerField(default=0)
-
-    class Meta:
-        ordering = ["sort_order"]
-
-    def __str__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        self.description = sanitize_html(self.description)
-        super().save(*args, **kwargs)
-
-
 class ContactFormSettings(models.Model):
     """Singleton model for contact form configuration.
 

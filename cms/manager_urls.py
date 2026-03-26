@@ -112,32 +112,6 @@ urlpatterns = [
         views.block_page_csv_parse,
         name="block_page_csv_parse",
     ),
-    # Our Team
-    path(
-        "our-team/",
-        views.OurTeamManagerView.as_view(),
-        name="our_team",
-    ),
-    path(
-        "our-team/section/add/",
-        views.OurTeamSectionAddView.as_view(),
-        name="our_team_section_add",
-    ),
-    path(
-        "our-team/section/<int:pk>/delete/",
-        views.OurTeamSectionDeleteView.as_view(),
-        name="our_team_section_delete",
-    ),
-    path(
-        "our-team/member/<int:pk>/delete/",
-        views.OurTeamMemberDeleteView.as_view(),
-        name="our_team_member_delete",
-    ),
-    path(
-        "our-team/member-image-upload/",
-        views.team_member_image_upload,
-        name="team_member_image_upload",
-    ),
     # Pages
     path("pages/", views.PageListView.as_view(), name="page_list"),
     path("pages/new/", views.PageCreateView.as_view(), name="page_create"),
