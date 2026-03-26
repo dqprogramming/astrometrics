@@ -1,0 +1,49 @@
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+    <div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.stat_1_value.id_for_label }}">Stat 1 Value</label>
+            {{ form.stat_1_value }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label">Stat 1 Text</label>
+            {{ form.stat_1_text }}
+        </div>
+    </div>
+    <div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.stat_2_value.id_for_label }}">Stat 2 Value</label>
+            {{ form.stat_2_value }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label">Stat 2 Text</label>
+            {{ form.stat_2_text }}
+        </div>
+    </div>
+    <div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.stat_3_value.id_for_label }}">Stat 3 Value</label>
+            {{ form.stat_3_value }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label">Stat 3 Text</label>
+            {{ form.stat_3_text }}
+        </div>
+    </div>
+    <div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.stat_4_value.id_for_label }}">Stat 4 Value</label>
+            {{ form.stat_4_value }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label">Stat 4 Text</label>
+            {{ form.stat_4_text }}
+        </div>
+    </div>
+</div>
+
+<div class="color-picker-row" style="margin-top:1rem;">
+    <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.bg_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.text_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Border</label> {{ form.border_color }}</span>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
+</div>

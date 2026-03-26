@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="/static/css/about_us.css">
+{% with org_quotes=block.quotes.all %}{% if org_quotes %}
+<section class="about-quote-section" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};" aria-label="Organization quotes">
+    <div class="org-glide-{{ block.pk }}">
+        <div class="glide__track" data-glide-el="track">
+            <ul class="glide__slides">
+                {% for quote in org_quotes %}
+                <li class="glide__slide">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-3">
+                                {% if quote.logo %}
+                                <img src="{{ quote.logo.url }}"
+                                     alt="{{ quote.author_name }}"
+                                     class="press-logo">
+                                {% endif %}
+                            </div>
+                            <div class="col-9">
+                                <div class="quote-content" style="border-left-color: {{ block.text_color }};">
+                                    <div class="quote-text spectral-bold" style="color: inherit;">{{ quote.quote_text|safe }}</div>
+                                    <p class="quote-author" style="color: inherit;">{{ quote.author_name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% if org_quotes|length > 1 %}
+        <div class="glide__bullets pagination" data-glide-el="controls[nav]">
+            {% for quote in org_quotes %}
+            <button class="glide__bullet" data-glide-dir="={{ forloop.counter0 }}" aria-label="Go to slide {{ forloop.counter }}"></button>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <style>
+        .org-glide-{{ block.pk }} .glide__bullet {
+            background-color: {{ block.bullet_color }};
+            opacity: 1;
+        }
+        .org-glide-{{ block.pk }} .glide__bullet--active {
+            background-color: {{ block.bullet_active_color }};
+        }
+    </style>
+    <script>
+        new Glide('.org-glide-{{ block.pk }}', { type: 'slider' }).mount();
+    </script>
+</section>
+{% endif %}{% endwith %}

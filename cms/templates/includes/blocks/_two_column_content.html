@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="/static/css/about_us.css">
+<section class="about-content" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};" aria-labelledby="about-content-title-{{ block.pk }}">
+    <div class="container">
+        <h2 id="about-content-title-{{ block.pk }}" class="about-content-title spectral-bold" style="color: {{ block.text_color }};">{{ block.section_title }}</h2>
+
+        <div class="about-columns">
+            <div class="about-column">
+                <h3 class="spectral-bold" style="color: {{ block.text_color }};">{{ block.col_1_title }}</h3>
+                <div style="color: {{ block.text_color }};">{{ block.col_1_body|safe }}</div>
+            </div>
+            <div class="about-column">
+                <h3 class="spectral-bold" style="color: {{ block.text_color }};">{{ block.col_2_title }}</h3>
+                <div style="color: {{ block.text_color }};">{{ block.col_2_body|safe }}</div>
+            </div>
+        </div>
+    </div>
+</section>

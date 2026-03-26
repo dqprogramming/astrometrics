@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="/static/css/about_us.css">
+<section class="about-content" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};" aria-label="Statistics">
+    <div class="container">
+        <div class="about-stats">
+            <div class="about-stat" style="border-left-color: {{ block.border_color }};">
+                <div class="about-stat-value" style="color: {{ block.text_color }};">{{ block.stat_1_value }}</div>
+                <div class="about-stat-text" style="color: {{ block.text_color }};">{{ block.stat_1_text|safe }}</div>
+            </div>
+            <div class="about-stat" style="border-left-color: {{ block.border_color }};">
+                <div class="about-stat-value" style="color: {{ block.text_color }};">{{ block.stat_2_value }}</div>
+                <div class="about-stat-text" style="color: {{ block.text_color }};">{{ block.stat_2_text|safe }}</div>
+            </div>
+            <div class="about-stat" style="border-left-color: {{ block.border_color }};">
+                <div class="about-stat-value" style="color: {{ block.text_color }};">{{ block.stat_3_value }}</div>
+                <div class="about-stat-text" style="color: {{ block.text_color }};">{{ block.stat_3_text|safe }}</div>
+            </div>
+            <div class="about-stat" style="border-left-color: {{ block.border_color }};">
+                <div class="about-stat-value" style="color: {{ block.text_color }};">{{ block.stat_4_value }}</div>
+                <div class="about-stat-text" style="color: {{ block.text_color }};">{{ block.stat_4_text|safe }}</div>
+            </div>
+        </div>
+    </div>
+</section>

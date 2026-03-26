@@ -1,0 +1,34 @@
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.section_title.id_for_label }}">Section Title</label>
+    {{ form.section_title }}
+    {% if form.section_title.errors %}<div class="mgr-error">{{ form.section_title.errors.0 }}</div>{% endif %}
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+    <div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.col_1_title.id_for_label }}">Column 1 Title</label>
+            {{ form.col_1_title }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label">Column 1 Body</label>
+            {{ form.col_1_body }}
+        </div>
+    </div>
+    <div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.col_2_title.id_for_label }}">Column 2 Title</label>
+            {{ form.col_2_title }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label">Column 2 Body</label>
+            {{ form.col_2_body }}
+        </div>
+    </div>
+</div>
+
+<div class="color-picker-row" style="margin-top:1rem;">
+    <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.bg_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.text_color }}</span>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
+</div>
