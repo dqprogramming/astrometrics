@@ -3,8 +3,6 @@ Data migration to seed the OJC Boards BlockPageTemplate with two
 PeopleListBlock sections (Publishers' Board and Library Board).
 """
 
-import json
-
 from django.db import migrations
 
 _CONFIG = [
@@ -251,7 +249,7 @@ def seed_ojc_boards_template(apps, schema_editor):
         key="ojc_boards",
         defaults={
             "name": "OJC Boards",
-            "config": json.dumps(_CONFIG),
+            "config": _CONFIG,
         },
     )
 
