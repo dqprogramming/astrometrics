@@ -23,6 +23,8 @@ from .models import (
     MembersInstitutionsBlock,
     MenuItem,
     OJCModelBlock,
+    OrganizationCarouselBlock,
+    OrgCarouselQuote,
     OurModelHeroBlock,
     Page,
     PeopleListBlock,
@@ -34,8 +36,11 @@ from .models import (
     RevenuePackageTable,
     RevenueTableColumn,
     Snippet,
+    StatisticsBlock,
     TextImageCTABlock,
+    TwoColumnContentBlock,
     WhoWeAreBlock,
+    WideHeaderCirclesBlock,
 )
 
 
@@ -1067,6 +1072,121 @@ class TextImageCTABlockForm(forms.ModelForm):
                 }
             ),
         }
+
+
+class WideHeaderCirclesBlockForm(forms.ModelForm):
+    class Meta:
+        model = WideHeaderCirclesBlock
+        fields = [
+            "heading",
+            "sub_heading",
+            "bg_color",
+            "text_color",
+            "circle_color",
+        ]
+        widgets = {
+            "heading": forms.TextInput(attrs={"class": "mgr-input"}),
+            "sub_heading": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 3}
+            ),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "circle_color": forms.TextInput(attrs=_COLOR_ATTRS),
+        }
+
+
+class TwoColumnContentBlockForm(forms.ModelForm):
+    class Meta:
+        model = TwoColumnContentBlock
+        fields = [
+            "section_title",
+            "col_1_title",
+            "col_1_body",
+            "col_2_title",
+            "col_2_body",
+            "bg_color",
+            "text_color",
+        ]
+        widgets = {
+            "section_title": forms.TextInput(attrs={"class": "mgr-input"}),
+            "col_1_title": forms.TextInput(attrs={"class": "mgr-input"}),
+            "col_1_body": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+            "col_2_title": forms.TextInput(attrs={"class": "mgr-input"}),
+            "col_2_body": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+        }
+
+
+class StatisticsBlockForm(forms.ModelForm):
+    class Meta:
+        model = StatisticsBlock
+        fields = [
+            "stat_1_value",
+            "stat_1_text",
+            "stat_2_value",
+            "stat_2_text",
+            "stat_3_value",
+            "stat_3_text",
+            "stat_4_value",
+            "stat_4_text",
+            "bg_color",
+            "text_color",
+            "border_color",
+        ]
+        widgets = {
+            "stat_1_value": forms.TextInput(attrs={"class": "mgr-input"}),
+            "stat_1_text": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+            "stat_2_value": forms.TextInput(attrs={"class": "mgr-input"}),
+            "stat_2_text": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+            "stat_3_value": forms.TextInput(attrs={"class": "mgr-input"}),
+            "stat_3_text": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+            "stat_4_value": forms.TextInput(attrs={"class": "mgr-input"}),
+            "stat_4_text": TinyMCE(mce_attrs=_ABOUT_US_TINYMCE),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "border_color": forms.TextInput(attrs=_COLOR_ATTRS),
+        }
+
+
+class OrganizationCarouselBlockForm(forms.ModelForm):
+    class Meta:
+        model = OrganizationCarouselBlock
+        fields = [
+            "bg_color",
+            "text_color",
+            "bullet_color",
+            "bullet_active_color",
+        ]
+        widgets = {
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "bullet_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "bullet_active_color": forms.TextInput(attrs=_COLOR_ATTRS),
+        }
+
+
+class OrgCarouselQuoteForm(forms.ModelForm):
+    class Meta:
+        model = OrgCarouselQuote
+        fields = ["logo", "quote_text", "author_name", "sort_order"]
+        widgets = {
+            "quote_text": TinyMCE(
+                attrs={"class": "quote-tinymce"},
+                mce_attrs=_ABOUT_US_TINYMCE,
+            ),
+            "author_name": forms.TextInput(attrs={"class": "mgr-input"}),
+            "sort_order": forms.HiddenInput(),
+        }
+
+
+OrgCarouselQuoteFormSet = forms.inlineformset_factory(
+    OrganizationCarouselBlock,
+    OrgCarouselQuote,
+    form=OrgCarouselQuoteForm,
+    extra=0,
+    can_delete=True,
+)
 
 
 class ContactSubmissionForm(forms.Form):

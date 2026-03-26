@@ -2212,6 +2212,201 @@ class TextImageCTABlock(BaseBlock):
         super().save(*args, **kwargs)
 
 
+@register
+class WideHeaderCirclesBlock(BaseBlock):
+    """Wide header with large concentric circles block."""
+
+    BLOCK_TYPE = "wide_header_circles"
+    LABEL = "Wide Header With Large Concentric Circles"
+    ICON = "bi-type-h1"
+    FORM_CLASS = "cms.forms.WideHeaderCirclesBlockForm"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_wide_header_circles.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_wide_header_circles.html"
+    COLOR_DEFAULTS = {
+        "bg_color": "#71f7f2",
+        "text_color": "#212129",
+        "circle_color": "#ffffff",
+    }
+
+    heading = models.CharField(
+        max_length=500,
+        default=(
+            "Our mission is lorem ipsum dolor sit amet,"
+            " consectetur ips remit et."
+        ),
+        help_text="Main hero heading",
+    )
+    sub_heading = models.TextField(
+        blank=True,
+        default="",
+        help_text="Hero sub-heading text",
+    )
+    bg_color = models.CharField(max_length=7, default="#71f7f2")
+    text_color = models.CharField(max_length=7, default="#212129")
+    circle_color = models.CharField(max_length=7, default="#ffffff")
+
+    def __str__(self):
+        return f"WideHeaderCirclesBlock #{self.pk}"
+
+
+@register
+class TwoColumnContentBlock(BaseBlock):
+    """Two-column content section block."""
+
+    BLOCK_TYPE = "two_column_content"
+    LABEL = "Two-Column Content Section"
+    ICON = "bi-layout-split"
+    FORM_CLASS = "cms.forms.TwoColumnContentBlockForm"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_two_column_content.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_two_column_content.html"
+    COLOR_DEFAULTS = {
+        "bg_color": "#ffffff",
+        "text_color": "#212129",
+    }
+
+    section_title = models.CharField(max_length=200, default="About us.")
+    col_1_title = models.CharField(max_length=200, default="Our vision.")
+    col_1_body = models.TextField(blank=True)
+    col_2_title = models.CharField(max_length=200, default="Our Mission.")
+    col_2_body = models.TextField(blank=True)
+    bg_color = models.CharField(max_length=7, default="#ffffff")
+    text_color = models.CharField(max_length=7, default="#212129")
+
+    def __str__(self):
+        return f"TwoColumnContentBlock #{self.pk}"
+
+    def save(self, *args, **kwargs):
+        self.col_1_body = sanitize_html(self.col_1_body)
+        self.col_2_body = sanitize_html(self.col_2_body)
+        super().save(*args, **kwargs)
+
+
+@register
+class StatisticsBlock(BaseBlock):
+    """Statistics block with 4 stat value/text pairs."""
+
+    BLOCK_TYPE = "statistics"
+    LABEL = "Statistics"
+    ICON = "bi-bar-chart"
+    FORM_CLASS = "cms.forms.StatisticsBlockForm"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_statistics.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_statistics.html"
+    COLOR_DEFAULTS = {
+        "bg_color": "#ffffff",
+        "text_color": "#212129",
+        "border_color": "#a5bfff",
+    }
+
+    stat_1_value = models.CharField(max_length=50, default="6")
+    stat_1_text = models.TextField(blank=True)
+    stat_2_value = models.CharField(max_length=50, default="60%")
+    stat_2_text = models.TextField(blank=True)
+    stat_3_value = models.CharField(max_length=50, default="3m")
+    stat_3_text = models.TextField(blank=True)
+    stat_4_value = models.CharField(max_length=50, default="300k")
+    stat_4_text = models.TextField(blank=True)
+    bg_color = models.CharField(max_length=7, default="#ffffff")
+    text_color = models.CharField(max_length=7, default="#212129")
+    border_color = models.CharField(max_length=7, default="#a5bfff")
+
+    def __str__(self):
+        return f"StatisticsBlock #{self.pk}"
+
+    def save(self, *args, **kwargs):
+        self.stat_1_text = sanitize_html(self.stat_1_text)
+        self.stat_2_text = sanitize_html(self.stat_2_text)
+        self.stat_3_text = sanitize_html(self.stat_3_text)
+        self.stat_4_text = sanitize_html(self.stat_4_text)
+        super().save(*args, **kwargs)
+
+
+@register
+class OrganizationCarouselBlock(BaseBlock):
+    """Organization carousel block with logo-based quotes."""
+
+    BLOCK_TYPE = "org_carousel"
+    LABEL = "Organization Carousel"
+    ICON = "bi-chat-quote"
+    FORM_CLASS = "cms.forms.OrganizationCarouselBlockForm"
+    FORMSET_CLASS = "cms.forms.OrgCarouselQuoteFormSet"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_org_carousel.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_org_carousel.html"
+    COLOR_DEFAULTS = {
+        "bg_color": "#a5bfff",
+        "text_color": "#212129",
+        "bullet_color": "#999999",
+        "bullet_active_color": "#212129",
+    }
+
+    bg_color = models.CharField(max_length=7, default="#a5bfff")
+    text_color = models.CharField(max_length=7, default="#212129")
+    bullet_color = models.CharField(
+        max_length=7,
+        default="#999999",
+        help_text="Carousel dot colour (unselected)",
+    )
+    bullet_active_color = models.CharField(
+        max_length=7,
+        default="#212129",
+        help_text="Carousel dot colour (selected)",
+    )
+
+    def __str__(self):
+        return f"OrganizationCarouselBlock #{self.pk}"
+
+    def get_public_context(self):
+        return {"org_quotes": self.quotes.all()}
+
+    def create_children_from_config(self, children_config):
+        import os
+
+        from django.conf import settings as django_settings
+        from django.core.files.base import ContentFile
+
+        for child in children_config:
+            static_image = child.pop("static_image", None)
+            quote = OrgCarouselQuote.objects.create(block=self, **child)
+            if static_image:
+                static_path = os.path.join(
+                    django_settings.BASE_DIR, static_image.lstrip("/")
+                )
+                if os.path.isfile(static_path):
+                    ext = os.path.splitext(static_path)[1]
+                    dest_name = f"blocks/org_carousel/{quote.pk}{ext}"
+                    with open(static_path, "rb") as f:
+                        quote.logo.save(
+                            dest_name, ContentFile(f.read()), save=True
+                        )
+
+
+class OrgCarouselQuote(models.Model):
+    """A quote in an organization carousel block."""
+
+    block = models.ForeignKey(
+        OrganizationCarouselBlock,
+        on_delete=models.CASCADE,
+        related_name="quotes",
+    )
+    logo = models.ImageField(
+        upload_to="blocks/org_carousel/",
+        blank=True,
+        help_text="Organization logo image",
+    )
+    quote_text = models.TextField()
+    author_name = models.CharField(max_length=255)
+    sort_order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return self.author_name
+
+    def save(self, *args, **kwargs):
+        self.quote_text = sanitize_html(self.quote_text)
+        super().save(*args, **kwargs)
+
+
 class PageBlock(models.Model):
     """Junction model linking a concrete block to any singleton page."""
 

@@ -88,5 +88,9 @@ class BlockRegistryTests(TestCase):
                 "people_list",
                 "revenue_distribution",
                 "text_image_cta",
+                "wide_header_circles",
+                "two_column_content",
+                "statistics",
+                "org_carousel",
             },
         )
