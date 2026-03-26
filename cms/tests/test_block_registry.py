@@ -92,5 +92,6 @@ class BlockRegistryTests(TestCase):
                 "two_column_content",
                 "statistics",
                 "org_carousel",
+                "contact_form",
             },
         )

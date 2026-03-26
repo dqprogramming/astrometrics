@@ -5,6 +5,8 @@ from .models import (
     BlockPage,
     BlockPageTemplate,
     Category,
+    ContactFormBlock,
+    ContactFormRecipient,
     ContactFormSettings,
     ContactRecipient,
     FooterLink,
@@ -1114,6 +1116,41 @@ OrgCarouselQuoteFormSet = forms.inlineformset_factory(
     OrganizationCarouselBlock,
     OrgCarouselQuote,
     form=OrgCarouselQuoteForm,
+    extra=0,
+    can_delete=True,
+)
+
+
+class ContactFormBlockForm(forms.ModelForm):
+    class Meta:
+        model = ContactFormBlock
+        fields = ["intro_text", "from_email", "bg_color", "text_color"]
+        widgets = {
+            "intro_text": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 3}
+            ),
+            "from_email": forms.EmailInput(attrs={"class": "mgr-input"}),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+        }
+
+
+class ContactFormRecipientForm(forms.ModelForm):
+    class Meta:
+        model = ContactFormRecipient
+        fields = ["email", "sort_order"]
+        widgets = {
+            "email": forms.EmailInput(
+                attrs={"class": "mgr-input", "aria-label": "Recipient email"}
+            ),
+            "sort_order": forms.HiddenInput(),
+        }
+
+
+ContactFormRecipientFormSet = forms.inlineformset_factory(
+    ContactFormBlock,
+    ContactFormRecipient,
+    form=ContactFormRecipientForm,
     extra=0,
     can_delete=True,
 )

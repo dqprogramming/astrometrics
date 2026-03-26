@@ -2,16 +2,22 @@
 CMS views for static content pages.
 """
 
+import structlog
+from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
 
+from .forms import ContactSubmissionForm
 from .models import (
     BlockPage,
     Category,
+    ContactFormBlock,
     LandingPageSettings,
     Page,
     Post,
 )
+
+logger = structlog.get_logger(__name__)
 
 
 def index_view(request):
@@ -84,8 +90,46 @@ def block_page_view(request, slug):
 def slug_page_view(request, slug):
     """Serve block pages by slug."""
     page = get_object_or_404(BlockPage, slug=slug)
+    contact_sent = False
+
+    if request.method == "POST" and "contact_block_pk" in request.POST:
+        contact_block_pk = request.POST.get("contact_block_pk")
+        try:
+            contact_block = ContactFormBlock.objects.get(pk=contact_block_pk)
+            form = ContactSubmissionForm(request.POST)
+            if form.is_valid():
+                recipients = list(
+                    contact_block.recipients.values_list("email", flat=True)
+                )
+                if recipients:
+                    cd = form.cleaned_data
+                    subject = cd["subject"] or "Contact form submission"
+                    body = (
+                        f"Name: {cd['name']}\n"
+                        f"Email: {cd['email']}\n\n"
+                        f"{cd['message']}"
+                    )
+                    email_msg = EmailMessage(
+                        subject=subject,
+                        body=body,
+                        from_email=contact_block.from_email,
+                        to=recipients,
+                        reply_to=[cd["email"]],
+                    )
+                    try:
+                        email_msg.send()
+                    except Exception:
+                        logger.exception("contact_form_email_failed")
+                contact_sent = True
+        except ContactFormBlock.DoesNotExist:
+            pass
+
     blocks = _build_public_blocks(page)
-    return render(request, "block_page.html", {"page": page, "blocks": blocks})
+    return render(
+        request,
+        "block_page.html",
+        {"page": page, "blocks": blocks, "contact_sent": contact_sent},
+    )
 
 
 def page_preview_view(request, token):

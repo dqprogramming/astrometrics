@@ -2282,6 +2282,61 @@ class OrgCarouselQuote(models.Model):
         super().save(*args, **kwargs)
 
 
+@register
+class ContactFormBlock(BaseBlock):
+    """Contact form block that sends emails to configured recipients."""
+
+    BLOCK_TYPE = "contact_form"
+    LABEL = "Contact Us Form"
+    ICON = "bi-envelope"
+    FORM_CLASS = "cms.forms.ContactFormBlockForm"
+    FORMSET_CLASS = "cms.forms.ContactFormRecipientFormSet"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_contact_form.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_contact_form.html"
+    COLOR_DEFAULTS = {
+        "bg_color": "#f0f0f1",
+        "text_color": "#212129",
+    }
+
+    intro_text = models.TextField(
+        default="If you'd like to get in touch with a member of our team, "
+        "please use the contact form.",
+    )
+    from_email = models.EmailField(default="noreply@example.com")
+    bg_color = models.CharField(max_length=7, default="#f0f0f1")
+    text_color = models.CharField(max_length=7, default="#212129")
+
+    def __str__(self):
+        return f"ContactFormBlock #{self.pk}"
+
+    def get_public_context(self):
+        return {
+            "recipients": list(self.recipients.values_list("email", flat=True))
+        }
+
+    def create_children_from_config(self, children_config):
+        for child in children_config:
+            ContactFormRecipient.objects.create(block=self, **child)
+
+
+class ContactFormRecipient(models.Model):
+    """An email recipient for a contact form block."""
+
+    block = models.ForeignKey(
+        ContactFormBlock,
+        on_delete=models.CASCADE,
+        related_name="recipients",
+    )
+    email = models.EmailField()
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return self.email
+
+
 class PageBlock(models.Model):
     """Junction model linking a concrete block to any singleton page."""
 

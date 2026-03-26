@@ -7,5 +7,5 @@
 {% endblock %}
 
 {% block content %}
-{% for bd in blocks %}{% include bd.template with block=bd.block columns=bd.columns tables=bd.tables num_columns=bd.num_columns col_width_pct=bd.col_width_pct quotes=bd.quotes institutions=bd.institutions people=bd.people org_quotes=bd.org_quotes %}{% endfor %}
+{% for bd in blocks %}{% include bd.template with block=bd.block columns=bd.columns tables=bd.tables num_columns=bd.num_columns col_width_pct=bd.col_width_pct quotes=bd.quotes institutions=bd.institutions people=bd.people org_quotes=bd.org_quotes recipients=bd.recipients contact_sent=contact_sent %}{% endfor %}
 {% endblock %}
