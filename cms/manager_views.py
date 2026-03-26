@@ -29,8 +29,6 @@ from cms.block_registry import (
 )
 
 from .forms import (
-    AboutUsPageSettingsForm,
-    AboutUsQuoteFormSet,
     BlockPageCreateForm,
     CategoryForm,
     Column1LinkFormSet,
@@ -47,7 +45,6 @@ from .forms import (
     SnippetForm,
 )
 from .models import (
-    AboutUsPageSettings,
     BlockPage,
     BlockPageTemplate,
     Category,
@@ -307,42 +304,6 @@ class LandingPageSettingsUpdateView(StaffRequiredMixin, UpdateView):
     def form_valid(self, form):
         messages.success(self.request, "Landing page settings updated.")
         return super().form_valid(form)
-
-
-# ── About Us Page Settings ─────────────────────────────────────────────────
-
-
-class AboutUsPageSettingsUpdateView(StaffRequiredMixin, View):
-    template_name = "cms/manager/about_us_form.html"
-
-    def _get_forms(self, data=None, files=None):
-        instance = AboutUsPageSettings.load()
-        form = AboutUsPageSettingsForm(
-            data=data, files=files, instance=instance
-        )
-        formset = AboutUsQuoteFormSet(
-            data=data, files=files, instance=instance, prefix="quotes"
-        )
-        return form, formset, instance
-
-    def get(self, request):
-        form, formset, _ = self._get_forms()
-        return render(
-            request, self.template_name, {"form": form, "formset": formset}
-        )
-
-    def post(self, request):
-        form, formset, _ = self._get_forms(
-            data=request.POST, files=request.FILES
-        )
-        if form.is_valid() and formset.is_valid():
-            form.save()
-            formset.save()
-            messages.success(request, "About Us page settings updated.")
-            return redirect(reverse_lazy("cms_manager:about_us"))
-        return render(
-            request, self.template_name, {"form": form, "formset": formset}
-        )
 
 
 # ── Header Settings ─────────────────────────────────────────────────────────

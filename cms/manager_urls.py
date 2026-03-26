@@ -70,12 +70,6 @@ urlpatterns = [
         views.LandingPageSettingsUpdateView.as_view(),
         name="landing_page",
     ),
-    # About Us
-    path(
-        "about-us/",
-        views.AboutUsPageSettingsUpdateView.as_view(),
-        name="about_us",
-    ),
     # Block Pages
     path(
         "block-pages/create/",

@@ -6,7 +6,6 @@ from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
 
 from .models import (
-    AboutUsPageSettings,
     BlockPage,
     Category,
     LandingPageSettings,
@@ -55,14 +54,6 @@ def post_preview_view(request, token):
     post = get_object_or_404(Post, preview_token=token)
     return render(
         request, "news_detail.html", {"post": post, "is_preview": True}
-    )
-
-
-def about_us_view(request):
-    settings = AboutUsPageSettings.load()
-    quotes = settings.quotes.all()
-    return render(
-        request, "about_us.html", {"settings": settings, "quotes": quotes}
     )
 
 
