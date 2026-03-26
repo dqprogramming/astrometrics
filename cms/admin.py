@@ -6,8 +6,6 @@ from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
 from cms.models import (
-    BoardMember,
-    BoardSection,
     ContactFormSettings,
     ContactRecipient,
     FooterLink,
@@ -108,23 +106,6 @@ class SnippetAdmin(TranslationAdmin):
     list_display = ["name", "key", "updated_at"]
     search_fields = ["name", "key", "body"]
     readonly_fields = ["created_at", "updated_at"]
-
-
-class BoardMemberInline(admin.TabularInline):
-    model = BoardMember
-    extra = 1
-
-
-@admin.register(BoardSection)
-class BoardSectionAdmin(TranslationAdmin):
-    list_display = ["name", "sort_order"]
-    inlines = [BoardMemberInline]
-
-
-@admin.register(BoardMember)
-class BoardMemberAdmin(TranslationAdmin):
-    list_display = ["name", "section", "sort_order"]
-    list_filter = ["section"]
 
 
 class TeamMemberInline(admin.TabularInline):

@@ -138,32 +138,6 @@ urlpatterns = [
         views.team_member_image_upload,
         name="team_member_image_upload",
     ),
-    # OJC Boards
-    path(
-        "board/",
-        views.BoardManagerView.as_view(),
-        name="board",
-    ),
-    path(
-        "board/section/add/",
-        views.BoardSectionAddView.as_view(),
-        name="board_section_add",
-    ),
-    path(
-        "board/section/<int:pk>/delete/",
-        views.BoardSectionDeleteView.as_view(),
-        name="board_section_delete",
-    ),
-    path(
-        "board/member/<int:pk>/delete/",
-        views.BoardMemberDeleteView.as_view(),
-        name="board_member_delete",
-    ),
-    path(
-        "board/member-image-upload/",
-        views.board_member_image_upload,
-        name="board_member_image_upload",
-    ),
     # Pages
     path("pages/", views.PageListView.as_view(), name="page_list"),
     path("pages/new/", views.PageCreateView.as_view(), name="page_create"),

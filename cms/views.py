@@ -11,7 +11,6 @@ from .forms import ContactSubmissionForm
 from .models import (
     AboutUsPageSettings,
     BlockPage,
-    BoardSection,
     Category,
     ContactFormSettings,
     LandingPageSettings,
@@ -26,13 +25,6 @@ logger = structlog.get_logger(__name__)
 def index_view(request):
     landing = LandingPageSettings.load()
     return render(request, "landing.html", {"landing": landing})
-
-
-def board_view(request):
-    sections = BoardSection.objects.prefetch_related("members").order_by(
-        "sort_order"
-    )
-    return render(request, "board.html", {"sections": sections})
 
 
 def our_team_view(request):

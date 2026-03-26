@@ -32,7 +32,6 @@ from .forms import (
     AboutUsPageSettingsForm,
     AboutUsQuoteFormSet,
     BlockPageCreateForm,
-    BoardMemberFormSet,
     CategoryForm,
     Column1LinkFormSet,
     Column2LinkFormSet,
@@ -52,8 +51,6 @@ from .models import (
     AboutUsPageSettings,
     BlockPage,
     BlockPageTemplate,
-    BoardMember,
-    BoardSection,
     Category,
     ContactFormSettings,
     FooterSettings,
@@ -896,155 +893,6 @@ def team_member_image_upload(request):
     from django.core.files.base import ContentFile
 
     filename = f"cms/team/{uuid.uuid4().hex}.jpg"
-    saved_path = default_storage.save(filename, ContentFile(buf.read()))
-    url = default_storage.url(saved_path)
-    return JsonResponse({"url": url})
-
-
-# ── OJC Boards ───────────────────────────────────────────────────────────────
-
-
-class BoardManagerView(StaffRequiredMixin, View):
-    template_name = "cms/manager/board_form.html"
-
-    def get(self, request):
-        sections = BoardSection.objects.prefetch_related("members").order_by(
-            "sort_order"
-        )
-        section_data = []
-        for section in sections:
-            formset = BoardMemberFormSet(
-                instance=section, prefix=f"members_{section.pk}"
-            )
-            section_data.append({"section": section, "formset": formset})
-        return render(
-            request,
-            self.template_name,
-            {"section_data": section_data},
-        )
-
-    def post(self, request):
-        sections = BoardSection.objects.prefetch_related("members").order_by(
-            "sort_order"
-        )
-        all_valid = True
-        updates = []
-
-        for section in sections:
-            name_key = f"section_{section.pk}_name"
-            sort_key = f"section_{section.pk}_sort_order"
-            if name_key in request.POST:
-                section.name = request.POST[name_key]
-            if sort_key in request.POST:
-                section.sort_order = int(request.POST[sort_key])
-
-            formset = BoardMemberFormSet(
-                request.POST,
-                instance=section,
-                prefix=f"members_{section.pk}",
-            )
-            if formset.is_valid():
-                updates.append((section, formset))
-            else:
-                all_valid = False
-
-        if all_valid:
-            for section, formset in updates:
-                section.save()
-                for member in formset.save(commit=False):
-                    member.save()
-                for member in formset.deleted_objects:
-                    member.delete()
-            messages.success(request, "OJC Boards page updated.")
-            return redirect(reverse_lazy("cms_manager:board"))
-
-        # Re-render with errors
-        section_data = []
-        for section, formset in updates:
-            section_data.append({"section": section, "formset": formset})
-        return render(
-            request,
-            self.template_name,
-            {"section_data": section_data},
-        )
-
-
-class BoardSectionAddView(StaffRequiredMixin, View):
-    def post(self, request):
-        max_order = BoardSection.objects.aggregate(m=models.Max("sort_order"))[
-            "m"
-        ]
-        next_order = (max_order or 0) + 1
-        BoardSection.objects.create(name="New Section", sort_order=next_order)
-        messages.success(request, "New section added.")
-        return redirect(reverse_lazy("cms_manager:board"))
-
-
-class BoardSectionDeleteView(StaffRequiredMixin, View):
-    def post(self, request, pk):
-        section = get_object_or_404(BoardSection, pk=pk)
-        section.delete()
-        messages.success(request, "Section deleted.")
-        return redirect(reverse_lazy("cms_manager:board"))
-
-
-class BoardMemberDeleteView(StaffRequiredMixin, View):
-    def post(self, request, pk):
-        member = get_object_or_404(BoardMember, pk=pk)
-        member.delete()
-        messages.success(request, "Board member deleted.")
-        return redirect(reverse_lazy("cms_manager:board"))
-
-
-@csrf_exempt
-@require_POST
-def board_member_image_upload(request):
-    """Upload and crop a board member image to 600x400 (3:2 landscape)."""
-    if not (request.user.is_active and request.user.is_staff):
-        return JsonResponse({"error": "Forbidden"}, status=403)
-
-    uploaded = request.FILES.get("image")
-    if not uploaded:
-        return JsonResponse({"error": "No file received"}, status=400)
-
-    if uploaded.content_type not in _ALLOWED_IMAGE_TYPES:
-        return JsonResponse({"error": "Unsupported file type"}, status=400)
-
-    ext = os.path.splitext(uploaded.name)[1].lower()
-    if ext not in _ALLOWED_IMAGE_EXTENSIONS:
-        return JsonResponse(
-            {"error": "Unsupported file extension"}, status=400
-        )
-
-    from io import BytesIO
-
-    from PIL import Image as PILImage
-
-    img = PILImage.open(uploaded)
-    img = img.convert("RGB")
-
-    # Center-crop to 3:2 ratio
-    w, h = img.size
-    target_ratio = 3 / 2
-    current_ratio = w / h
-    if current_ratio > target_ratio:
-        new_w = int(h * target_ratio)
-        left = (w - new_w) // 2
-        img = img.crop((left, 0, left + new_w, h))
-    elif current_ratio < target_ratio:
-        new_h = int(w / target_ratio)
-        top = (h - new_h) // 2
-        img = img.crop((0, top, w, top + new_h))
-
-    img = img.resize((600, 400), PILImage.LANCZOS)
-
-    buf = BytesIO()
-    img.save(buf, format="JPEG", quality=85)
-    buf.seek(0)
-
-    from django.core.files.base import ContentFile
-
-    filename = f"cms/board/{uuid.uuid4().hex}.jpg"
     saved_path = default_storage.save(filename, ContentFile(buf.read()))
     url = default_storage.url(saved_path)
     return JsonResponse({"url": url})

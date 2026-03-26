@@ -6,8 +6,6 @@ from .models import (
     AboutUsQuote,
     BlockPage,
     BlockPageTemplate,
-    BoardMember,
-    BoardSection,
     Category,
     ContactFormSettings,
     ContactRecipient,
@@ -406,46 +404,6 @@ TeamMemberFormSet = forms.inlineformset_factory(
     TeamSection,
     TeamMember,
     form=TeamMemberForm,
-    extra=0,
-    can_delete=True,
-)
-
-
-class BoardSectionForm(forms.ModelForm):
-    class Meta:
-        model = BoardSection
-        fields = ["name", "sort_order"]
-        widgets = {
-            "name": forms.TextInput(attrs={"class": "mgr-input"}),
-            "sort_order": forms.HiddenInput(),
-        }
-
-
-class BoardMemberForm(forms.ModelForm):
-    class Meta:
-        model = BoardMember
-        fields = [
-            "name",
-            "description",
-            "linkedin_url",
-            "image",
-            "sort_order",
-        ]
-        widgets = {
-            "name": forms.TextInput(attrs={"class": "mgr-input"}),
-            "description": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 3}
-            ),
-            "linkedin_url": forms.TextInput(attrs={"class": "mgr-input"}),
-            "image": forms.HiddenInput(),
-            "sort_order": forms.HiddenInput(),
-        }
-
-
-BoardMemberFormSet = forms.inlineformset_factory(
-    BoardSection,
-    BoardMember,
-    form=BoardMemberForm,
     extra=0,
     can_delete=True,
 )
