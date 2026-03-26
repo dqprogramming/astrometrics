@@ -97,6 +97,13 @@
         });
     }
 
+    // -- Surname helper -------------------------------------------------------
+
+    function getSurname(nameStr) {
+        var parts = (nameStr || '').trim().replace(/\.$/, '').split(/\s+/);
+        return (parts.length > 1 ? parts[parts.length - 1] : parts[0] || '').toLowerCase();
+    }
+
     // -- Row visibility helpers -----------------------------------------------
 
     function isRowHidden(row) {
@@ -620,6 +627,39 @@
             btn.addEventListener('click', function () {
                 var card = btn.closest('.section-card');
                 if (card) addPersonToBlock(card);
+            });
+        });
+
+        // Sort people by surname
+        document.querySelectorAll('.btn-sort-person-surname').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var card = btn.closest('.section-card');
+                if (!card) return;
+                var list = card.querySelector('.person-list');
+                if (!list) return;
+                var rows = Array.prototype.slice.call(list.querySelectorAll('.person-row'));
+                var visible = [];
+                var hidden = [];
+                rows.forEach(function (row) {
+                    var del = row.querySelector('input[name$="-DELETE"]');
+                    if ((del && del.checked) || row.style.display === 'none') {
+                        hidden.push(row);
+                    } else {
+                        visible.push(row);
+                    }
+                });
+                visible.sort(function (a, b) {
+                    var nameA = a.querySelector('input[name$="-name"]');
+                    var nameB = b.querySelector('input[name$="-name"]');
+                    var sA = getSurname(nameA ? nameA.value : '');
+                    var sB = getSurname(nameB ? nameB.value : '');
+                    return sA.localeCompare(sB);
+                });
+                visible.concat(hidden).forEach(function (row) {
+                    list.appendChild(row);
+                });
+                updateSortOrders(list, '.person-row');
+                markDirty();
             });
         });
 

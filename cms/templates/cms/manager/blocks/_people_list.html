@@ -48,9 +48,14 @@
     {% endfor %}
 </div>
 
-<button type="button" class="btn btn-sm btn-outline-primary mt-2 btn-add-person" data-block-pk="{{ placement.pk }}">
-    <i class="bi bi-plus"></i> Add Person
-</button>
+<div class="d-flex gap-2 mt-2">
+    <button type="button" class="btn btn-sm btn-outline-primary btn-add-person" data-block-pk="{{ placement.pk }}">
+        <i class="bi bi-plus"></i> Add Person
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-sort-person-surname" data-block-pk="{{ placement.pk }}">
+        <i class="bi bi-sort-alpha-down"></i> Sort by surname
+    </button>
+</div>
 
 <div class="color-picker-row" style="margin-top:1rem;">
     <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.bg_color }}</span>
