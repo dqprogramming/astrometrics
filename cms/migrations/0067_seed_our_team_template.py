@@ -1,9 +1,6 @@
 """
 Data migration to seed the Our Team BlockPageTemplate with three
 PeopleListBlock sections (Directors, Executive Team, Staff).
-
-Note: The static/img/team/ images are small placeholders. Real photos
-must be uploaded via the CMS after creating a page from this template.
 """
 
 from django.db import migrations
@@ -26,12 +23,14 @@ _CONFIG = [
                 "description": _LOREM,
                 "linkedin_url": "",
                 "sort_order": 0,
+                "static_image": "static/img/team/director-1.jpg",
             },
             {
                 "name": "Joanna Ball.",
                 "description": _LOREM,
                 "linkedin_url": "",
                 "sort_order": 1,
+                "static_image": "static/img/team/director-2.jpg",
             },
             {
                 "name": "Rupert Gatti.",
@@ -53,24 +52,28 @@ _CONFIG = [
                 "description": _LOREM,
                 "linkedin_url": "",
                 "sort_order": 0,
+                "static_image": "static/img/team/exec-1.jpg",
             },
             {
                 "name": "Sarah Thompson.",
                 "description": _LOREM,
                 "linkedin_url": "",
                 "sort_order": 1,
+                "static_image": "static/img/team/exec-2.jpg",
             },
             {
                 "name": "Charles Watkinson.",
                 "description": _LOREM,
                 "linkedin_url": "",
                 "sort_order": 2,
+                "static_image": "static/img/team/exec-3.jpg",
             },
             {
                 "name": "Rebecca Wojturska.",
                 "description": _LOREM,
                 "linkedin_url": "",
                 "sort_order": 3,
+                "static_image": "static/img/team/exec-4.jpg",
             },
         ],
     },

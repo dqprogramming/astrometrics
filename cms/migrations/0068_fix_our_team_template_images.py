@@ -1,19 +1,18 @@
-"""Remove static_image refs from Our Team template (static images are placeholders)."""
+"""Restore static_image refs in Our Team template now that real photos
+are in static/img/team/."""
+
+import importlib
 
 from django.db import migrations
 
 
 def fix_config(apps, schema_editor):
+    mod = importlib.import_module("cms.migrations.0067_seed_our_team_template")
+    config = mod._CONFIG
     BlockPageTemplate = apps.get_model("cms", "BlockPageTemplate")
     for tpl in BlockPageTemplate.objects.filter(key="our_team"):
-        changed = False
-        for block_cfg in tpl.config:
-            for child in block_cfg.get("children", []):
-                if "static_image" in child:
-                    del child["static_image"]
-                    changed = True
-        if changed:
-            tpl.save()
+        tpl.config = config
+        tpl.save()
 
 
 class Migration(migrations.Migration):
