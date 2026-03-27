@@ -166,11 +166,7 @@ Block Pages / {{ page.name }}
         <div class="section-toggle-row">
             <label>
                 <span class="section-drag-handle" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
-                {% if bd.block_type == "members_header" %}<i class="bi bi-type-h1"></i>
-                {% elif bd.block_type == "who_we_are" %}<i class="bi bi-people-fill"></i>
-                {% elif bd.block_type == "person_carousel" %}<i class="bi bi-chat-quote"></i>
-                {% elif bd.block_type == "members_institutions" %}<i class="bi bi-building"></i>
-                {% endif %}
+                {% if bd.icon %}<i class="bi {{ bd.icon }}"></i>{% endif %}
                 {{ bd.block_type_label }}
             </label>
             <span style="display:flex; align-items:center; gap:0.75rem;">

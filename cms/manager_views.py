@@ -732,11 +732,16 @@ def _build_block_data(placements, data=None, files=None):
                 prefix=f"children_{p.pk}",
             )
         color_defaults = json.dumps(get_color_defaults(p.block_type))
+        try:
+            icon = get_block_class(p.block_type).ICON
+        except KeyError:
+            icon = ""
         bd = {
             "placement": p,
             "block": block,
             "block_type": p.block_type,
             "block_type_label": get_label(p.block_type),
+            "icon": icon,
             "form": form,
             "child_formset": child_formset,
             "form_template": get_manager_template(p.block_type),
