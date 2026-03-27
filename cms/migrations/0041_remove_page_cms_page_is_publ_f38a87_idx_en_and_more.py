@@ -6,26 +6,10 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cms', '0040_merge_20260323_1535'),
+        ('cms', '0039_remove_ourmembersbottomquote_page_and_more'),
     ]
 
     operations = [
-        migrations.RemoveIndex(
-            model_name='page',
-            name='cms_page_is_publ_f38a87_idx-en',
-        ),
-        migrations.RemoveIndex(
-            model_name='page',
-            name='cms_page_is_publ_f38a87_idx-fr',
-        ),
-        migrations.RemoveIndex(
-            model_name='page',
-            name='cms_page_is_publ_f38a87_idx-de',
-        ),
-        migrations.RemoveIndex(
-            model_name='page',
-            name='cms_page_is_publ_f38a87_idx-es',
-        ),
         migrations.AddField(
             model_name='personcarouselblock',
             name='bullet_active_color',
