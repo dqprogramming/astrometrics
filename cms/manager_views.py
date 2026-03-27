@@ -33,8 +33,6 @@ from .forms import (
     CategoryForm,
     Column1LinkFormSet,
     Column2LinkFormSet,
-    ContactFormSettingsForm,
-    ContactRecipientFormSet,
     FooterSettingsForm,
     HeaderSettingsForm,
     LandingPageSettingsForm,
@@ -48,7 +46,6 @@ from .models import (
     BlockPage,
     BlockPageTemplate,
     Category,
-    ContactFormSettings,
     FooterSettings,
     HeaderSettings,
     LandingPageSettings,
@@ -664,47 +661,6 @@ class SnippetDeleteView(StaffRequiredMixin, DeleteView):
             self.request, f'Snippet "{self.object.name}" deleted.'
         )
         return super().form_valid(form)
-
-
-# ── Contact Form Settings ────────────────────────────────────────────────────
-
-
-class ContactFormSettingsUpdateView(StaffRequiredMixin, View):
-    template_name = "cms/manager/contact_form_settings.html"
-
-    def get(self, request):
-        settings = ContactFormSettings.load()
-        form = ContactFormSettingsForm(instance=settings)
-        formset = ContactRecipientFormSet(
-            instance=settings, prefix="recipients"
-        )
-        return render(
-            request,
-            self.template_name,
-            {"form": form, "formset": formset},
-        )
-
-    def post(self, request):
-        settings = ContactFormSettings.load()
-        form = ContactFormSettingsForm(request.POST, instance=settings)
-        formset = ContactRecipientFormSet(
-            request.POST, instance=settings, prefix="recipients"
-        )
-
-        if form.is_valid() and formset.is_valid():
-            form.save()
-            for recipient in formset.save(commit=False):
-                recipient.save()
-            for recipient in formset.deleted_objects:
-                recipient.delete()
-            messages.success(request, "Contact form settings updated.")
-            return redirect(reverse_lazy("cms_manager:contact_form"))
-
-        return render(
-            request,
-            self.template_name,
-            {"form": form, "formset": formset},
-        )
 
 
 # ── Block Pages ──────────────────────────────────────────────────────────────

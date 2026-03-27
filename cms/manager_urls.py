@@ -54,12 +54,6 @@ urlpatterns = [
         views.CategoryDeleteView.as_view(),
         name="category_delete",
     ),
-    # Contact Form Settings
-    path(
-        "contact-form/",
-        views.ContactFormSettingsUpdateView.as_view(),
-        name="contact_form",
-    ),
     # Header
     path("header/", views.HeaderSettingsUpdateView.as_view(), name="header"),
     # Footer

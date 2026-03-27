@@ -6,8 +6,6 @@ from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
 from cms.models import (
-    ContactFormSettings,
-    ContactRecipient,
     FooterLink,
     FooterSettings,
     Page,
@@ -104,14 +102,3 @@ class SnippetAdmin(TranslationAdmin):
     list_display = ["name", "key", "updated_at"]
     search_fields = ["name", "key", "body"]
     readonly_fields = ["created_at", "updated_at"]
-
-
-class ContactRecipientInline(admin.TabularInline):
-    model = ContactRecipient
-    extra = 1
-
-
-@admin.register(ContactFormSettings)
-class ContactFormSettingsAdmin(admin.ModelAdmin):
-    list_display = ["from_email", "updated_at"]
-    inlines = [ContactRecipientInline]

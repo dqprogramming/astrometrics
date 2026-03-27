@@ -7,8 +7,6 @@ from .models import (
     Category,
     ContactFormBlock,
     ContactFormRecipient,
-    ContactFormSettings,
-    ContactRecipient,
     FooterLink,
     FooterSettings,
     FreeAccessJournalsBlock,
@@ -370,36 +368,6 @@ _RESTRICTED_TINYMCE = {
     "plugins": "",
     "toolbar": "bold italic underline",
 }
-
-
-class ContactFormSettingsForm(forms.ModelForm):
-    class Meta:
-        model = ContactFormSettings
-        fields = ["from_email"]
-        widgets = {
-            "from_email": forms.EmailInput(attrs={"class": "mgr-input"}),
-        }
-
-
-class ContactRecipientForm(forms.ModelForm):
-    class Meta:
-        model = ContactRecipient
-        fields = ["email", "sort_order"]
-        widgets = {
-            "email": forms.EmailInput(
-                attrs={"class": "mgr-input", "aria-label": "Recipient email"}
-            ),
-            "sort_order": forms.HiddenInput(),
-        }
-
-
-ContactRecipientFormSet = forms.inlineformset_factory(
-    ContactFormSettings,
-    ContactRecipient,
-    form=ContactRecipientForm,
-    extra=0,
-    can_delete=True,
-)
 
 
 _MANIFESTO_TINYMCE = {
