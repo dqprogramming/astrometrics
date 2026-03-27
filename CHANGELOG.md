@@ -1,3 +1,9 @@
+## 1.23.0 (2026-03-27)
+
+### Feat
+
+- **journals**: redesign public catalogue pages
+
 ## 1.22.1 (2026-03-22)
 
 ### Fix
