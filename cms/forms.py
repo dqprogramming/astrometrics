@@ -7,13 +7,16 @@ from .models import (
     Category,
     ContactFormBlock,
     ContactFormRecipient,
+    FeatureCardBlock,
     FooterLink,
     FooterSettings,
     FreeAccessJournalsBlock,
     HeaderSettings,
     InstitutionEntry,
     JournalFundingBlock,
+    LandingHeroBlock,
     LandingPageSettings,
+    LandingStatsBlock,
     ManifestoHeroBlock,
     ManifestoOrganiseBlock,
     ManifestoTextBlock,
@@ -1122,6 +1125,148 @@ ContactFormRecipientFormSet = forms.inlineformset_factory(
     extra=0,
     can_delete=True,
 )
+
+
+class LandingHeroBlockForm(forms.ModelForm):
+    class Meta:
+        model = LandingHeroBlock
+        fields = [
+            "heading",
+            "sub_heading",
+            "cta_text",
+            "cta_url",
+            "cta_bg_color",
+            "cta_text_color",
+            "cta_hover_bg_color",
+            "cta_hover_text_color",
+            "bg_color",
+            "text_color",
+            "circle_color",
+        ]
+        widgets = {
+            "heading": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 3}
+            ),
+            "sub_heading": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 3}
+            ),
+            "cta_text": forms.TextInput(attrs={"class": "mgr-input"}),
+            "cta_url": forms.TextInput(
+                attrs={
+                    "class": "mgr-input",
+                    "placeholder": "e.g. mailto:info@example.org or https://...",
+                }
+            ),
+            "cta_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_hover_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_hover_text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "circle_color": forms.TextInput(attrs=_COLOR_ATTRS),
+        }
+
+
+class FeatureCardBlockForm(forms.ModelForm):
+    class Meta:
+        model = FeatureCardBlock
+        fields = [
+            "title",
+            "text",
+            "image",
+            "image_alt",
+            "number",
+            "cta_text",
+            "cta_url",
+            "cta_bg_color",
+            "cta_text_color",
+            "cta_hover_bg_color",
+            "cta_hover_text_color",
+            "card_bg_color",
+            "text_color",
+        ]
+        widgets = {
+            "title": forms.TextInput(attrs={"class": "mgr-input"}),
+            "text": forms.Textarea(attrs={"class": "mgr-textarea", "rows": 4}),
+            "image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
+            "number": forms.TextInput(
+                attrs={"class": "mgr-input", "style": "max-width:80px;"}
+            ),
+            "cta_text": forms.TextInput(attrs={"class": "mgr-input"}),
+            "cta_url": forms.TextInput(
+                attrs={
+                    "class": "mgr-input",
+                    "placeholder": "e.g. /contact/ or https://...",
+                }
+            ),
+            "cta_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_hover_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "cta_hover_text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "card_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+        }
+
+
+class LandingStatsBlockForm(forms.ModelForm):
+    class Meta:
+        model = LandingStatsBlock
+        fields = [
+            "fundraising_target",
+            "amount_raised",
+            "description",
+            "button_1_text",
+            "button_1_url",
+            "button_1_bg_color",
+            "button_1_text_color",
+            "button_1_hover_bg_color",
+            "button_1_hover_text_color",
+            "button_2_text",
+            "button_2_url",
+            "button_2_bg_color",
+            "button_2_text_color",
+            "button_2_hover_bg_color",
+            "button_2_hover_text_color",
+            "bg_color",
+            "text_color",
+            "ring_color",
+        ]
+        widgets = {
+            "fundraising_target": forms.NumberInput(
+                attrs={"class": "mgr-input", "style": "max-width:200px;"}
+            ),
+            "amount_raised": forms.NumberInput(
+                attrs={"class": "mgr-input", "style": "max-width:200px;"}
+            ),
+            "description": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 3}
+            ),
+            "button_1_text": forms.TextInput(attrs={"class": "mgr-input"}),
+            "button_1_url": forms.TextInput(
+                attrs={
+                    "class": "mgr-input",
+                    "placeholder": "e.g. mailto:... or https://...",
+                }
+            ),
+            "button_1_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "button_1_text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "button_1_hover_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "button_1_hover_text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "button_2_text": forms.TextInput(attrs={"class": "mgr-input"}),
+            "button_2_url": forms.TextInput(
+                attrs={
+                    "class": "mgr-input",
+                    "placeholder": "e.g. mailto:... or https://...",
+                }
+            ),
+            "button_2_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "button_2_text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "button_2_hover_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "button_2_hover_text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            "ring_color": forms.TextInput(attrs=_COLOR_ATTRS),
+        }
 
 
 class ContactSubmissionForm(forms.Form):

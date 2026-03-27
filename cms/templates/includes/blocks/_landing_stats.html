@@ -1,0 +1,155 @@
+                </div>{# end .features #}
+            </div>{# end .col-12 #}
+        </div>{# end .row #}
+    </div>{# end .container #}
+</section>{# end .landing-features #}
+</div>{# end .landing-hero-features-wrapper #}
+
+<!-- Stats Section -->
+<section class="landing-stats" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};">
+    <div class="container">
+        <h2 class="sr-only">Statistics</h2>
+        <svg class="landing-stats-rings-svg" viewBox="0 0 1100 1100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" overflow="visible">
+            <circle cx="550" cy="550" r="200" fill="none" stroke="{{ block.ring_color }}" stroke-width="80"/>
+            <circle cx="550" cy="550" r="350" fill="none" stroke="{{ block.ring_color }}" stroke-width="80"/>
+            <circle cx="550" cy="550" r="500" fill="none" stroke="{{ block.ring_color }}" stroke-width="80"/>
+        </svg>
+        <div class="landing-stats-inner">
+            <div class="landing-stats-left">
+                <span class="landing-stats-number spectral-bold"
+                      style="color: {{ block.text_color }};"
+                      data-count-to="{{ block.stats_percentage }}" data-count-suffix="%">0%</span>
+            </div>
+            <div class="landing-stats-right" style="border-left-color: {{ block.text_color }};">
+                <div class="landing-stats-raised">
+                    <span class="landing-stats-amount spectral-bold"
+                          style="color: {{ block.text_color }};"
+                          data-count-to="{{ block.amount_raised }}" data-count-prefix="&pound;"
+                          data-count-format="comma">&pound;0</span>
+                    <span class="landing-stats-target" style="color: {{ block.text_color }};">raised of {{ block.fundraising_target_display }}</span>
+                </div>
+                <p class="landing-stats-desc" style="color: {{ block.text_color }};">
+                    {{ block.description }}
+                </p>
+                <div class="landing-stats-buttons">
+                    {% if block.button_1_text %}
+                    <style>
+                        .stats-btn1-{{ block.pk }}:hover {
+                            background-color: {{ block.button_1_hover_bg_color }} !important;
+                            color: {{ block.button_1_hover_text_color }} !important;
+                        }
+                    </style>
+                    <a href="{{ block.button_1_url }}"
+                       class="btn spectral-bold stats-btn1-{{ block.pk }}"
+                       style="background-color: {{ block.button_1_bg_color }}; color: {{ block.button_1_text_color }};">{{ block.button_1_text }}</a>
+                    {% endif %}
+                    {% if block.button_2_text %}
+                    <style>
+                        .stats-btn2-{{ block.pk }}:hover {
+                            background-color: {{ block.button_2_hover_bg_color }} !important;
+                            color: {{ block.button_2_hover_text_color }} !important;
+                        }
+                    </style>
+                    <a href="{{ block.button_2_url }}"
+                       class="btn spectral-bold stats-btn2-{{ block.pk }}"
+                       style="background-color: {{ block.button_2_bg_color }}; color: {{ block.button_2_text_color }};">{{ block.button_2_text }}</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="sr-only" aria-live="polite" id="stats-announcement"></div>
+    </div>
+</section>
+
+<script>
+(function () {
+  var statsSection = document.querySelector('.landing-stats');
+  if (!statsSection) return;
+  var counters = statsSection.querySelectorAll('[data-count-to]');
+  if (!counters.length) return;
+
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function formatNumber(n, el) {
+    var fmt = el.dataset.countFormat;
+    if (fmt === 'comma') return n.toLocaleString('en-GB');
+    return String(n);
+  }
+
+  function updateDisplay(el, value) {
+    var prefix = el.dataset.countPrefix || '';
+    var suffix = el.dataset.countSuffix || '';
+    el.textContent = prefix + formatNumber(value, el) + suffix;
+  }
+
+  function announceStats() {
+    var announcement = document.getElementById('stats-announcement');
+    if (!announcement) return;
+    var parts = [];
+    counters.forEach(function (el) {
+      var target = parseInt(el.dataset.countTo, 10);
+      var prefix = el.dataset.countPrefix || '';
+      var suffix = el.dataset.countSuffix || '';
+      parts.push(prefix + formatNumber(target, el) + suffix);
+    });
+    announcement.textContent = parts[0] + ' raised, ' + parts[1] + ' of target';
+  }
+
+  function animateCount(el, from, to, onComplete) {
+    if (el._countAnim) cancelAnimationFrame(el._countAnim);
+    var duration = 1200;
+    var start = performance.now();
+
+    function tick(now) {
+      var elapsed = now - start;
+      var progress = Math.min(elapsed / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = Math.round(from + eased * (to - from));
+      el._currentValue = current;
+      updateDisplay(el, current);
+      if (progress < 1) {
+        el._countAnim = requestAnimationFrame(tick);
+      } else {
+        el._countAnim = null;
+        if (onComplete) onComplete();
+      }
+    }
+
+    el._countAnim = requestAnimationFrame(tick);
+  }
+
+  counters.forEach(function (el) { el._currentValue = 0; });
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      var animationsRemaining = counters.length;
+      counters.forEach(function (el) {
+        var target = parseInt(el.dataset.countTo, 10);
+        var to = entry.isIntersecting ? target : 0;
+        var from = el._currentValue;
+        if (from !== to) {
+          if (prefersReducedMotion) {
+            el._currentValue = to;
+            updateDisplay(el, to);
+            animationsRemaining--;
+            if (animationsRemaining <= 0 && entry.isIntersecting) {
+              announceStats();
+            }
+          } else {
+            animateCount(el, from, to, function () {
+              animationsRemaining--;
+              if (animationsRemaining <= 0 && entry.isIntersecting) {
+                announceStats();
+              }
+            });
+          }
+        } else {
+          animationsRemaining--;
+        }
+      });
+    });
+  }, { threshold: 0.5 });
+
+  observer.observe(statsSection);
+})();
+</script>

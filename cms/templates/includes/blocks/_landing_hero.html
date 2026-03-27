@@ -1,0 +1,43 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/landing.css' %}">
+<div class="landing-hero-features-wrapper" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};">
+    <!-- Concentric circles SVG -->
+    <svg class="landing-circles-svg" viewBox="0 0 1100 1100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" overflow="visible">
+        <circle cx="550" cy="550" r="130" fill="none" stroke="{{ block.circle_color }}" stroke-width="70"/>
+        <circle cx="550" cy="550" r="250" fill="none" stroke="{{ block.circle_color }}" stroke-width="70"/>
+        <circle cx="550" cy="550" r="370" fill="none" stroke="{{ block.circle_color }}" stroke-width="70"/>
+        <circle cx="550" cy="550" r="490" fill="none" stroke="{{ block.circle_color }}" stroke-width="70"/>
+    </svg>
+
+    <!-- Hero Section -->
+    <section class="landing-hero">
+        <div class="container">
+            <div class="landing-hero-content" style="border-left-color: {{ block.text_color }};">
+                <h1 class="landing-hero-heading spectral-bold" style="color: {{ block.text_color }};">
+                    {{ block.heading }}
+                </h1>
+                <p class="landing-hero-sub" style="color: {{ block.text_color }};">
+                    {{ block.sub_heading }}
+                </p>
+                {% if block.cta_text %}
+                <style>
+                    .landing-hero-cta-{{ block.pk }}:hover {
+                        background-color: {{ block.cta_hover_bg_color }} !important;
+                        color: {{ block.cta_hover_text_color }} !important;
+                    }
+                </style>
+                <a href="{{ block.cta_url }}"
+                   class="btn spectral-bold landing-hero-cta-{{ block.pk }}"
+                   style="background-color: {{ block.cta_bg_color }}; color: {{ block.cta_text_color }};">{{ block.cta_text }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Features wrapper opens here, closed by landing_stats block -->
+    <section class="landing-features">
+    <div class="container">
+        <h2 class="sr-only">Features</h2>
+        <div class="row">
+            <div class="col-12">
+                <div class="features">

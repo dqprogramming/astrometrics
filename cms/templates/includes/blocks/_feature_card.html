@@ -1,0 +1,19 @@
+<div class="feature-card" style="background-color: {{ block.card_bg_color }}; color: {{ block.text_color }};">
+    <img src="{% if block.image %}{{ block.image.url }}{% else %}{{ block.fallback_image_url }}{% endif %}"
+         alt="{{ block.image_alt }}"
+         class="feature-image">
+    <div class="feature-number">{{ block.number }}</div>
+    <h3 class="feature-title" style="color: {{ block.text_color }};">{{ block.title }}</h3>
+    <p class="feature-text" style="color: {{ block.text_color }};">{{ block.text }}</p>
+    {% if block.cta_text %}
+    <style>
+        .feature-cta-{{ block.pk }}:hover {
+            background-color: {{ block.cta_hover_bg_color }} !important;
+            color: {{ block.cta_hover_text_color }} !important;
+        }
+    </style>
+    <a href="{{ block.cta_url }}"
+       class="btn spectral-bold feature-btn feature-cta-{{ block.pk }}"
+       style="background-color: {{ block.cta_bg_color }}; color: {{ block.cta_text_color }};">{{ block.cta_text }}</a>
+    {% endif %}
+</div>

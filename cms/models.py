@@ -777,6 +777,10 @@ class BlockPage(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
     template_key = models.CharField(max_length=50, blank=True, default="")
+    is_landing_page = models.BooleanField(
+        default=False,
+        help_text="Serve this page at / instead of the old landing page",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     blocks = GenericRelation(
@@ -790,6 +794,14 @@ class BlockPage(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if self.is_landing_page:
+            # Ensure only one landing page exists
+            BlockPage.objects.filter(is_landing_page=True).exclude(
+                pk=self.pk
+            ).update(is_landing_page=False)
+        super().save(*args, **kwargs)
 
 
 class BlockPageTemplate(models.Model):
@@ -2256,6 +2268,170 @@ class ContactFormRecipient(models.Model):
 
     def __str__(self):
         return self.email
+
+
+@register
+class LandingHeroBlock(BaseBlock):
+    """Hero block for the landing page with large concentric circles."""
+
+    BLOCK_TYPE = "landing_hero"
+    LABEL = "Hero: Very Large Circles"
+    ICON = "bi-type-h1"
+    FORM_CLASS = "cms.forms.LandingHeroBlockForm"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_landing_hero.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_landing_hero.html"
+    COLOR_DEFAULTS = {
+        "cta_bg_color": "#212129",
+        "cta_text_color": "#ffffff",
+        "cta_hover_bg_color": "#000000",
+        "cta_hover_text_color": "#ffffff",
+        "bg_color": "#ffffff",
+        "text_color": "#212129",
+        "circle_color": "#FFDE59",
+    }
+
+    heading = models.TextField(
+        default="We're a collective of libraries and university"
+        " publishers reshaping academic research.",
+        help_text="Main hero heading",
+    )
+    sub_heading = models.TextField(
+        blank=True,
+        default=(
+            "Add a bit more info here, means we can be a bit more"
+            " punchy to the point above and adipiscing elit, sed"
+            " do a cursus semper."
+        ),
+        help_text="Hero sub-heading text",
+    )
+    cta_text = models.CharField(max_length=100, default="JOIN THE MOVEMENT")
+    cta_url = models.CharField(max_length=500, blank=True)
+    cta_bg_color = models.CharField(max_length=7, default="#212129")
+    cta_text_color = models.CharField(max_length=7, default="#ffffff")
+    cta_hover_bg_color = models.CharField(max_length=7, default="#000000")
+    cta_hover_text_color = models.CharField(max_length=7, default="#ffffff")
+    bg_color = models.CharField(max_length=7, default="#ffffff")
+    text_color = models.CharField(max_length=7, default="#212129")
+    circle_color = models.CharField(max_length=7, default="#FFDE59")
+
+    def __str__(self):
+        return f"LandingHeroBlock #{self.pk}"
+
+
+@register
+class FeatureCardBlock(BaseBlock):
+    """Feature card block for the landing page."""
+
+    BLOCK_TYPE = "feature_card"
+    LABEL = "Feature Card"
+    ICON = "bi-card-text"
+    FORM_CLASS = "cms.forms.FeatureCardBlockForm"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_feature_card.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_feature_card.html"
+    COLOR_DEFAULTS = {
+        "card_bg_color": "#a5bfff",
+        "text_color": "#212129",
+        "cta_bg_color": "#212129",
+        "cta_text_color": "#ffffff",
+        "cta_hover_bg_color": "#000000",
+        "cta_hover_text_color": "#ffffff",
+    }
+
+    _FALLBACK_IMAGES = {
+        "01": "/static/img/home-col-1.jpg",
+        "02": "/static/img/home-col-2.jpg",
+        "03": "/static/img/home-col-3.jpg",
+    }
+
+    title = models.CharField(max_length=255, default="Feature title.")
+    text = models.TextField(blank=True)
+    image = models.ImageField(upload_to="blocks/feature_card/", blank=True)
+    image_alt = models.CharField(max_length=255, blank=True)
+    number = models.CharField(max_length=5, default="01")
+    cta_text = models.CharField(max_length=100, default="LEARN MORE")
+    cta_url = models.CharField(max_length=500, blank=True)
+    cta_bg_color = models.CharField(max_length=7, default="#212129")
+    cta_text_color = models.CharField(max_length=7, default="#ffffff")
+    cta_hover_bg_color = models.CharField(max_length=7, default="#000000")
+    cta_hover_text_color = models.CharField(max_length=7, default="#ffffff")
+    card_bg_color = models.CharField(max_length=7, default="#a5bfff")
+    text_color = models.CharField(max_length=7, default="#212129")
+
+    def __str__(self):
+        return f"FeatureCardBlock #{self.pk}"
+
+    @property
+    def fallback_image_url(self):
+        return self._FALLBACK_IMAGES.get(
+            self.number, "/static/img/home-col-1.jpg"
+        )
+
+
+@register
+class LandingStatsBlock(BaseBlock):
+    """Stats section block for the landing page with animated counter."""
+
+    BLOCK_TYPE = "landing_stats"
+    LABEL = "Landing Page Statistics"
+    ICON = "bi-bar-chart"
+    FORM_CLASS = "cms.forms.LandingStatsBlockForm"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_landing_stats.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_landing_stats.html"
+    COLOR_DEFAULTS = {
+        "button_1_bg_color": "#212129",
+        "button_1_text_color": "#ffffff",
+        "button_1_hover_bg_color": "#000000",
+        "button_1_hover_text_color": "#ffffff",
+        "button_2_bg_color": "#212129",
+        "button_2_text_color": "#ffffff",
+        "button_2_hover_bg_color": "#000000",
+        "button_2_hover_text_color": "#ffffff",
+        "bg_color": "#FFDE59",
+        "text_color": "#212129",
+        "ring_color": "#ffffff",
+    }
+
+    fundraising_target = models.PositiveIntegerField(default=14000)
+    amount_raised = models.PositiveIntegerField(default=11500)
+    description = models.TextField(blank=True)
+    button_1_text = models.CharField(
+        max_length=100, default="JOIN THE MOVEMENT"
+    )
+    button_1_url = models.CharField(max_length=500, blank=True)
+    button_1_bg_color = models.CharField(max_length=7, default="#212129")
+    button_1_text_color = models.CharField(max_length=7, default="#ffffff")
+    button_1_hover_bg_color = models.CharField(max_length=7, default="#000000")
+    button_1_hover_text_color = models.CharField(
+        max_length=7, default="#ffffff"
+    )
+    button_2_text = models.CharField(max_length=100, default="SHARE")
+    button_2_url = models.CharField(max_length=500, blank=True)
+    button_2_bg_color = models.CharField(max_length=7, default="#212129")
+    button_2_text_color = models.CharField(max_length=7, default="#ffffff")
+    button_2_hover_bg_color = models.CharField(max_length=7, default="#000000")
+    button_2_hover_text_color = models.CharField(
+        max_length=7, default="#ffffff"
+    )
+    bg_color = models.CharField(max_length=7, default="#FFDE59")
+    text_color = models.CharField(max_length=7, default="#212129")
+    ring_color = models.CharField(max_length=7, default="#ffffff")
+
+    def __str__(self):
+        return f"LandingStatsBlock #{self.pk}"
+
+    @property
+    def stats_percentage(self):
+        if not self.fundraising_target:
+            return 0
+        return int((self.amount_raised / self.fundraising_target) * 100)
+
+    @property
+    def amount_raised_display(self):
+        return f"\u00a3{self.amount_raised:,}"
+
+    @property
+    def fundraising_target_display(self):
+        return f"\u00a3{self.fundraising_target:,}"
 
 
 class PageBlock(models.Model):
