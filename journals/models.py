@@ -255,6 +255,14 @@ class Journal(models.Model):
         help_text="Unique selling points to note",
     )
 
+    # Cover image
+    cover = models.ImageField(
+        upload_to="journal_covers/",
+        blank=True,
+        null=True,
+        help_text="Journal cover image",
+    )
+
     # Licensing & Archiving
     licensing = models.CharField(
         max_length=100,

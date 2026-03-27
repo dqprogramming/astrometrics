@@ -1,312 +1,279 @@
-{% extends "public/base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
-{% block title %}Browse Journals{% endblock %}
-
-{% block header_title %}<h1 class="site-header-text">Browse Journals</h1>{% endblock %}
+{% block title %}Browse Journals — Open Journals Collective{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/catalogue.css' %}">
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero-section hero-section--large">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h2 class="hero-title" style="text-align: center;">
-                    Discover Open Access Journals
-                </h2>
-                <p class="hero-description">
-                    Search our collection of academic journals committed to open access and community-led publishing
-                </p>
-            </div>
-        </div>
-    </div>
+
+<!-- ===== HERO ===== -->
+<section class="cata-hero">
+  <div class="cata-container">
+    <h1 class="cata-hero__title">Browse journals</h1>
+  </div>
 </section>
 
-<!-- Search Section -->
-<section class="search-section">
-    <div class="container">
-        <div class="row">
-            <div class="col-1"></div>
-            <div class="col-10">
-                <form method="get" action="{% url 'journals:public_search' %}" class="search-form">
-                    <!-- Main Search Bar -->
-                    <div class="search-bar-wrapper">
-                        <input type="text"
-                               name="q"
-                               value="{{ current_filters.q }}"
-                               placeholder="Search by journal title, subject, publisher..."
-                               class="search-input">
-                        <button type="submit" class="search-submit">
-                            Search
-                        </button>
-                    </div>
+<!-- ===== SEARCH ===== -->
+<section class="cata-search">
+  <div class="cata-container">
+    <p class="cata-search__intro">
+      Explore our collection of open access, community-led academic journals,
+      or download the full list in one click.
+    </p>
 
-                    <!-- Filter Toggles -->
-                    <div class="filter-toggles">
-                        <button type="button"
-                                onclick="document.getElementById('filters').style.display = document.getElementById('filters').style.display === 'none' ? 'block' : 'none'"
-                                class="filter-toggle-btn">
-                            ⚙ Filters
-                        </button>
-                        {% if current_filters.q or current_filters.subject or current_filters.publisher or current_filters.in_doaj == 'yes' %}
-                        <a href="{% url 'journals:public_search' %}" class="btn btn--danger">
-                            Clear All
-                        </a>
-                        {% endif %}
-                    </div>
+    <form method="get" action="{% url 'journals:public_search' %}" class="cata-search__form">
+      <div class="cata-search__bar">
+        <input type="text"
+               name="q"
+               value="{{ current_filters.q }}"
+               placeholder="What are you looking for?"
+               class="cata-search__input"
+               aria-label="Search journals">
+        <button type="submit" class="cata-search__btn">SEARCH</button>
+      </div>
 
-                    <!-- Collapsible Filters -->
-                    <div id="filters" class="filters-panel">
-                        <div class="filters-grid">
+      <!-- Collapsible filters -->
+      <button type="button"
+              class="cata-filters-toggle"
+              onclick="toggleFilters()"
+              id="filters-toggle-btn">
+        ⚙ Filters
+        {% if current_filters.subject or current_filters.publisher or current_filters.in_doaj == 'yes' or current_filters.language %}
+        (active)
+        {% endif %}
+      </button>
 
-                            <!-- Subject Filter -->
-                            <div class="filter-group">
-                                <label>Subject</label>
-                                <select name="subject" class="filter-select">
-                                    <option value="">All Subjects</option>
-                                    {% for subject in subjects %}
-                                    <option value="{{ subject.id }}"
-                                            {% if current_filters.subject == subject.id|stringformat:"s" %}selected{% endif %}>
-                                        {{ subject.name }}
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+      <div id="cata-filters" class="cata-filters-panel">
+        <div class="cata-filters-grid">
+          <div class="cata-filter-group">
+            <label for="filter-subject">Subject</label>
+            <select name="subject" id="filter-subject" class="cata-filter-select">
+              <option value="">All Subjects</option>
+              {% for subject in subjects %}
+              <option value="{{ subject.id }}"
+                      {% if current_filters.subject == subject.id|stringformat:"s" %}selected{% endif %}>
+                {{ subject.name }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
 
-                            <!-- Publisher Filter -->
-                            <div class="filter-group">
-                                <label>Publisher</label>
-                                <select name="publisher" class="filter-select">
-                                    <option value="">All Publishers</option>
-                                    {% for publisher in publishers %}
-                                    <option value="{{ publisher.id }}"
-                                            {% if current_filters.publisher == publisher.id|stringformat:"s" %}selected{% endif %}>
-                                        {{ publisher.name }}
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+          <div class="cata-filter-group">
+            <label for="filter-publisher">Publisher</label>
+            <select name="publisher" id="filter-publisher" class="cata-filter-select">
+              <option value="">All Publishers</option>
+              {% for publisher in publishers %}
+              <option value="{{ publisher.id }}"
+                      {% if current_filters.publisher == publisher.id|stringformat:"s" %}selected{% endif %}>
+                {{ publisher.name }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
 
-                            <!-- DOAJ Filter -->
-                            <div class="filter-group">
-                                <label>DOAJ Listed</label>
-                                <select name="in_doaj" class="filter-select">
-                                    <option value="">All Journals</option>
-                                    <option value="yes" {% if current_filters.in_doaj == 'yes' %}selected{% endif %}>DOAJ Listed Only</option>
-                                </select>
-                            </div>
+          <div class="cata-filter-group">
+            <label for="filter-doaj">DOAJ Listed</label>
+            <select name="in_doaj" id="filter-doaj" class="cata-filter-select">
+              <option value="">All Journals</option>
+              <option value="yes" {% if current_filters.in_doaj == 'yes' %}selected{% endif %}>DOAJ Listed Only</option>
+            </select>
+          </div>
 
-                            <!-- Language Filter -->
-                            <div class="filter-group">
-                                <label>Language</label>
-                                <select name="language" class="filter-select">
-                                    <option value="">All Languages</option>
-                                    {% for language in languages %}
-                                    <option value="{{ language.id }}"
-                                            {% if current_filters.language == language.id|stringformat:"s" %}selected{% endif %}>
-                                        {{ language.name }}
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-
-                        </div>
-
-                        <div class="filter-submit-wrapper">
-                            <button type="submit" class="filter-submit">
-                                Apply Filters
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="col-1"></div>
+          <div class="cata-filter-group">
+            <label for="filter-language">Language</label>
+            <select name="language" id="filter-language" class="cata-filter-select">
+              <option value="">All Languages</option>
+              {% for language in languages %}
+              <option value="{{ language.id }}"
+                      {% if current_filters.language == language.id|stringformat:"s" %}selected{% endif %}>
+                {{ language.name }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
         </div>
+        <div style="display:flex; gap:0.75rem; align-items:center; margin-top:1rem;">
+          <button type="submit" class="cata-filter-apply">Apply Filters</button>
+          {% if current_filters.q or current_filters.subject or current_filters.publisher or current_filters.in_doaj == 'yes' or current_filters.language %}
+          <a href="{% url 'journals:public_search' %}" style="font-size:0.8rem;color:var(--text-muted);text-decoration:underline;">Clear all</a>
+          {% endif %}
+        </div>
+      </div>
+    </form>
+
+    <p class="cata-search__download-text">
+      Or download the full collection, copy here
+    </p>
+    <div class="cata-search__download-btns">
+      <a href="#" class="cata-download-btn">Download Journal List 1</a>
+      <a href="#" class="cata-download-btn">Download Journal List 2</a>
+      <a href="#" class="cata-download-btn">Download Journal List 3</a>
     </div>
+  </div>
 </section>
 
-<!-- Results Section -->
-<section class="results-section">
-    <div class="container">
-        <div class="row">
-            <div class="col-1"></div>
-            <div class="col-10">
+<!-- ===== RESULTS COUNT ===== -->
+<section class="cata-results-count">
+  <div class="cata-results-count__inner">
+    <!-- open book SVG icon -->
+    <svg class="cata-results-count__icon" width="56" height="48" viewBox="0 0 56 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M28 8C22 2 10 2 4 6v34c6-4 18-4 24 2 6-6 18-6 24-2V6c-6-4-18-4-24 2z" stroke="#111" stroke-width="2" stroke-linejoin="round" fill="none"/>
+      <line x1="28" y1="8" x2="28" y2="42" stroke="#111" stroke-width="2"/>
+    </svg>
+    <span class="cata-results-count__number">{{ statistics.total_count }}</span>
+    <span class="cata-results-count__label">Journals<br>found</span>
+  </div>
+</section>
 
-                {% if statistics.total_count > 0 %}
-                <!-- Results Summary -->
-                <div class="results-summary">
-                    <h3 class="results-summary__title">
-                        Found <strong>{{ statistics.total_count }}</strong> journal{{ statistics.total_count|pluralize }}
-                    </h3>
-                    {% if statistics.doaj_count > 0 %}
-                    <p class="results-summary__subtitle">
-                        {{ statistics.doaj_count }} listed in DOAJ
-                    </p>
-                    {% endif %}
-                </div>
+<!-- ===== JOURNAL LIST ===== -->
+<section class="cata-list">
+  <div class="cata-container">
 
-                <!-- Journal Cards -->
-                <div class="results-grid">
-                    {% for journal in journals %}
-                    <div class="journal-card journal-card--list"
-                         onclick="window.location.href='{% url 'journals:public_detail' journal.pk %}'">
+    {% if statistics.total_count > 0 %}
+    <div class="cata-list__grid">
+      {% for journal in journals %}
+      <div class="journal-list-card"
+           onclick="window.location.href='{% url 'journals:public_detail' journal.pk %}'">
 
-                        <!-- Header -->
-                        <div>
-                            <h3 class="journal-card__title journal-card__title--large">
-                                {{ journal.title }}
-                            </h3>
-
-                            <!-- Publisher & Badges -->
-                            <div class="journal-card__meta">
-                                <span class="journal-card__publisher">
-                                    {{ journal.publisher.name }}
-                                </span>
-
-                                {% if journal.in_doaj %}
-                                <span class="badge badge--doaj badge--small">
-                                    DOAJ
-                                </span>
-                                {% endif %}
-
-                                {% if journal.in_scopus %}
-                                <span class="badge badge--scopus badge--small">
-                                    Scopus
-                                </span>
-                                {% endif %}
-
-                                {% if journal.wos_impact_factor %}
-                                <span class="badge badge--if badge--small">
-                                    IF: {{ journal.wos_impact_factor }}
-                                </span>
-                                {% endif %}
-                            </div>
-
-                            {% if journal.issn %}
-                            <div class="journal-card__issn">
-                                ISSN: {{ journal.issn }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <!-- Description -->
-                        {% if journal.description %}
-                        <div class="journal-card__description">
-                            {{ journal.description|truncatewords:40 }}
-                        </div>
-                        {% endif %}
-
-                        <!-- Subjects -->
-                        {% if journal.subjects.all %}
-                        <div class="journal-card__subjects">
-                            {% for subject in journal.subjects.all|slice:":5" %}
-                            <span class="badge badge--subject-small">
-                                {{ subject.name }}
-                            </span>
-                            {% endfor %}
-                            {% if journal.subjects.count > 5 %}
-                            <span class="badge badge--subject-small">
-                                +{{ journal.subjects.count|add:"-5" }} more
-                            </span>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-
-                        <!-- Footer -->
-                        <div class="journal-card__footer">
-                            <div class="journal-card__languages">
-                                {% if journal.languages.all %}
-                                <span>
-                                    {{ journal.languages.all|join:", " }}
-                                </span>
-                                {% endif %}
-                            </div>
-                            <div>
-                                <span class="journal-card__link">
-                                    View Details →
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-
-                <!-- Pagination -->
-                {% if page_obj.has_other_pages %}
-                <div class="pagination">
-                    <div class="pagination__wrapper">
-                        {% if page_obj.has_previous %}
-                        <a href="?page=1&{{ query_string }}" class="pagination__link">
-                            ««
-                        </a>
-                        <a href="?page={{ page_obj.previous_page_number }}&{{ query_string }}" class="pagination__link">
-                            ‹
-                        </a>
-                        {% endif %}
-
-                        {% for num in page_obj.paginator.page_range %}
-                        {% if page_obj.number == num %}
-                        <span class="pagination__current">
-                            {{ num }}
-                        </span>
-                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                        <a href="?page={{ num }}&{{ query_string }}" class="pagination__link">
-                            {{ num }}
-                        </a>
-                        {% endif %}
-                        {% endfor %}
-
-                        {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}&{{ query_string }}" class="pagination__link">
-                            ›
-                        </a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}&{{ query_string }}" class="pagination__link">
-                            »»
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
-                {% endif %}
-
-                {% else %}
-                <!-- No Results -->
-                <div class="no-results">
-                    <h3 class="no-results__title">
-                        No journals found
-                    </h3>
-                    <p class="no-results__text">
-                        Try adjusting your search criteria or filters
-                    </p>
-                    <a href="{% url 'journals:public_search' %}" class="btn btn--dark">
-                        Clear All Filters
-                    </a>
-                </div>
-                {% endif %}
-
-            </div>
-            <div class="col-1"></div>
+        <!-- Cover placeholder -->
+        <div class="journal-list-card__cover shadow-medium" aria-hidden="true">
+          {% if journal.cover %}
+          <img src="{{ journal.cover.url }}" alt="{{ journal.title }} cover" class="journal-list-card__cover-img">
+          {% else %}
+          <span class="journal-list-card__cover-initial">{{ journal.title|first|upper }}</span>
+          {% endif %}
         </div>
+
+        <!-- Body -->
+        <div class="journal-list-card__body">
+          <div class="journal-list-card__top">
+            <div>
+              <h2 class="journal-list-card__title">{{ journal.title }}</h2>
+              <p class="journal-list-card__publisher">
+                {{ journal.publisher.name }}
+              </p>
+            </div>
+            <div style="display:flex; gap:0.4rem; flex-shrink:0;">
+              {% if journal.in_doaj %}
+              <span class="cata-doaj-badge">DOAJ</span>
+              {% endif %}
+              {% if journal.in_scopus %}
+              <span class="cata-doaj-badge">Scopus</span>
+              {% endif %}
+            </div>
+          </div>
+
+          {% if journal.description %}
+          <p class="journal-list-card__description">
+            {{ journal.description|truncatewords:40 }}
+          </p>
+          {% endif %}
+
+          <div class="journal-list-card__meta-row">
+            <span>
+              {% if journal.languages.all %}
+              <strong>Language:</strong> {{ journal.languages.all|join:", " }}
+              {% endif %}
+            </span>
+            <span>
+              {% if journal.issn %}
+              <strong>ISSN:</strong> {{ journal.issn }}
+              {% endif %}
+            </span>
+          </div>
+
+          {% if journal.subjects.all %}
+          <div class="journal-list-card__subjects">
+            {% for subject in journal.subjects.all|slice:":5" %}
+            <span class="cata-subject-tag">{{ subject.name }}</span>
+            {% endfor %}
+            {% if journal.subjects.count > 5 %}
+            <span class="cata-subject-tag">+{{ journal.subjects.count|add:"-5" }} more</span>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          <div class="journal-list-card__footer">
+            <span class="journal-list-card__readmore">Read more →</span>
+          </div>
+        </div>
+
+      </div>
+      {% endfor %}
     </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <nav class="cata-pagination" aria-label="Pagination">
+      <ul class="cata-pagination__list">
+
+        {% if page_obj.has_previous %}
+        <li class="cata-pagination__item">
+          <a href="?page=1&{{ query_string }}" class="cata-pagination__arrow" aria-label="First page">«</a>
+        </li>
+        <li class="cata-pagination__item">
+          <a href="?page={{ page_obj.previous_page_number }}&{{ query_string }}" aria-label="Previous page">‹</a>
+        </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+          <li class="cata-pagination__item cata-pagination__item--active">
+            <span>{{ num }}</span>
+          </li>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <li class="cata-pagination__item">
+            <a href="?page={{ num }}&{{ query_string }}">{{ num }}</a>
+          </li>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="cata-pagination__item">
+          <a href="?page={{ page_obj.next_page_number }}&{{ query_string }}" aria-label="Next page">›</a>
+        </li>
+        <li class="cata-pagination__item">
+          <a href="?page={{ page_obj.paginator.num_pages }}&{{ query_string }}" class="cata-pagination__arrow" aria-label="Last page">»</a>
+        </li>
+        {% endif %}
+
+      </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="cata-no-results">
+      <h3 class="cata-no-results__title">No journals found</h3>
+      <p class="cata-no-results__text">Try adjusting your search criteria or filters.</p>
+      <a href="{% url 'journals:public_search' %}" class="cata-btn-clear">Clear All Filters</a>
+    </div>
+    {% endif %}
+
+  </div>
 </section>
 
 {% endblock %}
 
 {% block extra_scripts %}
 <script>
-    // Auto-hide filters on page load unless there are active filters
-    window.addEventListener('DOMContentLoaded', function() {
-        const hasFilters = {{ current_filters.subject|yesno:"true,false" }} ||
-                          {{ current_filters.publisher|yesno:"true,false" }} ||
-                          '{{ current_filters.in_doaj }}' === 'yes' ||
-                          {{ current_filters.language|yesno:"true,false" }};
+  document.addEventListener('DOMContentLoaded', function () {
 
-        if (hasFilters) {
-            document.getElementById('filters').style.display = 'block';
-        }
-    });
+    // ── Show filters if any are active ─────────────────────────────────
+    var hasFilters = {{ current_filters.subject|yesno:"true,false" }} ||
+                     {{ current_filters.publisher|yesno:"true,false" }} ||
+                     '{{ current_filters.in_doaj }}' === 'yes' ||
+                     {{ current_filters.language|yesno:"true,false" }};
+    if (hasFilters) {
+      document.getElementById('cata-filters').style.display = 'block';
+    }
+  });
+
+  function toggleFilters() {
+    var panel = document.getElementById('cata-filters');
+    panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+  }
 </script>
 {% endblock %}
