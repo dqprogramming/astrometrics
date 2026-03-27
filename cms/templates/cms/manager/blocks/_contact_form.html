@@ -1,0 +1,70 @@
+<div class="mgr-field">
+    <label class="mgr-label">Intro Text</label>
+    {{ form.intro_text }}
+</div>
+
+<div class="mgr-field">
+    <label class="mgr-label">From Email</label>
+    {{ form.from_email }}
+</div>
+
+{{ child_formset.management_form }}
+
+<div class="recipient-list" data-block-pk="{{ placement.pk }}">
+    {% for rform in child_formset %}
+    <div class="recipient-row border rounded p-3 mb-2">
+        <div class="d-flex align-items-center gap-2">
+            <span class="recipient-drag-handle" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+
+            <div class="flex-grow-1">
+                {% for hidden in rform.hidden_fields %}{{ hidden }}{% endfor %}
+                <span style="display:none;">{{ rform.DELETE }}</span>
+
+                <div class="mgr-field mb-0">
+                    <label class="mgr-label">Recipient Email</label>
+                    {{ rform.email }}
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-sm btn-outline-danger btn-delete-recipient">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="d-flex gap-2 mt-2">
+    <button type="button" class="btn btn-sm btn-outline-primary btn-add-recipient" data-block-pk="{{ placement.pk }}">
+        <i class="bi bi-plus"></i> Add Recipient
+    </button>
+</div>
+
+<div class="color-picker-row" style="margin-top:1rem;">
+    <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.bg_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.text_color }}</span>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
+</div>
+
+{# Template for new recipient rows #}
+<template class="recipient-template" data-prefix="children_{{ placement.pk }}">
+    <div class="recipient-row border rounded p-3 mb-2">
+        <div class="d-flex align-items-center gap-2">
+            <span class="recipient-drag-handle" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+
+            <div class="flex-grow-1">
+                <input type="hidden" name="children_{{ placement.pk }}-__prefix__-id" value="">
+                <input type="hidden" name="children_{{ placement.pk }}-__prefix__-sort_order" value="0">
+
+                <div class="mgr-field mb-0">
+                    <label class="mgr-label">Recipient Email</label>
+                    <input type="email" name="children_{{ placement.pk }}-__prefix__-email" class="mgr-input">
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-sm btn-outline-danger btn-delete-recipient">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    </div>
+</template>

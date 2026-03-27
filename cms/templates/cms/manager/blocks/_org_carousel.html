@@ -1,0 +1,85 @@
+{{ child_formset.management_form }}
+
+<div class="quote-list" data-block-pk="{{ placement.pk }}">
+    {% for qform in child_formset %}
+    <div class="quote-row border rounded p-3 mb-2">
+        <div class="d-flex align-items-start gap-2">
+            <span class="quote-drag-handle mt-2" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+
+            <div class="flex-grow-1">
+                {% for hidden in qform.hidden_fields %}{{ hidden }}{% endfor %}
+                <span style="display:none;">{{ qform.DELETE }}</span>
+
+                <div class="mgr-field">
+                    <label class="mgr-label">Quote Text</label>
+                    {{ qform.quote_text }}
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div class="mgr-field">
+                        <label class="mgr-label">Author</label>
+                        {{ qform.author_name }}
+                    </div>
+                    <div class="mgr-field">
+                        <label class="mgr-label">Logo</label>
+                        {% if qform.instance.logo %}
+                        <div style="margin-bottom:0.5rem;">
+                            <img src="{{ qform.instance.logo.url }}" alt="Logo preview" style="max-height:60px;">
+                        </div>
+                        {% endif %}
+                        {{ qform.logo }}
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-sm btn-outline-danger mt-2 btn-delete-quote">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<button type="button" class="btn btn-sm btn-outline-primary mt-2 btn-add-quote" data-block-pk="{{ placement.pk }}">
+    <i class="bi bi-plus"></i> Add Quote
+</button>
+
+<div class="color-picker-row" style="margin-top:1rem;">
+    <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.bg_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.text_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Dot</label> {{ form.bullet_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Active Dot</label> {{ form.bullet_active_color }}</span>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
+</div>
+
+{# Template for new quote rows #}
+<template class="quote-template" data-prefix="children_{{ placement.pk }}">
+    <div class="quote-row border rounded p-3 mb-2">
+        <div class="d-flex align-items-start gap-2">
+            <span class="quote-drag-handle mt-2" style="cursor:grab;" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+
+            <div class="flex-grow-1">
+                <input type="hidden" name="children_{{ placement.pk }}-__prefix__-id" value="">
+                <input type="hidden" name="children_{{ placement.pk }}-__prefix__-sort_order" value="0">
+
+                <div class="mgr-field">
+                    <label class="mgr-label">Quote Text</label>
+                    <textarea name="children_{{ placement.pk }}-__prefix__-quote_text" class="mgr-textarea quote-tinymce" rows="4"></textarea>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div class="mgr-field">
+                        <label class="mgr-label">Author</label>
+                        <input type="text" name="children_{{ placement.pk }}-__prefix__-author_name" class="mgr-input">
+                    </div>
+                    <div class="mgr-field">
+                        <label class="mgr-label">Logo</label>
+                        <input type="file" name="children_{{ placement.pk }}-__prefix__-logo" accept="image/*" class="form-control form-control-sm">
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-sm btn-outline-danger mt-2 btn-delete-quote">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    </div>
+</template>

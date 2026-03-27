@@ -1,0 +1,28 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/our-model.css' %}">
+<section class="model-funding" aria-labelledby="model-funding-heading-{{ block.pk }}" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};">
+    <div class="container">
+        <div class="model-funding-inner">
+            <div class="model-funding-images">
+                <div class="model-funding-img-upper">
+                    {% if block.upper_image %}
+                    <img src="{{ block.upper_image.url }}" alt="{{ block.upper_image_alt }}">
+                    {% else %}
+                    <img src="{% static 'img/our-model-funding-upper.jpg' %}" alt="{{ block.upper_image_alt }}">
+                    {% endif %}
+                </div>
+                <div class="model-funding-img-lower">
+                    {% if block.lower_image %}
+                    <img src="{{ block.lower_image.url }}" alt="{{ block.lower_image_alt }}">
+                    {% else %}
+                    <img src="{% static 'img/our-model-funding-lower.jpg' %}" alt="{{ block.lower_image_alt }}">
+                    {% endif %}
+                </div>
+            </div>
+            <div class="model-funding-content">
+                <h2 id="model-funding-heading-{{ block.pk }}" class="spectral-bold">{{ block.heading }}</h2>
+                {{ block.body|safe }}
+            </div>
+        </div>
+    </div>
+</section>

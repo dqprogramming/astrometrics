@@ -1,0 +1,70 @@
+<link rel="stylesheet" href="/static/css/manifesto.css">
+<section class="manifesto-organise" aria-labelledby="manifesto-organise-heading" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};">
+    <div class="manifesto-organise-upper">
+        <div class="container">
+            <div class="manifesto-organise-upper-inner">
+                <!-- Speech bubbles -->
+                <div class="manifesto-speech-bubbles" aria-hidden="true">
+                    <div class="manifesto-speech-bubble manifesto-speech-bubble-filled">
+                        <svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <!-- Fill with background colour to mask the bubble behind -->
+                            <path d="M20,10 L240,10 Q250,10 250,20 L250,150 Q250,160 240,160 L80,160 L50,190 L50,160 L20,160 Q10,160 10,150 L10,20 Q10,10 20,10 Z" fill="{{ block.bg_color }}" stroke="#fff" stroke-width="8"/>
+                            <!-- Speech lines -->
+                            <line x1="60" y1="55" x2="200" y2="55" stroke="#fff" stroke-width="8"/>
+                            <line x1="60" y1="85" x2="200" y2="85" stroke="#fff" stroke-width="8"/>
+                            <line x1="60" y1="115" x2="200" y2="115" stroke="#fff" stroke-width="8"/>
+                        </svg>
+                    </div>
+                    <div class="manifesto-speech-bubble manifesto-speech-bubble-outline">
+                        <svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M20,10 L240,10 Q250,10 250,20 L250,150 Q250,160 240,160 L210,160 L210,190 L180,160 L20,160 Q10,160 10,150 L10,20 Q10,10 20,10 Z" fill="none" stroke="#fff" stroke-width="8"/>
+                        </svg>
+                    </div>
+                </div>
+                <!-- Text content -->
+                <div class="manifesto-organise-text">
+                    <h2 id="manifesto-organise-heading" class="spectral-bold">{{ block.organise_heading }}</h2>
+                    {{ block.organise_body|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="manifesto-organise-lower">
+        <div class="container">
+            <div class="manifesto-organise-lower-inner">
+                <div class="manifesto-achievable-text">
+                    <h3 class="spectral-bold">{{ block.achievable_heading }}</h3>
+                    {{ block.achievable_body|safe }}
+                </div>
+                <!-- Arrows -->
+                <div class="manifesto-arrows" aria-hidden="true">
+                    <svg class="manifesto-arrows-svg" viewBox="0 0 420 500" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" overflow="visible">
+                        <!-- Left arrow: shorter, tip at ~halfway down middle arrow -->
+                        <line x1="180" y1="500" x2="180" y2="170" stroke="#fff" stroke-width="22" vector-effect="non-scaling-stroke" stroke-linecap="round"/>
+                        <polyline points="130,260 180,170 230,260" fill="none" stroke="#fff" stroke-width="22" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+                        <!-- Middle arrow: three prongs merging into one tip -->
+                        <line x1="240" y1="380" x2="240" y2="55" stroke="#fff" stroke-width="22" vector-effect="non-scaling-stroke" stroke-linecap="butt"/>
+                        <line x1="260" y1="380" x2="260" y2="20" stroke="#fff" stroke-width="22" vector-effect="non-scaling-stroke" stroke-linecap="butt"/>
+                        <line x1="280" y1="380" x2="280" y2="55" stroke="#fff" stroke-width="22" vector-effect="non-scaling-stroke" stroke-linecap="butt"/>
+                        <polyline points="210,110 260,20 310,110" fill="none" stroke="#fff" stroke-width="22" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+                        <!-- Right arrow: shorter, tip at ~halfway down middle arrow, clips right -->
+                        <line x1="340" y1="500" x2="340" y2="170" stroke="#fff" stroke-width="22" vector-effect="non-scaling-stroke" stroke-linecap="round"/>
+                        <polyline points="290,260 340,170 390,260" fill="none" stroke="#fff" stroke-width="22" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        {% if block.show_cta %}
+        <div class="manifesto-cta-wrapper">
+            <a href="{{ block.cta_url }}" class="btn spectral-bold manifesto-cta-btn manifesto-cta-btn-{{ block.pk }}" style="background-color: {{ block.cta_bg_color }}; color: {{ block.cta_text_color }}; border-color: {{ block.cta_bg_color }};">{{ block.cta_text }}</a>
+        </div>
+        <style>
+            .manifesto-cta-btn-{{ block.pk }}:hover {
+                background-color: {{ block.cta_hover_bg_color }} !important;
+                color: {{ block.cta_hover_text_color }} !important;
+                border-color: {{ block.cta_hover_bg_color }} !important;
+            }
+        </style>
+        {% endif %}
+    </div>
+</section>

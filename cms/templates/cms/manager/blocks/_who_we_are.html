@@ -1,0 +1,66 @@
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.section_heading.id_for_label }}">Section Heading</label>
+    {{ form.section_heading }}
+    {% if form.section_heading.errors %}<div class="mgr-error">{{ form.section_heading.errors.0 }}</div>{% endif %}
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+    <div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.circle_1_title.id_for_label }}">Circle 1 Title</label>
+            {{ form.circle_1_title }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.circle_1_body.id_for_label }}">Circle 1 Body</label>
+            {{ form.circle_1_body }}
+            <div class="mgr-help">Bold, italic, underline, super/subscript</div>
+        </div>
+    </div>
+    <div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.circle_2_title.id_for_label }}">Circle 2 Title</label>
+            {{ form.circle_2_title }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.circle_2_body.id_for_label }}">Circle 2 Body</label>
+            {{ form.circle_2_body }}
+            <div class="mgr-help">Bold, italic, underline, super/subscript</div>
+        </div>
+    </div>
+    <div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.circle_3_title.id_for_label }}">Circle 3 Title</label>
+            {{ form.circle_3_title }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.circle_3_body.id_for_label }}">Circle 3 Body</label>
+            {{ form.circle_3_body }}
+            <div class="mgr-help">Bold, italic, underline, super/subscript</div>
+        </div>
+    </div>
+</div>
+
+<div class="color-picker-row" style="margin-top:1rem;">
+    <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.bg_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.text_color }}</span>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
+</div>
+
+<div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border, #dee2e6);">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+        <span style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;"><i class="bi bi-link-45deg"></i> Call to Action</span>
+        <span class="section-toggle-check">Show {{ form.show_cta }}</span>
+    </div>
+    <div data-cta-content>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.cta_text.id_for_label }}">Button Text</label>
+                {{ form.cta_text }}
+            </div>
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.cta_url.id_for_label }}">Button URL</label>
+                {{ form.cta_url }}
+            </div>
+        </div>
+    </div>
+</div>

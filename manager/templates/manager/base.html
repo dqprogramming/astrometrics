@@ -29,34 +29,24 @@
             <i class="bi bi-house"></i> Dashboard
         </a>
 
+        <span class="mgr-nav-section">Block Pages</span>
+        {% for bp in block_pages %}
+        <a href="{% url 'cms_manager:block_page_edit' bp.pk %}" class="mgr-nav-link {% if active_block_page_pk == bp.pk %}active{% endif %}">
+            <i class="bi bi-file-earmark-richtext"></i> {{ bp.name }}
+        </a>
+        {% endfor %}
+        <a href="{% url 'cms_manager:block_page_create' %}" class="mgr-nav-link {% block nav_block_page_create %}{% endblock %}">
+            <i class="bi bi-plus-circle"></i> Add Block Page
+        </a>
+
         <span class="mgr-nav-section">Content</span>
-        <a href="{% url 'cms_manager:about_us' %}" class="mgr-nav-link {% block nav_about_us %}{% endblock %}">
-            <i class="bi bi-info-circle"></i> About Us
-        </a>
-        <a href="{% url 'cms_manager:contact_form' %}" class="mgr-nav-link {% block nav_contact_form %}{% endblock %}">
-            <i class="bi bi-envelope"></i> Contact Us Form
-        </a>
         <a href="{% url 'cms_manager:header' %}" class="mgr-nav-link {% block nav_header %}{% endblock %}">
             <i class="bi bi-layout-text-sidebar-reverse"></i> Header &amp; Menus
         </a>
         <a href="{% url 'cms_manager:footer' %}" class="mgr-nav-link {% block nav_footer %}{% endblock %}">
             <i class="bi bi-layout-text-window-reverse"></i> Footer
         </a>
-        <a href="{% url 'cms_manager:landing_page' %}" class="mgr-nav-link {% block nav_landing_page %}{% endblock %}">
-            <i class="bi bi-house-heart"></i> Landing Page
-        </a>
-        <a href="{% url 'cms_manager:manifesto' %}" class="mgr-nav-link {% block nav_manifesto %}{% endblock %}">
-            <i class="bi bi-megaphone"></i> Our Manifesto
-        </a>
-        <a href="{% url 'cms_manager:our_model' %}" class="mgr-nav-link {% block nav_our_model %}{% endblock %}">
-            <i class="bi bi-diagram-3"></i> Our Model
-        </a>
-        <a href="{% url 'cms_manager:our_team' %}" class="mgr-nav-link {% block nav_our_team %}{% endblock %}">
-            <i class="bi bi-people"></i> Our Team
-        </a>
-        <a href="{% url 'cms_manager:board' %}" class="mgr-nav-link {% block nav_board %}{% endblock %}">
-            <i class="bi bi-clipboard-check"></i> OJC Boards
-        </a>
+
         <a href="{% url 'cms_manager:page_list' %}" class="mgr-nav-link {% block nav_pages %}{% endblock %}">
             <i class="bi bi-file-text"></i> Pages
         </a>

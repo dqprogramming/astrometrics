@@ -5,122 +5,31 @@ CMS views for static content pages.
 import structlog
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
-from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 
 from .forms import ContactSubmissionForm
 from .models import (
-    AboutUsPageSettings,
-    BoardSection,
+    BlockPage,
     Category,
-    ContactFormSettings,
-    LandingPageSettings,
-    ManifestoPageSettings,
-    OurModelPageSettings,
+    ContactFormBlock,
     Page,
     Post,
-    TeamSection,
 )
 
 logger = structlog.get_logger(__name__)
 
 
 def index_view(request):
-    landing = LandingPageSettings.load()
-    return render(request, "landing.html", {"landing": landing})
-
-
-def our_model_view(request, slug=None):
-    # Check if slug matches the manifesto page first
-    if slug:
-        manifesto_settings = ManifestoPageSettings.load()
-        if slug == manifesto_settings.slug:
-            return manifesto_view(request, slug=slug)
-
-    settings = OurModelPageSettings.load()
-    if slug and slug != settings.slug:
-        raise Http404
-
-    columns = settings.get_table_columns()
-    tables = settings.get_package_tables()
-    num_columns = len(columns)
-    col_width_pct = (100 // num_columns) if num_columns else 25
-
-    # Pre-build ordered cell lists for template rendering
-    for table in tables:
-        for row in table.rows.all():
-            cells_by_col = {
-                cell.column_id: cell.value for cell in row.cells.all()
-            }
-            row.ordered_cells = [
-                cells_by_col.get(col.pk, "") for col in columns
-            ]
-
-    return render(
-        request,
-        "our_model.html",
-        {
-            "settings": settings,
-            "columns": columns,
-            "tables": tables,
-            "num_columns": num_columns,
-            "col_width_pct": col_width_pct,
-        },
-    )
-
-
-def board_view(request):
-    sections = BoardSection.objects.prefetch_related("members").order_by(
-        "sort_order"
-    )
-    return render(request, "board.html", {"sections": sections})
-
-
-def our_team_view(request):
-    sections = TeamSection.objects.prefetch_related("members").order_by(
-        "sort_order"
-    )
-    contact_form = ContactSubmissionForm()
-    contact_sent = False
-
-    if request.method == "POST":
-        contact_form = ContactSubmissionForm(request.POST)
-        if contact_form.is_valid():
-            settings = ContactFormSettings.load()
-            recipients = settings.get_recipient_emails()
-            if recipients:
-                cd = contact_form.cleaned_data
-                subject = cd["subject"] or "Contact form submission"
-                body = (
-                    f"Name: {cd['name']}\n"
-                    f"Email: {cd['email']}\n\n"
-                    f"{cd['message']}"
-                )
-                email = EmailMessage(
-                    subject=subject,
-                    body=body,
-                    from_email=settings.from_email,
-                    to=recipients,
-                    reply_to=[cd["email"]],
-                )
-                try:
-                    email.send()
-                except Exception:
-                    logger.exception("contact_form_email_failed")
-                contact_sent = True
-            else:
-                contact_sent = True
-            contact_form = ContactSubmissionForm()
-
-    return render(
-        request,
-        "our_team.html",
-        {
-            "sections": sections,
-            "contact_form": contact_form,
-            "contact_sent": contact_sent,
-        },
-    )
+    try:
+        block_landing = BlockPage.objects.get(is_landing_page=True)
+        blocks = _build_public_blocks(block_landing)
+        return render(
+            request,
+            "block_page.html",
+            {"page": block_landing, "blocks": blocks},
+        )
+    except BlockPage.DoesNotExist:
+        return render(request, "block_page.html", {"page": None, "blocks": []})
 
 
 def partial_view(request, filename):
@@ -161,18 +70,72 @@ def post_preview_view(request, token):
     )
 
 
-def manifesto_view(request, slug=None):
-    settings = ManifestoPageSettings.load()
-    if slug and slug != settings.slug:
-        raise Http404
-    return render(request, "manifesto.html", {"settings": settings})
+def _build_public_blocks(page):
+    blocks = []
+    for p in page.blocks.order_by("sort_order"):
+        if not p.is_visible:
+            continue
+        block = p.get_block()
+        if not block:
+            continue
+        bd = {
+            "type": p.block_type,
+            "block": block,
+            "template": block.PUBLIC_TEMPLATE,
+        }
+        bd.update(block.get_public_context())
+        blocks.append(bd)
+    return blocks
 
 
-def about_us_view(request):
-    settings = AboutUsPageSettings.load()
-    quotes = settings.quotes.all()
+def block_page_view(request, slug):
+    page = get_object_or_404(BlockPage, slug=slug)
+    blocks = _build_public_blocks(page)
+    return render(request, "block_page.html", {"page": page, "blocks": blocks})
+
+
+def slug_page_view(request, slug):
+    """Serve block pages by slug."""
+    page = get_object_or_404(BlockPage, slug=slug)
+    contact_sent = False
+
+    if request.method == "POST" and "contact_block_pk" in request.POST:
+        contact_block_pk = request.POST.get("contact_block_pk")
+        try:
+            contact_block = ContactFormBlock.objects.get(pk=contact_block_pk)
+            form = ContactSubmissionForm(request.POST)
+            if form.is_valid():
+                recipients = list(
+                    contact_block.recipients.values_list("email", flat=True)
+                )
+                if recipients:
+                    cd = form.cleaned_data
+                    subject = cd["subject"] or "Contact form submission"
+                    body = (
+                        f"Name: {cd['name']}\n"
+                        f"Email: {cd['email']}\n\n"
+                        f"{cd['message']}"
+                    )
+                    email_msg = EmailMessage(
+                        subject=subject,
+                        body=body,
+                        from_email=contact_block.from_email,
+                        to=recipients,
+                        reply_to=[cd["email"]],
+                    )
+                    try:
+                        email_msg.send()
+                    except Exception:
+                        logger.exception("contact_form_email_failed")
+                contact_sent = True
+        except ContactFormBlock.DoesNotExist:
+            pass
+
+    blocks = _build_public_blocks(page)
     return render(
-        request, "about_us.html", {"settings": settings, "quotes": quotes}
+        request,
+        "block_page.html",
+        {"page": page, "blocks": blocks, "contact_sent": contact_sent},
     )
 
 

@@ -1,0 +1,23 @@
+<section class="members-grid-section" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};" aria-labelledby="members-grid-heading-{{ block.pk }}">
+    <div class="container">
+        <h2 id="members-grid-heading-{{ block.pk }}" class="members-grid-heading spectral-bold" style="color: inherit;">{{ block.heading }}</h2>
+
+        {% with institutions=block.institutions.all %}
+        {% if institutions %}
+        <div class="members-grid">
+            {% for institution in institutions %}
+            <div class="members-grid-item">
+                <p class="members-grid-name spectral-bold" style="color: inherit;">{{ institution.name }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% if block.show_cta and block.cta_text %}
+        <div class="members-cta-row">
+            <a href="{{ block.cta_url }}" class="btn-members-join">{{ block.cta_text }} &rarr;</a>
+        </div>
+        {% endif %}
+    </div>
+</section>

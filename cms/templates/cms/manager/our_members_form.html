@@ -1,0 +1,187 @@
+{% extends "manager/base.html" %}
+{% load static %}
+
+{% block title %}Our Members{% endblock %}
+{% block page_title %}Our Members{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> /
+Our Members
+{% endblock %}
+{% block nav_our_members %}active{% endblock %}
+
+{% block extra_css %}
+<style>
+    .section-disabled {
+        opacity: 0.4;
+        pointer-events: none;
+    }
+    .section-toggle-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+    .section-toggle-row label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        margin: 0;
+    }
+    .section-toggle-check {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.78rem;
+        color: var(--muted);
+    }
+    .section-drag-handle {
+        cursor: grab;
+        color: var(--muted);
+        padding: 4px 8px;
+        font-size: 1.1rem;
+    }
+    .section-drag-handle:active {
+        cursor: grabbing;
+    }
+    .section-card.sortable-ghost {
+        opacity: 0.4;
+    }
+    .section-card.block-deleted {
+        display: none !important;
+    }
+    .mgr-color-input {
+        width: 48px;
+        height: 32px;
+        padding: 2px;
+        border: 1px solid var(--border, #dee2e6);
+        border-radius: 4px;
+        background: none;
+        cursor: pointer;
+        vertical-align: middle;
+    }
+    .color-picker-row {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .color-picker-pair {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .color-picker-pair .mgr-label {
+        margin: 0;
+        font-size: 0.75rem;
+        white-space: nowrap;
+    }
+    .block-delete-btn {
+        font-size: 0.75rem;
+    }
+    .form-errors-banner {
+        background: #f8d7da;
+        border: 1px solid #f5c2c7;
+        color: #842029;
+        padding: 0.75rem 1rem;
+        border-radius: 0.375rem;
+        margin-bottom: 1rem;
+        font-size: 0.875rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="display:flex; gap:0.5rem; margin-bottom:1.5rem; flex-wrap:wrap; align-items:center;">
+    <form method="post" action="{% url 'cms_manager:our_members_reset_defaults' %}" id="reset-defaults-form" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-sm btn-outline-warning" id="btn-reset-page-defaults">
+            <i class="bi bi-arrow-repeat"></i> Reset page to defaults
+        </button>
+    </form>
+</div>
+
+{% if form_errors %}
+<div class="form-errors-banner">
+    <strong><i class="bi bi-exclamation-triangle"></i> Please fix the errors below before saving.</strong>
+    <ul style="margin:0.5rem 0 0 0; padding-left:1.25rem;">
+        {% for error in form_errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data" style="max-width:900px;" id="our-members-form" data-csv-parse-url="{% url 'cms_manager:our_members_csv_parse' %}">
+    {% csrf_token %}
+    <input type="hidden" name="block_order" id="block-order-field">
+    <input type="hidden" name="deleted_blocks" id="deleted-blocks-field" value="">
+
+    <div id="block-list">
+
+    {% for bd in block_data %}
+    <div class="mgr-form-card section-card" style="margin-bottom:1.25rem;"
+         data-block-pk="{{ bd.placement.pk }}"
+         data-block-type="{{ bd.block_type }}"
+         data-color-defaults='{{ bd.color_defaults }}'>
+        <div class="section-toggle-row">
+            <label>
+                <span class="section-drag-handle" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+                {% if bd.block_type == "members_header" %}<i class="bi bi-type-h1"></i>
+                {% elif bd.block_type == "who_we_are" %}<i class="bi bi-people-fill"></i>
+                {% elif bd.block_type == "person_carousel" %}<i class="bi bi-chat-quote"></i>
+                {% elif bd.block_type == "members_institutions" %}<i class="bi bi-building"></i>
+                {% endif %}
+                {{ bd.block_type_label }}
+            </label>
+            <span style="display:flex; align-items:center; gap:0.75rem;">
+                <span class="section-toggle-check">
+                    Show <input type="checkbox" class="block-visible-check" {% if bd.placement.is_visible %}checked{% endif %}>
+                </span>
+                <button type="button" class="btn btn-sm btn-outline-danger block-delete-btn" title="Delete block" data-delete-block-pk="{{ bd.placement.pk }}">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </span>
+        </div>
+        <div data-block-content {% if not bd.placement.is_visible %}class="section-disabled"{% endif %}>
+            {% include bd.form_template with form=bd.form child_formset=bd.child_formset placement=bd.placement %}
+        </div>
+    </div>
+    {% endfor %}
+
+    </div>{# /block-list #}
+
+    {# ── Add Block Dropdown ──────────────────────────────────── #}
+    <div class="dropdown" style="margin-bottom:1.5rem;">
+        <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-plus"></i> Add Block
+        </button>
+        <ul class="dropdown-menu">
+            {% for bt in available_block_types %}
+            <li><button type="button" class="dropdown-item add-block-btn" data-block-type="{{ bt.type }}"><i class="bi {{ bt.icon }}"></i> {{ bt.label }}</button></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {# ── Actions ───────────────────────────────────────────────── #}
+    <div id="form-actions" style="display:flex; gap:1rem; align-items:center; margin-top:1.5rem;">
+        <button type="submit" class="mgr-btn mgr-btn-primary">
+            <i class="bi bi-check2"></i> Save Changes
+        </button>
+        <a href="{% url 'manager:dashboard' %}" class="mgr-btn">Cancel</a>
+    </div>
+</form>
+
+{# Hidden form for add-block POST #}
+<form method="post" action="{% url 'cms_manager:our_members_add_block' %}" id="add-block-form" style="display:none;">
+    {% csrf_token %}
+    <input type="hidden" name="block_type" id="add-block-type">
+</form>
+{% endblock %}
+
+{% block extra_js %}
+{% for bd in block_data %}{{ bd.form.media }}{% if bd.child_formset %}{{ bd.child_formset.media }}{% endif %}{% endfor %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script src="{% static 'js/our-members-manager.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% load static %}
+<link rel="stylesheet" href="/static/css/our-team.css">
+<section class="team-section" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};" aria-labelledby="people-list-{{ block.pk }}-heading">
+    <div class="container">
+        <h2 id="people-list-{{ block.pk }}-heading" class="spectral-bold">{{ block.name }}</h2>
+        <div class="team-grid">
+            {% for person in people %}
+            <div class="team-card">
+                {% if person.image %}
+                <img src="{{ person.image.url }}" alt="{{ person.name }}" class="team-card-image">
+                {% else %}
+                <div class="team-card-placeholder" aria-hidden="true"></div>
+                {% endif %}
+                <div class="team-card-info" style="background-color: {{ block.card_bg_color }};">
+                    <p class="team-card-name spectral-bold">{{ person.name }}</p>
+                    <p class="team-card-desc">{{ person.description|safe }}</p>
+                    {% if person.linkedin_url %}
+                    <a href="{{ person.linkedin_url }}" class="team-card-link" target="_blank" rel="noopener">LinkedIn &rarr;</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

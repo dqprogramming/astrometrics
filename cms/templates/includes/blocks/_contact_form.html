@@ -1,0 +1,37 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/our-team.css' %}">
+
+<section class="team-contact" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};" aria-labelledby="contact-heading-{{ block.pk }}">
+    <div class="container">
+        <div class="team-contact-inner">
+            <div class="team-contact-text">
+                <p id="contact-heading-{{ block.pk }}">{{ block.intro_text }}</p>
+            </div>
+            <div class="team-contact-form">
+                {% if contact_sent %}
+                <div class="contact-success">
+                    <p>Your message has been sent. We will get back to you soon.</p>
+                </div>
+                {% else %}
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <input type="hidden" name="contact_block_pk" value="{{ block.pk }}">
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Your name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Your email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="subject" placeholder="Subject">
+                    </div>
+                    <div class="form-group">
+                        <textarea name="message" placeholder="Your message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-send">Send</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>

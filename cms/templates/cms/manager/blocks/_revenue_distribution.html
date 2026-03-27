@@ -1,0 +1,597 @@
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.heading.id_for_label }}">Heading</label>
+    {{ form.heading }}
+    {% if form.heading.errors %}<div class="mgr-error">{{ form.heading.errors.0 }}</div>{% endif %}
+</div>
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.description.id_for_label }}">Description</label>
+    {{ form.description }}
+    {% if form.description.errors %}<div class="mgr-error">{{ form.description.errors.0 }}</div>{% endif %}
+</div>
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.callout.id_for_label }}">Callout</label>
+    {{ form.callout }}
+    {% if form.callout.errors %}<div class="mgr-error">{{ form.callout.errors.0 }}</div>{% endif %}
+</div>
+<div class="color-picker-row" style="margin-top:1rem;">
+    <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.bg_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.text_color }}</span>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
+</div>
+
+{# ── Table Columns ─────────────────────────────────────────── #}
+{% if column_formset %}
+<div class="mgr-form-card" style="margin-top:1.25rem; margin-bottom:1.25rem;">
+    <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+        <i class="bi bi-layout-three-columns"></i> Table Columns
+    </div>
+    <div class="mgr-help" style="margin-bottom:1rem;">
+        Column headings shared across all package tables. Changes to columns take effect after saving.
+    </div>
+
+    {{ column_formset.management_form }}
+
+    <div id="rev-column-formset-{{ placement.pk }}">
+        {% for col_form in column_formset %}
+        <div class="rev-column-form-row" data-col-id="{{ col_form.instance.pk|default_if_none:'' }}" data-col-index="{{ forloop.counter0 }}" style="display:flex; gap:0.75rem; align-items:center; margin-bottom:0.5rem;">
+            {{ col_form.id }}
+            {{ col_form.sort_order }}
+            <div style="flex:1;">{{ col_form.heading }}</div>
+            <span style="display:none;">{{ col_form.DELETE }}</span>
+            <button type="button" class="btn btn-sm btn-outline-danger rev-delete-column-btn" title="Delete column"><i class="bi bi-x-lg"></i></button>
+        </div>
+        {% endfor %}
+    </div>
+
+    <button type="button" class="btn-mgr-secondary rev-add-column-btn" data-placement-pk="{{ placement.pk }}" style="margin-top:0.5rem;">
+        <i class="bi bi-plus"></i> Add Column
+    </button>
+</div>
+{% endif %}
+
+{# ── Package Tables ────────────────────────────────────────── #}
+{% if child_formset %}
+<div class="mgr-form-card" style="margin-bottom:1.25rem;">
+    <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">
+        <i class="bi bi-grid-3x3"></i> Package Tables
+    </div>
+
+    {{ child_formset.management_form }}
+
+    <div id="rev-table-list-{{ placement.pk }}">
+    {% for table_form in child_formset %}
+    <div class="rev-table-form-card table-form-card" style="border:1px solid var(--border); border-radius:8px; padding:1rem; margin-bottom:1rem;">
+        {{ table_form.id }}
+        {{ table_form.sort_order }}
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+            <strong>{{ table_form.instance.title|default:"New Table" }}</strong>
+            <span style="display:none;">{{ table_form.DELETE }}</span>
+            <button type="button" class="btn btn-sm btn-outline-danger rev-delete-table-btn" title="Delete table"><i class="bi bi-trash"></i> Delete Table</button>
+        </div>
+
+        <div class="mgr-field">
+            <label class="mgr-label">Title</label>
+            {{ table_form.title }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label">Description</label>
+            {{ table_form.description }}
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
+            <div class="mgr-field" style="margin-bottom:0;">
+                <label class="mgr-label">Colour Preset</label>
+                {{ table_form.colour_preset }}
+            </div>
+            <div class="mgr-field custom-colour-field" style="margin-bottom:0;">
+                <label class="mgr-label">Header BG</label>
+                {{ table_form.custom_header_bg }}
+            </div>
+            <div class="mgr-field custom-colour-field" style="margin-bottom:0;">
+                <label class="mgr-label">Row BG</label>
+                {{ table_form.custom_row_bg }}
+            </div>
+            <div class="mgr-field custom-colour-field" style="margin-bottom:0;">
+                <label class="mgr-label">Text Colour</label>
+                {{ table_form.custom_text_colour }}
+            </div>
+        </div>
+
+        {# ── Row/Cell Grid ─────────────────────────────────── #}
+        {% if table_form.instance.pk %}
+        <div class="mgr-help" style="margin-bottom:0.5rem;">Data Grid</div>
+        <div style="overflow-x:auto;">
+            <table class="rev-data-grid-table data-grid-table" data-table-pk="{{ table_form.instance.pk }}" data-placement-pk="{{ placement.pk }}" style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+                <thead>
+                    <tr>
+                        {% for col in columns %}
+                        <th class="grid-col-header" data-col-id="{{ col.pk }}" style="padding:0.35rem 0.5rem; text-align:left; border-bottom:1px solid var(--border);">{{ col.heading }}</th>
+                        {% endfor %}
+                        <th style="padding:0.35rem 0.5rem; width:60px;"></th>
+                    </tr>
+                </thead>
+                <tbody id="rev-grid-{{ table_form.instance.pk }}">
+                    {% for row_data in table_form.instance.grid_rows %}
+                    <tr>
+                        {% for cell in row_data.cells %}
+                        <td class="grid-cell" data-col-id="{{ cell.column_pk }}" style="padding:0.25rem 0.5rem;">
+                            <input type="text" name="cell_{{ table_form.instance.pk }}_{{ row_data.pk }}_{{ cell.column_pk }}" value="{{ cell.value }}" class="mgr-input" style="width:100%;">
+                        </td>
+                        {% endfor %}
+                        <td style="padding:0.25rem 0.5rem;">
+                            <input type="checkbox" name="delete_row_{{ table_form.instance.pk }}_{{ row_data.pk }}" style="display:none;" class="rev-delete-row-cb">
+                            <button type="button" class="btn btn-sm btn-outline-danger rev-delete-row-btn" title="Delete row" style="font-size:0.7rem; padding:2px 6px;"><i class="bi bi-x-lg"></i></button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <button type="button" class="btn-mgr-secondary rev-add-row-btn" data-table-pk="{{ table_form.instance.pk }}" data-placement-pk="{{ placement.pk }}" style="margin-top:0.5rem; font-size:0.8rem;">
+            <i class="bi bi-plus"></i> Add Row
+        </button>
+        {% else %}
+        <div class="mgr-help">Save the form first to add rows to this table.</div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    </div>
+
+    <button type="button" class="btn-mgr-secondary rev-add-table-btn" data-placement-pk="{{ placement.pk }}" style="margin-top:0.5rem;">
+        <i class="bi bi-plus"></i> Add Table
+    </button>
+</div>
+{% endif %}
+
+{% comment %}
+Revenue Distribution block inline JS — scoped to placement {{ placement.pk }}.
+Uses the same pattern as our-model-manager.js but scoped via unique IDs/selectors
+to avoid conflicts when multiple blocks are on the same page.
+All innerHTML assignments use only server-generated formset prefixes and field
+names (staff-only admin UI), matching the existing our-model-manager.js pattern.
+{% endcomment %}
+<script>
+(function () {
+    'use strict';
+
+    var PLACEMENT_PK = '{{ placement.pk }}';
+    var COL_PREFIX = 'revenue_columns_' + PLACEMENT_PK;
+    var TBL_PREFIX = 'children_' + PLACEMENT_PK;
+    var TH_STYLE = 'padding:0.35rem 0.5rem; text-align:left; border-bottom:1px solid var(--border);';
+    var TD_STYLE = 'padding:0.25rem 0.5rem;';
+
+    var colContainer = document.getElementById('rev-column-formset-' + PLACEMENT_PK);
+    var tblListContainer = document.getElementById('rev-table-list-' + PLACEMENT_PK);
+
+    function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.firstChild ? div.firstChild.textContent : '';
+    }
+
+    function getLiveColumns() {
+        if (!colContainer) return [];
+        var cols = [];
+        colContainer.querySelectorAll('.rev-column-form-row').forEach(function (row) {
+            var delCb = row.querySelector('input[type="checkbox"][name$="-DELETE"]');
+            if (delCb && delCb.checked) return;
+            var headingInput = row.querySelector('input[name$="-heading"]');
+            if (!headingInput) return;
+            var idInput = row.querySelector('input[name$="-id"]');
+            var colId = (idInput && idInput.value) ? idInput.value : 'new_' + row.dataset.colIndex;
+            cols.push({ id: colId, heading: headingInput.value || '(untitled)', isNew: !idInput || !idInput.value });
+        });
+        return cols;
+    }
+
+    function syncGridsToColumns() {
+        var cols = getLiveColumns();
+        var tables = document.querySelectorAll('.rev-data-grid-table[data-placement-pk="' + PLACEMENT_PK + '"]');
+        tables.forEach(function (table) {
+            syncOneGrid(table, table.dataset.tablePk, cols);
+        });
+    }
+
+    function syncOneGrid(table, tablePk, cols) {
+        var headerRow = table.querySelector('thead tr');
+        if (!headerRow) return;
+        headerRow.textContent = '';
+        cols.forEach(function (col) {
+            var th = document.createElement('th');
+            th.className = 'grid-col-header';
+            th.dataset.colId = col.id;
+            th.style.cssText = TH_STYLE;
+            th.textContent = col.heading;
+            headerRow.appendChild(th);
+        });
+        var thAct = document.createElement('th');
+        thAct.style.cssText = TH_STYLE + ' width:60px;';
+        headerRow.appendChild(thAct);
+
+        var tbody = table.querySelector('tbody');
+        if (!tbody) return;
+        tbody.querySelectorAll('tr').forEach(function (tr) {
+            syncRowCells(tr, tablePk, cols);
+        });
+    }
+
+    function syncRowCells(tr, tablePk, cols) {
+        var existingCells = {};
+        tr.querySelectorAll('td.grid-cell').forEach(function (td) {
+            existingCells[td.dataset.colId] = td;
+        });
+        var actionsTd = tr.querySelector('td:last-child:not(.grid-cell)');
+        tr.querySelectorAll('td.grid-cell').forEach(function (td) { td.remove(); });
+
+        cols.forEach(function (col) {
+            var td;
+            if (existingCells[col.id]) {
+                td = existingCells[col.id];
+            } else {
+                td = document.createElement('td');
+                td.className = 'grid-cell';
+                td.dataset.colId = col.id;
+                td.style.cssText = TD_STYLE;
+                var existingInput = tr.querySelector('input[type="text"][name^="cell_"], input[type="text"][name^="new_cell_"]');
+                var inputName;
+                if (existingInput && existingInput.name.startsWith('new_cell_')) {
+                    var parts = existingInput.name.split('_');
+                    inputName = 'new_cell_' + tablePk + '_' + parts[3] + '_' + col.id;
+                } else if (existingInput && existingInput.name.startsWith('cell_')) {
+                    var parts2 = existingInput.name.split('_');
+                    inputName = 'cell_' + tablePk + '_' + parts2[2] + '_' + col.id;
+                } else {
+                    inputName = 'cell_' + tablePk + '_0_' + col.id;
+                }
+                var inp = document.createElement('input');
+                inp.type = 'text';
+                inp.name = inputName;
+                inp.value = '';
+                inp.className = 'mgr-input';
+                inp.style.cssText = 'width:100%;';
+                td.appendChild(inp);
+            }
+            if (actionsTd) {
+                tr.insertBefore(td, actionsTd);
+            } else {
+                tr.appendChild(td);
+            }
+        });
+    }
+
+    function toggleCustomColours(presetSelect) {
+        var card = presetSelect.closest('.rev-table-form-card');
+        if (!card) return;
+        var fields = card.querySelectorAll('.custom-colour-field');
+        var show = presetSelect.value === 'custom';
+        fields.forEach(function (el) {
+            el.style.display = show ? '' : 'none';
+        });
+    }
+
+    if (tblListContainer) {
+        tblListContainer.querySelectorAll('select[name$="colour_preset"]').forEach(function (sel) {
+            toggleCustomColours(sel);
+            sel.addEventListener('change', function () {
+                toggleCustomColours(this);
+            });
+        });
+    }
+
+    if (colContainer) {
+        colContainer.addEventListener('input', function (e) {
+            if (e.target.name && e.target.name.endsWith('-heading')) {
+                syncGridsToColumns();
+            }
+        });
+        colContainer.addEventListener('change', function (e) {
+            if (e.target.type === 'checkbox' && e.target.name && e.target.name.endsWith('-DELETE')) {
+                syncGridsToColumns();
+            }
+        });
+    }
+
+    var addColBtn = document.querySelector('.rev-add-column-btn[data-placement-pk="' + PLACEMENT_PK + '"]');
+    if (addColBtn && colContainer) {
+        addColBtn.addEventListener('click', function () {
+            var totalInput = document.querySelector('[name="' + COL_PREFIX + '-TOTAL_FORMS"]');
+            var total = parseInt(totalInput.value, 10);
+            var div = document.createElement('div');
+            div.className = 'rev-column-form-row';
+            div.dataset.colId = '';
+            div.dataset.colIndex = total;
+            div.style.cssText = 'display:flex; gap:0.75rem; align-items:center; margin-bottom:0.5rem;';
+
+            var idField = document.createElement('input');
+            idField.type = 'hidden';
+            idField.name = COL_PREFIX + '-' + total + '-id';
+            idField.value = '';
+            div.appendChild(idField);
+
+            var sortField = document.createElement('input');
+            sortField.type = 'hidden';
+            sortField.name = COL_PREFIX + '-' + total + '-sort_order';
+            sortField.value = String(total);
+            div.appendChild(sortField);
+
+            var headingWrap = document.createElement('div');
+            headingWrap.style.cssText = 'flex:1;';
+            var headingInput = document.createElement('input');
+            headingInput.type = 'text';
+            headingInput.name = COL_PREFIX + '-' + total + '-heading';
+            headingInput.className = 'mgr-input';
+            headingInput.setAttribute('aria-label', 'Column heading');
+            headingInput.placeholder = 'New column heading';
+            headingWrap.appendChild(headingInput);
+            div.appendChild(headingWrap);
+
+            var delCbSpan = document.createElement('span');
+            delCbSpan.style.cssText = 'display:none;';
+            var delCb = document.createElement('input');
+            delCb.type = 'checkbox';
+            delCb.name = COL_PREFIX + '-' + total + '-DELETE';
+            delCbSpan.appendChild(delCb);
+            div.appendChild(delCbSpan);
+            var delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.className = 'btn btn-sm btn-outline-danger rev-delete-column-btn';
+            delBtn.title = 'Delete column';
+            delBtn.innerHTML = '<i class="bi bi-x-lg"></i>';
+            div.appendChild(delBtn);
+
+            colContainer.appendChild(div);
+            totalInput.value = total + 1;
+            syncGridsToColumns();
+        });
+    }
+
+    var addTblBtn = document.querySelector('.rev-add-table-btn[data-placement-pk="' + PLACEMENT_PK + '"]');
+    if (addTblBtn && tblListContainer) {
+        addTblBtn.addEventListener('click', function () {
+            var totalInput = document.querySelector('[name="' + TBL_PREFIX + '-TOTAL_FORMS"]');
+            var total = parseInt(totalInput.value, 10);
+            var div = document.createElement('div');
+            div.className = 'rev-table-form-card table-form-card';
+            div.style.cssText = 'border:1px solid var(--border); border-radius:8px; padding:1rem; margin-bottom:1rem;';
+
+            var idField = document.createElement('input');
+            idField.type = 'hidden';
+            idField.name = TBL_PREFIX + '-' + total + '-id';
+            idField.value = '';
+            div.appendChild(idField);
+
+            var sortField = document.createElement('input');
+            sortField.type = 'hidden';
+            sortField.name = TBL_PREFIX + '-' + total + '-sort_order';
+            sortField.value = String(total);
+            div.appendChild(sortField);
+
+            function addField(parent, labelText, tag, name, attrs) {
+                var fieldDiv = document.createElement('div');
+                fieldDiv.className = 'mgr-field';
+                var label = document.createElement('label');
+                label.className = 'mgr-label';
+                label.textContent = labelText;
+                fieldDiv.appendChild(label);
+                var el = document.createElement(tag);
+                el.name = name;
+                el.className = attrs.className || 'mgr-input';
+                if (attrs.rows) el.rows = attrs.rows;
+                if (attrs.style) el.style.cssText = attrs.style;
+                if (attrs.type) el.type = attrs.type;
+                fieldDiv.appendChild(el);
+                if (attrs.wrapClass) fieldDiv.className += ' ' + attrs.wrapClass;
+                if (attrs.wrapStyle) fieldDiv.style.cssText = attrs.wrapStyle;
+                parent.appendChild(fieldDiv);
+                return el;
+            }
+
+            var headerRow = document.createElement('div');
+            headerRow.style.cssText = 'display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;';
+            var headerTitle = document.createElement('strong');
+            headerTitle.textContent = 'New Table';
+            headerRow.appendChild(headerTitle);
+            var delCbSpan = document.createElement('span');
+            delCbSpan.style.cssText = 'display:none;';
+            var delCb = document.createElement('input');
+            delCb.type = 'checkbox';
+            delCb.name = TBL_PREFIX + '-' + total + '-DELETE';
+            delCbSpan.appendChild(delCb);
+            headerRow.appendChild(delCbSpan);
+            var delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.className = 'btn btn-sm btn-outline-danger rev-delete-table-btn';
+            delBtn.title = 'Delete table';
+            delBtn.innerHTML = '<i class="bi bi-trash"></i> Delete Table';
+            headerRow.appendChild(delBtn);
+            div.appendChild(headerRow);
+
+            addField(div, 'Title', 'input', TBL_PREFIX + '-' + total + '-title', {});
+            addField(div, 'Description', 'textarea', TBL_PREFIX + '-' + total + '-description', { className: 'mgr-textarea', rows: 2 });
+
+            var colourGrid = document.createElement('div');
+            colourGrid.style.cssText = 'display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.75rem; margin-bottom:1rem;';
+
+            var presetDiv = document.createElement('div');
+            presetDiv.className = 'mgr-field';
+            presetDiv.style.cssText = 'margin-bottom:0;';
+            var presetLabel = document.createElement('label');
+            presetLabel.className = 'mgr-label';
+            presetLabel.textContent = 'Colour Preset';
+            presetDiv.appendChild(presetLabel);
+            var presetSel = document.createElement('select');
+            presetSel.name = TBL_PREFIX + '-' + total + '-colour_preset';
+            presetSel.className = 'mgr-input';
+            [['pink','Pink'],['green','Green'],['blue','Blue'],['custom','Custom']].forEach(function(opt) {
+                var o = document.createElement('option');
+                o.value = opt[0];
+                o.textContent = opt[1];
+                presetSel.appendChild(o);
+            });
+            presetDiv.appendChild(presetSel);
+            colourGrid.appendChild(presetDiv);
+
+            [['Header BG', 'custom_header_bg'], ['Row BG', 'custom_row_bg'], ['Text Colour', 'custom_text_colour']].forEach(function(pair) {
+                var cDiv = document.createElement('div');
+                cDiv.className = 'mgr-field custom-colour-field';
+                cDiv.style.cssText = 'margin-bottom:0; display:none;';
+                var cLabel = document.createElement('label');
+                cLabel.className = 'mgr-label';
+                cLabel.textContent = pair[0];
+                cDiv.appendChild(cLabel);
+                var cInput = document.createElement('input');
+                cInput.type = 'color';
+                cInput.name = TBL_PREFIX + '-' + total + '-' + pair[1];
+                cInput.className = 'mgr-input';
+                cInput.style.cssText = 'max-width:80px;';
+                cDiv.appendChild(cInput);
+                colourGrid.appendChild(cDiv);
+            });
+            div.appendChild(colourGrid);
+
+            // Build data grid immediately for new tables
+            var gridLabel = document.createElement('div');
+            gridLabel.className = 'mgr-help';
+            gridLabel.style.cssText = 'margin-bottom:0.5rem;';
+            gridLabel.textContent = 'Data Grid';
+            div.appendChild(gridLabel);
+
+            var gridWrap = document.createElement('div');
+            gridWrap.style.cssText = 'overflow-x:auto;';
+            var gridTable = document.createElement('table');
+            gridTable.className = 'rev-data-grid-table data-grid-table';
+            gridTable.dataset.tablePk = 'new_' + total;
+            gridTable.dataset.placementPk = PLACEMENT_PK;
+            gridTable.style.cssText = 'width:100%; border-collapse:collapse; font-size:0.85rem;';
+
+            var thead = document.createElement('thead');
+            var headTr = document.createElement('tr');
+            var cols = getLiveColumns();
+            cols.forEach(function (col) {
+                var th = document.createElement('th');
+                th.className = 'grid-col-header';
+                th.dataset.colId = col.id;
+                th.style.cssText = TH_STYLE;
+                th.textContent = col.heading;
+                headTr.appendChild(th);
+            });
+            var actTh = document.createElement('th');
+            actTh.style.cssText = TH_STYLE + ' width:60px;';
+            headTr.appendChild(actTh);
+            thead.appendChild(headTr);
+            gridTable.appendChild(thead);
+
+            var tbody = document.createElement('tbody');
+            tbody.id = 'rev-grid-new_' + total;
+            gridTable.appendChild(tbody);
+            gridWrap.appendChild(gridTable);
+            div.appendChild(gridWrap);
+
+            var addRowBtn = document.createElement('button');
+            addRowBtn.type = 'button';
+            addRowBtn.className = 'btn-mgr-secondary rev-add-row-btn';
+            addRowBtn.dataset.tablePk = 'new_' + total;
+            addRowBtn.dataset.placementPk = PLACEMENT_PK;
+            addRowBtn.style.cssText = 'margin-top:0.5rem; font-size:0.8rem;';
+            addRowBtn.innerHTML = '<i class="bi bi-plus"></i> Add Row';
+            div.appendChild(addRowBtn);
+
+            var helpDiv = document.createElement('div');
+            helpDiv.className = 'mgr-help';
+            helpDiv.style.cssText = 'margin-top:0.5rem;';
+            helpDiv.textContent = 'Note: save to persist new table data.';
+            div.appendChild(helpDiv);
+
+            tblListContainer.appendChild(div);
+            totalInput.value = total + 1;
+
+            presetSel.addEventListener('change', function () {
+                toggleCustomColours(this);
+            });
+        });
+    }
+
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.rev-add-row-btn[data-placement-pk="' + PLACEMENT_PK + '"]');
+        if (!btn) return;
+        var tablePk = btn.dataset.tablePk;
+        var tbody = document.getElementById('rev-grid-' + tablePk);
+        if (!tbody) return;
+
+        var cols = getLiveColumns();
+        if (cols.length === 0) return;
+
+        var newIdx = 0;
+        tbody.querySelectorAll('tr').forEach(function (tr) {
+            var inp = tr.querySelector('input[type="text"][name^="new_cell_"]');
+            if (inp) newIdx++;
+        });
+
+        var tr = document.createElement('tr');
+        cols.forEach(function (col) {
+            var td = document.createElement('td');
+            td.className = 'grid-cell';
+            td.dataset.colId = col.id;
+            td.style.cssText = TD_STYLE;
+            var inp = document.createElement('input');
+            inp.type = 'text';
+            inp.name = 'new_cell_' + tablePk + '_' + newIdx + '_' + col.id;
+            inp.value = '';
+            inp.className = 'mgr-input';
+            inp.style.cssText = 'width:100%;';
+            td.appendChild(inp);
+            tr.appendChild(td);
+        });
+        var delTd = document.createElement('td');
+        delTd.style.cssText = TD_STYLE;
+        var newSpan = document.createElement('span');
+        newSpan.style.cssText = 'font-size:0.75rem; color:var(--muted);';
+        newSpan.textContent = 'New';
+        delTd.appendChild(newSpan);
+        tr.appendChild(delTd);
+        tbody.appendChild(tr);
+    });
+
+    // -- Delete column button -------------------------------------------------
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.rev-delete-column-btn');
+        if (!btn) return;
+        var row = btn.closest('.rev-column-form-row');
+        if (!row || !row.closest('#rev-column-formset-' + PLACEMENT_PK)) return;
+        if (!confirm('Delete this column? This will save all changes.')) return;
+        var cb = row.querySelector('input[type="checkbox"][name$="-DELETE"]');
+        if (cb) cb.checked = true;
+        var mainForm = document.getElementById('our-members-form');
+        if (mainForm) { window._suppressBeforeUnload = true; mainForm.requestSubmit(); }
+    });
+
+    // -- Delete table button --------------------------------------------------
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.rev-delete-table-btn');
+        if (!btn) return;
+        var card = btn.closest('.rev-table-form-card');
+        if (!card || !card.closest('#rev-table-list-' + PLACEMENT_PK)) return;
+        if (!confirm('Delete this table and all its rows? This will save all changes.')) return;
+        var cb = card.querySelector('input[type="checkbox"][name$="-DELETE"]');
+        if (cb) cb.checked = true;
+        var mainForm = document.getElementById('our-members-form');
+        if (mainForm) { window._suppressBeforeUnload = true; mainForm.requestSubmit(); }
+    });
+
+    // -- Delete row button ----------------------------------------------------
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.rev-delete-row-btn');
+        if (!btn) return;
+        var td = btn.closest('td');
+        if (!td) return;
+        var table = td.closest('.rev-data-grid-table[data-placement-pk="' + PLACEMENT_PK + '"]');
+        if (!table) return;
+        if (!confirm('Delete this row? This will save all changes.')) return;
+        var cb = td.querySelector('.rev-delete-row-cb');
+        if (cb) cb.checked = true;
+        var mainForm = document.getElementById('our-members-form');
+        if (mainForm) { window._suppressBeforeUnload = true; mainForm.requestSubmit(); }
+    });
+})();
+</script>

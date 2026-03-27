@@ -1,0 +1,45 @@
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.heading.id_for_label }}">Heading</label>
+    {{ form.heading }}
+    {% if form.heading.errors %}<div class="mgr-error">{{ form.heading.errors.0 }}</div>{% endif %}
+</div>
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.body.id_for_label }}">Body</label>
+    {{ form.body }}
+    {% if form.body.errors %}<div class="mgr-error">{{ form.body.errors.0 }}</div>{% endif %}
+</div>
+<div class="mgr-field">
+    <label class="mgr-label">Upper Image</label>
+    {% if form.instance.upper_image %}
+    <div style="margin-bottom:0.5rem;">
+        <img src="{{ form.instance.upper_image.url }}" alt="Current upper image" style="max-height:100px; border-radius:4px;">
+    </div>
+    {% endif %}
+    {{ form.upper_image }}
+    {% if form.upper_image.errors %}<div class="mgr-error">{{ form.upper_image.errors.0 }}</div>{% endif %}
+</div>
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.upper_image_alt.id_for_label }}">Upper Image Alt Text</label>
+    {{ form.upper_image_alt }}
+    {% if form.upper_image_alt.errors %}<div class="mgr-error">{{ form.upper_image_alt.errors.0 }}</div>{% endif %}
+</div>
+<div class="mgr-field">
+    <label class="mgr-label">Lower Image</label>
+    {% if form.instance.lower_image %}
+    <div style="margin-bottom:0.5rem;">
+        <img src="{{ form.instance.lower_image.url }}" alt="Current lower image" style="max-height:100px; border-radius:4px;">
+    </div>
+    {% endif %}
+    {{ form.lower_image }}
+    {% if form.lower_image.errors %}<div class="mgr-error">{{ form.lower_image.errors.0 }}</div>{% endif %}
+</div>
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.lower_image_alt.id_for_label }}">Lower Image Alt Text</label>
+    {{ form.lower_image_alt }}
+    {% if form.lower_image_alt.errors %}<div class="mgr-error">{{ form.lower_image_alt.errors.0 }}</div>{% endif %}
+</div>
+<div class="color-picker-row" style="margin-top:1rem;">
+    <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.bg_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.text_color }}</span>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
+</div>

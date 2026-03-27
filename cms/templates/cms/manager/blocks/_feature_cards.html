@@ -1,0 +1,158 @@
+{# Card 1 #}
+<div style="margin-bottom:1.5rem; padding:1rem; border:1px solid var(--border, #dee2e6); border-radius:6px;">
+    <span style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;"><i class="bi bi-card-text"></i> Card 1</span>
+    <div class="mgr-field" style="margin-top:0.5rem;">
+        <label class="mgr-label" for="{{ form.card_1_title.id_for_label }}">Card Title</label>
+        {{ form.card_1_title }}
+        {% if form.card_1_title.errors %}<div class="mgr-error">{{ form.card_1_title.errors.0 }}</div>{% endif %}
+    </div>
+    <div class="mgr-field">
+        <label class="mgr-label" for="{{ form.card_1_text.id_for_label }}">Card Text</label>
+        {{ form.card_1_text }}
+        {% if form.card_1_text.errors %}<div class="mgr-error">{{ form.card_1_text.errors.0 }}</div>{% endif %}
+    </div>
+    <div class="mgr-field">
+        <label class="mgr-label">Card Image</label>
+        {% if form.instance.card_1_image %}
+        <div style="margin-bottom:0.5rem;">
+            <img src="{{ form.instance.card_1_image.url }}" alt="Current card image" style="max-height:80px; border-radius:4px;">
+        </div>
+        {% endif %}
+        {{ form.card_1_image }}
+        {% if form.card_1_image.errors %}<div class="mgr-error">{{ form.card_1_image.errors.0 }}</div>{% endif %}
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.card_1_image_alt.id_for_label }}">Image Alt Text</label>
+            {{ form.card_1_image_alt }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.card_1_number.id_for_label }}">Card Number</label>
+            {{ form.card_1_number }}
+        </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:0.5rem;">
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.card_1_cta_text.id_for_label }}">CTA Text</label>
+            {{ form.card_1_cta_text }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.card_1_cta_url.id_for_label }}">CTA URL</label>
+            {{ form.card_1_cta_url }}
+        </div>
+    </div>
+    <div class="color-picker-row" style="margin-top:0.75rem;">
+        <span class="color-picker-pair"><label class="mgr-label">Card BG</label> {{ form.card_1_bg_color }}</span>
+    </div>
+</div>
+
+{# Card 2 #}
+<div style="margin-bottom:1.5rem; padding:1rem; border:1px solid var(--border, #dee2e6); border-radius:6px;">
+    <span style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;"><i class="bi bi-card-text"></i> Card 2</span>
+    <div class="mgr-field" style="margin-top:0.5rem;">
+        <label class="mgr-label" for="{{ form.card_2_title.id_for_label }}">Card Title</label>
+        {{ form.card_2_title }}
+        {% if form.card_2_title.errors %}<div class="mgr-error">{{ form.card_2_title.errors.0 }}</div>{% endif %}
+    </div>
+    <div class="mgr-field">
+        <label class="mgr-label" for="{{ form.card_2_text.id_for_label }}">Card Text</label>
+        {{ form.card_2_text }}
+        {% if form.card_2_text.errors %}<div class="mgr-error">{{ form.card_2_text.errors.0 }}</div>{% endif %}
+    </div>
+    <div class="mgr-field">
+        <label class="mgr-label">Card Image</label>
+        {% if form.instance.card_2_image %}
+        <div style="margin-bottom:0.5rem;">
+            <img src="{{ form.instance.card_2_image.url }}" alt="Current card image" style="max-height:80px; border-radius:4px;">
+        </div>
+        {% endif %}
+        {{ form.card_2_image }}
+        {% if form.card_2_image.errors %}<div class="mgr-error">{{ form.card_2_image.errors.0 }}</div>{% endif %}
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.card_2_image_alt.id_for_label }}">Image Alt Text</label>
+            {{ form.card_2_image_alt }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.card_2_number.id_for_label }}">Card Number</label>
+            {{ form.card_2_number }}
+        </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:0.5rem;">
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.card_2_cta_text.id_for_label }}">CTA Text</label>
+            {{ form.card_2_cta_text }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.card_2_cta_url.id_for_label }}">CTA URL</label>
+            {{ form.card_2_cta_url }}
+        </div>
+    </div>
+    <div class="color-picker-row" style="margin-top:0.75rem;">
+        <span class="color-picker-pair"><label class="mgr-label">Card BG</label> {{ form.card_2_bg_color }}</span>
+    </div>
+</div>
+
+{# Card 3 #}
+<div style="margin-bottom:1.5rem; padding:1rem; border:1px solid var(--border, #dee2e6); border-radius:6px;">
+    <span style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;"><i class="bi bi-card-text"></i> Card 3</span>
+    <div class="mgr-field" style="margin-top:0.5rem;">
+        <label class="mgr-label" for="{{ form.card_3_title.id_for_label }}">Card Title</label>
+        {{ form.card_3_title }}
+        {% if form.card_3_title.errors %}<div class="mgr-error">{{ form.card_3_title.errors.0 }}</div>{% endif %}
+    </div>
+    <div class="mgr-field">
+        <label class="mgr-label" for="{{ form.card_3_text.id_for_label }}">Card Text</label>
+        {{ form.card_3_text }}
+        {% if form.card_3_text.errors %}<div class="mgr-error">{{ form.card_3_text.errors.0 }}</div>{% endif %}
+    </div>
+    <div class="mgr-field">
+        <label class="mgr-label">Card Image</label>
+        {% if form.instance.card_3_image %}
+        <div style="margin-bottom:0.5rem;">
+            <img src="{{ form.instance.card_3_image.url }}" alt="Current card image" style="max-height:80px; border-radius:4px;">
+        </div>
+        {% endif %}
+        {{ form.card_3_image }}
+        {% if form.card_3_image.errors %}<div class="mgr-error">{{ form.card_3_image.errors.0 }}</div>{% endif %}
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.card_3_image_alt.id_for_label }}">Image Alt Text</label>
+            {{ form.card_3_image_alt }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.card_3_number.id_for_label }}">Card Number</label>
+            {{ form.card_3_number }}
+        </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:0.5rem;">
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.card_3_cta_text.id_for_label }}">CTA Text</label>
+            {{ form.card_3_cta_text }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.card_3_cta_url.id_for_label }}">CTA URL</label>
+            {{ form.card_3_cta_url }}
+        </div>
+    </div>
+    <div class="color-picker-row" style="margin-top:0.75rem;">
+        <span class="color-picker-pair"><label class="mgr-label">Card BG</label> {{ form.card_3_bg_color }}</span>
+    </div>
+</div>
+
+<div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border, #dee2e6);">
+    <span style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;"><i class="bi bi-link-45deg"></i> Shared CTA Colours</span>
+    <div class="color-picker-row" style="margin-top:0.75rem;">
+        <span class="color-picker-pair"><label class="mgr-label">Button BG</label> {{ form.cta_bg_color }}</span>
+        <span class="color-picker-pair"><label class="mgr-label">Button Text</label> {{ form.cta_text_color }}</span>
+        <span class="color-picker-pair"><label class="mgr-label">Hover BG</label> {{ form.cta_hover_bg_color }}</span>
+        <span class="color-picker-pair"><label class="mgr-label">Hover Text</label> {{ form.cta_hover_text_color }}</span>
+    </div>
+</div>
+
+<div class="color-picker-row" style="margin-top:1rem;">
+    <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.text_color }}</span>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
+</div>

@@ -54,91 +54,45 @@ urlpatterns = [
         views.CategoryDeleteView.as_view(),
         name="category_delete",
     ),
-    # Contact Form Settings
-    path(
-        "contact-form/",
-        views.ContactFormSettingsUpdateView.as_view(),
-        name="contact_form",
-    ),
     # Header
     path("header/", views.HeaderSettingsUpdateView.as_view(), name="header"),
     # Footer
     path("footer/", views.FooterSettingsUpdateView.as_view(), name="footer"),
-    # Landing Page
+    # Block Pages
     path(
-        "landing-page/",
-        views.LandingPageSettingsUpdateView.as_view(),
-        name="landing_page",
-    ),
-    # Our Manifesto
-    path(
-        "our-manifesto/",
-        views.ManifestoPageSettingsUpdateView.as_view(),
-        name="manifesto",
-    ),
-    # About Us
-    path(
-        "about-us/",
-        views.AboutUsPageSettingsUpdateView.as_view(),
-        name="about_us",
-    ),
-    # Our Model
-    path(
-        "our-model/",
-        views.OurModelPageSettingsUpdateView.as_view(),
-        name="our_model",
-    ),
-    # Our Team
-    path(
-        "our-team/",
-        views.OurTeamManagerView.as_view(),
-        name="our_team",
+        "block-pages/create/",
+        views.BlockPageCreateView.as_view(),
+        name="block_page_create",
     ),
     path(
-        "our-team/section/add/",
-        views.OurTeamSectionAddView.as_view(),
-        name="our_team_section_add",
+        "block-pages/<int:pk>/",
+        views.BlockPageUpdateView.as_view(),
+        name="block_page_edit",
     ),
     path(
-        "our-team/section/<int:pk>/delete/",
-        views.OurTeamSectionDeleteView.as_view(),
-        name="our_team_section_delete",
+        "block-pages/<int:pk>/delete/",
+        views.BlockPageDeleteView.as_view(),
+        name="block_page_delete",
     ),
     path(
-        "our-team/member/<int:pk>/delete/",
-        views.OurTeamMemberDeleteView.as_view(),
-        name="our_team_member_delete",
+        "block-pages/<int:pk>/add-block/",
+        views.BlockAddBlockView.as_view(),
+        name="block_page_add_block",
     ),
     path(
-        "our-team/member-image-upload/",
-        views.team_member_image_upload,
-        name="team_member_image_upload",
-    ),
-    # OJC Boards
-    path(
-        "board/",
-        views.BoardManagerView.as_view(),
-        name="board",
+        "block-pages/<int:pk>/delete-block/<int:block_pk>/",
+        views.BlockDeleteBlockView.as_view(),
+        name="block_page_delete_block",
     ),
     path(
-        "board/section/add/",
-        views.BoardSectionAddView.as_view(),
-        name="board_section_add",
+        "block-pages/<int:pk>/reset-defaults/",
+        views.BlockPageResetDefaultsView.as_view(),
+        name="block_page_reset_defaults",
     ),
     path(
-        "board/section/<int:pk>/delete/",
-        views.BoardSectionDeleteView.as_view(),
-        name="board_section_delete",
-    ),
-    path(
-        "board/member/<int:pk>/delete/",
-        views.BoardMemberDeleteView.as_view(),
-        name="board_member_delete",
-    ),
-    path(
-        "board/member-image-upload/",
-        views.board_member_image_upload,
-        name="board_member_image_upload",
+        "block-pages/<int:pk>/csv-parse/",
+        views.block_page_csv_parse,
+        name="block_page_csv_parse",
     ),
     # Pages
     path("pages/", views.PageListView.as_view(), name="page_list"),

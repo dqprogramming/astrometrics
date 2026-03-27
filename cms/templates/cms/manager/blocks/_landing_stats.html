@@ -1,0 +1,104 @@
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+    <div class="mgr-field">
+        <label class="mgr-label" for="{{ form.fundraising_target.id_for_label }}">Fundraising Target (&pound;)</label>
+        {{ form.fundraising_target }}
+        {% if form.fundraising_target.errors %}<div class="mgr-error">{{ form.fundraising_target.errors.0 }}</div>{% endif %}
+    </div>
+    <div class="mgr-field">
+        <label class="mgr-label" for="{{ form.amount_raised.id_for_label }}">Amount Raised (&pound;)</label>
+        {{ form.amount_raised }}
+        {% if form.amount_raised.errors %}<div class="mgr-error">{{ form.amount_raised.errors.0 }}</div>{% endif %}
+    </div>
+</div>
+
+<div class="mgr-field" style="margin-top:0.5rem;">
+    <div style="font-size:0.85rem; color:var(--muted);">
+        Preview: <strong id="stats-preview-pct">
+        {% if form.instance.pk %}{{ form.instance.stats_percentage }}%{% else %}0%{% endif %}
+        </strong> &mdash;
+        <strong id="stats-preview-raised">
+        {% if form.instance.pk %}{{ form.instance.amount_raised_display }}{% else %}&pound;0{% endif %}
+        </strong>
+        raised of
+        <strong id="stats-preview-target">
+        {% if form.instance.pk %}{{ form.instance.fundraising_target_display }}{% else %}&pound;0{% endif %}
+        </strong>
+    </div>
+</div>
+
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.description.id_for_label }}">Description</label>
+    {{ form.description }}
+    {% if form.description.errors %}<div class="mgr-error">{{ form.description.errors.0 }}</div>{% endif %}
+</div>
+
+<div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border, #dee2e6);">
+    <span style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;"><i class="bi bi-link-45deg"></i> Button 1</span>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:0.5rem;">
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.button_1_text.id_for_label }}">Text</label>
+            {{ form.button_1_text }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.button_1_url.id_for_label }}">URL</label>
+            {{ form.button_1_url }}
+        </div>
+    </div>
+    <div class="color-picker-row" style="margin-top:0.75rem;">
+        <span class="color-picker-pair"><label class="mgr-label">BG</label> {{ form.button_1_bg_color }}</span>
+        <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.button_1_text_color }}</span>
+        <span class="color-picker-pair"><label class="mgr-label">Hover BG</label> {{ form.button_1_hover_bg_color }}</span>
+        <span class="color-picker-pair"><label class="mgr-label">Hover Text</label> {{ form.button_1_hover_text_color }}</span>
+    </div>
+</div>
+
+<div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border, #dee2e6);">
+    <span style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;"><i class="bi bi-link-45deg"></i> Button 2</span>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:0.5rem;">
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.button_2_text.id_for_label }}">Text</label>
+            {{ form.button_2_text }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label" for="{{ form.button_2_url.id_for_label }}">URL</label>
+            {{ form.button_2_url }}
+        </div>
+    </div>
+    <div class="color-picker-row" style="margin-top:0.75rem;">
+        <span class="color-picker-pair"><label class="mgr-label">BG</label> {{ form.button_2_bg_color }}</span>
+        <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.button_2_text_color }}</span>
+        <span class="color-picker-pair"><label class="mgr-label">Hover BG</label> {{ form.button_2_hover_bg_color }}</span>
+        <span class="color-picker-pair"><label class="mgr-label">Hover Text</label> {{ form.button_2_hover_text_color }}</span>
+    </div>
+</div>
+
+<div class="color-picker-row" style="margin-top:1rem;">
+    <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.bg_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.text_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Rings</label> {{ form.ring_color }}</span>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
+</div>
+
+<script>
+(function() {
+    var card = document.currentScript.closest('.section-card') || document.currentScript.parentElement;
+    var targetInput = card.querySelector('[name$="fundraising_target"]');
+    var raisedInput = card.querySelector('[name$="amount_raised"]');
+    if (!targetInput || !raisedInput) return;
+
+    function updatePreview() {
+        var target = parseInt(targetInput.value, 10) || 0;
+        var raised = parseInt(raisedInput.value, 10) || 0;
+        var pct = target > 0 ? Math.round((raised / target) * 100) : 0;
+        var pctEl = card.querySelector('#stats-preview-pct');
+        var raisedEl = card.querySelector('#stats-preview-raised');
+        var targetEl = card.querySelector('#stats-preview-target');
+        if (pctEl) pctEl.textContent = pct + '%';
+        if (raisedEl) raisedEl.textContent = '\u00a3' + raised.toLocaleString('en-GB');
+        if (targetEl) targetEl.textContent = '\u00a3' + target.toLocaleString('en-GB');
+    }
+
+    targetInput.addEventListener('input', updatePreview);
+    raisedInput.addEventListener('input', updatePreview);
+})();
+</script>

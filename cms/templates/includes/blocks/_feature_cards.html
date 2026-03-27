@@ -1,0 +1,64 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/landing.css' %}">
+<section class="landing-features">
+    <div class="container">
+        <h2 class="sr-only">Features</h2>
+        <div class="row">
+            <div class="col-12">
+                <div class="features">
+                    {# Card 1 #}
+                    <div class="feature-card" style="background-color: {{ block.card_1_bg_color }}; color: {{ block.text_color }};">
+                        <img src="{% if block.card_1_image %}{{ block.card_1_image.url }}{% else %}{% static 'img/home-col-1.jpg' %}{% endif %}"
+                             alt="{{ block.card_1_image_alt }}"
+                             class="feature-image">
+                        <div class="feature-number">{{ block.card_1_number }}</div>
+                        <h3 class="feature-title" style="color: {{ block.text_color }};">{{ block.card_1_title }}</h3>
+                        <p class="feature-text" style="color: {{ block.text_color }};">{{ block.card_1_text }}</p>
+                        {% if block.card_1_cta_text %}
+                        <a href="{{ block.card_1_cta_url }}"
+                           class="btn spectral-bold feature-btn feature-cta-{{ block.pk }}"
+                           style="background-color: {{ block.cta_bg_color }}; color: {{ block.cta_text_color }};">{{ block.card_1_cta_text }}</a>
+                        {% endif %}
+                    </div>
+
+                    {# Card 2 #}
+                    <div class="feature-card" style="background-color: {{ block.card_2_bg_color }}; color: {{ block.text_color }};">
+                        <img src="{% if block.card_2_image %}{{ block.card_2_image.url }}{% else %}{% static 'img/home-col-2.jpg' %}{% endif %}"
+                             alt="{{ block.card_2_image_alt }}"
+                             class="feature-image">
+                        <div class="feature-number">{{ block.card_2_number }}</div>
+                        <h3 class="feature-title" style="color: {{ block.text_color }};">{{ block.card_2_title }}</h3>
+                        <p class="feature-text" style="color: {{ block.text_color }};">{{ block.card_2_text }}</p>
+                        {% if block.card_2_cta_text %}
+                        <a href="{{ block.card_2_cta_url }}"
+                           class="btn spectral-bold feature-btn feature-cta-{{ block.pk }}"
+                           style="background-color: {{ block.cta_bg_color }}; color: {{ block.cta_text_color }};">{{ block.card_2_cta_text }}</a>
+                        {% endif %}
+                    </div>
+
+                    {# Card 3 #}
+                    <div class="feature-card" style="background-color: {{ block.card_3_bg_color }}; color: {{ block.text_color }};">
+                        <img src="{% if block.card_3_image %}{{ block.card_3_image.url }}{% else %}{% static 'img/home-col-3.jpg' %}{% endif %}"
+                             alt="{{ block.card_3_image_alt }}"
+                             class="feature-image">
+                        <div class="feature-number">{{ block.card_3_number }}</div>
+                        <h3 class="feature-title" style="color: {{ block.text_color }};">{{ block.card_3_title }}</h3>
+                        <p class="feature-text" style="color: {{ block.text_color }};">{{ block.card_3_text }}</p>
+                        {% if block.card_3_cta_text %}
+                        <a href="{{ block.card_3_cta_url }}"
+                           class="btn spectral-bold feature-btn feature-cta-{{ block.pk }}"
+                           style="background-color: {{ block.cta_bg_color }}; color: {{ block.cta_text_color }};">{{ block.card_3_cta_text }}</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .feature-cta-{{ block.pk }}:hover {
+        background-color: {{ block.cta_hover_bg_color }} !important;
+        color: {{ block.cta_hover_text_color }} !important;
+    }
+</style>

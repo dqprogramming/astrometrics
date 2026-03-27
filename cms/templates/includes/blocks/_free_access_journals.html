@@ -1,0 +1,35 @@
+{% load static %}
+<link rel="stylesheet" href="/static/css/manifesto.css">
+<section class="manifesto-final" aria-labelledby="manifesto-final-heading" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};">
+    <div class="container">
+        <div class="manifesto-final-inner">
+            <div class="manifesto-final-image-wrapper">
+                <div class="manifesto-final-image-shadow" aria-hidden="true"></div>
+                {% if block.image %}
+                <img src="{{ block.image.url }}"
+                     alt="{{ block.image_alt }}"
+                     class="manifesto-final-image">
+                {% else %}
+                <img src="{% static 'img/home-free-access.jpg' %}"
+                     alt="{{ block.image_alt }}"
+                     class="manifesto-final-image">
+                {% endif %}
+            </div>
+            <div class="manifesto-final-content">
+                <h2 id="manifesto-final-heading" class="spectral-bold manifesto-final-heading">
+                    {{ block.heading }}
+                </h2>
+                {% if block.show_cta %}
+                <a href="{{ block.cta_url }}" class="btn spectral-bold manifesto-cta-btn manifesto-cta-btn-{{ block.pk }}" style="background-color: {{ block.cta_bg_color }}; color: {{ block.cta_text_color }}; border-color: {{ block.cta_bg_color }};">{{ block.cta_text }}</a>
+                <style>
+                    .manifesto-cta-btn-{{ block.pk }}:hover {
+                        background-color: {{ block.cta_hover_bg_color }} !important;
+                        color: {{ block.cta_hover_text_color }} !important;
+                        border-color: {{ block.cta_hover_bg_color }} !important;
+                    }
+                </style>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>

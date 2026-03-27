@@ -1,0 +1,95 @@
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.heading.id_for_label }}">Heading</label>
+    {{ form.heading }}
+    {% if form.heading.errors %}<div class="mgr-error">{{ form.heading.errors.0 }}</div>{% endif %}
+</div>
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.body.id_for_label }}">Body</label>
+    {{ form.body }}
+    {% if form.body.errors %}<div class="mgr-error">{{ form.body.errors.0 }}</div>{% endif %}
+</div>
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.collections_label.id_for_label }}">Collections Label</label>
+    {{ form.collections_label }}
+    {% if form.collections_label.errors %}<div class="mgr-error">{{ form.collections_label.errors.0 }}</div>{% endif %}
+</div>
+
+<div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border, #dee2e6);">
+    <span style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;">Collection 1</span>
+    <div style="display:grid; grid-template-columns:80px 1fr; gap:0.5rem; margin-top:0.5rem;">
+        <div class="mgr-field">
+            <label class="mgr-label">Number</label>
+            {{ form.collection_1_number }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label">Title</label>
+            {{ form.collection_1_title }}
+        </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+        <div class="mgr-field">
+            <label class="mgr-label">Link Text</label>
+            {{ form.collection_1_link_text }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label">Link URL</label>
+            {{ form.collection_1_link_url }}
+        </div>
+    </div>
+</div>
+
+<div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border, #dee2e6);">
+    <span style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;">Collection 2</span>
+    <div style="display:grid; grid-template-columns:80px 1fr; gap:0.5rem; margin-top:0.5rem;">
+        <div class="mgr-field">
+            <label class="mgr-label">Number</label>
+            {{ form.collection_2_number }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label">Title</label>
+            {{ form.collection_2_title }}
+        </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+        <div class="mgr-field">
+            <label class="mgr-label">Link Text</label>
+            {{ form.collection_2_link_text }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label">Link URL</label>
+            {{ form.collection_2_link_url }}
+        </div>
+    </div>
+</div>
+
+<div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border, #dee2e6);">
+    <span style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;">Collection 3</span>
+    <div style="display:grid; grid-template-columns:80px 1fr; gap:0.5rem; margin-top:0.5rem;">
+        <div class="mgr-field">
+            <label class="mgr-label">Number</label>
+            {{ form.collection_3_number }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label">Title</label>
+            {{ form.collection_3_title }}
+        </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+        <div class="mgr-field">
+            <label class="mgr-label">Link Text</label>
+            {{ form.collection_3_link_text }}
+        </div>
+        <div class="mgr-field">
+            <label class="mgr-label">Link URL</label>
+            {{ form.collection_3_link_url }}
+        </div>
+    </div>
+</div>
+
+<div class="color-picker-row" style="margin-top:1rem;">
+    <span class="color-picker-pair"><label class="mgr-label">Circle BG</label> {{ form.circle_bg_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Circle Text</label> {{ form.circle_text_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.bg_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.text_color }}</span>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
+</div>

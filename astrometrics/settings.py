@@ -90,6 +90,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "cms.context_processors.footer_settings",
                 "cms.context_processors.header_settings",
+                "cms.context_processors.block_pages",
             ],
         },
     },

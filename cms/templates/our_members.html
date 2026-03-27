@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Our Members — Open Journals Collective{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="/static/css/our-members.css">
+{% endblock %}
+
+{% block content %}
+{% for bd in blocks %}{% include bd.template with block=bd.block %}{% endfor %}
+{% endblock %}

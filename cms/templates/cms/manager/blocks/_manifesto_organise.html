@@ -1,0 +1,51 @@
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.organise_heading.id_for_label }}">Organise Heading</label>
+    {{ form.organise_heading }}
+    {% if form.organise_heading.errors %}<div class="mgr-error">{{ form.organise_heading.errors.0 }}</div>{% endif %}
+</div>
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.organise_body.id_for_label }}">Organise Body</label>
+    {{ form.organise_body }}
+    {% if form.organise_body.errors %}<div class="mgr-error">{{ form.organise_body.errors.0 }}</div>{% endif %}
+</div>
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.achievable_heading.id_for_label }}">Achievable Heading</label>
+    {{ form.achievable_heading }}
+    {% if form.achievable_heading.errors %}<div class="mgr-error">{{ form.achievable_heading.errors.0 }}</div>{% endif %}
+</div>
+<div class="mgr-field">
+    <label class="mgr-label" for="{{ form.achievable_body.id_for_label }}">Achievable Body</label>
+    {{ form.achievable_body }}
+    {% if form.achievable_body.errors %}<div class="mgr-error">{{ form.achievable_body.errors.0 }}</div>{% endif %}
+</div>
+
+<div class="color-picker-row" style="margin-top:1rem;">
+    <span class="color-picker-pair"><label class="mgr-label">Background</label> {{ form.bg_color }}</span>
+    <span class="color-picker-pair"><label class="mgr-label">Text</label> {{ form.text_color }}</span>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-reset-colors"><i class="bi bi-arrow-counterclockwise"></i> Reset colours</button>
+</div>
+
+<div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border, #dee2e6);">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+        <span style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;"><i class="bi bi-link-45deg"></i> Call to Action</span>
+        <span class="section-toggle-check">Show {{ form.show_cta }}</span>
+    </div>
+    <div data-cta-content>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.cta_text.id_for_label }}">Button Text</label>
+                {{ form.cta_text }}
+            </div>
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.cta_url.id_for_label }}">Button URL</label>
+                {{ form.cta_url }}
+            </div>
+        </div>
+        <div class="color-picker-row" style="margin-top:0.75rem;">
+            <span class="color-picker-pair"><label class="mgr-label">Button BG</label> {{ form.cta_bg_color }}</span>
+            <span class="color-picker-pair"><label class="mgr-label">Button Text</label> {{ form.cta_text_color }}</span>
+            <span class="color-picker-pair"><label class="mgr-label">Hover BG</label> {{ form.cta_hover_bg_color }}</span>
+            <span class="color-picker-pair"><label class="mgr-label">Hover Text</label> {{ form.cta_hover_text_color }}</span>
+        </div>
+    </div>
+</div>

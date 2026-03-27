@@ -1,0 +1,29 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/our-model.css' %}">
+<section class="model-cta" aria-label="Call to action" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};">
+    <div class="container">
+        <div class="model-cta-inner">
+            <div class="model-cta-content">
+                <h2 class="spectral-bold">{{ block.heading }}</h2>
+                {{ block.body|safe }}
+                {% if block.show_cta %}
+                <a href="{{ block.cta_url }}" class="btn btn-dark spectral-bold model-cta-btn-{{ block.pk }}" style="background-color: {{ block.cta_bg_color }}; color: {{ block.cta_text_color }}; border-color: {{ block.cta_bg_color }};">{{ block.cta_text }}</a>
+                <style>
+                    .model-cta-btn-{{ block.pk }}:hover {
+                        background-color: {{ block.cta_hover_bg_color }} !important;
+                        color: {{ block.cta_hover_text_color }} !important;
+                        border-color: {{ block.cta_hover_bg_color }} !important;
+                    }
+                </style>
+                {% endif %}
+            </div>
+            <div class="model-cta-image">
+                {% if block.image %}
+                <img src="{{ block.image.url }}" alt="{{ block.image_alt }}">
+                {% else %}
+                <img src="{% static 'img/our-model-journals.jpg' %}" alt="{{ block.image_alt }}">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
