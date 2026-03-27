@@ -35,7 +35,6 @@ from .forms import (
     Column2LinkFormSet,
     FooterSettingsForm,
     HeaderSettingsForm,
-    LandingPageSettingsForm,
     MenuItemFormSet,
     PageForm,
     PostForm,
@@ -48,7 +47,6 @@ from .models import (
     Category,
     FooterSettings,
     HeaderSettings,
-    LandingPageSettings,
     Page,
     PageBlock,
     Post,
@@ -278,28 +276,6 @@ class CategoryDeleteView(StaffRequiredMixin, DeleteView):
         messages.success(
             self.request, f'Category "{self.object.name}" deleted.'
         )
-        return super().form_valid(form)
-
-
-# ── Landing Page Settings ────────────────────────────────────────────────────
-
-
-class LandingPageSettingsUpdateView(StaffRequiredMixin, UpdateView):
-    model = LandingPageSettings
-    form_class = LandingPageSettingsForm
-    template_name = "cms/manager/landing_page_form.html"
-    success_url = reverse_lazy("cms_manager:landing_page")
-
-    def get_object(self, queryset=None):
-        return LandingPageSettings.load()
-
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx["landing"] = self.get_object()
-        return ctx
-
-    def form_valid(self, form):
-        messages.success(self.request, "Landing page settings updated.")
         return super().form_valid(form)
 
 

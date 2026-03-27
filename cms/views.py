@@ -12,7 +12,6 @@ from .models import (
     BlockPage,
     Category,
     ContactFormBlock,
-    LandingPageSettings,
     Page,
     Post,
 )
@@ -21,7 +20,6 @@ logger = structlog.get_logger(__name__)
 
 
 def index_view(request):
-    # Check for a block-based landing page first
     try:
         block_landing = BlockPage.objects.get(is_landing_page=True)
         blocks = _build_public_blocks(block_landing)
@@ -31,15 +29,7 @@ def index_view(request):
             {"page": block_landing, "blocks": blocks},
         )
     except BlockPage.DoesNotExist:
-        pass
-    landing = LandingPageSettings.load()
-    return render(request, "landing.html", {"landing": landing})
-
-
-def old_landing_view(request):
-    """Serve the old singleton landing page at /old-landing/."""
-    landing = LandingPageSettings.load()
-    return render(request, "landing.html", {"landing": landing})
+        return render(request, "block_page.html", {"page": None, "blocks": []})
 
 
 def partial_view(request, filename):

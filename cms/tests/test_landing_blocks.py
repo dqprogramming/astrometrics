@@ -5,7 +5,6 @@ Covers:
 - LandingHeroBlock, FeatureCardsBlock, LandingStatsBlock models
 - is_landing_page field on BlockPage with uniqueness enforcement
 - index_view routing to block landing page
-- old_landing_view at /old-landing/
 """
 
 from django.test import TestCase, override_settings
@@ -322,11 +321,11 @@ class BlockPageIsLandingPageTests(TestCase):
 # ---------------------------------------------------------------------------
 @override_settings(ROOT_URLCONF="astrometrics.urls")
 class IndexViewRoutingTests(TestCase):
-    def test_index_falls_back_to_old_landing(self):
-        """With no block landing page, / should render the old landing."""
+    def test_index_no_block_landing_still_renders(self):
+        """With no block landing page, / should render block_page.html."""
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, "landing.html")
+        self.assertTemplateUsed(resp, "block_page.html")
 
     def test_index_serves_block_landing_page(self):
         """With a block landing page, / should render block_page.html."""
@@ -336,12 +335,6 @@ class IndexViewRoutingTests(TestCase):
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, "block_page.html")
-
-    def test_old_landing_view(self):
-        """The /old-landing/ URL should always render the old landing page."""
-        resp = self.client.get("/old-landing/")
-        self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, "landing.html")
 
 
 # ---------------------------------------------------------------------------

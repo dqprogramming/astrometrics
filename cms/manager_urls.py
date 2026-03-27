@@ -58,12 +58,6 @@ urlpatterns = [
     path("header/", views.HeaderSettingsUpdateView.as_view(), name="header"),
     # Footer
     path("footer/", views.FooterSettingsUpdateView.as_view(), name="footer"),
-    # Landing Page
-    path(
-        "landing-page/",
-        views.LandingPageSettingsUpdateView.as_view(),
-        name="landing_page",
-    ),
     # Block Pages
     path(
         "block-pages/create/",
