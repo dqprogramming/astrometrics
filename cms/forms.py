@@ -7,7 +7,7 @@ from .models import (
     Category,
     ContactFormBlock,
     ContactFormRecipient,
-    FeatureCardBlock,
+    FeatureCardsBlock,
     FooterLink,
     FooterSettings,
     FreeAccessJournalsBlock,
@@ -1167,44 +1167,102 @@ class LandingHeroBlockForm(forms.ModelForm):
         }
 
 
-class FeatureCardBlockForm(forms.ModelForm):
+class FeatureCardsBlockForm(forms.ModelForm):
     class Meta:
-        model = FeatureCardBlock
+        model = FeatureCardsBlock
         fields = [
-            "title",
-            "text",
-            "image",
-            "image_alt",
-            "number",
-            "cta_text",
-            "cta_url",
+            # Card 1
+            "card_1_title",
+            "card_1_text",
+            "card_1_image",
+            "card_1_image_alt",
+            "card_1_number",
+            "card_1_cta_text",
+            "card_1_cta_url",
+            "card_1_bg_color",
+            # Card 2
+            "card_2_title",
+            "card_2_text",
+            "card_2_image",
+            "card_2_image_alt",
+            "card_2_number",
+            "card_2_cta_text",
+            "card_2_cta_url",
+            "card_2_bg_color",
+            # Card 3
+            "card_3_title",
+            "card_3_text",
+            "card_3_image",
+            "card_3_image_alt",
+            "card_3_number",
+            "card_3_cta_text",
+            "card_3_cta_url",
+            "card_3_bg_color",
+            # Shared colours
+            "text_color",
             "cta_bg_color",
             "cta_text_color",
             "cta_hover_bg_color",
             "cta_hover_text_color",
-            "card_bg_color",
-            "text_color",
         ]
         widgets = {
-            "title": forms.TextInput(attrs={"class": "mgr-input"}),
-            "text": forms.Textarea(attrs={"class": "mgr-textarea", "rows": 4}),
-            "image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
-            "number": forms.TextInput(
+            # Card 1
+            "card_1_title": forms.TextInput(attrs={"class": "mgr-input"}),
+            "card_1_text": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 4}
+            ),
+            "card_1_image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
+            "card_1_number": forms.TextInput(
                 attrs={"class": "mgr-input", "style": "max-width:80px;"}
             ),
-            "cta_text": forms.TextInput(attrs={"class": "mgr-input"}),
-            "cta_url": forms.TextInput(
+            "card_1_cta_text": forms.TextInput(attrs={"class": "mgr-input"}),
+            "card_1_cta_url": forms.TextInput(
                 attrs={
                     "class": "mgr-input",
                     "placeholder": "e.g. /contact/ or https://...",
                 }
             ),
+            "card_1_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            # Card 2
+            "card_2_title": forms.TextInput(attrs={"class": "mgr-input"}),
+            "card_2_text": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 4}
+            ),
+            "card_2_image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
+            "card_2_number": forms.TextInput(
+                attrs={"class": "mgr-input", "style": "max-width:80px;"}
+            ),
+            "card_2_cta_text": forms.TextInput(attrs={"class": "mgr-input"}),
+            "card_2_cta_url": forms.TextInput(
+                attrs={
+                    "class": "mgr-input",
+                    "placeholder": "e.g. /contact/ or https://...",
+                }
+            ),
+            "card_2_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            # Card 3
+            "card_3_title": forms.TextInput(attrs={"class": "mgr-input"}),
+            "card_3_text": forms.Textarea(
+                attrs={"class": "mgr-textarea", "rows": 4}
+            ),
+            "card_3_image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
+            "card_3_number": forms.TextInput(
+                attrs={"class": "mgr-input", "style": "max-width:80px;"}
+            ),
+            "card_3_cta_text": forms.TextInput(attrs={"class": "mgr-input"}),
+            "card_3_cta_url": forms.TextInput(
+                attrs={
+                    "class": "mgr-input",
+                    "placeholder": "e.g. /contact/ or https://...",
+                }
+            ),
+            "card_3_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
+            # Shared colours
+            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
             "cta_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
             "cta_text_color": forms.TextInput(attrs=_COLOR_ATTRS),
             "cta_hover_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
             "cta_hover_text_color": forms.TextInput(attrs=_COLOR_ATTRS),
-            "card_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
-            "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
         }
 
 

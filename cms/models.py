@@ -2319,17 +2319,19 @@ class LandingHeroBlock(BaseBlock):
 
 
 @register
-class FeatureCardBlock(BaseBlock):
-    """Feature card block for the landing page."""
+class FeatureCardsBlock(BaseBlock):
+    """Three feature cards displayed side by side."""
 
-    BLOCK_TYPE = "feature_card"
-    LABEL = "Feature Card"
+    BLOCK_TYPE = "feature_cards"
+    LABEL = "Feature Cards"
     ICON = "bi-card-text"
-    FORM_CLASS = "cms.forms.FeatureCardBlockForm"
-    MANAGER_TEMPLATE = "cms/manager/blocks/_feature_card.html"
-    PUBLIC_TEMPLATE = "includes/blocks/_feature_card.html"
+    FORM_CLASS = "cms.forms.FeatureCardsBlockForm"
+    MANAGER_TEMPLATE = "cms/manager/blocks/_feature_cards.html"
+    PUBLIC_TEMPLATE = "includes/blocks/_feature_cards.html"
     COLOR_DEFAULTS = {
-        "card_bg_color": "#a5bfff",
+        "card_1_bg_color": "#a5bfff",
+        "card_2_bg_color": "#78f2c1",
+        "card_3_bg_color": "#ffd4f7",
         "text_color": "#212129",
         "cta_bg_color": "#212129",
         "cta_text_color": "#ffffff",
@@ -2338,32 +2340,60 @@ class FeatureCardBlock(BaseBlock):
     }
 
     _FALLBACK_IMAGES = {
-        "01": "/static/img/home-col-1.jpg",
-        "02": "/static/img/home-col-2.jpg",
-        "03": "/static/img/home-col-3.jpg",
+        "1": "/static/img/home-col-1.jpg",
+        "2": "/static/img/home-col-2.jpg",
+        "3": "/static/img/home-col-3.jpg",
     }
 
-    title = models.CharField(max_length=255, default="Feature title.")
-    text = models.TextField(blank=True)
-    image = models.ImageField(upload_to="blocks/feature_card/", blank=True)
-    image_alt = models.CharField(max_length=255, blank=True)
-    number = models.CharField(max_length=5, default="01")
-    cta_text = models.CharField(max_length=100, default="LEARN MORE")
-    cta_url = models.CharField(max_length=500, blank=True)
+    # Card 1
+    card_1_title = models.CharField(max_length=255, default="Feature title.")
+    card_1_text = models.TextField(blank=True)
+    card_1_image = models.ImageField(
+        upload_to="blocks/feature_cards/", blank=True
+    )
+    card_1_image_alt = models.CharField(max_length=255, blank=True)
+    card_1_number = models.CharField(max_length=5, default="01")
+    card_1_cta_text = models.CharField(max_length=100, default="LEARN MORE")
+    card_1_cta_url = models.CharField(max_length=500, blank=True)
+    card_1_bg_color = models.CharField(max_length=7, default="#a5bfff")
+
+    # Card 2
+    card_2_title = models.CharField(max_length=255, default="Feature title.")
+    card_2_text = models.TextField(blank=True)
+    card_2_image = models.ImageField(
+        upload_to="blocks/feature_cards/", blank=True
+    )
+    card_2_image_alt = models.CharField(max_length=255, blank=True)
+    card_2_number = models.CharField(max_length=5, default="02")
+    card_2_cta_text = models.CharField(max_length=100, default="LEARN MORE")
+    card_2_cta_url = models.CharField(max_length=500, blank=True)
+    card_2_bg_color = models.CharField(max_length=7, default="#78f2c1")
+
+    # Card 3
+    card_3_title = models.CharField(max_length=255, default="Feature title.")
+    card_3_text = models.TextField(blank=True)
+    card_3_image = models.ImageField(
+        upload_to="blocks/feature_cards/", blank=True
+    )
+    card_3_image_alt = models.CharField(max_length=255, blank=True)
+    card_3_number = models.CharField(max_length=5, default="03")
+    card_3_cta_text = models.CharField(max_length=100, default="LEARN MORE")
+    card_3_cta_url = models.CharField(max_length=500, blank=True)
+    card_3_bg_color = models.CharField(max_length=7, default="#ffd4f7")
+
+    # Shared colors
+    text_color = models.CharField(max_length=7, default="#212129")
     cta_bg_color = models.CharField(max_length=7, default="#212129")
     cta_text_color = models.CharField(max_length=7, default="#ffffff")
     cta_hover_bg_color = models.CharField(max_length=7, default="#000000")
     cta_hover_text_color = models.CharField(max_length=7, default="#ffffff")
-    card_bg_color = models.CharField(max_length=7, default="#a5bfff")
-    text_color = models.CharField(max_length=7, default="#212129")
 
     def __str__(self):
-        return f"FeatureCardBlock #{self.pk}"
+        return f"FeatureCardsBlock #{self.pk}"
 
-    @property
-    def fallback_image_url(self):
+    def fallback_image_url(self, card_num):
         return self._FALLBACK_IMAGES.get(
-            self.number, "/static/img/home-col-1.jpg"
+            str(card_num), "/static/img/home-col-1.jpg"
         )
 
 

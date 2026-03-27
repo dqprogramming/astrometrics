@@ -2,7 +2,7 @@
 Tests for the landing page block conversion (issue #37).
 
 Covers:
-- LandingHeroBlock, FeatureCardBlock, LandingStatsBlock models
+- LandingHeroBlock, FeatureCardsBlock, LandingStatsBlock models
 - is_landing_page field on BlockPage with uniqueness enforcement
 - index_view routing to block landing page
 - old_landing_view at /old-landing/
@@ -12,14 +12,14 @@ from django.test import TestCase, override_settings
 
 from cms.block_registry import get_block_class, get_label
 from cms.forms import (
-    FeatureCardBlockForm,
+    FeatureCardsBlockForm,
     LandingHeroBlockForm,
     LandingStatsBlockForm,
 )
 from cms.models import (
     BlockPage,
     BlockPageTemplate,
-    FeatureCardBlock,
+    FeatureCardsBlock,
     LandingHeroBlock,
     LandingStatsBlock,
 )
@@ -62,59 +62,70 @@ class LandingHeroBlockModelTests(TestCase):
 
 
 # ---------------------------------------------------------------------------
-# FeatureCardBlock model tests
+# FeatureCardsBlock model tests
 # ---------------------------------------------------------------------------
-class FeatureCardBlockModelTests(TestCase):
+class FeatureCardsBlockModelTests(TestCase):
     def test_block_type(self):
-        self.assertEqual(FeatureCardBlock.BLOCK_TYPE, "feature_card")
+        self.assertEqual(FeatureCardsBlock.BLOCK_TYPE, "feature_cards")
 
     def test_label(self):
-        self.assertEqual(FeatureCardBlock.LABEL, "Feature Card")
+        self.assertEqual(FeatureCardsBlock.LABEL, "Feature Cards")
 
     def test_icon(self):
-        self.assertEqual(FeatureCardBlock.ICON, "bi-card-text")
+        self.assertEqual(FeatureCardsBlock.ICON, "bi-card-text")
 
     def test_create_with_defaults(self):
-        block = FeatureCardBlock.objects.create()
-        self.assertEqual(block.number, "01")
-        self.assertEqual(block.card_bg_color, "#a5bfff")
+        block = FeatureCardsBlock.objects.create()
+        self.assertEqual(block.card_1_number, "01")
+        self.assertEqual(block.card_1_bg_color, "#a5bfff")
+        self.assertEqual(block.card_2_number, "02")
+        self.assertEqual(block.card_2_bg_color, "#78f2c1")
+        self.assertEqual(block.card_3_number, "03")
+        self.assertEqual(block.card_3_bg_color, "#ffd4f7")
 
     def test_color_defaults(self):
-        defaults = FeatureCardBlock.COLOR_DEFAULTS
-        self.assertEqual(defaults["card_bg_color"], "#a5bfff")
+        defaults = FeatureCardsBlock.COLOR_DEFAULTS
+        self.assertEqual(defaults["card_1_bg_color"], "#a5bfff")
+        self.assertEqual(defaults["card_2_bg_color"], "#78f2c1")
+        self.assertEqual(defaults["card_3_bg_color"], "#ffd4f7")
         self.assertEqual(defaults["text_color"], "#212129")
         self.assertIn("cta_bg_color", defaults)
 
     def test_str(self):
-        block = FeatureCardBlock.objects.create()
-        self.assertIn("FeatureCardBlock", str(block))
+        block = FeatureCardsBlock.objects.create()
+        self.assertIn("FeatureCardsBlock", str(block))
 
     def test_registered_in_block_registry(self):
-        cls = get_block_class("feature_card")
-        self.assertEqual(cls, FeatureCardBlock)
+        cls = get_block_class("feature_cards")
+        self.assertEqual(cls, FeatureCardsBlock)
 
-    def test_fallback_image_url_01(self):
-        block = FeatureCardBlock.objects.create(number="01")
-        self.assertEqual(
-            block.fallback_image_url, "/static/img/home-col-1.jpg"
+    def test_shared_cta_colors(self):
+        block = FeatureCardsBlock.objects.create()
+        self.assertEqual(block.cta_bg_color, "#212129")
+        self.assertEqual(block.cta_text_color, "#ffffff")
+        self.assertEqual(block.cta_hover_bg_color, "#000000")
+        self.assertEqual(block.cta_hover_text_color, "#ffffff")
+
+    def test_each_card_has_own_fields(self):
+        block = FeatureCardsBlock.objects.create(
+            card_1_title="Card One",
+            card_2_title="Card Two",
+            card_3_title="Card Three",
         )
+        self.assertEqual(block.card_1_title, "Card One")
+        self.assertEqual(block.card_2_title, "Card Two")
+        self.assertEqual(block.card_3_title, "Card Three")
 
-    def test_fallback_image_url_02(self):
-        block = FeatureCardBlock.objects.create(number="02")
+    def test_fallback_image_urls(self):
+        block = FeatureCardsBlock()
         self.assertEqual(
-            block.fallback_image_url, "/static/img/home-col-2.jpg"
+            block.fallback_image_url("1"), "/static/img/home-col-1.jpg"
         )
-
-    def test_fallback_image_url_03(self):
-        block = FeatureCardBlock.objects.create(number="03")
         self.assertEqual(
-            block.fallback_image_url, "/static/img/home-col-3.jpg"
+            block.fallback_image_url("2"), "/static/img/home-col-2.jpg"
         )
-
-    def test_fallback_image_url_unknown(self):
-        block = FeatureCardBlock.objects.create(number="04")
         self.assertEqual(
-            block.fallback_image_url, "/static/img/home-col-1.jpg"
+            block.fallback_image_url("3"), "/static/img/home-col-3.jpg"
         )
 
 
@@ -200,30 +211,48 @@ class LandingHeroBlockFormTests(TestCase):
         self.assertTrue(form.is_valid(), form.errors)
 
 
-class FeatureCardBlockFormTests(TestCase):
+class FeatureCardsBlockFormTests(TestCase):
     def test_form_fields(self):
-        form = FeatureCardBlockForm()
-        self.assertIn("title", form.fields)
-        self.assertIn("text", form.fields)
-        self.assertIn("number", form.fields)
-        self.assertIn("card_bg_color", form.fields)
+        form = FeatureCardsBlockForm()
+        self.assertIn("card_1_title", form.fields)
+        self.assertIn("card_1_text", form.fields)
+        self.assertIn("card_1_number", form.fields)
+        self.assertIn("card_1_bg_color", form.fields)
+        self.assertIn("card_2_title", form.fields)
+        self.assertIn("card_3_title", form.fields)
+        self.assertIn("cta_bg_color", form.fields)
+        self.assertIn("text_color", form.fields)
 
     def test_form_valid(self):
         data = {
-            "title": "Test",
-            "text": "Description",
-            "number": "01",
-            "image_alt": "",
-            "cta_text": "Click",
-            "cta_url": "/go/",
+            "card_1_title": "Test 1",
+            "card_1_text": "Description 1",
+            "card_1_number": "01",
+            "card_1_image_alt": "",
+            "card_1_cta_text": "Click",
+            "card_1_cta_url": "/go/",
+            "card_1_bg_color": "#a5bfff",
+            "card_2_title": "Test 2",
+            "card_2_text": "Description 2",
+            "card_2_number": "02",
+            "card_2_image_alt": "",
+            "card_2_cta_text": "Click",
+            "card_2_cta_url": "/go/",
+            "card_2_bg_color": "#78f2c1",
+            "card_3_title": "Test 3",
+            "card_3_text": "Description 3",
+            "card_3_number": "03",
+            "card_3_image_alt": "",
+            "card_3_cta_text": "Click",
+            "card_3_cta_url": "/go/",
+            "card_3_bg_color": "#ffd4f7",
             "cta_bg_color": "#000000",
             "cta_text_color": "#ffffff",
             "cta_hover_bg_color": "#111111",
             "cta_hover_text_color": "#eeeeee",
-            "card_bg_color": "#a5bfff",
             "text_color": "#212129",
         }
-        form = FeatureCardBlockForm(data=data)
+        form = FeatureCardsBlockForm(data=data)
         self.assertTrue(form.is_valid(), form.errors)
 
 
@@ -321,7 +350,7 @@ class IndexViewRoutingTests(TestCase):
 class LandingPageTemplateTests(TestCase):
     def test_template_config_structure(self):
         """After data migration, a landing_page template should exist with
-        the right block types in order: hero, 3 feature cards, stats."""
+        the right block types in order: hero, feature_cards, stats."""
         # We can't rely on migration being run, so test the expected config
         # structure programmatically.
         template = BlockPageTemplate.objects.filter(key="landing_page").first()
@@ -330,9 +359,7 @@ class LandingPageTemplateTests(TestCase):
                 "landing_page template not yet seeded (migration pending)"
             )
         config = template.config
-        self.assertEqual(len(config), 5)
+        self.assertEqual(len(config), 3)
         self.assertEqual(config[0]["block_type"], "landing_hero")
-        self.assertEqual(config[1]["block_type"], "feature_card")
-        self.assertEqual(config[2]["block_type"], "feature_card")
-        self.assertEqual(config[3]["block_type"], "feature_card")
-        self.assertEqual(config[4]["block_type"], "landing_stats")
+        self.assertEqual(config[1]["block_type"], "feature_cards")
+        self.assertEqual(config[2]["block_type"], "landing_stats")

@@ -94,7 +94,7 @@ class BlockRegistryTests(TestCase):
                 "org_carousel",
                 "contact_form",
                 "landing_hero",
-                "feature_card",
+                "feature_cards",
                 "landing_stats",
             },
         )

@@ -3,7 +3,7 @@ Data migration to seed the Landing Page block page template.
 
 Creates a BlockPageTemplate with key="landing_page" containing:
 - 1 LandingHeroBlock
-- 3 FeatureCardBlocks (blue, green, pink)
+- 1 FeatureCardsBlock (3 cards: blue, green, pink)
 - 1 LandingStatsBlock
 
 Default values sourced from the original landing page seed migration (0006).
@@ -40,89 +40,67 @@ _LANDING_PAGE_CONFIG = [
         },
     },
     {
-        "block_type": "feature_card",
+        "block_type": "feature_cards",
         "is_visible": True,
         "defaults": {
-            "title": "Publishing cutting-edge research.",
-            "text": (
+            "card_1_title": "Publishing cutting-edge research.",
+            "card_1_text": (
                 "We publish leading academic journals that are openly"
                 " available \u2013 free to read, published with no"
                 " embargos, and with no author payments. We believe"
                 " that high-quality research should be available to"
                 " all."
             ),
-            "number": "01",
-            "image_alt": (
+            "card_1_number": "01",
+            "card_1_image_alt": (
                 "Publishing research: an image of a man working on"
                 " a laptop"
             ),
-            "cta_text": "DOWNLOAD BROCHURE",
-            "cta_url": (
+            "card_1_cta_text": "DOWNLOAD BROCHURE",
+            "card_1_cta_url": (
                 "https://drive.google.com/file/d/"
                 "1-i_9uipCHMAOn0FGufHdF09cK7SK4FsH/view?usp=sharing"
             ),
-            "card_bg_color": "#a5bfff",
-            "text_color": "#212129",
-            "cta_bg_color": "#212129",
-            "cta_text_color": "#ffffff",
-            "cta_hover_bg_color": "#000000",
-            "cta_hover_text_color": "#ffffff",
-        },
-    },
-    {
-        "block_type": "feature_card",
-        "is_visible": True,
-        "defaults": {
-            "title": "Giving back to research communities.",
-            "text": (
+            "card_1_bg_color": "#a5bfff",
+            "card_2_title": "Giving back to research communities.",
+            "card_2_text": (
                 "We work closely with libraries and funders to support"
                 " the transition from a profit-driven commercial"
                 " publishing model to a community-governed publishing"
                 " model. All funds are invested in our journals and"
                 " the research communities that make them possible."
             ),
-            "number": "02",
-            "image_alt": (
+            "card_2_number": "02",
+            "card_2_image_alt": (
                 "Research communities: an image of women working"
                 " outside on a laptop and clipboard"
             ),
-            "cta_text": "SEARCH CATALOGUE",
-            "cta_url": (
+            "card_2_cta_text": "SEARCH CATALOGUE",
+            "card_2_cta_url": (
                 "https://www.openjournalscollective.org/catalogue/"
             ),
-            "card_bg_color": "#78f2c1",
-            "text_color": "#212129",
-            "cta_bg_color": "#212129",
-            "cta_text_color": "#ffffff",
-            "cta_hover_bg_color": "#000000",
-            "cta_hover_text_color": "#ffffff",
-        },
-    },
-    {
-        "block_type": "feature_card",
-        "is_visible": True,
-        "defaults": {
-            "title": (
+            "card_2_bg_color": "#78f2c1",
+            "card_3_title": (
                 "Building a sustainable future for academic journals."
             ),
-            "text": (
+            "card_3_text": (
                 "Our expertise as mission-driven publishers places us"
                 " at the heart of the academic community. We provide a"
                 " sustainable future for academic journals, providing"
                 " financial, legal and technological support."
             ),
-            "number": "03",
-            "image_alt": (
+            "card_3_number": "03",
+            "card_3_image_alt": (
                 "Academic journals: an image of a library with many"
                 " staircases"
             ),
-            "cta_text": "SUPPORT US",
-            "cta_url": (
+            "card_3_cta_text": "SUPPORT US",
+            "card_3_cta_url": (
                 "https://docs.google.com/forms/d/e/"
                 "1FAIpQLSdotiDEvbJJdVf5tnoWmmx0_SUAD64LcNaX0_MjjQWD1"
                 "K7aoA/viewform"
             ),
-            "card_bg_color": "#ffd4f7",
+            "card_3_bg_color": "#ffd4f7",
             "text_color": "#212129",
             "cta_bg_color": "#212129",
             "cta_text_color": "#ffffff",
