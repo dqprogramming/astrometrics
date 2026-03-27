@@ -1,3 +1,102 @@
+## 1.24.0 (2026-03-27)
+
+### Feat
+
+- **cms**: totally dynamic block-based CMS
+- **cms**: totally dynamic block-based CMS
+- **cms**: replace FeatureCardBlock with grouped FeatureCardsBlock
+- **cms**: add landing page template seed and manager view updates
+- **cms**: add landing page block types with is_landing_page routing
+- **cms**: add contact form block to Our Team page template data migration
+- **cms**: add recipient JS handlers to block page manager
+- **cms**: add ContactFormBlock with email sending and public form
+- **cms**: add About Us block page template data migration
+- **cms**: add manager and public templates for About Us blocks
+- **cms**: add 4 About Us block types with models, forms, and tests
+- **cms**: add Our Team block page template
+- **cms**: add Sort by Surname button to People List block
+- **cms**: seed board member images in OJC Boards block page template
+- **cms**: add OJC Boards block page template data migration
+- **cms**: add person list JS handlers to block page manager
+- **cms**: add manager and public templates for People List block
+- **cms**: add PeopleListBlock and PeopleListPerson models with forms
+- **cms**: show data grid immediately when adding new table
+- **cms**: replace delete checkboxes with instant-action buttons
+- **cms**: port full table editing UI to Revenue Distribution block
+- **cms**: add 5 Our Model block types with models, forms, templates and tests
+- **cms**: add uploadable hero image to Quarter Circle hero block
+- **cms**: add CTA button colour pickers to manifesto blocks
+- **cms**: add manifesto block types with models, forms, templates, and tests
+- **cms**: implement dynamic block pages with CRUD
+- **cms**: add block registry module
+- **cms**: add configurable carousel navigation dot colours
+- **cms**: sort Add Block dropdown alphabetically
+- **cms**: remove legacy Our Members fields and models
+- **cms**: update public Our Members page for block system
+- **cms**: rewrite manager JS for dynamic block system
+- **cms**: add block-based manager template and partials
+- **cms**: rewrite Our Members manager for block system
+- **cms**: add block forms and formsets
+- **cms**: migrate existing Our Members data to block system
+- **cms**: add block system models for Our Members page
+- **cms**: add per-section reset colours to default button
+- **cms**: add configurable background and text colours per section
+- **cms**: split CTA into independent Who We Are and Members Grid CTAs
+- **cms**: add drag-and-drop section reordering for Our Members page
+- **cms**: add show/hide toggles for all Our Members page sections
+- **cms**: integrate Our Members page with CMS backend
+- **cms**: add Our Members models, forms, and data migration
+- **cms**: add static Our Members page with layout and styling
+
+### Fix
+
+- **cms**: remove broken merge migration referencing nonexistent parent
+- **cms**: fix spacing between content/stats and org carousel dots
+- **cms**: restore static_image refs in Our Team template data
+- **cms**: replace team placeholder images with real photos
+- **cms**: remove placeholder image refs from Our Team template
+- **cms**: fix OJC Boards template crash and people list rendering
+- **cms**: remove Our Model dashboard card referencing deleted URL
+- **cms**: mark revenue callout as safe to prevent escaped HTML
+- **cms**: initialize TinyMCE editors on first page load
+- **cms**: reinitialize TinyMCE for all block types after drag and drop
+- **cms**: prevent double-creation of revenue distribution defaults
+- **cms**: add missing space in Revenue Distribution heading default
+- **cms**: preserve row data when adding rows to new tables on first save
+- **cms**: fix delete buttons not submitting form in revenue editor
+- **cms**: preserve cell data for newly added columns on first save
+- **cms**: fix revenue distribution tables not rendering on front end
+- **cms**: fix revenue distribution rendering and defaults
+- **cms**: make block deletion immediate via server-side POST
+- **cms**: add default lorem ipsum body text to Who We Are circle fields
+- **cms**: align Thin Band hero default bg colour with Quarter Circle hero
+- **cms**: add default body text and CSS loading to manifesto blocks
+- **cms**: fix nested form breaking save buttons on block page editor
+- **cms**: make PageBlock.content_type non-nullable and fix LOREM_BODY scope
+- **cms**: fix carousel navigation dots positioning with dynamic block IDs
+- **cms**: fix save button and make block delete client-side
+- **cms**: make colour pickers display visible colour swatch
+- **cms**: fix institution delete not hiding row visually
+- **cms**: use Python csv module for CSV import parsing
+- **cms**: fix bottom carousel text color and add member placeholder
+
+### Refactor
+
+- **cms**: remove old Landing Page singleton system
+- **cms**: use dynamic block icons in block page manager
+- **cms**: remove old Contact Us Form singleton system
+- **cms**: remove old About Us singleton system
+- **cms**: remove old Our Team singleton system
+- **cms**: remove old OJC Boards singleton system
+- **cms**: remove old Our Model singleton system
+- **cms**: remove ManifestoPageSettings model and related code
+- **cms**: remove manifesto manager URL
+- **cms**: remove manifesto frontend route and view
+- **cms**: remove Our Manifesto from Content nav
+- **cms**: rename blocks to descriptive, reusable names
+- **cms**: move Our Members to new Block Pages nav section
+- **cms**: centralise block metadata into registry
+
 ## 1.23.0 (2026-03-27)
 
 ### Feat
