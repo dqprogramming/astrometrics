@@ -118,15 +118,29 @@ Block Pages / {{ page.name }}
             </div>
             <div class="mgr-field">
                 <label class="mgr-label">Slug / URL</label>
+                {% if is_landing_page %}
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                    <span style="color:var(--muted); font-size:0.85rem;">/</span>
+                    <input type="text" value="{{ page.slug }}" class="mgr-input" style="flex:1;" disabled>
+                    <input type="hidden" name="page_slug" value="{{ page.slug }}">
+                </div>
+                <div style="font-size:0.75rem; color:var(--muted); margin-top:0.25rem;">This page is served at /</div>
+                {% else %}
                 <div style="display:flex; align-items:center; gap:0.5rem;">
                     <span style="color:var(--muted); font-size:0.85rem;">/</span>
                     <input type="text" name="page_slug" value="{{ page.slug }}" class="mgr-input" style="flex:1;">
                 </div>
+                {% endif %}
             </div>
         </div>
         <div style="display:flex; align-items:center; justify-content:space-between; margin-top:0.75rem;">
+            {% if is_landing_page %}
+            <a href="/" target="_blank" class="mgr-nav-link" style="font-size:0.8rem;">
+                <i class="bi bi-box-arrow-up-right"></i> Preview (save first to see changes)
+            {% else %}
             <a href="/{{ page.slug }}/" target="_blank" class="mgr-nav-link" style="font-size:0.8rem;">
                 <i class="bi bi-box-arrow-up-right"></i> Preview (save first to see changes)
+            {% endif %}
             </a>
             <button type="submit" class="mgr-btn mgr-btn-primary btn-sm">
                 <i class="bi bi-check2"></i> Save

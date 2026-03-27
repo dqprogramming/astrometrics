@@ -810,6 +810,7 @@ class BlockPageUpdateView(StaffRequiredMixin, View):
                 "default_page_config": default_config,
                 "available_block_types": get_all_block_types(),
                 "active_block_page_pk": page.pk,
+                "is_landing_page": page.is_landing_page,
             },
         )
 
@@ -821,7 +822,7 @@ class BlockPageUpdateView(StaffRequiredMixin, View):
         page_slug = request.POST.get("page_slug", "").strip()
         if page_name:
             page.name = page_name
-        if page_slug:
+        if page_slug and not page.is_landing_page:
             page.slug = slugify(page_slug)
 
         # Parse deleted_blocks — these are handled client-side (hidden)
@@ -1052,10 +1053,24 @@ class BlockPageCreateView(StaffRequiredMixin, View):
             slug = f"{base_slug}-{counter}"
             counter += 1
 
+        is_landing = template_key == "landing_page"
+
+        # Enforce only one landing page
+        if (
+            is_landing
+            and BlockPage.objects.filter(is_landing_page=True).exists()
+        ):
+            messages.error(
+                request,
+                "A landing page already exists. Delete it first or edit the existing one.",
+            )
+            return render(request, self.template_name, {"form": form})
+
         page = BlockPage.objects.create(
             name=name,
-            slug=slug,
+            slug="_landing_" if is_landing else slug,
             template_key=template_key,
+            is_landing_page=is_landing,
         )
 
         # Populate from template if selected
