@@ -1,300 +1,199 @@
-{% extends "public/base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
-{% block title %}{{ journal.title }}{% endblock %}
-
-{% block header_title %}<h1 class="site-header-text">{{ journal.title|truncatewords:8 }}</h1>{% endblock %}
+{% block title %}{{ journal.title }} — Open Journals Collective{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/catalogue.css' %}">
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero-section">
-    <div class="container">
-        <div class="row">
-            <div class="col-1"></div>
-            <div class="col-10">
-                <div class="hero-content">
-                    <h2 class="hero-title">
-                        {{ journal.title }}
-                    </h2>
 
-                    <p class="hero-subtitle">
-                        {{ journal.publisher.name }}
-                    </p>
+<!-- ===== JOURNAL HEADER ===== -->
+<section class="detail-header">
+  <div class="cata-container">
+    <div class="detail-header__inner">
 
-                    <!-- Badges -->
-                    <div class="badge-container">
-                        {% if journal.in_doaj %}
-                        <span class="badge badge--doaj">
-                            DOAJ Listed
-                        </span>
-                        {% endif %}
+      <!-- Cover placeholder -->
+      <div class="detail-cover shadow-medium" aria-hidden="true">
+        {% if journal.cover %}
+        <img src="{{ journal.cover.url }}" alt="{{ journal.title }} cover" class="detail-cover__img">
+        {% else %}
+        <span class="detail-cover__initial">{{ journal.title|first|upper }}</span>
+        {% endif %}
+      </div>
 
-                        {% if journal.in_scopus %}
-                        <span class="badge badge--scopus">
-                            Scopus Indexed
-                        </span>
-                        {% endif %}
+      <!-- Header body -->
+      <div class="detail-header__body">
 
-                        {% if journal.wos_impact_factor %}
-                        <span class="badge badge--impact-factor">
-                            Impact Factor: {{ journal.wos_impact_factor }}
-                        </span>
-                        {% endif %}
-
-                        {% if journal.licensing %}
-                        <span class="badge badge--license">
-                            {{ journal.licensing }}
-                        </span>
-                        {% endif %}
-                    </div>
-
-                    <!-- Actions -->
-                    <div class="action-buttons">
-                        {% if journal.journal_url %}
-                        <a href="{{ journal.journal_url }}" target="_blank" class="btn btn--primary">
-                            Visit Journal Website →
-                        </a>
-                        {% endif %}
-
-                        <a href="{% url 'journals:public_search' %}" class="btn btn--outline">
-                            ← Back to Search
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-1"></div>
+        <!-- Badges (top right) -->
+        <div class="detail-header__badges">
+          {% if journal.in_doaj %}
+          <span class="cata-doaj-badge">DOAJ</span>
+          {% endif %}
+          {% if journal.licensing %}
+          <span class="cata-license-badge">{{ journal.licensing }}</span>
+          {% endif %}
+          {% if journal.in_scopus %}
+          <span class="cata-doaj-badge">Scopus</span>
+          {% endif %}
         </div>
+
+        <h1 class="detail-header__title">{{ journal.title }}</h1>
+        <p class="detail-header__publisher">{{ journal.publisher.name }}</p>
+
+        <div class="detail-header__actions">
+          {% if journal.journal_url %}
+          <a href="{{ journal.journal_url }}"
+             target="_blank"
+             rel="noopener"
+             class="detail-btn detail-btn--filled">Journal site</a>
+          {% endif %}
+          <a href="{% url 'journals:public_search' %}"
+             class="detail-btn detail-btn--outline">Back to search</a>
+        </div>
+
+      </div>
     </div>
+  </div>
 </section>
 
-<!-- Main Content -->
-<section class="content-section">
-    <div class="container">
-        <div class="row">
-            <div class="col-1"></div>
-            <div class="col-10">
+<!-- ===== MAIN CONTENT ===== -->
+<section class="detail-content">
+  <div class="cata-container">
+    <div class="detail-content__grid">
 
-                <div class="content-grid">
+      <!-- Left column -->
+      <div class="detail-content__left">
 
-                    <!-- Left Column - Main Info -->
-                    <div>
-
-                        {% if journal.description %}
-                        <div class="section-block">
-                            <h3 class="section-heading">
-                                About
-                            </h3>
-                            <div class="section-content">
-                                {{ journal.description|linebreaks }}
-                            </div>
-                        </div>
-                        {% endif %}
-
-                        {% if journal.subjects.all %}
-                        <div class="section-block">
-                            <h3 class="section-heading section-heading--medium">
-                                Subject Areas
-                            </h3>
-                            <div class="journal-card__subjects">
-                                {% for subject in journal.subjects.all %}
-                                <span class="badge badge--subject">
-                                    {{ subject.name }}
-                                </span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-
-                        {% if journal.usps %}
-                        <div class="section-block">
-                            <h3 class="section-heading section-heading--medium">
-                                Key Features
-                            </h3>
-                            <div class="section-content">
-                                {{ journal.usps|linebreaks }}
-                            </div>
-                        </div>
-                        {% endif %}
-
-                        {% if journal.archiving_services %}
-                        <div class="section-block">
-                            <h3 class="section-heading section-heading--medium">
-                                Archiving Services
-                            </h3>
-                            <div class="section-content">
-                                {{ journal.archiving_services|linebreaks }}
-                            </div>
-                        </div>
-                        {% endif %}
-
-                    </div>
-
-                    <!-- Right Column - Metadata -->
-                    <div>
-                        <div class="metadata-panel">
-                            <h3 class="section-heading section-heading--small">
-                                Journal Information
-                            </h3>
-
-                            <div class="metadata-grid">
-
-                                {% if journal.issn %}
-                                <div class="metadata-item">
-                                    <div class="metadata-label">
-                                        ISSN
-                                    </div>
-                                    <div class="metadata-value">
-                                        {{ journal.issn }}
-                                    </div>
-                                </div>
-                                {% endif %}
-
-                                <div class="metadata-item">
-                                    <div class="metadata-label">
-                                        Publisher
-                                    </div>
-                                    <div class="metadata-value">
-                                        {{ journal.publisher.name }}
-                                    </div>
-                                </div>
-
-                                {% if journal.journal_owner %}
-                                <div class="metadata-item">
-                                    <div class="metadata-label">
-                                        Owner
-                                    </div>
-                                    <div class="metadata-value">
-                                        {{ journal.journal_owner }}
-                                    </div>
-                                </div>
-                                {% endif %}
-
-                                {% if journal.year_established %}
-                                <div class="metadata-item">
-                                    <div class="metadata-label">
-                                        Year Established
-                                    </div>
-                                    <div class="metadata-value">
-                                        {{ journal.year_established }}
-                                    </div>
-                                </div>
-                                {% endif %}
-
-                                {% if journal.languages.all %}
-                                <div class="metadata-item">
-                                    <div class="metadata-label">
-                                        Languages
-                                    </div>
-                                    <div class="metadata-value">
-                                        {{ journal.languages.all|join:", " }}
-                                    </div>
-                                </div>
-                                {% endif %}
-
-                                {% if journal.archive_years %}
-                                <div class="metadata-item">
-                                    <div class="metadata-label">
-                                        Archive Coverage
-                                    </div>
-                                    <div class="metadata-value">
-                                        {{ journal.archive_years }} years
-                                    </div>
-                                </div>
-                                {% endif %}
-
-                                {% if journal.normalized_articles %}
-                                <div class="metadata-item">
-                                    <div class="metadata-label">
-                                        Articles (Normalized)
-                                    </div>
-                                    <div class="metadata-value">
-                                        {{ journal.normalized_articles|floatformat:1 }}
-                                    </div>
-                                </div>
-                                {% endif %}
-
-                                {% if journal.package_band %}
-                                <div class="metadata-item">
-                                    <div class="metadata-label">
-                                        Package Band
-                                    </div>
-                                    <div class="metadata-value">
-                                        {{ journal.package_band.code }} - {{ journal.package_band.name }}
-                                    </div>
-                                </div>
-                                {% endif %}
-
-                            </div>
-
-                            {% if journal.journal_url or journal.publisher_url %}
-                            <div class="metadata-actions">
-                                <div class="metadata-button-grid">
-                                    {% if journal.journal_url %}
-                                    <a href="{{ journal.journal_url }}" target="_blank" class="metadata-button metadata-button--primary">
-                                        Visit Journal
-                                    </a>
-                                    {% endif %}
-
-                                    {% if journal.publisher_url %}
-                                    <a href="{{ journal.publisher_url }}" target="_blank" class="metadata-button metadata-button--secondary">
-                                        Publisher Site
-                                    </a>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Related Journals -->
-                {% if related_journals %}
-                <div class="related-journals">
-                    <h3 class="section-heading">
-                        Related Journals
-                    </h3>
-
-                    <div class="journal-grid">
-                        {% for related in related_journals %}
-                        <div class="journal-card"
-                             onclick="window.location.href='{% url 'journals:public_detail' related.pk %}'">
-
-                            <h4 class="journal-card__title">
-                                {{ related.title|truncatewords:10 }}
-                            </h4>
-
-                            <p class="journal-card__publisher">
-                                {{ related.publisher.name }}
-                            </p>
-
-                            <div class="journal-card__subjects">
-                                {% if related.in_doaj %}
-                                <span class="badge badge--doaj badge--small">
-                                    DOAJ
-                                </span>
-                                {% endif %}
-
-                                {% if related.in_scopus %}
-                                <span class="badge badge--scopus badge--small">
-                                    Scopus
-                                </span>
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
-
-            </div>
-            <div class="col-1"></div>
+        {% if journal.description %}
+        <div class="detail-section">
+          <h2 class="detail-section__heading">About</h2>
+          <div class="detail-section__body">
+            {{ journal.description|linebreaks }}
+          </div>
         </div>
+        {% endif %}
+
+        {% if journal.subjects.all %}
+        <div class="detail-section">
+          <h2 class="detail-section__heading">Subject Areas</h2>
+          <div class="detail-section__subjects">
+            {% for subject in journal.subjects.all %}
+            <span class="cata-subject-tag">{{ subject.name }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        {% if journal.archiving_services.all %}
+        <div class="detail-section">
+          <h2 class="detail-section__heading">Archiving Services</h2>
+          <ul class="detail-archiving-list">
+            {% for service in journal.archiving_services.all %}
+            <li>{{ service.name }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        {% if journal.usps %}
+        <div class="detail-section">
+          <h2 class="detail-section__heading">Financial Information</h2>
+          <div class="detail-section__body">
+            {{ journal.usps|linebreaks }}
+          </div>
+        </div>
+        {% endif %}
+
+      </div>
+
+      <!-- Right column — info panel -->
+      <div>
+        <aside class="detail-info-panel">
+          <h2 class="detail-info-panel__heading">Journal Information</h2>
+
+          <div class="detail-info-panel__fields">
+            {% if journal.issn %}
+            <div>
+              <div class="detail-info-panel__field-label">ISSN</div>
+              <div class="detail-info-panel__field-value">{{ journal.issn }}</div>
+            </div>
+            {% endif %}
+
+            <div>
+              <div class="detail-info-panel__field-label">Publishing Member</div>
+              <div class="detail-info-panel__field-value">{{ journal.publisher.name }}</div>
+            </div>
+
+            {% if journal.journal_owner %}
+            <div>
+              <div class="detail-info-panel__field-label">Owner</div>
+              <div class="detail-info-panel__field-value">{{ journal.journal_owner }}</div>
+            </div>
+            {% endif %}
+
+            {% if journal.year_established %}
+            <div>
+              <div class="detail-info-panel__field-label">Year Established</div>
+              <div class="detail-info-panel__field-value">{{ journal.year_established }}</div>
+            </div>
+            {% endif %}
+
+            {% if journal.languages.all %}
+            <div>
+              <div class="detail-info-panel__field-label">Languages</div>
+              <div class="detail-info-panel__field-value">{{ journal.languages.all|join:", " }}</div>
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="detail-info-panel__actions">
+            {% if journal.journal_url %}
+            <a href="{{ journal.journal_url }}"
+               target="_blank"
+               rel="noopener"
+               class="detail-info-btn detail-info-btn--filled">Journal site</a>
+            {% endif %}
+            {% if journal.publisher_url %}
+            <a href="{{ journal.publisher_url }}"
+               target="_blank"
+               rel="noopener"
+               class="detail-info-btn detail-info-btn--outline">Publisher site</a>
+            {% endif %}
+          </div>
+        </aside>
+      </div>
+
     </div>
+  </div>
 </section>
+
+<!-- ===== RELATED JOURNALS ===== -->
+{% if related_journals %}
+<section class="detail-related">
+  <div class="cata-container">
+    <h2 class="detail-related__heading">Related Journals</h2>
+    <div class="detail-related__grid">
+      {% for related in related_journals %}
+      <div class="related-card"
+           onclick="window.location.href='{% url 'journals:public_detail' related.pk %}'">
+
+        <div class="related-card__badge-row">
+          {% if related.in_doaj %}
+          <span class="cata-doaj-badge">DOAJ</span>
+          {% endif %}
+        </div>
+
+        <h3 class="related-card__title">{{ related.title|truncatewords:8 }}</h3>
+        <p class="related-card__publisher">{{ related.publisher.name }}</p>
+
+        <span class="related-card__link">Journal →</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
 
 {% endblock %}
