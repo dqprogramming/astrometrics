@@ -1,3 +1,9 @@
+## 1.25.2 (2026-04-04)
+
+### Fix
+
+- **staging**: change gunicorn port from 8989 to 8765
+
 ## 1.25.1 (2026-04-04)
 
 ### Fix
