@@ -1,3 +1,9 @@
+## 1.25.0 (2026-04-04)
+
+### Feat
+
+- **staging**: add nginx/gunicorn staging deployment
+
 ## 1.24.0 (2026-03-27)
 
 ### Feat
