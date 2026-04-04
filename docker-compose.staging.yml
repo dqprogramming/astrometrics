@@ -1,0 +1,61 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: astrometrics
+      POSTGRES_USER: astrometrics
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U astrometrics"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    image: astrometrics
+    volumes:
+      - staticfiles:/app/staticfiles
+      - media:/app/media
+    environment:
+      DJANGO_SETTINGS_MODULE: astrometrics.settings
+      DATABASE_URL: postgres://astrometrics:${POSTGRES_PASSWORD}@db:5432/astrometrics
+      SECRET_KEY: ${SECRET_KEY}
+      DEBUG: "false"
+      ALLOWED_HOSTS: ojc.janeway.systems
+      CSRF_TRUSTED_ORIGINS: https://ojc.janeway.systems
+      EMAIL_BACKEND: ${EMAIL_BACKEND:-django.core.mail.backends.smtp.EmailBackend}
+      DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL:-noreply@ojc.janeway.systems}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: /start.staging
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - ./nginx/staging.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - staticfiles:/app/staticfiles:ro
+      - media:/app/media:ro
+    depends_on:
+      - web
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  staticfiles:
+  media:

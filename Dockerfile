@@ -26,6 +26,10 @@ COPY ./start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 
+COPY ./start.staging /start.staging
+RUN sed -i 's/\r$//g' /start.staging
+RUN chmod +x /start.staging
+
 # create a non-root user matching the host UID/GID
 RUN groupadd -g ${GID} appuser && \
     useradd -u ${UID} -g ${GID} -m appuser
