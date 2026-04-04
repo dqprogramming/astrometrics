@@ -35,7 +35,7 @@ services:
       EMAIL_BACKEND: ${EMAIL_BACKEND:-django.core.mail.backends.smtp.EmailBackend}
       DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL:-noreply@ojc.janeway.systems}
     ports:
-      - "8989:8989"
+      - "8765:8765"
     depends_on:
       db:
         condition: service_healthy
