@@ -1,3 +1,9 @@
+## 1.25.1 (2026-04-04)
+
+### Fix
+
+- **staging**: remove nginx service, expose port 8989 to host nginx
+
 ## 1.25.0 (2026-04-04)
 
 ### Feat
