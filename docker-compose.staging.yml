@@ -23,8 +23,8 @@ services:
         GID: ${GID:-1000}
     image: astrometrics
     volumes:
-      - staticfiles:/app/staticfiles
-      - media:/app/media
+      - ./staticfiles:/app/staticfiles
+      - ./media:/app/media
     environment:
       DJANGO_SETTINGS_MODULE: astrometrics.settings
       DATABASE_URL: postgres://astrometrics:${POSTGRES_PASSWORD}@db:5432/astrometrics
@@ -44,5 +44,3 @@ services:
 
 volumes:
   pgdata:
-  staticfiles:
-  media:
