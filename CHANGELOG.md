@@ -1,3 +1,9 @@
+## 1.25.3 (2026-04-04)
+
+### Fix
+
+- **staging**: use bind mounts for staticfiles and media so nginx can serve them
+
 ## 1.25.2 (2026-04-04)
 
 ### Fix
