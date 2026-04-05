@@ -1,3 +1,9 @@
+## 1.26.0 (2026-04-05)
+
+### Feat
+
+- **cms**: add responsive mobile design to manager block editing pages
+
 ## 1.25.3 (2026-04-04)
 
 ### Fix
