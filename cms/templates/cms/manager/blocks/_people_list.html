@@ -15,7 +15,7 @@
                 {% for hidden in pform.hidden_fields %}{{ hidden }}{% endfor %}
                 <span style="display:none;">{{ pform.DELETE }}</span>
 
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div class="mgr-grid-2">
                     <div class="mgr-field">
                         <label class="mgr-label">Name</label>
                         {{ pform.name }}
@@ -74,7 +74,7 @@
                 <input type="hidden" name="children_{{ placement.pk }}-__prefix__-id" value="">
                 <input type="hidden" name="children_{{ placement.pk }}-__prefix__-sort_order" value="0">
 
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div class="mgr-grid-2">
                     <div class="mgr-field">
                         <label class="mgr-label">Name</label>
                         <input type="text" name="children_{{ placement.pk }}-__prefix__-name" class="mgr-input">

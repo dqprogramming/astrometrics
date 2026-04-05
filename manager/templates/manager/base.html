@@ -102,11 +102,18 @@
     </div>
 </div>
 
+<div class="mgr-sidebar-overlay" id="sidebarOverlay"></div>
+
 <div class="mgr-main">
     <div class="mgr-topbar">
-        <div>
-            <div class="mgr-page-title">{% block page_title %}Manager{% endblock %}</div>
-            <div class="mgr-breadcrumb">{% block breadcrumb %}{% endblock %}</div>
+        <div style="display:flex; align-items:center; gap:0.6rem;">
+            <button class="mgr-hamburger" id="sidebarToggle" aria-label="Open menu">
+                <i class="bi bi-list"></i>
+            </button>
+            <div>
+                <div class="mgr-page-title">{% block page_title %}Manager{% endblock %}</div>
+                <div class="mgr-breadcrumb">{% block breadcrumb %}{% endblock %}</div>
+            </div>
         </div>
         <div class="mgr-user">
             <button class="mgr-theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle light/dark theme">
@@ -149,6 +156,22 @@
             localStorage.setItem('mgr-theme', next);
             applyTheme(next);
         });
+    })();
+
+    /* ── Sidebar mobile toggle ── */
+    (function () {
+        const sidebar = document.querySelector('.mgr-sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const toggle  = document.getElementById('sidebarToggle');
+        if (!toggle) return;
+
+        function openSidebar()  { sidebar.classList.add('open'); overlay.classList.add('open'); }
+        function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('open'); }
+
+        toggle.addEventListener('click', function () {
+            sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+        });
+        overlay.addEventListener('click', closeSidebar);
     })();
 </script>
 {% block extra_js %}{% endblock %}

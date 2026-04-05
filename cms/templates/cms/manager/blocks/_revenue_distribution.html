@@ -79,7 +79,7 @@
             {{ table_form.description }}
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
+        <div class="mgr-grid-4" style="margin-bottom:1rem;">
             <div class="mgr-field" style="margin-bottom:0;">
                 <label class="mgr-label">Colour Preset</label>
                 {{ table_form.colour_preset }}
@@ -411,7 +411,8 @@ names (staff-only admin UI), matching the existing our-model-manager.js pattern.
             addField(div, 'Description', 'textarea', TBL_PREFIX + '-' + total + '-description', { className: 'mgr-textarea', rows: 2 });
 
             var colourGrid = document.createElement('div');
-            colourGrid.style.cssText = 'display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.75rem; margin-bottom:1rem;';
+            colourGrid.className = 'mgr-grid-4';
+            colourGrid.style.cssText = 'margin-bottom:1rem;';
 
             var presetDiv = document.createElement('div');
             presetDiv.className = 'mgr-field';

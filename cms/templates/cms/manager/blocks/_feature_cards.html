@@ -21,7 +21,7 @@
         {{ form.card_1_image }}
         {% if form.card_1_image.errors %}<div class="mgr-error">{{ form.card_1_image.errors.0 }}</div>{% endif %}
     </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+    <div class="mgr-grid-2">
         <div class="mgr-field">
             <label class="mgr-label" for="{{ form.card_1_image_alt.id_for_label }}">Image Alt Text</label>
             {{ form.card_1_image_alt }}
@@ -31,7 +31,7 @@
             {{ form.card_1_number }}
         </div>
     </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:0.5rem;">
+    <div class="mgr-grid-2" style="margin-top:0.5rem;">
         <div class="mgr-field">
             <label class="mgr-label" for="{{ form.card_1_cta_text.id_for_label }}">CTA Text</label>
             {{ form.card_1_cta_text }}
@@ -69,7 +69,7 @@
         {{ form.card_2_image }}
         {% if form.card_2_image.errors %}<div class="mgr-error">{{ form.card_2_image.errors.0 }}</div>{% endif %}
     </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+    <div class="mgr-grid-2">
         <div class="mgr-field">
             <label class="mgr-label" for="{{ form.card_2_image_alt.id_for_label }}">Image Alt Text</label>
             {{ form.card_2_image_alt }}
@@ -79,7 +79,7 @@
             {{ form.card_2_number }}
         </div>
     </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:0.5rem;">
+    <div class="mgr-grid-2" style="margin-top:0.5rem;">
         <div class="mgr-field">
             <label class="mgr-label" for="{{ form.card_2_cta_text.id_for_label }}">CTA Text</label>
             {{ form.card_2_cta_text }}
@@ -117,7 +117,7 @@
         {{ form.card_3_image }}
         {% if form.card_3_image.errors %}<div class="mgr-error">{{ form.card_3_image.errors.0 }}</div>{% endif %}
     </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+    <div class="mgr-grid-2">
         <div class="mgr-field">
             <label class="mgr-label" for="{{ form.card_3_image_alt.id_for_label }}">Image Alt Text</label>
             {{ form.card_3_image_alt }}
@@ -127,7 +127,7 @@
             {{ form.card_3_number }}
         </div>
     </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:0.5rem;">
+    <div class="mgr-grid-2" style="margin-top:0.5rem;">
         <div class="mgr-field">
             <label class="mgr-label" for="{{ form.card_3_cta_text.id_for_label }}">CTA Text</label>
             {{ form.card_3_cta_text }}

@@ -104,14 +104,14 @@ Block Pages / {{ page.name }}
 </div>
 {% endif %}
 
-<form method="post" enctype="multipart/form-data" style="max-width:900px;" id="our-members-form" data-csv-parse-url="{% url 'cms_manager:block_page_csv_parse' page.pk %}">
+<form method="post" enctype="multipart/form-data" style="max-width:900px; width:100%;" id="our-members-form" data-csv-parse-url="{% url 'cms_manager:block_page_csv_parse' page.pk %}">
     {% csrf_token %}
     <input type="hidden" name="block_order" id="block-order-field">
     <input type="hidden" name="deleted_blocks" id="deleted-blocks-field" value="">
 
     {# ── Name / Slug / Preview Box ──────────────────────────── #}
     <div class="mgr-form-card" style="margin-bottom:1.5rem;">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div class="mgr-grid-2">
             <div class="mgr-field">
                 <label class="mgr-label">Page Name</label>
                 <input type="text" name="page_name" value="{{ page.name }}" class="mgr-input">

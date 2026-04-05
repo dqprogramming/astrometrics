@@ -4,7 +4,7 @@
     {% if form.section_heading.errors %}<div class="mgr-error">{{ form.section_heading.errors.0 }}</div>{% endif %}
 </div>
 
-<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+<div class="mgr-grid-3">
     <div>
         <div class="mgr-field">
             <label class="mgr-label" for="{{ form.circle_1_title.id_for_label }}">Circle 1 Title</label>
@@ -52,7 +52,7 @@
         <span class="section-toggle-check">Show {{ form.show_cta }}</span>
     </div>
     <div data-cta-content>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div class="mgr-grid-2">
             <div class="mgr-field">
                 <label class="mgr-label" for="{{ form.cta_text.id_for_label }}">Button Text</label>
                 {{ form.cta_text }}
