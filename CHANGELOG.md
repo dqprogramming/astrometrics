@@ -1,3 +1,9 @@
+## 1.26.1 (2026-04-05)
+
+### Fix
+
+- **cms**: align concentric circles right edge with feature cards container
+
 ## 1.26.0 (2026-04-05)
 
 ### Feat
