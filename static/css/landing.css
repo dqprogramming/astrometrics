@@ -13,10 +13,10 @@
     width: 850px;
     height: 850px;
     top: -200px;
-    right: 50px;
+    /* Align SVG right edge with the .container right edge (max-width 1000px centered) */
+    right: calc(50% - 500px);
     z-index: 0;
     pointer-events: none;
-    clip-path: inset(0 28% 0 0);
 }
 
 /* --- Hero Section --- */
