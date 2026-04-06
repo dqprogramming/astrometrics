@@ -1,3 +1,9 @@
+## 1.27.0 (2026-04-06)
+
+### Feat
+
+- add sentry-sdk for error tracking
+
 ## 1.26.1 (2026-04-05)
 
 ### Fix
