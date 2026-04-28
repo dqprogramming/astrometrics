@@ -1,3 +1,9 @@
+## 1.28.0 (2026-04-28)
+
+### Feat
+
+- **files**: add dashboard file manager with controllable public URLs
+
 ## 1.27.0 (2026-04-06)
 
 ### Feat
