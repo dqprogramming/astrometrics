@@ -1,0 +1,67 @@
+{% extends "manager/base.html" %}
+{% load files_extras %}
+
+{% block title %}Files{% endblock %}
+{% block page_title %}Files{% endblock %}
+{% block breadcrumb %}<a href="{% url 'manager:dashboard' %}">Dashboard</a> / Files{% endblock %}
+{% block nav_files %}active{% endblock %}
+
+{% block content %}
+<div class="mgr-section-header">
+    <div>
+        <div class="mgr-section-title">{{ total }} file{{ total|pluralize }}</div>
+        <div class="mgr-section-sub">Upload arbitrary files; share them with controllable URLs in posts and pages.</div>
+    </div>
+    <div style="display:flex; gap:.75rem; align-items:center;">
+        <div class="mgr-search-wrap">
+            <i class="bi bi-search"></i>
+            <label for="fileSearch" class="visually-hidden">Filter files</label>
+            <input
+                class="mgr-search"
+                type="text"
+                id="fileSearch"
+                name="q"
+                value="{{ q }}"
+                placeholder="Filter files…"
+                hx-get="{% url 'files_manager:file_list' %}"
+                hx-trigger="input changed delay:300ms"
+                hx-target="#fileTable"
+                autocomplete="off"
+            >
+        </div>
+        <a href="{% url 'files_manager:file_upload' %}" class="btn-mgr-primary">
+            <i class="bi bi-cloud-upload"></i> Upload file
+        </a>
+    </div>
+</div>
+
+<div id="fileTable">
+    {% include "files/manager/file_table.html" %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function () {
+        document.body.addEventListener('click', async function (ev) {
+            const btn = ev.target.closest('[data-copy-url]');
+            if (!btn) return;
+            ev.preventDefault();
+            const url = btn.dataset.copyUrl;
+            const labelEl = btn.querySelector('.copy-label');
+            const original = labelEl ? labelEl.textContent : '';
+            try {
+                await navigator.clipboard.writeText(url);
+                btn.classList.add('copy-flash--on');
+                if (labelEl) labelEl.textContent = 'Copied';
+                setTimeout(function () {
+                    btn.classList.remove('copy-flash--on');
+                    if (labelEl) labelEl.textContent = original;
+                }, 1200);
+            } catch (e) {
+                if (labelEl) labelEl.textContent = 'Copy failed';
+            }
+        });
+    })();
+</script>
+{% endblock %}

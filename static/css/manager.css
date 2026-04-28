@@ -771,3 +771,60 @@ body {
     .mgr-user { font-size: 0.8rem; flex-wrap: wrap; gap: 0.5rem; }
     .color-picker-row { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
 }
+
+/* ── Files: drop-zone + copy flash ──────────────────────────────────────── */
+
+.file-dropzone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 2.25rem 1rem;
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+    text-align: center;
+}
+
+.file-dropzone:hover,
+.file-dropzone--drag {
+    border-color: var(--accent);
+    background: rgba(99, 102, 241, 0.06);
+}
+
+.file-dropzone__icon {
+    font-size: 1.6rem;
+    color: var(--accent);
+}
+
+.file-dropzone__primary {
+    font-weight: 500;
+    color: var(--text);
+    font-size: 0.92rem;
+}
+
+.file-dropzone__hint {
+    font-size: 0.78rem;
+    color: var(--muted);
+}
+
+.file-dropzone input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    clip: rect(0 0 0 0);
+    overflow: hidden;
+}
+
+.copy-flash--on {
+    background: rgba(34, 197, 94, 0.15) !important;
+    border-color: rgba(34, 197, 94, 0.5) !important;
+    color: #22c55e !important;
+}

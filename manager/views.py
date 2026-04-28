@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 
 from cms.models import Page, Post, Snippet
+from files.models import MediaFile
 from journals.models import (
     ArchivingService,
     Journal,
@@ -56,6 +57,14 @@ _ALL_CARDS = [
         "color": "#10b981",
         "url": reverse_lazy("cms_manager:snippet_list"),
         "tags": ["content", "cms"],
+    },
+    {
+        "title": "Files",
+        "description": "Upload and manage files with controllable public URLs for posts and pages.",
+        "icon": "file-earmark-arrow-up",
+        "color": "#22c55e",
+        "url": reverse_lazy("files_manager:file_list"),
+        "tags": ["content"],
     },
     {
         "title": "Journals",
@@ -137,6 +146,7 @@ def _counts():
         "Pages": Page.objects.count(),
         "Posts": Post.objects.count(),
         "Snippets": Snippet.objects.count(),
+        "Files": MediaFile.objects.count(),
         "Journals": Journal.objects.count(),
         "Publishers": Publisher.objects.count(),
         "Subjects": Subject.objects.count(),

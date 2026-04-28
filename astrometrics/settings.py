@@ -72,7 +72,36 @@ INSTALLED_APPS = [
     "cms",
     "manager",
     "portal",
+    "files.apps.FilesConfig",
 ]
+
+# Files app
+FILES_MAX_UPLOAD_SIZE = 50 * 1024 * 1024  # 50 MB
+FILES_BLOCKED_EXTENSIONS = {
+    "exe",
+    "sh",
+    "bat",
+    "cmd",
+    "ps1",
+    "py",
+    "php",
+    "pl",
+    "rb",
+    "jar",
+    "msi",
+    "dll",
+    "scr",
+    "vbs",
+    "vbe",
+    "js",
+    "jse",
+    "wsf",
+    "wsh",
+    "hta",
+    "lnk",
+    "com",
+}
+FILES_SIGNED_URL_TTL = 300  # seconds (used when storage backend supports it)
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

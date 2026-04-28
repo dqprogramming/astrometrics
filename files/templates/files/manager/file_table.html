@@ -1,0 +1,60 @@
+{% load files_extras %}
+<div class="mgr-table-wrap">
+    <table class="mgr-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Size</th>
+                <th>Visibility</th>
+                <th>Uploaded</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in files %}
+            <tr>
+                <td>
+                    <div style="font-weight:500;">{{ file.display_name }}</div>
+                    <div style="font-family:monospace; font-size:0.75rem; color:var(--muted); margin-top:.15rem;">/files/{{ file.slug }}.{{ file.extension }}</div>
+                </td>
+                <td>
+                    <span class="mgr-badge mgr-badge-gray" style="text-transform:uppercase; font-family:monospace;">{{ file.extension }}</span>
+                </td>
+                <td style="color:var(--muted); font-size:.82rem;">{{ file.size|filesizeformat }}</td>
+                <td>
+                    {% if file.is_public %}
+                    <span class="mgr-badge mgr-badge-green"><i class="bi bi-globe me-1" style="font-size:.7rem;"></i>Public</span>
+                    {% else %}
+                    <span class="mgr-badge mgr-badge-gray"><i class="bi bi-shield-lock me-1" style="font-size:.7rem;"></i>Staff only</span>
+                    {% endif %}
+                </td>
+                <td style="color:var(--muted); font-size:0.82rem;">{{ file.created_at|date:"d M Y" }}</td>
+                <td style="text-align:right;">
+                    <div style="display:flex; gap:.5rem; justify-content:flex-end;">
+                        <button type="button"
+                                class="btn-mgr-secondary copy-flash"
+                                style="padding:.3rem .7rem;"
+                                data-copy-url="{{ request.scheme }}://{{ request.get_host }}{{ file.public_url }}"
+                                title="Copy public URL">
+                            <i class="bi bi-link-45deg"></i>
+                            <span class="copy-label">Copy URL</span>
+                        </button>
+                        <a href="{{ file.public_url }}" target="_blank" rel="noopener" class="btn-mgr-secondary" style="padding:.3rem .7rem;" title="Open"><i class="bi bi-box-arrow-up-right"></i></a>
+                        <a href="{% url 'files_manager:file_edit' file.pk %}" class="btn-mgr-secondary" style="padding:.3rem .7rem;" title="Edit"><i class="bi bi-pencil"></i></a>
+                        <a href="{% url 'files_manager:file_delete' file.pk %}" class="btn-mgr-danger" style="padding:.3rem .7rem;" title="Delete"><i class="bi bi-trash"></i></a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align:center; padding:3rem; color:var(--muted);">
+                    <i class="bi bi-cloud-upload" style="font-size:2rem; display:block; margin-bottom:.6rem; opacity:.6;"></i>
+                    <div style="font-weight:500; margin-bottom:.3rem;">No files yet</div>
+                    <div style="font-size:.85rem;">Upload your first file to share it via a clean URL.</div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

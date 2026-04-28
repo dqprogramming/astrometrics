@@ -13,8 +13,11 @@ urlpatterns = [
     path("manager/cms/", include("cms.manager_urls")),
     path("manager/catalogue/", include("journals.manager_urls")),
     path("manager/portal/", include("portal.manager_urls")),
+    path("manager/files/", include("files.manager_urls")),
     path("portal/", include("portal.urls")),
     path("catalogue/", include("journals.urls")),
+    # Public file serving — must precede the cms catch-all `<slug>` route
+    path("files/", include("files.urls")),
     path("", include("cms.urls")),
 ]
 

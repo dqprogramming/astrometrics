@@ -1,0 +1,107 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Edit file{% endblock %}
+{% block page_title %}Edit file{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> /
+<a href="{% url 'files_manager:file_list' %}">Files</a> /
+{{ object.display_name }}
+{% endblock %}
+{% block nav_files %}active{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+
+    <div style="display:grid; grid-template-columns:1fr 320px; gap:1.25rem; align-items:start;">
+
+        <div class="mgr-form-card">
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.display_name.id_for_label }}">Display name</label>
+                {{ form.display_name }}
+                <div class="mgr-help">An internal label so you can find this file later.</div>
+                {% if form.display_name.errors %}<div class="mgr-error">{{ form.display_name.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.slug.id_for_label }}">URL slug</label>
+                {{ form.slug }}
+                <div class="mgr-help">Public URL: <code>/files/{{ object.slug }}.{{ object.extension }}</code></div>
+                {% if form.slug.errors %}<div class="mgr-error">{{ form.slug.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="mgr-field" style="margin-bottom:0;">
+                <label class="mgr-label" for="{{ form.description.id_for_label }}">Description (optional)</label>
+                {{ form.description }}
+                {% if form.description.errors %}<div class="mgr-error">{{ form.description.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+            <div class="mgr-form-card">
+                <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">Visibility</div>
+                <div class="mgr-field" style="margin-bottom:0;">
+                    <label class="mgr-switch">
+                        {{ form.is_public }}
+                        <span class="mgr-switch__track"></span>
+                        <span class="mgr-switch__label">Public</span>
+                    </label>
+                    <div class="mgr-help">Public files are accessible to anyone with the URL.</div>
+                </div>
+            </div>
+
+            <div class="mgr-form-card">
+                <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">Public URL</div>
+                <div style="display:flex; gap:.5rem; align-items:center; margin-bottom:.75rem;">
+                    <code style="flex:1; background:var(--surface-2, var(--surface)); padding:.5rem .65rem; border-radius:6px; font-size:.8rem; word-break:break-all;">{{ request.scheme }}://{{ request.get_host }}{{ object.public_url }}</code>
+                </div>
+                <div style="display:flex; gap:.5rem;">
+                    <button type="button"
+                            class="btn-mgr-secondary copy-flash"
+                            style="flex:1; justify-content:center;"
+                            data-copy-url="{{ request.scheme }}://{{ request.get_host }}{{ object.public_url }}">
+                        <i class="bi bi-link-45deg"></i>
+                        <span class="copy-label">Copy URL</span>
+                    </button>
+                    <a href="{{ object.public_url }}" target="_blank" rel="noopener" class="btn-mgr-secondary" style="flex:1; justify-content:center;">
+                        <i class="bi bi-box-arrow-up-right"></i> Open
+                    </a>
+                </div>
+            </div>
+
+            <div style="display:flex; gap:.75rem; flex-wrap:wrap;">
+                <button type="submit" class="btn-mgr-primary" style="flex:1; justify-content:center;">
+                    <i class="bi bi-check2"></i> Save
+                </button>
+                <a href="{% url 'files_manager:file_list' %}" class="btn-mgr-secondary" style="flex:1; justify-content:center;">
+                    Cancel
+                </a>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    (function () {
+        document.body.addEventListener('click', async function (ev) {
+            const btn = ev.target.closest('[data-copy-url]');
+            if (!btn) return;
+            ev.preventDefault();
+            const url = btn.dataset.copyUrl;
+            const labelEl = btn.querySelector('.copy-label');
+            const original = labelEl ? labelEl.textContent : '';
+            try {
+                await navigator.clipboard.writeText(url);
+                btn.classList.add('copy-flash--on');
+                if (labelEl) labelEl.textContent = 'Copied';
+                setTimeout(function () {
+                    btn.classList.remove('copy-flash--on');
+                    if (labelEl) labelEl.textContent = original;
+                }, 1200);
+            } catch (e) {
+                if (labelEl) labelEl.textContent = 'Copy failed';
+            }
+        });
+    })();
+</script>
+{% endblock %}

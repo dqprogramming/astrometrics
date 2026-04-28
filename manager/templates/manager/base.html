@@ -59,6 +59,9 @@
         <a href="{% url 'cms_manager:snippet_list' %}" class="mgr-nav-link {% block nav_snippets %}{% endblock %}">
             <i class="bi bi-puzzle"></i> Snippets
         </a>
+        <a href="{% url 'files_manager:file_list' %}" class="mgr-nav-link {% block nav_files %}{% endblock %}">
+            <i class="bi bi-file-earmark-arrow-up"></i> Files
+        </a>
 
         <span class="mgr-nav-section">Catalogue</span>
         <a href="{% url 'journals_manager:journal_list' %}" class="mgr-nav-link {% block nav_journals %}{% endblock %}">

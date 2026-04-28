@@ -1,0 +1,44 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Delete file{% endblock %}
+{% block page_title %}Delete file{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> /
+<a href="{% url 'files_manager:file_list' %}">Files</a> /
+Delete
+{% endblock %}
+{% block nav_files %}active{% endblock %}
+
+{% block content %}
+<div style="max-width:480px;">
+    <div class="mgr-form-card">
+        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.25rem;">
+            <div style="width:44px; height:44px; border-radius:8px; background:rgba(248,113,113,.12); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <i class="bi bi-trash" style="color:#f87171; font-size:1.2rem;"></i>
+            </div>
+            <div>
+                <div style="font-weight:600; font-size:.95rem;">Confirm deletion</div>
+                <div style="color:var(--muted); font-size:.82rem; margin-top:.1rem;">This will remove both the metadata and the underlying file. This action cannot be undone.</div>
+            </div>
+        </div>
+
+        <p style="font-size:.875rem; color:var(--muted); margin-bottom:1rem;">
+            Are you sure you want to delete <strong style="color:var(--text);">"{{ object.display_name }}"</strong>?
+        </p>
+        <p style="font-size:.8rem; color:var(--muted); margin-bottom:1.5rem;">
+            Public URL: <code>/files/{{ object.slug }}.{{ object.extension }}</code><br>
+            Existing links to this URL will return 404 once deleted.
+        </p>
+
+        <form method="post" style="display:flex; gap:.75rem;">
+            {% csrf_token %}
+            <button type="submit" class="btn-mgr-danger" style="flex:1; justify-content:center;">
+                <i class="bi bi-trash"></i> Delete
+            </button>
+            <a href="{% url 'files_manager:file_list' %}" class="btn-mgr-secondary" style="flex:1; justify-content:center;">
+                Cancel
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

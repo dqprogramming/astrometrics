@@ -1,0 +1,147 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Upload file{% endblock %}
+{% block page_title %}Upload file{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'manager:dashboard' %}">Dashboard</a> /
+<a href="{% url 'files_manager:file_list' %}">Files</a> /
+Upload
+{% endblock %}
+{% block nav_files %}active{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div style="display:grid; grid-template-columns:1fr 320px; gap:1.25rem; align-items:start;">
+
+        <div class="mgr-form-card">
+            <div class="mgr-field">
+                <label class="mgr-label">File</label>
+                <label class="file-dropzone" id="fileDropzone">
+                    {{ form.file }}
+                    <div class="file-dropzone__icon"><i class="bi bi-cloud-upload"></i></div>
+                    <div class="file-dropzone__primary">Drag &amp; drop a file here, or click to browse</div>
+                    <div class="file-dropzone__hint" id="dropHint">Max {{ FILES_MAX_UPLOAD_SIZE_MB }} MB. Executables and scripts are not permitted.</div>
+                </label>
+                {% if form.file.errors %}<div class="mgr-error">{{ form.file.errors.0 }}</div>{% endif %}
+                {% if form.non_field_errors %}<div class="mgr-error">{{ form.non_field_errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.display_name.id_for_label }}">Display name</label>
+                {{ form.display_name }}
+                <div class="mgr-help">An internal label so you can find this file later.</div>
+                {% if form.display_name.errors %}<div class="mgr-error">{{ form.display_name.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="mgr-field">
+                <label class="mgr-label" for="{{ form.slug.id_for_label }}">URL slug</label>
+                {{ form.slug }}
+                <div class="mgr-help" id="slugPreview">Public URL: <code>/files/&lt;slug&gt;.&lt;ext&gt;</code></div>
+                {% if form.slug.errors %}<div class="mgr-error">{{ form.slug.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="mgr-field" style="margin-bottom:0;">
+                <label class="mgr-label" for="{{ form.description.id_for_label }}">Description (optional)</label>
+                {{ form.description }}
+                {% if form.description.errors %}<div class="mgr-error">{{ form.description.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+            <div class="mgr-form-card">
+                <div style="font-size:0.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem;">Visibility</div>
+                <div class="mgr-field" style="margin-bottom:0;">
+                    <label class="mgr-switch">
+                        {{ form.is_public }}
+                        <span class="mgr-switch__track"></span>
+                        <span class="mgr-switch__label">Public</span>
+                    </label>
+                    <div class="mgr-help">Public files are accessible to anyone with the URL. Staff-only files require a manager login.</div>
+                </div>
+            </div>
+
+            <div style="display:flex; gap:.75rem; flex-wrap:wrap;">
+                <button type="submit" class="btn-mgr-primary" style="flex:1; justify-content:center;">
+                    <i class="bi bi-cloud-upload"></i> Upload
+                </button>
+                <a href="{% url 'files_manager:file_list' %}" class="btn-mgr-secondary" style="flex:1; justify-content:center;">
+                    Cancel
+                </a>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    (function () {
+        // Auto-derive slug from display name (only while user hasn't edited slug)
+        const displayInput = document.getElementById('{{ form.display_name.id_for_label }}');
+        const slugInput = document.getElementById('{{ form.slug.id_for_label }}');
+        const preview = document.getElementById('slugPreview');
+        let slugTouched = !!(slugInput && slugInput.value);
+
+        function slugify(text) {
+            return text
+                .toString()
+                .toLowerCase()
+                .normalize('NFKD').replace(/[̀-ͯ]/g, '')
+                .replace(/[^a-z0-9\s-]/g, '')
+                .trim()
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
+        }
+
+        if (slugInput) {
+            slugInput.addEventListener('input', function () { slugTouched = true; updatePreview(); });
+        }
+        if (displayInput) {
+            displayInput.addEventListener('input', function () {
+                if (!slugTouched && slugInput) {
+                    slugInput.value = slugify(displayInput.value);
+                }
+                updatePreview();
+            });
+        }
+
+        function updatePreview() {
+            if (!preview || !slugInput) return;
+            const slug = slugInput.value || '<slug>';
+            const code = preview.querySelector('code');
+            if (code) code.textContent = '/files/' + slug + '.<ext>';
+        }
+
+        // Drop zone styling
+        const dropzone = document.getElementById('fileDropzone');
+        const fileInput = dropzone ? dropzone.querySelector('input[type=file]') : null;
+        const hint = document.getElementById('dropHint');
+        if (dropzone && fileInput) {
+            ['dragenter', 'dragover'].forEach(function (e) {
+                dropzone.addEventListener(e, function (ev) {
+                    ev.preventDefault();
+                    dropzone.classList.add('file-dropzone--drag');
+                });
+            });
+            ['dragleave', 'drop'].forEach(function (e) {
+                dropzone.addEventListener(e, function (ev) {
+                    ev.preventDefault();
+                    dropzone.classList.remove('file-dropzone--drag');
+                });
+            });
+            dropzone.addEventListener('drop', function (ev) {
+                if (ev.dataTransfer && ev.dataTransfer.files.length) {
+                    fileInput.files = ev.dataTransfer.files;
+                    fileInput.dispatchEvent(new Event('change'));
+                }
+            });
+            fileInput.addEventListener('change', function () {
+                if (fileInput.files.length && hint) {
+                    hint.textContent = 'Selected: ' + fileInput.files[0].name +
+                        ' (' + Math.round(fileInput.files[0].size / 1024) + ' KB)';
+                }
+            });
+        }
+    })();
+</script>
+{% endblock %}
