@@ -276,6 +276,17 @@ _RESTRICTED_TINYMCE = {
 }
 
 
+_INLINE_TINYMCE = {
+    "height": 120,
+    "menubar": False,
+    "plugins": "",
+    "toolbar": "bold italic underline | superscript subscript | removeformat",
+    "forced_root_block": "",
+    "valid_elements": "strong/b,em/i,u,br,sub,sup,span,a[href|title|rel|target]",
+    "invalid_elements": "p,div,h1,h2,h3,h4,h5,h6,ul,ol,li,blockquote,table,script,iframe,object,embed,form,input",
+}
+
+
 _MANIFESTO_TINYMCE = {
     "height": 200,
     "menubar": False,
@@ -755,11 +766,13 @@ class RevenueDistributionBlockForm(forms.ModelForm):
         ]
         widgets = {
             "heading": forms.TextInput(attrs={"class": "mgr-input"}),
-            "description": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 3}
+            "description": TinyMCE(
+                attrs={"aria-label": "Section description"},
+                mce_attrs=_RESTRICTED_TINYMCE,
             ),
-            "callout": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 3}
+            "callout": TinyMCE(
+                attrs={"aria-label": "Callout"},
+                mce_attrs=_RESTRICTED_TINYMCE,
             ),
             "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
             "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
@@ -801,8 +814,9 @@ class RevenuePackageTableForm(forms.ModelForm):
         ]
         widgets = {
             "title": forms.TextInput(attrs={"class": "mgr-input"}),
-            "description": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 2}
+            "description": TinyMCE(
+                attrs={"aria-label": "Package description"},
+                mce_attrs=_INLINE_TINYMCE,
             ),
             "colour_preset": forms.Select(attrs={"class": "mgr-input"}),
             "custom_header_bg": forms.TextInput(
