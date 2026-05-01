@@ -79,6 +79,38 @@ def sanitize_html(value):
     )
 
 
+INLINE_ALLOWED_TAGS = [
+    "a",
+    "abbr",
+    "b",
+    "br",
+    "em",
+    "i",
+    "s",
+    "span",
+    "strong",
+    "sub",
+    "sup",
+    "u",
+]
+
+
+def sanitize_inline_html(value):
+    """Sanitize HTML to inline-only tags (no block-level elements).
+
+    Used for fields rendered inside contexts where block-level tags such as
+    ``<p>`` or ``<div>`` would be invalid (for example inside ``<th>``).
+    """
+    if not value:
+        return value
+    return bleach.clean(
+        value,
+        tags=INLINE_ALLOWED_TAGS,
+        attributes=ALLOWED_ATTRIBUTES,
+        strip=True,
+    )
+
+
 class Category(models.Model):
     """A category for grouping news posts."""
 
@@ -1615,6 +1647,8 @@ class RevenueDistributionBlock(BaseBlock):
         return f"RevenueDistributionBlock #{self.pk}"
 
     def save(self, *args, **kwargs):
+        self.description = sanitize_html(self.description)
+        self.callout = sanitize_html(self.callout)
         super().save(*args, **kwargs)
 
     def get_public_context(self):
@@ -1733,6 +1767,11 @@ class RevenuePackageTable(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        # Description renders inside <th>, where block-level tags are invalid.
+        self.description = sanitize_inline_html(self.description)
+        super().save(*args, **kwargs)
 
     @property
     def header_bg_colour(self):
