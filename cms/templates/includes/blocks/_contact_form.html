@@ -4,8 +4,8 @@
 <section class="team-contact" style="background-color: {{ block.bg_color }}; color: {{ block.text_color }};" aria-labelledby="contact-heading-{{ block.pk }}">
     <div class="container">
         <div class="team-contact-inner">
-            <div class="team-contact-text">
-                <p id="contact-heading-{{ block.pk }}">{{ block.intro_text }}</p>
+            <div class="team-contact-text" id="contact-heading-{{ block.pk }}">
+                {{ block.intro_text|safe }}
             </div>
             <div class="team-contact-form">
                 {% if contact_sent %}

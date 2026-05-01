@@ -5,7 +5,7 @@
         <div class="model-revenue-layout">
             <div class="model-revenue-header">
                 <h2 id="model-revenue-heading-{{ block.pk }}" class="spectral-bold">{{ block.heading }}</h2>
-                <p>{{ block.description }}</p>
+                <div class="model-revenue-description">{{ block.description|safe }}</div>
             </div>
 
             <div class="model-revenue-tables">
@@ -24,12 +24,12 @@
                 {% for table in tables %}
                 <!-- {{ table.title }} -->
                 <table class="model-packages-table" aria-labelledby="table-heading-{{ table.pk }}">
-                    <caption class="sr-only">{{ table.title }} — {{ table.description }}</caption>
+                    <caption class="sr-only">{{ table.title }} — {{ table.description|striptags }}</caption>
                     <thead>
                         <tr class="package-header" style="background-color: {{ table.header_bg_colour }}; color: {{ table.text_colour }};">
                             <th scope="colgroup" colspan="{{ num_columns }}" id="table-heading-{{ table.pk }}">
                                 <strong>{{ table.title }}</strong><br>
-                                {{ table.description }}
+                                {{ table.description|safe }}
                             </th>
                         </tr>
                     </thead>

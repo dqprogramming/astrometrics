@@ -276,6 +276,17 @@ _RESTRICTED_TINYMCE = {
 }
 
 
+_INLINE_TINYMCE = {
+    "height": 120,
+    "menubar": False,
+    "plugins": "",
+    "toolbar": "bold italic underline | superscript subscript | removeformat",
+    "forced_root_block": "",
+    "valid_elements": "strong/b,em/i,u,br,sub,sup,span,a[href|title|rel|target]",
+    "invalid_elements": "p,div,h1,h2,h3,h4,h5,h6,ul,ol,li,blockquote,table,script,iframe,object,embed,form,input",
+}
+
+
 _MANIFESTO_TINYMCE = {
     "height": 200,
     "menubar": False,
@@ -671,8 +682,9 @@ class OJCModelBlockForm(forms.ModelForm):
                 attrs={"aria-label": "OJC Model body"},
                 mce_attrs=_RESTRICTED_TINYMCE,
             ),
-            "collections_label": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 2}
+            "collections_label": TinyMCE(
+                attrs={"aria-label": "Collections label"},
+                mce_attrs=_RESTRICTED_TINYMCE,
             ),
             "collection_1_number": forms.TextInput(
                 attrs={"class": "mgr-input", "style": "max-width:80px;"}
@@ -755,11 +767,13 @@ class RevenueDistributionBlockForm(forms.ModelForm):
         ]
         widgets = {
             "heading": forms.TextInput(attrs={"class": "mgr-input"}),
-            "description": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 3}
+            "description": TinyMCE(
+                attrs={"aria-label": "Section description"},
+                mce_attrs=_RESTRICTED_TINYMCE,
             ),
-            "callout": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 3}
+            "callout": TinyMCE(
+                attrs={"aria-label": "Callout"},
+                mce_attrs=_RESTRICTED_TINYMCE,
             ),
             "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
             "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
@@ -801,8 +815,9 @@ class RevenuePackageTableForm(forms.ModelForm):
         ]
         widgets = {
             "title": forms.TextInput(attrs={"class": "mgr-input"}),
-            "description": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 2}
+            "description": TinyMCE(
+                attrs={"aria-label": "Package description"},
+                mce_attrs=_INLINE_TINYMCE,
             ),
             "colour_preset": forms.Select(attrs={"class": "mgr-input"}),
             "custom_header_bg": forms.TextInput(
@@ -892,8 +907,9 @@ class WideHeaderCirclesBlockForm(forms.ModelForm):
         ]
         widgets = {
             "heading": forms.TextInput(attrs={"class": "mgr-input"}),
-            "sub_heading": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 3}
+            "sub_heading": TinyMCE(
+                attrs={"aria-label": "Hero sub-heading"},
+                mce_attrs=_RESTRICTED_TINYMCE,
             ),
             "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
             "text_color": forms.TextInput(attrs=_COLOR_ATTRS),
@@ -1000,8 +1016,9 @@ class ContactFormBlockForm(forms.ModelForm):
         model = ContactFormBlock
         fields = ["intro_text", "from_email", "bg_color", "text_color"]
         widgets = {
-            "intro_text": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 3}
+            "intro_text": TinyMCE(
+                attrs={"aria-label": "Intro text"},
+                mce_attrs=_RESTRICTED_TINYMCE,
             ),
             "from_email": forms.EmailInput(attrs={"class": "mgr-input"}),
             "bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
@@ -1111,8 +1128,9 @@ class FeatureCardsBlockForm(forms.ModelForm):
         widgets = {
             # Card 1
             "card_1_title": forms.TextInput(attrs={"class": "mgr-input"}),
-            "card_1_text": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 4}
+            "card_1_text": TinyMCE(
+                attrs={"aria-label": "Card 1 text"},
+                mce_attrs=_RESTRICTED_TINYMCE,
             ),
             "card_1_image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
             "card_1_number": forms.TextInput(
@@ -1128,8 +1146,9 @@ class FeatureCardsBlockForm(forms.ModelForm):
             "card_1_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
             # Card 2
             "card_2_title": forms.TextInput(attrs={"class": "mgr-input"}),
-            "card_2_text": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 4}
+            "card_2_text": TinyMCE(
+                attrs={"aria-label": "Card 2 text"},
+                mce_attrs=_RESTRICTED_TINYMCE,
             ),
             "card_2_image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
             "card_2_number": forms.TextInput(
@@ -1145,8 +1164,9 @@ class FeatureCardsBlockForm(forms.ModelForm):
             "card_2_bg_color": forms.TextInput(attrs=_COLOR_ATTRS),
             # Card 3
             "card_3_title": forms.TextInput(attrs={"class": "mgr-input"}),
-            "card_3_text": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 4}
+            "card_3_text": TinyMCE(
+                attrs={"aria-label": "Card 3 text"},
+                mce_attrs=_RESTRICTED_TINYMCE,
             ),
             "card_3_image_alt": forms.TextInput(attrs={"class": "mgr-input"}),
             "card_3_number": forms.TextInput(
