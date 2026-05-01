@@ -682,8 +682,9 @@ class OJCModelBlockForm(forms.ModelForm):
                 attrs={"aria-label": "OJC Model body"},
                 mce_attrs=_RESTRICTED_TINYMCE,
             ),
-            "collections_label": forms.Textarea(
-                attrs={"class": "mgr-textarea", "rows": 2}
+            "collections_label": TinyMCE(
+                attrs={"aria-label": "Collections label"},
+                mce_attrs=_RESTRICTED_TINYMCE,
             ),
             "collection_1_number": forms.TextInput(
                 attrs={"class": "mgr-input", "style": "max-width:80px;"}

@@ -12,6 +12,7 @@ from django.template.loader import render_to_string
 from django.test import SimpleTestCase, TestCase
 
 from cms.models import (
+    OJCModelBlock,
     RevenueDistributionBlock,
     RevenuePackageCell,
     RevenuePackageRow,
@@ -172,3 +173,27 @@ class RevenueDistributionTemplateRenderTests(TestCase):
         # The <caption class="sr-only"> should contain plain "Tier 1Notes"
         # with no <strong> or <br> tags.
         self.assertIn("Package A (full fat) — Tier 1", out)
+
+
+class OJCModelBlockHtmlSafetyTests(TestCase):
+    """Same bug pattern as RevenueDistribution: stored <p> tags in
+    collections_label rendered as escaped text inside an outer <p>."""
+
+    def test_collections_label_sanitised_on_save_keeps_p(self):
+        block = OJCModelBlock.objects.create(
+            collections_label="<p>We offer three.</p><script>x</script>"
+        )
+        self.assertNotIn("<script", block.collections_label)
+        self.assertIn("<p>We offer three.</p>", block.collections_label)
+
+    def test_template_does_not_double_wrap_collections_label(self):
+        block = OJCModelBlock.objects.create(
+            collections_label="<p>We offer three.</p>"
+        )
+        out = render_to_string(
+            "includes/blocks/_ojc_model.html", {"block": block}
+        )
+        self.assertNotIn("&lt;p&gt;", out)
+        self.assertNotIn("<p><p>", out)
+        self.assertNotIn("</p></p>", out)
+        self.assertIn("We offer three.", out)

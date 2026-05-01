@@ -1,11 +1,11 @@
 """
-Normalise stored HTML in RevenueDistributionBlock and RevenuePackageTable so
-existing rows render correctly under the new template/sanitiser conventions:
+Normalise stored HTML in revenue distribution and OJC model blocks so existing
+rows render correctly under the new template/sanitiser conventions:
 
-* RevenueDistributionBlock.description / .callout: keep block-level HTML and
-  pass through bleach with the standard allow-list, wrapping plain-text values
-  in ``<p>`` so the section still renders as a paragraph after the template
-  drops its outer ``<p>`` wrapper.
+* RevenueDistributionBlock.description / .callout and OJCModelBlock.collections_label:
+  keep block-level HTML and pass through bleach with the standard allow-list,
+  wrapping plain-text values in ``<p>`` so the section still renders as a
+  paragraph after the template drops its outer ``<p>`` wrapper.
 * RevenuePackageTable.description: rendered inside ``<th>`` where block tags
   are invalid, so strip everything down to inline-only HTML (``<p>foo</p>``
   becomes ``foo``).
@@ -72,6 +72,7 @@ def forwards(apps, schema_editor):
         "cms", "RevenueDistributionBlock"
     )
     RevenuePackageTable = apps.get_model("cms", "RevenuePackageTable")
+    OJCModelBlock = apps.get_model("cms", "OJCModelBlock")
 
     for block in RevenueDistributionBlock.objects.all():
         new_description = _normalise_block_text(block.description)
@@ -89,6 +90,12 @@ def forwards(apps, schema_editor):
         if new_description != table.description:
             table.description = new_description
             table.save(update_fields=["description"])
+
+    for block in OJCModelBlock.objects.all():
+        new_label = _normalise_block_text(block.collections_label)
+        if new_label != block.collections_label:
+            block.collections_label = new_label
+            block.save(update_fields=["collections_label"])
 
 
 def reverse(apps, schema_editor):

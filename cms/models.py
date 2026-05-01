@@ -1507,6 +1507,7 @@ class OJCModelBlock(BaseBlock):
 
     def save(self, *args, **kwargs):
         self.body = sanitize_html(self.body)
+        self.collections_label = sanitize_html(self.collections_label)
         super().save(*args, **kwargs)
 
 
