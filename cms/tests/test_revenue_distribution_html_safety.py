@@ -12,12 +12,15 @@ from django.template.loader import render_to_string
 from django.test import SimpleTestCase, TestCase
 
 from cms.models import (
+    ContactFormBlock,
+    FeatureCardsBlock,
     OJCModelBlock,
     RevenueDistributionBlock,
     RevenuePackageCell,
     RevenuePackageRow,
     RevenuePackageTable,
     RevenueTableColumn,
+    WideHeaderCirclesBlock,
     sanitize_inline_html,
 )
 
@@ -197,3 +200,86 @@ class OJCModelBlockHtmlSafetyTests(TestCase):
         self.assertNotIn("<p><p>", out)
         self.assertNotIn("</p></p>", out)
         self.assertIn("We offer three.", out)
+
+
+class WideHeaderCirclesBlockHtmlSafetyTests(TestCase):
+    """Preventive hardening for WideHeaderCirclesBlock.sub_heading."""
+
+    def test_sub_heading_sanitised_on_save_keeps_p(self):
+        block = WideHeaderCirclesBlock.objects.create(
+            sub_heading="<p>Mission text.</p><script>x</script>"
+        )
+        self.assertNotIn("<script", block.sub_heading)
+        self.assertIn("<p>Mission text.</p>", block.sub_heading)
+
+    def test_template_does_not_double_wrap_sub_heading(self):
+        block = WideHeaderCirclesBlock.objects.create(
+            sub_heading="<p>Mission text.</p>"
+        )
+        out = render_to_string(
+            "includes/blocks/_wide_header_circles.html", {"block": block}
+        )
+        self.assertNotIn("&lt;p&gt;", out)
+        self.assertNotIn("<p><p>", out)
+        self.assertNotIn("</p></p>", out)
+        self.assertIn("Mission text.", out)
+
+
+class ContactFormBlockHtmlSafetyTests(TestCase):
+    """Preventive hardening for ContactFormBlock.intro_text."""
+
+    def test_intro_text_sanitised_on_save_keeps_p(self):
+        block = ContactFormBlock.objects.create(
+            intro_text="<p>Contact us.</p><script>x</script>"
+        )
+        self.assertNotIn("<script", block.intro_text)
+        self.assertIn("<p>Contact us.</p>", block.intro_text)
+
+    def test_template_does_not_double_wrap_intro_text(self):
+        block = ContactFormBlock.objects.create(
+            intro_text="<p>Contact us.</p>"
+        )
+        out = render_to_string(
+            "includes/blocks/_contact_form.html", {"block": block}
+        )
+        self.assertNotIn("&lt;p&gt;", out)
+        self.assertNotIn("<p><p>", out)
+        self.assertNotIn("</p></p>", out)
+        self.assertIn("Contact us.", out)
+
+
+class FeatureCardsBlockHtmlSafetyTests(TestCase):
+    """Preventive hardening for FeatureCardsBlock card_*_text fields."""
+
+    def test_card_texts_sanitised_on_save_keep_p(self):
+        block = FeatureCardsBlock.objects.create(
+            card_1_text="<p>One.</p><script>a</script>",
+            card_2_text="<p>Two.</p><iframe></iframe>",
+            card_3_text="<p>Three.</p><style>x</style>",
+        )
+        for value in (
+            block.card_1_text,
+            block.card_2_text,
+            block.card_3_text,
+        ):
+            self.assertNotIn("<script", value)
+            self.assertNotIn("<iframe", value)
+            self.assertNotIn("<style", value)
+        self.assertIn("<p>One.</p>", block.card_1_text)
+        self.assertIn("<p>Two.</p>", block.card_2_text)
+        self.assertIn("<p>Three.</p>", block.card_3_text)
+
+    def test_template_does_not_double_wrap_card_texts(self):
+        block = FeatureCardsBlock.objects.create(
+            card_1_text="<p>One.</p>",
+            card_2_text="<p>Two.</p>",
+            card_3_text="<p>Three.</p>",
+        )
+        out = render_to_string(
+            "includes/blocks/_feature_cards.html", {"block": block}
+        )
+        self.assertNotIn("&lt;p&gt;", out)
+        self.assertNotIn("<p><p>", out)
+        self.assertNotIn("</p></p>", out)
+        for word in ("One.", "Two.", "Three."):
+            self.assertIn(word, out)

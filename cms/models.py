@@ -1927,6 +1927,10 @@ class WideHeaderCirclesBlock(BaseBlock):
     def __str__(self):
         return f"WideHeaderCirclesBlock #{self.pk}"
 
+    def save(self, *args, **kwargs):
+        self.sub_heading = sanitize_html(self.sub_heading)
+        super().save(*args, **kwargs)
+
 
 @register
 class TwoColumnContentBlock(BaseBlock):
@@ -2113,6 +2117,10 @@ class ContactFormBlock(BaseBlock):
     def __str__(self):
         return f"ContactFormBlock #{self.pk}"
 
+    def save(self, *args, **kwargs):
+        self.intro_text = sanitize_html(self.intro_text)
+        super().save(*args, **kwargs)
+
     def get_public_context(self):
         return {
             "recipients": list(self.recipients.values_list("email", flat=True))
@@ -2261,6 +2269,12 @@ class FeatureCardsBlock(BaseBlock):
 
     def __str__(self):
         return f"FeatureCardsBlock #{self.pk}"
+
+    def save(self, *args, **kwargs):
+        self.card_1_text = sanitize_html(self.card_1_text)
+        self.card_2_text = sanitize_html(self.card_2_text)
+        self.card_3_text = sanitize_html(self.card_3_text)
+        super().save(*args, **kwargs)
 
     def fallback_image_url(self, card_num):
         return self._FALLBACK_IMAGES.get(

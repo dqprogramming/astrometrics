@@ -20,7 +20,7 @@
                 {{ block.heading }}
             </h1>
             {% if block.sub_heading %}
-            <p class="about-hero-sub" style="color: {{ block.text_color }};">{{ block.sub_heading }}</p>
+            <div class="about-hero-sub" style="color: {{ block.text_color }};">{{ block.sub_heading|safe }}</div>
             {% endif %}
         </div>
     </div>

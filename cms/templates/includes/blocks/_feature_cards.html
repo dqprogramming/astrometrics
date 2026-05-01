@@ -13,7 +13,7 @@
                              class="feature-image">
                         <div class="feature-number">{{ block.card_1_number }}</div>
                         <h3 class="feature-title" style="color: {{ block.text_color }};">{{ block.card_1_title }}</h3>
-                        <p class="feature-text" style="color: {{ block.text_color }};">{{ block.card_1_text }}</p>
+                        <div class="feature-text" style="color: {{ block.text_color }};">{{ block.card_1_text|safe }}</div>
                         {% if block.card_1_cta_text %}
                         <a href="{{ block.card_1_cta_url }}"
                            class="btn spectral-bold feature-btn feature-cta-{{ block.pk }}"
@@ -28,7 +28,7 @@
                              class="feature-image">
                         <div class="feature-number">{{ block.card_2_number }}</div>
                         <h3 class="feature-title" style="color: {{ block.text_color }};">{{ block.card_2_title }}</h3>
-                        <p class="feature-text" style="color: {{ block.text_color }};">{{ block.card_2_text }}</p>
+                        <div class="feature-text" style="color: {{ block.text_color }};">{{ block.card_2_text|safe }}</div>
                         {% if block.card_2_cta_text %}
                         <a href="{{ block.card_2_cta_url }}"
                            class="btn spectral-bold feature-btn feature-cta-{{ block.pk }}"
@@ -43,7 +43,7 @@
                              class="feature-image">
                         <div class="feature-number">{{ block.card_3_number }}</div>
                         <h3 class="feature-title" style="color: {{ block.text_color }};">{{ block.card_3_title }}</h3>
-                        <p class="feature-text" style="color: {{ block.text_color }};">{{ block.card_3_text }}</p>
+                        <div class="feature-text" style="color: {{ block.text_color }};">{{ block.card_3_text|safe }}</div>
                         {% if block.card_3_cta_text %}
                         <a href="{{ block.card_3_cta_url }}"
                            class="btn spectral-bold feature-btn feature-cta-{{ block.pk }}"
