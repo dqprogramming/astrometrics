@@ -1,3 +1,15 @@
+## 1.29.0 (2026-05-01)
+
+### Feat
+
+- **cms**: use TinyMCE for revenue distribution description fields
+
+### Fix
+
+- **cms**: preventively harden Textarea-backed text fields against double <p> wrapping
+- **cms**: render OJC collections_label HTML safely without escaping or double wrapping
+- **cms**: render revenue distribution HTML safely without escaping or double wrapping
+
 ## 1.28.0 (2026-04-28)
 
 ### Feat
