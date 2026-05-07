@@ -1,3 +1,9 @@
+## 1.31.0 (2026-05-07)
+
+### Feat
+
+- **journals**: add uuid + financial_information; sync importer with new CSV schema
+
 ## 1.30.0 (2026-05-07)
 
 ### Feat
