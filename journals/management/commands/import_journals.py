@@ -11,10 +11,14 @@ Options:
 import csv
 import re
 from decimal import Decimal, InvalidOperation
+from urllib.parse import urlparse
 
+import requests
+from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 from django.utils import timezone
+from django.utils.text import slugify
 
 from journals.models import (
     ArchivingService,
@@ -145,7 +149,7 @@ class Command(BaseCommand):
             raise ValueError("Journal title is required")
 
         # Get or create publisher
-        publisher_name = row.get("Publisher", "").strip()
+        publisher_name = row.get("Publishing Member", "").strip()
         if not publisher_name:
             raise ValueError("Publisher is required")
 
@@ -153,7 +157,7 @@ class Command(BaseCommand):
             name=publisher_name,
             defaults={
                 "website": row.get(
-                    "Link to publisher website",
+                    "Link to Publishing Member's Website",
                     "",
                 ).strip(),
             },
@@ -199,6 +203,10 @@ class Command(BaseCommand):
             row.get("Archiving", ""),
         )
 
+        cover_url = row.get("Journal Cover URL", "").strip()
+        if cover_url and not journal.cover:
+            self._download_cover_image(journal, cover_url, title)
+
     def _get_journal_defaults(
         self,
         row,
@@ -232,7 +240,7 @@ class Command(BaseCommand):
                 "",
             ).strip(),
             "publisher_url": row.get(
-                "Link to publisher website",
+                "Link to Publishing Member's Website",
                 "",
             ).strip(),
             "issn": row.get(
@@ -240,18 +248,18 @@ class Command(BaseCommand):
                 "",
             ).strip(),
             "description": row.get(
-                "Description",
+                "Journal Description",
                 "",
             ).strip(),
             "journal_owner": row.get(
-                "Journal Owner",
+                "Journal Owner (if applicable)",
                 "",
             ).strip(),
             "in_doaj": self._parse_boolean(
-                row.get("Already in DOAJ? Y/N", ""),
+                row.get("Already in DOAJ?", ""),
             ),
             "in_scopus": self._parse_boolean(
-                row.get("Scopus", ""),
+                row.get("Scopus Y/N", ""),
             ),
             "wos_impact_factor": self._parse_decimal(
                 row.get("WOS impact factor", ""),
@@ -270,6 +278,10 @@ class Command(BaseCommand):
             "licensing": self._parse_license(
                 row.get("Licencing", ""),
             ),
+            "financial_information": row.get(
+                "Journal Funding Information",
+                "",
+            ).strip(),
         }
 
     def _get_or_create_package_band(
@@ -326,6 +338,54 @@ class Command(BaseCommand):
             package_band.save(update_fields=["name"])
 
         return package_band
+
+    def _download_cover_image(self, journal, cover_url, title):
+        """Download a cover image from a URL into journal.cover.
+
+        Best-effort: failures are logged but don't abort the import row.
+        """
+        try:
+            response = requests.get(
+                cover_url,
+                timeout=10,
+                headers={"User-Agent": "Mozilla/5.0 (OJC Journal Importer)"},
+            )
+            response.raise_for_status()
+        except requests.RequestException as exc:
+            self.stdout.write(
+                self.style.WARNING(
+                    f"  Cover download failed for {title!r}: {exc}"
+                )
+            )
+            return
+
+        content_type = response.headers.get("content-type", "").lower()
+        if not content_type.startswith("image/"):
+            self.stdout.write(
+                self.style.WARNING(
+                    f"  Skipped cover for {title!r}: "
+                    f"non-image content-type {content_type!r}"
+                )
+            )
+            return
+
+        valid_extensions = {"jpg", "jpeg", "png", "gif", "webp"}
+        path = urlparse(cover_url).path
+        ext = path.rsplit(".", 1)[-1].lower() if "." in path else ""
+        if ext not in valid_extensions:
+            ext_map = {
+                "image/jpeg": "jpg",
+                "image/png": "png",
+                "image/gif": "gif",
+                "image/webp": "webp",
+            }
+            ext = ext_map.get(content_type, "jpg")
+
+        filename = f"{slugify(title)}-cover.{ext}"
+        journal.cover.save(filename, ContentFile(response.content), save=True)
+        self.stdout.write(
+            self.style.SUCCESS(f"  Downloaded cover for {title!r}")
+        )
 
     def _process_languages(
         self,

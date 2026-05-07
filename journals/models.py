@@ -1,3 +1,5 @@
+import uuid
+
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -135,6 +137,8 @@ class Journal(models.Model):
         ("CC BY-ND", "CC BY-ND"),
     ]
 
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+
     # Basic Information
     title = models.CharField(
         max_length=500, unique=True, help_text="Full journal title"
@@ -246,6 +250,10 @@ class Journal(models.Model):
         blank=True,
         validators=[MinValueValidator(0), MaxValueValidator(200)],
         help_text="Number of years of archive available",
+    )
+    financial_information = models.TextField(
+        blank=True,
+        help_text="Funding model, sponsorships, or other financial notes",
     )
 
     # Unique Selling Points

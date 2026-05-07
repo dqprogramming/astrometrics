@@ -164,12 +164,12 @@ class GetJournalDefaultsTests(TestCase):
             "Cost (££)": "5000",
             "Normalised no of articles": "15",
             "Link to Journal": "https://example.com",
-            "Link to publisher website": "https://publisher.com",
+            "Link to Publishing Member's Website": "https://publisher.com",
             "ISSN": "1234-5678",
-            "Description": "A test journal",
-            "Journal Owner": "Test Owner",
-            "Already in DOAJ? Y/N": "Y",
-            "Scopus": "Y",
+            "Journal Description": "A test journal",
+            "Journal Owner (if applicable)": "Test Owner",
+            "Already in DOAJ?": "Y",
+            "Scopus Y/N": "Y",
             "WOS impact factor": "1.5",
             "Archive available diamond OA? (Y/N, notes)": "Y",
             "No. of years of archive": "10",
@@ -177,6 +177,7 @@ class GetJournalDefaultsTests(TestCase):
             "Licencing": "CC BY",
             "Archiving": "LOCKSS",
             "Year Est. / Original zombie": "2010",
+            "Journal Funding Information": "Funded by grant",
         }
         defaults = self.cmd._get_journal_defaults(row, self.publisher)
 
@@ -196,6 +197,7 @@ class GetJournalDefaultsTests(TestCase):
         self.assertEqual(defaults["year_established"], "2010")
         self.assertIsNotNone(defaults["package_band"])
         self.assertEqual(defaults["package_band"].code, "C1")
+        self.assertEqual(defaults["financial_information"], "Funded by grant")
 
     def test_empty_row(self):
         row = {}
@@ -217,11 +219,12 @@ class ImportCommandFullTests(TestCase):
     def _write_csv(self, rows):
         """Write CSV rows to a temp file and return the path."""
         header = (
-            "Journal Title,Year Est. / Original zombie,Publisher,"
+            "Journal Title,Year Est. / Original zombie,Publishing Member,"
             "Package & Band,Cost (££),Normalised no of articles,"
-            "Already in DOAJ? Y/N,Link to Journal,ISSN,Description,"
-            "Language(s),Journal Owner,Subject(s),"
-            "Link to publisher website,Scopus,WOS impact factor,"
+            "Already in DOAJ?,Link to Journal,ISSN,Journal Description,"
+            "Language(s),Journal Owner (if applicable),Subject(s),"
+            "Link to Publishing Member's Website,Scopus Y/N,"
+            "WOS impact factor,"
             '"Archive available diamond OA? (Y/N, notes)",'
             "No. of years of archive,Any USPs to note? ,Licencing,"
             "Archiving"

@@ -97,9 +97,18 @@
         </div>
         {% endif %}
 
-        {% if journal.usps %}
+        {% if journal.financial_information %}
         <div class="detail-section">
           <h2 class="detail-section__heading">Financial Information</h2>
+          <div class="detail-section__body">
+            {{ journal.financial_information|linebreaks }}
+          </div>
+        </div>
+        {% endif %}
+
+        {% if journal.usps %}
+        <div class="detail-section">
+          <h2 class="detail-section__heading">Unique Selling Points</h2>
           <div class="detail-section__body">
             {{ journal.usps|linebreaks }}
           </div>

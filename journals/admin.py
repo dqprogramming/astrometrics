@@ -135,6 +135,7 @@ class JournalAdmin(admin.ModelAdmin):
                     "cost_gbp",
                     "normalized_articles",
                     "cost_per_article_display",
+                    "financial_information",
                 )
             },
         ),
