@@ -1,3 +1,9 @@
+## 1.30.0 (2026-05-07)
+
+### Feat
+
+- **portal**: add export_content/import_content management commands
+
 ## 1.29.0 (2026-05-01)
 
 ### Feat
