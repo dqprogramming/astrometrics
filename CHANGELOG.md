@@ -1,3 +1,10 @@
+## 1.32.1 (2026-05-08)
+
+### Fix
+
+- **cms**: wrap long footer labels on mobile to prevent page-width overflow
+- **cms**: use shared Redis cache so header/footer edits propagate
+
 ## 1.32.0 (2026-05-08)
 
 ### Feat
