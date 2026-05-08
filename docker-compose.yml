@@ -15,6 +15,16 @@ services:
       timeout: 5s
       retries: 10
 
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+
   web:
     build:
       context: .
@@ -34,9 +44,13 @@ services:
     environment:
       DJANGO_SETTINGS_MODULE: astrometrics.local_settings
       DATABASE_URL: postgres://astrometrics:astrometrics@db:5432/astrometrics
+      REDIS_URL: redis://redis:6379/1
     depends_on:
       db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
 
 volumes:
   pgdata:
+  redisdata:

@@ -151,6 +151,28 @@ _db_config["OPTIONS"] = {
 }
 DATABASES = {"default": _db_config}
 
+# Cache
+# A shared cache is required because gunicorn runs multiple workers; per-process
+# caches (the Django default) cause stale header/footer reads after edits.
+_redis_url = os.environ.get("REDIS_URL")
+if _redis_url:
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": _redis_url,
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            },
+        }
+    }
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "astrometrics-default",
+        }
+    }
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 

@@ -30,3 +30,12 @@ else:
         for app in INSTALLED_APPS  # noqa: F405
         if app != "django.contrib.postgres"
     ]
+
+# Pin tests to LocMemCache so a developer with REDIS_URL exported in their
+# shell doesn't accidentally have tests reach a real Redis instance.
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "astrometrics-tests",
+    }
+}
