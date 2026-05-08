@@ -6,7 +6,15 @@ from django.contrib import admin
 from django.db.models import Count
 from django.utils.html import format_html
 
-from .models import ImportLog, Journal, Language, Publisher, Subject
+from .models import (
+    ArchivingService,
+    ImportLog,
+    Journal,
+    Language,
+    PackageBand,
+    Publisher,
+    Subject,
+)
 
 
 @admin.register(Publisher)
@@ -40,6 +48,37 @@ class SubjectAdmin(admin.ModelAdmin):
     list_display = ["name", "journal_count", "created_at"]
     search_fields = ["name"]
     list_filter = ["created_at"]
+    readonly_fields = ["created_at", "updated_at"]
+
+    def journal_count(self, obj):
+        return obj.journals.count()
+
+    journal_count.short_description = "Number of Journals"
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.annotate(journals_count=Count("journals"))
+
+
+@admin.register(ArchivingService)
+class ArchivingServiceAdmin(admin.ModelAdmin):
+    list_display = ["name", "journal_count"]
+    search_fields = ["name"]
+
+    def journal_count(self, obj):
+        return obj.journals.count()
+
+    journal_count.short_description = "Number of Journals"
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.annotate(journals_count=Count("journals"))
+
+
+@admin.register(PackageBand)
+class PackageBandAdmin(admin.ModelAdmin):
+    list_display = ["code", "name", "journal_count", "created_at"]
+    search_fields = ["code", "name"]
     readonly_fields = ["created_at", "updated_at"]
 
     def journal_count(self, obj):
