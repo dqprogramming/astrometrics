@@ -1,3 +1,9 @@
+## 1.32.0 (2026-05-08)
+
+### Feat
+
+- **admin**: register every project model in the Django admin
+
 ## 1.31.0 (2026-05-07)
 
 ### Feat
