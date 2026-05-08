@@ -198,4 +198,12 @@
   .footer-pattern {
     order: 4;
   }
+
+  /* Allow long labels to wrap so a single unbreakable token can't push the
+     page wider than the viewport on mobile. */
+  .footer-column {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    min-width: 0;
+  }
 }
