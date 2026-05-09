@@ -1,3 +1,9 @@
+## 1.34.0 (2026-05-09)
+
+### Feat
+
+- **health**: add JSON /health/ endpoint
+
 ## 1.33.0 (2026-05-09)
 
 ### Feat
