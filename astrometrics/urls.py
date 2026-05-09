@@ -6,7 +6,10 @@ from django.urls import (
     path,
 )
 
+from astrometrics.health import health_view
+
 urlpatterns = [
+    path("health/", health_view, name="health"),
     path("admin/", admin.site.urls),
     path("tinymce/", include("tinymce.urls")),
     path("manager/", include("manager.urls")),
