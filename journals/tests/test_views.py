@@ -117,6 +117,15 @@ class PublicSearchViewTests(TestCase):
         response = self.client.get("/catalogue/", {"page": 2})
         self.assertEqual(response.status_code, 200)
 
+    def test_search_card_subject_tag_links_to_filtered_search(self):
+        """Subject tags on the search list cards should be clickable
+        links that pre-filter the catalogue by that subject."""
+        subject = Subject.objects.create(name="American Studies")
+        self.journal.subjects.add(subject)
+        response = self.client.get("/catalogue/")
+        expected_href = f'href="/catalogue/?subject={subject.pk}"'
+        self.assertContains(response, expected_href)
+
 
 class PublicDetailViewTests(TestCase):
     """Tests for public_journal_detail_view."""
@@ -176,6 +185,15 @@ class PublicDetailViewTests(TestCase):
         response = self.client.get(f"/catalogue/journal/{self.journal.pk}/")
         related_pks = [j.pk for j in response.context["related_journals"]]
         self.assertIn(related.pk, related_pks)
+
+    def test_detail_subject_tag_links_to_filtered_search(self):
+        """Subject tags on the detail page should be clickable links
+        that take the user to the catalogue filtered by that subject."""
+        subject = Subject.objects.create(name="American Studies")
+        self.journal.subjects.add(subject)
+        response = self.client.get(f"/catalogue/journal/{self.journal.pk}/")
+        expected_href = f'href="/catalogue/?subject={subject.pk}"'
+        self.assertContains(response, expected_href)
 
 
 class UrlRoutingTests(TestCase):

@@ -425,6 +425,22 @@
   white-space: nowrap;
 }
 
+a.cata-subject-tag,
+.cata-subject-tag--link {
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+a.cata-subject-tag:hover,
+.cata-subject-tag--link:hover,
+a.cata-subject-tag:focus-visible,
+.cata-subject-tag--link:focus-visible {
+  background: #111;
+  color: #fff;
+  text-decoration: none;
+}
+
 /* ==========================================================================
    Pagination
    ========================================================================== */

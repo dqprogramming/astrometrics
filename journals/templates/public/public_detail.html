@@ -80,7 +80,9 @@
           <h2 class="detail-section__heading">Subject Areas</h2>
           <div class="detail-section__subjects">
             {% for subject in journal.subjects.all %}
-            <span class="cata-subject-tag">{{ subject.name }}</span>
+            <a href="{% url 'journals:public_search' %}?subject={{ subject.id }}"
+               class="cata-subject-tag cata-subject-tag--link"
+               title="See all journals tagged {{ subject.name }}">{{ subject.name }}</a>
             {% endfor %}
           </div>
         </div>

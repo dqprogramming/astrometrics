@@ -188,7 +188,10 @@
           {% if journal.subjects.all %}
           <div class="journal-list-card__subjects">
             {% for subject in journal.subjects.all|slice:":5" %}
-            <span class="cata-subject-tag">{{ subject.name }}</span>
+            <a href="{% url 'journals:public_search' %}?subject={{ subject.id }}"
+               class="cata-subject-tag cata-subject-tag--link"
+               onclick="event.stopPropagation();"
+               title="See all journals tagged {{ subject.name }}">{{ subject.name }}</a>
             {% endfor %}
             {% if journal.subjects.count > 5 %}
             <span class="cata-subject-tag">+{{ journal.subjects.count|add:"-5" }} more</span>
