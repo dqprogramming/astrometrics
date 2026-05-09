@@ -1,3 +1,9 @@
+## 1.33.0 (2026-05-09)
+
+### Feat
+
+- **catalogue**: make subject tags clickable to filter by subject
+
 ## 1.32.1 (2026-05-08)
 
 ### Fix
