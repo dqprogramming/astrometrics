@@ -1,3 +1,9 @@
+## 1.34.1 (2026-06-05)
+
+### Fix
+
+- **journals**: make catalogue CSV export stream journals and add Financial Information field
+
 ## 1.34.0 (2026-05-09)
 
 ### Feat
