@@ -40,6 +40,7 @@ CSV_HEADERS = [
     "WOS impact factor",
     "Archive available diamond OA? (Y/N, notes)",
     "No. of years of archive",
+    "Financial Information",
     "Any USPs to note? ",
     "Licencing",
     "Archiving",
@@ -78,7 +79,7 @@ def _csv_rows(queryset):
     writer.writerow(CSV_HEADERS)
     yield buf.getvalue()
 
-    for journal in queryset.iterator():
+    for journal in queryset.iterator(chunk_size=100):
         buf.seek(0)
         buf.truncate()
 
@@ -115,6 +116,7 @@ def _csv_rows(queryset):
                 journal.archive_years
                 if journal.archive_years is not None
                 else "",
+                journal.financial_information or "",
                 journal.usps or "",
                 journal.licensing or "",
                 ", ".join(
@@ -231,6 +233,7 @@ def _get_journal_defaults(row, publisher):
         "archive_years": _parse_integer(
             row.get("No. of years of archive", "")
         ),
+        "financial_information": row.get("Financial Information", "").strip(),
         "usps": row.get("Any USPs to note? ", "").strip(),
         "licensing": _parse_license(row.get("Licencing", "")),
     }
