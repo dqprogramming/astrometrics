@@ -10,6 +10,7 @@ from journals.models import (
     Journal,
     Language,
     PackageBand,
+    Platform,
     Publisher,
     Subject,
 )
@@ -115,6 +116,14 @@ _ALL_CARDS = [
         "tags": ["catalogue"],
     },
     {
+        "title": "Platforms",
+        "description": "Manage publishing platforms journals run on, such as Janeway and OJS.",
+        "icon": "hdd-stack",
+        "color": "#0d9488",
+        "url": reverse_lazy("journals_manager:platform_list"),
+        "tags": ["catalogue"],
+    },
+    {
         "title": "Import",
         "description": "Import journal data from CSV files and review import logs.",
         "icon": "upload",
@@ -153,6 +162,7 @@ def _counts():
         "Languages": Language.objects.count(),
         "Package Bands": PackageBand.objects.count(),
         "Archiving Services": ArchivingService.objects.count(),
+        "Platforms": Platform.objects.count(),
         "Portal Users": PublisherUser.objects.count(),
     }
 
