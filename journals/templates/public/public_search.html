@@ -21,7 +21,7 @@
   <div class="cata-container">
     <p class="cata-search__intro">
       Explore our collection of open access, community-led academic journals,
-      or download the full list in one click.
+      or download a full list of all journals in each collection
     </p>
 
     <form method="get" action="{% url 'journals:public_search' %}" class="cata-search__form">
@@ -40,7 +40,7 @@
               class="cata-filters-toggle"
               onclick="toggleFilters()"
               id="filters-toggle-btn">
-        ⚙ Filters
+        <img src="/static/img/favicon.ico" alt="Description of the icon" width="12" height="12"> Filters
         {% if current_filters.subject or current_filters.publisher or current_filters.in_doaj == 'yes' or current_filters.language %}
         (active)
         {% endif %}
@@ -104,13 +104,10 @@
       </div>
     </form>
 
-    <p class="cata-search__download-text">
-      Or download the full collection, copy here
-    </p>
     <div class="cata-search__download-btns">
-      <a href="#" class="cata-download-btn">Download Journal List 1</a>
-      <a href="#" class="cata-download-btn">Download Journal List 2</a>
-      <a href="#" class="cata-download-btn">Download Journal List 3</a>
+      <a href="https://www.openjournalscollective.org/files/2026-ojc-collection-multidisciplinary.xlsx" class="cata-download-btn">Multidisciplinary Collection</a>
+      <a href="https://www.openjournalscollective.org/files/2026-ojc-collections-ahss.xlsx" class="cata-download-btn">Arts, Humanities & Social Sciences Collection</a>
+      <a href="https://www.openjournalscollective.org/files/2026-ojc-collections-stem.xlsx" class="cata-download-btn">STEM Collection</a>
     </div>
   </div>
 </section>

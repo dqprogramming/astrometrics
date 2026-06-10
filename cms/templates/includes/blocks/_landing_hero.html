@@ -14,10 +14,10 @@
         <div class="container">
             <div class="landing-hero-content" style="border-left-color: {{ block.text_color }};">
                 <h1 class="landing-hero-heading spectral-bold" style="color: {{ block.text_color }};">
-                    {{ block.heading }}
+                    {{ block.heading|safe }}
                 </h1>
                 <p class="landing-hero-sub" style="color: {{ block.text_color }};">
-                    {{ block.sub_heading }}
+                    {{ block.sub_heading|safe }}
                 </p>
                 {% if block.cta_text %}
                 <style>
