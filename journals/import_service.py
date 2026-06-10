@@ -18,6 +18,7 @@ from .models import (
     Journal,
     Language,
     PackageBand,
+    Platform,
     Publisher,
     Subject,
 )
@@ -46,6 +47,7 @@ CSV_HEADERS = [
     "Archiving",
     "Language(s)",
     "Subject(s)",
+    "Platform",
 ]
 
 
@@ -56,7 +58,9 @@ def export_journals_csv(queryset=None):
     """
     if queryset is None:
         queryset = (
-            Journal.objects.select_related("publisher", "package_band")
+            Journal.objects.select_related(
+                "publisher", "package_band", "platform"
+            )
             .prefetch_related("languages", "subjects", "archiving_services")
             .order_by("title")
         )
@@ -124,6 +128,7 @@ def _csv_rows(queryset):
                 ),
                 ", ".join(lang.name for lang in journal.languages.all()),
                 ", ".join(subj.name for subj in journal.subjects.all()),
+                journal.platform.name if journal.platform else "",
             ]
         )
         yield buf.getvalue()
@@ -236,7 +241,16 @@ def _get_journal_defaults(row, publisher):
         "financial_information": row.get("Financial Information", "").strip(),
         "usps": row.get("Any USPs to note? ", "").strip(),
         "licensing": _parse_license(row.get("Licencing", "")),
+        "platform": _get_or_create_platform(row.get("Platform", "")),
     }
+
+
+def _get_or_create_platform(raw_value):
+    name = raw_value.strip()
+    if not name or name.lower() == "n/a":
+        return None
+    platform, _ = Platform.objects.get_or_create(name=name)
+    return platform
 
 
 def _get_or_create_package_band(raw_value):

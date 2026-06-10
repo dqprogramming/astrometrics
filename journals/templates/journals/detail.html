@@ -47,6 +47,11 @@
                 
                 <div class="col-md-6">
                     <dl class="row">
+                        {% if journal.platform %}
+                        <dt class="col-sm-4">Platform:</dt>
+                        <dd class="col-sm-8">{{ journal.platform.name }}</dd>
+                        {% endif %}
+
                         {% if journal.package_band %}
                         <dt class="col-sm-4">Package Band:</dt>
                         <dd class="col-sm-8">

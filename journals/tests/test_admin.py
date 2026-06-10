@@ -87,13 +87,15 @@ class JournalAdminExportCsvTests(TestCase):
         self.assertEqual(len(rows), 2)
         header = rows[0]
         self.assertEqual(header[0], "Title")
+        self.assertEqual(header[2], "Platform")
         data = rows[1]
         self.assertEqual(data[0], "Export Journal")
         self.assertEqual(data[1], "CSV Publisher")
-        self.assertEqual(data[7], "Yes")  # In DOAJ
-        self.assertEqual(data[8], "No")  # In Scopus
-        self.assertIn("English", data[10])
-        self.assertIn("Computer Science", data[11])
+        self.assertEqual(data[2], "")  # Platform (none assigned)
+        self.assertEqual(data[8], "Yes")  # In DOAJ
+        self.assertEqual(data[9], "No")  # In Scopus
+        self.assertIn("English", data[11])
+        self.assertIn("Computer Science", data[12])
 
     def test_export_multiple_journals(self):
         for i in range(3):
