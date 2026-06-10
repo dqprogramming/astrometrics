@@ -23,7 +23,7 @@
                     <span class="landing-stats-target" style="color: {{ block.text_color }};">raised of {{ block.fundraising_target_display }}</span>
                 </div>
                 <p class="landing-stats-desc" style="color: {{ block.text_color }};">
-                    {{ block.description }}
+                    {{ block.description|safe }}
                 </p>
                 <div class="landing-stats-buttons">
                     {% if block.button_1_text %}

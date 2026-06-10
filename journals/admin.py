@@ -177,6 +177,7 @@ class JournalAdmin(admin.ModelAdmin):
                     "journal_owner",
                     "platform",
                     "description",
+                    "cover",
                 )
             },
         ),
