@@ -1,3 +1,9 @@
+## 1.36.0 (2026-06-10)
+
+### Feat
+
+- **public**: landing safe filters and collection download links
+
 ## 1.35.0 (2026-06-10)
 
 ### Feat
