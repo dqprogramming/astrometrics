@@ -5,6 +5,7 @@ from .models import (
     Journal,
     Language,
     PackageBand,
+    Platform,
     Publisher,
     Subject,
 )
@@ -19,6 +20,20 @@ class ArchivingServiceForm(forms.ModelForm):
                 attrs={
                     "class": "mgr-input",
                     "placeholder": "e.g. CLOCKSS, Portico",
+                }
+            ),
+        }
+
+
+class PlatformForm(forms.ModelForm):
+    class Meta:
+        model = Platform
+        fields = ["name"]
+        widgets = {
+            "name": forms.TextInput(
+                attrs={
+                    "class": "mgr-input",
+                    "placeholder": "e.g. Janeway, OJS",
                 }
             ),
         }
@@ -76,6 +91,7 @@ class JournalForm(forms.ModelForm):
             "issn",
             "publisher",
             "journal_owner",
+            "platform",
             "package_band",
             "journal_url",
             "publisher_url",
@@ -96,6 +112,7 @@ class JournalForm(forms.ModelForm):
             "issn": forms.TextInput(attrs={"class": "mgr-input"}),
             "publisher": forms.Select(attrs={"class": "mgr-select"}),
             "journal_owner": forms.TextInput(attrs={"class": "mgr-input"}),
+            "platform": forms.Select(attrs={"class": "mgr-select"}),
             "package_band": forms.Select(attrs={"class": "mgr-select"}),
             "journal_url": forms.URLInput(attrs={"class": "mgr-input"}),
             "publisher_url": forms.URLInput(attrs={"class": "mgr-input"}),

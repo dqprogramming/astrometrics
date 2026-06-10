@@ -17,6 +17,7 @@ from .forms import (
     JournalForm,
     LanguageForm,
     PackageBandForm,
+    PlatformForm,
     PublisherForm,
     SubjectForm,
 )
@@ -27,6 +28,7 @@ from .models import (
     Journal,
     Language,
     PackageBand,
+    Platform,
     Publisher,
     Subject,
 )
@@ -392,6 +394,89 @@ class ArchivingServiceDeleteView(StaffRequiredMixin, DeleteView):
     def form_valid(self, form):
         messages.success(
             self.request, f'Archiving service "{self.object.name}" deleted.'
+        )
+        return super().form_valid(form)
+
+
+# ── Platforms ─────────────────────────────────────────────────────────────────
+
+
+class PlatformListView(StaffRequiredMixin, ListView):
+    model = Platform
+    template_name = "journals/manager/platform_list.html"
+    context_object_name = "platforms"
+
+    def get_queryset(self):
+        qs = Platform.objects.annotate(
+            journal_count=Count("journals")
+        ).order_by("name")
+        q = self.request.GET.get("q", "").strip()
+        if q:
+            qs = qs.filter(name__icontains=q)
+        return qs
+
+    def get(self, request, *args, **kwargs):
+        if request.headers.get("HX-Request"):
+            return render(
+                request,
+                "journals/manager/platform_table.html",
+                {
+                    "platforms": self.get_queryset(),
+                },
+            )
+        return super().get(request, *args, **kwargs)
+
+
+class PlatformCreateView(StaffRequiredMixin, CreateView):
+    model = Platform
+    form_class = PlatformForm
+    template_name = "journals/manager/platform_form.html"
+    success_url = reverse_lazy("journals_manager:platform_list")
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["action"] = "Create"
+        return ctx
+
+    def form_valid(self, form):
+        messages.success(
+            self.request, f'Platform "{form.instance.name}" created.'
+        )
+        return super().form_valid(form)
+
+
+class PlatformUpdateView(StaffRequiredMixin, UpdateView):
+    model = Platform
+    form_class = PlatformForm
+    template_name = "journals/manager/platform_form.html"
+    success_url = reverse_lazy("journals_manager:platform_list")
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["action"] = "Edit"
+        return ctx
+
+    def form_valid(self, form):
+        messages.success(
+            self.request, f'Platform "{form.instance.name}" updated.'
+        )
+        return super().form_valid(form)
+
+
+class PlatformDeleteView(StaffRequiredMixin, DeleteView):
+    model = Platform
+    template_name = "journals/manager/confirm_delete.html"
+    success_url = reverse_lazy("journals_manager:platform_list")
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["object_type"] = "Platform"
+        ctx["cancel_url"] = reverse_lazy("journals_manager:platform_list")
+        return ctx
+
+    def form_valid(self, form):
+        messages.success(
+            self.request, f'Platform "{self.object.name}" deleted.'
         )
         return super().form_valid(form)
 

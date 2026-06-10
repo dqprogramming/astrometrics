@@ -181,7 +181,7 @@ def public_journal_detail_view(request, pk):
     """Public detailed view of a single journal."""
     journal = get_object_or_404(
         Journal.objects.select_related(
-            "publisher", "package_band"
+            "publisher", "package_band", "platform"
         ).prefetch_related("languages", "subjects"),
         pk=pk,
     )

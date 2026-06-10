@@ -137,6 +137,13 @@
               <div class="detail-info-panel__field-value">{{ journal.publisher.name }}</div>
             </div>
 
+            {% if journal.platform %}
+            <div>
+              <div class="detail-info-panel__field-label">Platform</div>
+              <div class="detail-info-panel__field-value">{{ journal.platform.name }}</div>
+            </div>
+            {% endif %}
+
             {% if journal.journal_owner %}
             <div>
               <div class="detail-info-panel__field-label">Owner</div>

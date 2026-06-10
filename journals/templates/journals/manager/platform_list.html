@@ -1,0 +1,25 @@
+{% extends "manager/base.html" %}
+
+{% block title %}Platforms{% endblock %}
+{% block page_title %}Platforms{% endblock %}
+{% block breadcrumb %}<a href="{% url 'manager:dashboard' %}">Dashboard</a> / Platforms{% endblock %}
+{% block nav_platforms %}active{% endblock %}
+
+{% block content %}
+<div class="mgr-section-header">
+    <div>
+        <div class="mgr-section-title">{{ platforms|length }} platform{{ platforms|length|pluralize }}</div>
+        <div class="mgr-section-sub">Publishing platforms journals run on.</div>
+    </div>
+    <div style="display:flex; gap:.75rem; align-items:center;">
+        <div class="mgr-search-wrap">
+            <i class="bi bi-search"></i>
+            <label for="platformSearch" class="visually-hidden">Filter platforms</label>
+            <input class="mgr-search" type="text" id="platformSearch" name="q" placeholder="Filter platforms…"
+                hx-get="{% url 'journals_manager:platform_list' %}" hx-trigger="input changed delay:300ms" hx-target="#platformTable">
+        </div>
+        <a href="{% url 'journals_manager:platform_create' %}" class="btn-mgr-primary"><i class="bi bi-plus"></i> New Platform</a>
+    </div>
+</div>
+<div id="platformTable">{% include "journals/manager/platform_table.html" %}</div>
+{% endblock %}

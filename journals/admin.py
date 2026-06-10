@@ -12,6 +12,7 @@ from .models import (
     Journal,
     Language,
     PackageBand,
+    Platform,
     Publisher,
     Subject,
 )
@@ -62,6 +63,21 @@ class SubjectAdmin(admin.ModelAdmin):
 
 @admin.register(ArchivingService)
 class ArchivingServiceAdmin(admin.ModelAdmin):
+    list_display = ["name", "journal_count"]
+    search_fields = ["name"]
+
+    def journal_count(self, obj):
+        return obj.journals.count()
+
+    journal_count.short_description = "Number of Journals"
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.annotate(journals_count=Count("journals"))
+
+
+@admin.register(Platform)
+class PlatformAdmin(admin.ModelAdmin):
     list_display = ["name", "journal_count"]
     search_fields = ["name"]
 
@@ -138,6 +154,7 @@ class JournalAdmin(admin.ModelAdmin):
 
     list_filter = [
         "publisher",
+        "platform",
         "package_band",
         "in_doaj",
         "in_scopus",
@@ -158,6 +175,7 @@ class JournalAdmin(admin.ModelAdmin):
                     "year_established",
                     "publisher",
                     "journal_owner",
+                    "platform",
                     "description",
                 )
             },
@@ -216,7 +234,7 @@ class JournalAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         """Optimize queryset with select_related and prefetch_related."""
         qs = super().get_queryset(request)
-        return qs.select_related("publisher").prefetch_related(
+        return qs.select_related("publisher", "platform").prefetch_related(
             "languages", "subjects"
         )
 
@@ -257,6 +275,7 @@ class JournalAdmin(admin.ModelAdmin):
             [
                 "Title",
                 "Publisher",
+                "Platform",
                 "Package Band",
                 "Cost (GBP)",
                 "Normalized Articles",
@@ -282,6 +301,7 @@ class JournalAdmin(admin.ModelAdmin):
                 [
                     journal.title,
                     journal.publisher.name,
+                    journal.platform.name if journal.platform else "",
                     journal.package_band,
                     journal.cost_gbp or "",
                     journal.normalized_articles or "",

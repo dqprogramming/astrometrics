@@ -58,6 +58,27 @@ urlpatterns = [
         views.ArchivingServiceDeleteView.as_view(),
         name="archivingservice_delete",
     ),
+    # Platforms
+    path(
+        "platforms/",
+        views.PlatformListView.as_view(),
+        name="platform_list",
+    ),
+    path(
+        "platforms/new/",
+        views.PlatformCreateView.as_view(),
+        name="platform_create",
+    ),
+    path(
+        "platforms/<int:pk>/edit/",
+        views.PlatformUpdateView.as_view(),
+        name="platform_edit",
+    ),
+    path(
+        "platforms/<int:pk>/delete/",
+        views.PlatformDeleteView.as_view(),
+        name="platform_delete",
+    ),
     # Publishers
     path(
         "publishers/", views.PublisherListView.as_view(), name="publisher_list"

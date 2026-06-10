@@ -49,6 +49,24 @@ class ArchivingService(models.Model):
         return self.name
 
 
+class Platform(models.Model):
+    """
+    Publishing platforms a journal runs on (Janeway, OJS, Scholastica, etc.).
+    """
+
+    name = models.CharField(
+        max_length=255, unique=True, help_text="Platform name"
+    )
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = _("Platform")
+        verbose_name_plural = _("Platforms")
+
+    def __str__(self):
+        return self.name
+
+
 class Subject(models.Model):
     """
     Academic subjects/disciplines for journals.
@@ -160,6 +178,16 @@ class Journal(models.Model):
         max_length=255,
         blank=True,
         help_text="Organization or entity that owns the journal",
+    )
+
+    # Platform
+    platform = models.ForeignKey(
+        Platform,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="journals",
+        help_text="Publishing platform the journal runs on",
     )
 
     # Cost & Package Information
