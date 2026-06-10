@@ -1,3 +1,10 @@
+## 1.35.0 (2026-06-10)
+
+### Feat
+
+- **manager**: add Platforms card to the manager dashboard
+- **journals**: add managed Platform field to journals
+
 ## 1.34.1 (2026-06-05)
 
 ### Fix
