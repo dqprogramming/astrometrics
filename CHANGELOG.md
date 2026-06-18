@@ -1,3 +1,9 @@
+## 1.37.0 (2026-06-18)
+
+### Feat
+
+- **cms**: serve published Pages at /pages/<slug>/
+
 ## 1.36.0 (2026-06-10)
 
 ### Feat
