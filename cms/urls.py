@@ -8,6 +8,7 @@ from cms.views import (
     index_view,
     news_detail_view,
     news_index_view,
+    page_detail_view,
     page_preview_view,
     partial_view,
     post_preview_view,
@@ -27,6 +28,7 @@ urlpatterns = [
     path("news/<slug:slug>/", news_detail_view, name="news-detail"),
     path("preview/post/<uuid:token>/", post_preview_view, name="post-preview"),
     path("preview/page/<uuid:token>/", page_preview_view, name="page-preview"),
+    path("pages/<slug:slug>/", page_detail_view, name="page-detail"),
     # Slug catch-all — serves block pages by slug
     path("<slug:slug>/", slug_page_view, name="slug-page"),
 ]

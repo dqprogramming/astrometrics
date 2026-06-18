@@ -96,6 +96,19 @@
                     <div class="mgr-help">Share to let others view before publishing.</div>
                 </div>
                 {% endif %}
+
+                {% if object.pk and object.is_published %}
+                <div class="mgr-field" style="margin-bottom:0;">
+                    <div class="mgr-label">Live page</div>
+                    <a href="{{ object.get_absolute_url }}"
+                       target="_blank"
+                       rel="noopener"
+                       class="btn-mgr-secondary"
+                       style="width:100%; justify-content:center;">
+                        <i class="bi bi-box-arrow-up-right"></i> View on site
+                    </a>
+                </div>
+                {% endif %}
             </div>
 
             <div class="mgr-form-card">

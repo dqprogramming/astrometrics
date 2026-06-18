@@ -139,6 +139,12 @@ def slug_page_view(request, slug):
     )
 
 
+def page_detail_view(request, slug):
+    """Serve a published content page by slug."""
+    page = get_object_or_404(Page, slug=slug, is_published=True)
+    return render(request, "page_detail.html", {"page": page})
+
+
 def page_preview_view(request, token):
     page = get_object_or_404(Page, preview_token=token)
     return render(
